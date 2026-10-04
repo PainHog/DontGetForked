@@ -19,7 +19,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 | Date | Decision | Notes |
 |---|---|---|
 | 2026-10-04 | Title, premise and core loop as in the pitch above | — |
-| 2026-10-04 | Private repository; same toolchain as Heisty Spideys (book pipeline, simulator, Foundry system) | Foundry automation-first is the default from Heisty's lessons; confirm in the first session |
+| 2026-10-04 | Public repository; same toolchain as Heisty Spideys (book pipeline, simulator, Foundry system) | Foundry automation-first is the default from Heisty's lessons; confirm in the first session |
 
 ## Open questions (work through these with Richard, roughly in this order)
 1. **Engine.** Reskin the proven *Heisty Spideys* engine, or build something new? Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
