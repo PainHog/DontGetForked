@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (draft 0.1)
+# Don't Get Forked — core rules (draft 0.2)
 
-*Draft for Richard's approval, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[proposed]** marks a gap the decisions leave open, filled with a proposal for Richard's call (all listed at the end).*
+*Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone.
@@ -15,30 +15,30 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 ## Rolling
 1. **The obstacle sets the trait.** Each obstacle lists one or two traits that work, usually one of them the loud way. Any other trait needs an ability.
 2. **Choose the second die:** the **Mask d6** (passing as human) or the **Monster d10** (letting it out).
-3. **Add the two dice** and compare the total with the Difficulty **[proposed: 6 easy · 8 standard · 10 hard · 12 daunting]**:
+3. **Add the two dice** [P2] and compare the total with the Difficulty **[P1: 6 easy · 8 standard · 10 hard · 12 daunting]**:
    - **Success:** the total meets the Difficulty.
-   - **Cost:** 1–2 short. You do it, at a cost **[proposed: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**.
+   - **Cost:** 1–2 short. You do it, at a cost **[P3: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**.
    - **Trouble:** 3 or more short. It doesn't happen, Suspicion +1, and witnesses catch you.
    - **Critical:** open. The simulator compares "a success on doubles" with "beat the Difficulty by 4".
 4. **The Monster shows** if the Monster die rolls higher than the trait die: Suspicion +1.
 
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
-- **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll. **No ability ever passes automatically.** **[proposed: an ability may target any Entity's roll at the same location, and no die is raised more than one size on one roll.]**
+- **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll. **No ability ever passes automatically.** **[P7: an ability may target any Entity's roll at the same location, and no die is raised more than one size on one roll.]**
 - **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim].
 
 ## The raid
 - **Shopping list:** rolled on a table; the number of items is set by difficulty **[sim: 3 / 4 / 5]**. One or two are **essentials**, the rest **extras**. Premade raids give a fixed list.
 - **The town** is built from shared parts: an **obstacle** (trait + Difficulty), a **location** (1–3 obstacles, some loot, at least two ways in) and the **raid** (locations visited until dawn). There are three ways to build one: a premade sequence, a map, or random tables with a difficulty budget.
-- **Time [proposed]:** the night lasts a set number of **Turns** before dawn [sim]. Each Turn, every Entity either makes one roll at its location or moves to another location. The party may split.
-- **Group checks [proposed]:** when the party crosses the same obstacle together, everyone rolls and gets through on their own result; Suspicion rises once, by the worst result.
+- **Time [P4]:** the night lasts a set number of **Turns** before dawn [sim]. Each Turn, every Entity either makes one roll at its location or moves to another location. The party may split.
+- **Group checks [P6]:** when the party crosses the same obstacle together, everyone rolls and gets through on their own result; Suspicion rises once, by the worst result.
 - **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. You can drop a piece at any time.
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
 - **Raised by:** trouble +1 · the Monster shows +1 · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved.
-- **At the Limit** **[proposed: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**.
+- **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**.
 
 ## Chases
 - **The Lead track:** start with a small Lead [sim]. Each round, roll against the mob's Difficulty, which rises with Suspicion and party size [sim]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
@@ -51,24 +51,24 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 | Result | When |
 |---|---|
 | **Grand Year** | A Win, plus at least one piece of furniture or decor |
-| **Win** | Every essential, and **[proposed]** at most one extra missing |
-| **Partial** | Less than a Win (missing an essential is at best a Partial) and **[proposed]** at least half the list home |
-| **Bust** **[proposed]** | Less than half the list home |
+| **Win** | Every essential, and at most one extra missing [P8] |
+| **Partial** | Less than a Win (missing an essential is at best a Partial) and at least half the list home [P8] |
+| **Bust** [P8] | Less than half the list home |
 | **Forked** | Cornered in the final flight. The session ends |
 
 Each Entity left behind drops the result one step (Bust is the floor short of Forked). The result decides the epilogue only; nothing carries over (optional campaign rules: Q9).
 
-## Proposals and open numbers
-| # | Item | Proposal | Decides |
+## Approved gap fills and open numbers
+| # | Item | Rule | Status |
 |---|---|---|---|
-| P1 | Difficulty ladder | 6 easy · 8 standard · 10 hard · 12 daunting | Richard |
-| P2 | Result bands | Success ≥ Difficulty; Cost 1–2 short; Trouble 3+ short | Richard |
-| P3 | What a Cost costs | Storyteller picks: Suspicion +1, drop an item, lose a Turn, or next roll one size smaller | Richard |
-| P4 | Time | The night is a number of Turns; each Turn, each Entity rolls once or moves | Richard |
-| P5 | Dawn | At dawn, anyone still in town starts the final flight | Richard |
-| P6 | Group checks | Everyone rolls and passes on their own result; Suspicion rises once, by the worst | Richard |
-| P7 | Abilities on others | Any Entity's roll at the same location; a die is raised at most one size per roll | Richard |
-| P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | Richard |
+| P1 | Difficulty ladder | 6 easy · 8 standard · 10 hard · 12 daunting | approved 2026-10-04 |
+| P2 | Result bands | Success ≥ Difficulty; Cost 1–2 short; Trouble 3+ short | approved 2026-10-04 |
+| P3 | What a Cost costs | Storyteller picks: Suspicion +1, drop an item, lose a Turn, or next roll one size smaller | approved 2026-10-04 |
+| P4 | Time | The night is a number of Turns; each Turn, each Entity rolls once or moves | approved 2026-10-04 |
+| P5 | Dawn | At dawn, anyone still in town starts the final flight | approved 2026-10-04 |
+| P6 | Group checks | Everyone rolls and passes on their own result; Suspicion rises once, by the worst | approved 2026-10-04 |
+| P7 | Abilities on others | Any Entity's roll at the same location; a die is raised at most one size per roll | approved 2026-10-04 |
+| P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a success vs beat by 4 | simulator, then Richard |
 | — | Numbers | Charges (3), list size (3/4/5), Turns per night, Suspicion Limits, Lead start and escape numbers, mob Difficulty | simulator, then Richard |
 | — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness, Tell; Castle Duties; chase table; festival | Richard |
