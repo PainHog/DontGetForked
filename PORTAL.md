@@ -1,7 +1,7 @@
-Now: Deciding whether a run of raids can be played as a campaign, and what carries over from one year to the next.
-Next: Approving the one-page core rules, then deciding the campaign, the table (session length and tone), the art direction and the online version.
-Number: Design decisions made = 46
-Number: Open design questions = 5
+Now: Settling the table: how long a session runs, the tone, and how much the Storyteller does.
+Next: The art direction, the online version, checking the name, and approving the one-page core rules.
+Number: Design decisions made = 47
+Number: Open design questions = 4
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->
@@ -20,7 +20,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Set the starting numbers for each difficulty level
 - [x] Settle the remaining rule gaps
 - [ ] Approve the core rules
-- [ ] Plan the campaign
+- [x] Plan the campaign
 - [ ] Settle the table: players, session length and tone
 - [ ] Set the art direction
 - [ ] Decide on the online version
