@@ -55,6 +55,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 | 2026-10-04 | **Table: 3–5 players plus the Storyteller.** | The simulator runs at 3, 4 and 5 players. Session length, tone and GM style (rest of Q10) still open |
 | 2026-10-04 | **S1 — once the hunt is on** (the final flight, from the Limit or dawn): Suspicion stops; **the Mask is off** (everyone rolls the Monster die); an Entity may still overdraw, but **its Weakness is then in play for the rest of the flight** (its trait one size smaller), and once its Weakness is in play it can't overdraw again. | Chosen over no overdraw in the flight and a growing mob fury (which maxes out and then lets overdraws go free again). The simulator found overdraw free in the flight (about 18 boosted rolls per raid). Final-flight numbers are retuned under S9 (simulated: mob Difficulty 10/11/11 and a starting Lead of 3 give wins 94/73/54%, forked 0.4/7.5/11.1%) |
 | 2026-10-04 | **S2 — the Monster showing costs +2 Suspicion** (was +1). Still "one roll raises Suspicion once, by its biggest trigger". | Chosen over showing on ties, a safe Mask (the Mask became the only sensible die, the game much easier and captures vanished) and leaving it. Simulated with Limits raised to 10/13/14: Mask on 35% of the rolls where you choose; always-Monster costs 2.5/7.1/4.8 points and always-Mask 2/16/14, so both dice matter; wins 95/75/57%, forked 0.2/6.8/10.5%. The Limits are numbers for S9 |
+| 2026-10-04 | **S3 — a dropped item falls where you are; picking it up costs that Entity its next action.** | Chosen over lost for good (17–22 points harsher, and Easy could not reach 90%) and extras-only drops (still heavier than the other Costs). All four Costs now cost about the same (Heisty lesson). Simulated with the exit roll: wins 94.5/75/57.5% |
 
 ## Open questions (work through these with Richard, roughly in this order)
 1. **Engine.** *Decided 2026-10-04: a new system using step dice, with guardrails 1 and 2 (see the Decisions log).* Left for later: the second die (Q3), Difficulty numbers, bands and Criticals (simulator), the Monster die (Q4). Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
@@ -96,7 +97,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 Not decisions. These need Richard's call before the core rules are final:
 - ~~**S1.**~~ *Decided 2026-10-04 (see the Decisions log): the Mask is off, and overdraw costs your Weakness.*
 - ~~**S2.**~~ *Decided 2026-10-04: the Monster showing costs +2 Suspicion.*
-- **S3.** Is a dropped item lost or recoverable? (14 points at Easy.)
+- ~~**S3.**~~ *Decided 2026-10-04: a dropped item can be picked up again, at the cost of the next action.*
 - **S4.** Getting out of town needs no roll, so carrying and late Suspicion barely matter.
 - **S5.** Bigger parties do worse (Hard 63 / 58 / 47% for 3 / 4 / 5 Entities).
 - **S6.** Captures are rare (0.11 per Hard raid against ≥ 0.3).
