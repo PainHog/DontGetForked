@@ -69,8 +69,8 @@ Where a number moves a lot between generous and strict, the rules are underspeci
 | Reading | Easy win | Standard win | Hard win | Hard forked | Hard captures | Mask |
 |---|---|---|---|---|---|---|
 | baseline | 94% (+0.0) | 75% (+0.0) | 56% (+0.0) | 7.7% | 0.11 | 12% |
-| generous | 95% (+0.7) | 79% (+3.6) | 59% (+2.6) | 7.3% | 0.15 | 13% |
-| strict | 87% (-7.4) | 54% (-21.1) | 34% (-22.3) | 39.7% | 0.16 | 8% |
+| generous | 96% (+1.6) | 83% (+8.4) | 63% (+7.1) | 3.5% | 0.13 | 12% |
+| strict | 76% (-18.9) | 42% (-32.8) | 24% (-31.9) | 37.1% | 0.16 | 10% |
 
 ## Sweeps: what each judgement call is worth
 
