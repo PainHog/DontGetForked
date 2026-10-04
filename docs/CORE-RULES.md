@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.8)
+# Don't Get Forked — core rules (draft 0.9)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -33,7 +33,8 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Time [P4]:** the night lasts a set number of **Turns** before dawn [sim]. Each Turn, every Entity either makes one roll at its location or moves to another location. The party may split.
 - **Group checks [P6]:** when the party crosses the same obstacle together, everyone rolls and gets through on their own result; Suspicion rises once, by the worst result.
 - **Getting out [S4]:** the way out of town is one watched obstacle: Sly or Nimble, or Brawn the loud way, at the label's exit Difficulty [sim]. One Entity rolls for the party. A Success or Cost gets everyone out; Trouble raises Suspicion and that Entity is caught, and the party may try again next Turn.
-- **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. You can drop a piece at any time.
+- **Furniture [S7]:** a piece stands at one of the list's locations, behind one extra obstacle the party may take on once that location's loot is in hand.
+- **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. While carrying furniture, every move takes two Turns [S7]. You can drop a piece at any time.
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
