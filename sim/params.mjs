@@ -72,10 +72,10 @@ export const PARAMS = {
     ref: "DESIGN Two kinds of chase / Q8g",
   },
   monsterRule: {
-    kind: "rule", default: "base", values: ["base", "tie", "plus2", "d8", "maskSafe"],
-    title: "S2 candidates: how the Monster die is priced",
-    doc: "base = the Monster shows when it rolls higher than the trait die (+1 Suspicion); tie = it shows when it rolls at least as high; plus2 = a show is +2 Suspicion; d8 = the Monster die is a d8; maskSafe = trouble on a Mask roll never gets you caught.",
-    ref: "DESIGN Mask/Monster decisions; S2",
+    kind: "rule", default: "plus2", values: ["plus2", "plus1", "tie", "d8", "maskSafe"],
+    title: "How the Monster die is priced (S2)",
+    doc: "plus2 = the rule since S2 (CORE-RULES 0.4): the Monster shows when it rolls higher than the trait die, +2 Suspicion; plus1 = draft 0.3 (+1); tie = +1, shows when at least as high; d8 = +1, the Monster die is a d8; maskSafe = +1, and trouble on a Mask roll never gets you caught.",
+    ref: "CORE-RULES 0.4 Rolling 4 (S2)",
   },
   exitRule: {
     kind: "rule", default: "free", values: ["free", "gate"],

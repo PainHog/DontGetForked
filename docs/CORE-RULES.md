@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.3)
+# Don't Get Forked — core rules (draft 0.4)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -20,7 +20,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
    - **Cost:** 1–2 short. You do it, at a cost **[P3: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**.
    - **Trouble:** 3 or more short. It doesn't happen, Suspicion +1, and witnesses catch you.
    - **Critical:** open. The simulator compares "a success on doubles" with "beat the Difficulty by 4".
-4. **The Monster shows** if the Monster die rolls higher than the trait die: Suspicion +1.
+4. **The Monster shows** if the Monster die rolls higher than the trait die: Suspicion +2 [S2].
 
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
@@ -36,7 +36,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
-- **Raised by:** trouble +1 · the Monster shows +1 · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
+- **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved.
 - **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1].
 
