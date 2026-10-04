@@ -36,7 +36,7 @@ export const GAPS = [
   { id: "G14", title: "Where captives are held, and whether the rescue obstacle resets", ref: "DESIGN Captured", param: null,
     note: "The simulator uses one lock-up per town (Sly, or Brawn the loud way, always watched) and a new rescue obstacle for each capture." },
   { id: "G15", title: "Getting out of town costs nothing", ref: "CORE-RULES The raid", param: "exitRule",
-    note: "Once the loot is in hand the party walks out with no roll unless the Limit or dawn has hit, so carrying furniture (no Mask, Nimble smaller) and late Suspicion cost almost nothing. Heisty lesson: losing must cost something even at the end; every scenario had 1–2 escape obstacles." },
+    note: "RESOLVED by S4 (CORE-RULES 0.6): the way out is one watched obstacle, rolled by one Entity for the party." },
 ];
 
 export const MODELLED = [
