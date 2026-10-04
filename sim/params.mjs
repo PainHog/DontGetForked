@@ -48,10 +48,10 @@ export const PARAMS = {
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
-    kind: "rule", default: "free", values: ["free", "forbidden", "weakness", "fury"],
+    kind: "rule", default: "weakness", values: ["weakness", "free", "forbidden", "fury"],
     title: "Overdraw (and Suspicion triggers) once the hunt is on",
-    doc: "free = nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap).",
-    ref: "CORE-RULES Abilities (overdraw costs Suspicion +2; the track can't go higher)",
+    doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap).",
+    ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
   raiseCap: {
     kind: "rule", default: "perDie", values: ["perDie", "perRoll"],
@@ -128,7 +128,7 @@ export function defaults() {
 
 /** Every ambiguous rule read for (generous) or against (strict) the players. */
 export const PRESETS = {
-  generous: { critEffect: "lead2", costChoice: "lenient", dropRule: "recover", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "free", raiseCap: "perDie", captiveItems: "kept", exitRule: "free" },
+  generous: { critEffect: "lead2", costChoice: "lenient", dropRule: "recover", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "weakness", raiseCap: "perDie", captiveItems: "kept", exitRule: "free" },
   // costChoice "mixed" keeps the harsh "drop an item" Cost in play ("suspicion" removes it and is easier at Easy).
   strict: { critEffect: "none", costChoice: "mixed", dropRule: "lost", loudRule: "both", openApproach: "switch", overdrawAtLimit: "forbidden", raiseCap: "perRoll", captiveItems: "lost", exitRule: "gate" },
 };

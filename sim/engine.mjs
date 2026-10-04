@@ -367,7 +367,7 @@ function planRoll(S, m, ctx) {
   const hiddenSrc = sources(S, m, ctx, "hidden");
   const carrying = !!m.furniture;
   let seconds;
-  if (carrying) seconds = [MONSTER]; // carrying: you can't use the Mask die
+  if (carrying || phase === "final") seconds = [MONSTER]; // carrying: no Mask; S1: once the hunt is on the Mask is off
   else if (P.monsterPolicy === "mask") seconds = [MASK];
   else if (P.monsterPolicy === "monster") seconds = [MONSTER];
   else seconds = [MASK, MONSTER];

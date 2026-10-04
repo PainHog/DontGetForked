@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.2)
+# Don't Get Forked — core rules (draft 0.3)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -25,7 +25,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
 - **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll. **No ability ever passes automatically.** **[P7: an ability may target any Entity's roll at the same location, and no die is raised more than one size on one roll.]**
-- **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim].
+- **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
 
 ## The raid
 - **Shopping list:** rolled on a table; the number of items is set by difficulty **[sim: 3 / 4 / 5]**. One or two are **essentials**, the rest **extras**. Premade raids give a fixed list.
@@ -38,7 +38,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
 - **Raised by:** trouble +1 · the Monster shows +1 · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved.
-- **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**.
+- **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1].
 
 ## Chases
 - **The Lead track:** start with a small Lead [sim]. Each round, roll against the mob's Difficulty, which rises with Suspicion and party size [sim]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
@@ -46,6 +46,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Weakness:** once the mob brings your Weakness, you roll your trait one size smaller in the chase.
 - **Local chase:** cornered means **captured**. You're held at a location; the party can rescue you (it becomes an obstacle and costs Turns), and once per Turn you may try to slip free (a failed attempt: Suspicion +1). Anyone still held when the party leaves town is left behind.
 - **Final flight:** everyone rolls each round. If successes outnumber trouble the Lead rises 1; if trouble outnumbers successes it falls 1. **Escape** = home with the goods. **Cornered** = **forked**: the monsters are killed and the raid is lost.
+- **Once the hunt is on [S1]:** the Mask is off, and everyone rolls the Monster die. An Entity may still overdraw, but its Weakness is then in play for the rest of the flight (its trait one size smaller), and once its Weakness is in play it can't overdraw again.
 
 ## How the year went
 | Result | When |
