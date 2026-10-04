@@ -8,20 +8,20 @@ node sim/run.mjs --runs 2000 --sweep-runs 500
 
 **Caveat:** everything runs on placeholder content: eight anonymous Entities, generated towns, and placeholder Gifts, Duties, Weaknesses and Tells. The simulated players follow simple documented policies (`sim/params.mjs`). The results show how the core rules and numbers behave, not how the finished game will play.
 
-## Where things stood after S9 (2026-10-04; S10 then changed the approach effect and the Limits; the report will be re-run after S11)
+## Where things stand (after S1–S11, 2026-10-04)
 
 | Measure | Target | Simulated |
 |---|---|---|
-| Win, Easy / Standard / Hard | 87–93 / 72–78 / 55–60% | 91.5 / 75.6 / 56.3% |
-| Forked, Easy / Standard / Hard | ≤2 / 3–7 / 8–12% | 0.6 / 3.4 / 6.3% (Hard a little low; the next mob step gives 18%) |
-| Hard win with 3 / 4 / 5 Entities | close together | 57 / 57 / 58% |
-| Captures per Hard raid | 0.2–0.3 (revised in S9) | 0.23 |
-| Trouble, share of rolls | at most 22% (revised in S9) | 22% |
-| Criticals (doubles on a Success) | about 5% (revised in S8) | 4.9% |
-| Entities spending at least half their charges | ≥ 50% | 92% |
-| Mask, on rolls where you choose | ≥ 25% | about 27% |
-| Furniture, greedy party: Grand Year / lost a Win it had | ~50% / ~20% | 61% / 19% |
-| Largest option outlier | within ±2.5 points | +5.7 (placeholder Gifts that "open an approach"; see S10) |
+| Win, Easy / Standard / Hard | 87–93 / 72–78 / 55–60% | 90.1 / 74.8 / 58.1% |
+| Forked, Easy / Standard / Hard | ≤2 / 3–7 / 8–12% | 0.7 / 3.2 / 4.5% (Hard low; the final flight is a knife-edge, see below) |
+| Hard win with 3 / 4 / 5 Entities | close together | 57 / 59 / 59% |
+| Captures per Hard raid | 0.2–0.3 (revised in S9) | 0.41 (more than needed, in the direction S6 wanted) |
+| Trouble, share of rolls | at most 22% (revised in S9) | 20.0% |
+| Criticals (doubles on a Success) | about 5% (revised in S8) | 5.0% |
+| Entities spending at least half their charges | ≥ 50% | 90% |
+| Mask, on rolls where you choose | ≥ 25% | 33% |
+| Furniture, greedy party: Grand Year / lost a Win it had | ~50% / ~20% | about 61% / 19% (S7 run) |
+| Largest option outlier | within ±2.5 points | +3.9 (a placeholder Gift; real Gifts will replace them) |
 
 ## How we got here
 
@@ -39,6 +39,7 @@ The first run (core rules draft 0.2, starting numbers) was far off: Hard was won
 | S8 | Criticals had no effect | Doubles on a Success: +2 Lead in a chase, otherwise a charge back |
 | S9 | Numbers | The starting numbers (`docs/CORE-RULES.md`, Starting numbers) |
 | S10 | "Open an approach" was described only in fiction and, read as unwatched, was the strongest effect | An easier way: the ability's trait at 2 lower Difficulty, watched as usual; Limits 12 / 13 / 15 |
+| S11 | Smaller gaps the simulator had to fill | Provisional rulings R1–R11 (`docs/CORE-RULES.md`) |
 
 Along the way the simulated players were improved (they now weigh the cost of being caught properly, which plays 1–3 points better), and several things were measured that matter for the rest of the design:
 - **The final flight is a knife-edge.** One point of mob Difficulty moves the forked rate by 10–20 points, because the majority rule turns a small edge per roll into a big edge per round. Forking is decided in the first two or three rounds.
@@ -46,7 +47,7 @@ Along the way the simulated players were improved (they now weigh the cost of be
 - **Tells are a big lever.** The placeholder Tell chance moves Hard by ±9–10 points, so the real Tells need their frequency designed with them.
 
 ## Still open
-- **S11.** Smaller gaps the simulator had to fill (`sim/notes.mjs`): what the loud way costs, several Entities caught by one roll, whether chases take Turns, below a d4, several tries at one obstacle in a Turn, shared Castle Duties, the lock-up, a captive's loot, P7's raise cap.
+Nothing the simulator found is open. The S11 rulings are provisional and get retested in playtests. The next balance work needs the real Entities, Tells and towns.
 
 ## What the simulation can't tell yet
 - **Real content.** Entity balance, real Tells and Weaknesses, and Perks all need the actual Entities.
