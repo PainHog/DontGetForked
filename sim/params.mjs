@@ -234,10 +234,15 @@ export const TARGETS = {
  *  - T1: numbers tuned toward the targets (sim/tune.mjs), rules as written.
  *  - T2: two proposed rule fixes (a roll to get out of town; a dropped item can
  *        be picked up again) with numbers tuned for them.
+ *  P0, T1 and T2 were measured under draft 0.2's rules; the defaults have since
+ *  moved to the decided rules (S1–S8), so re-running them now gives new numbers.
+ *  - D1: the decided rules with the S9 number proposal.
  * Every number and both fixes are proposals for Richard, not decisions.
  */
 export const PACKAGES = {
   P0: { title: "Starting numbers, rules as written", params: {}, numbers: {} },
   T1: { title: "Tuned numbers, rules as written", params: {}, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 13}, "hard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 12, "finalMob": 14}}} },
   T2: { title: "Tuned numbers + exit roll + recoverable drops (proposed)", params: { exitRule: "gate", dropRule: "recover" }, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 8, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}, "hard": {"difficulty": {"8": 0.4, "10": 0.45, "12": 0.15}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}}} },
+  // D1: the rules as decided through S8 (they are the defaults now) with the S9 number proposal.
+  D1: { title: "Decided rules (S1–S8) + proposed numbers (S9)", params: {}, numbers: {"lead": {"localStart": 1, "localEscape": 4, "finalStart": 2, "finalEscape": 6}, "localMob": {"base": 10, "perSuspicion": 0.5, "max": 12}, "labels": {"easy": {"items": 3, "essentials": [1], "difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "limit": 10, "exit": 6, "finalMob": 10, "lockup": 10}, "standard": {"items": 4, "essentials": [1, 2], "difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "limit": 11, "exit": 8, "finalMob": 11, "lockup": 10}, "hard": {"items": 4, "essentials": [2], "difficulty": {"8": 0.4, "10": 0.45, "12": 0.15}, "limit": 12, "exit": 8, "finalMob": 11, "lockup": 12}}} },
 };
