@@ -1,4 +1,4 @@
-# Don't Get Forked — simulator report: P0 — Starting numbers, rules as written (rough, core rules draft 0.2)
+# Don't Get Forked — simulator report: P0 — Decided rules (S1–S8) with the approved numbers (S9) (rough, core rules draft 0.2)
 
 Command: `node sim/run.mjs --runs 2000 --sweep-runs 500`
 
@@ -8,70 +8,65 @@ Command: `node sim/run.mjs --runs 2000 --sweep-runs 500`
 
 ## Packages
 
-- **P0**: Starting numbers, rules as written.
-- **T1**: Tuned numbers, rules as written.
-- **T2**: Tuned numbers + exit roll + recoverable drops (proposed).
+- **P0**: Decided rules (S1–S8) with the approved numbers (S9).
 
 | Package | Easy win | Standard win | Hard win | Forked E · S · H | Hard captures | Grand Year when tried | Trouble | Mask (raid rolls) | Spend ≥ ½ | Hard win, 3 · 4 · 5 Entities |
 |---|---|---|---|---|---|---|---|---|---|---|
-| **target** | 87–93% | 72–78% | 55–60% | ≤2 · 3–7 · 8–12% | ≥ 0.3 | ~50% | 10–20% | ≥ 25% | ≥ 50% | close together |
-| P0 | 85.3% | 60.8% | 10.5% | 0.0% · 0.1% · 0.3% | 0.00 | 86.6% | 14.5% | 23.1% | 70.6% | 13% · 11% · 8% |
-| T1 | 84.0% | 75.9% | 57.5% | 0.1% · 3.4% · 13.3% | 0.12 | 84.4% | 19.0% | 17.6% | 56.7% | 64% · 57% · 52% |
-| T2 | 94.5% | 75.0% | 56.1% | 0.7% · 5.5% · 7.7% | 0.11 | 79.7% | 21.7% | 23.8% | 88.3% | 63% · 58% · 47% |
+| **target** | 87–93% | 72–78% | 55–60% | ≤2 · 3–7 · 8–12% | ≥ 0.2 | ~50% | 10–20% | ≥ 25% | ≥ 50% | close together |
+| P0 | 91.5% | 75.6% | 56.3% | 0.6% · 3.4% · 6.3% | 0.23 | 93.0% | 22.2% | 28.1% | 91.8% | 56% · 56% · 57% |
 
-## P0 — Starting numbers, rules as written against the targets
+## P0 — Decided rules (S1–S8) with the approved numbers (S9) against the targets
 
 | Measure | Target | Simulated |  |
 |---|---|---|---|
-| Win, easy | 87%–93% | 85.3% | ✗ |
-| Win, standard | 72%–78% | 60.8% | ✗ |
-| Win, hard | 55%–60% | 10.5% | ✗ |
-| Forked, easy | 0%–2% | 0.0% | ✓ |
-| Forked, standard | 3%–7% | 0.1% | ✗ |
-| Forked, hard | 8%–12% | 0.3% | ✗ |
-| Captures per Hard raid | ≥ 0.3 | 0.00 | ✗ |
-| Grand Year when the party goes for furniture | ~50% | 86.6% | ✗ |
-| Going for furniture costs the Win | ~20% | 4.0% | ✗ |
-| Trouble, share of rolls | 10–20% | 14.5% | ✓ |
-| Critical (doubles), share of rolls | 10–20% | 5.6% | ✗ |
-| Critical (beat by 4), share of rolls | 10–20% | 40.3% | ✗ |
-| Entities spending ≥ half their charges | ≥ 50% | 70.6% | ✓ |
-| Mask, share of rolls (raid rolls) | ≥ 25% | 18.4% (23.1%) | ✗ |
-| Monster, share of rolls (raid rolls) | ≥ 25% | 81.6% (76.9%) | ✓ |
-| Largest option outlier | within ±2.5 pts | entity E1 -1.7 pts | ✓ |
+| Win, easy | 87%–93% | 91.5% | ✓ |
+| Win, standard | 72%–78% | 75.6% | ✓ |
+| Win, hard | 55%–60% | 56.3% | ✓ |
+| Forked, easy | 0%–2% | 0.6% | ✓ |
+| Forked, standard | 3%–7% | 3.4% | ✓ |
+| Forked, hard | 8%–12% | 6.3% | ✗ |
+| Captures per Hard raid | ≥ 0.2 | 0.23 | ✓ |
+| Grand Year when the party goes for furniture | ~50% | 93.0% | ✗ |
+| Going for furniture costs the Win | ~20% | 2.8% | ✗ |
+| Trouble, share of rolls | 10–20% | 22.2% | ✗ |
+| Critical (doubles on a Success, S8), share of rolls | 3%–7% | 4.9% | ✓ |
+| Entities spending ≥ half their charges | ≥ 50% | 91.8% | ✓ |
+| Mask, share of rolls where you choose (all rolls) | ≥ 25% | 26.7% (16.6%) | ✓ |
+| Monster, share of rolls where you choose (all rolls) | ≥ 25% | 73.3% (83.4%) | ✓ |
+| Largest option outlier | within ±2.5 pts | gift E6:open 5.7 pts | ✗ |
 
 ## Results by label and party size
 
 | Label | Entities | Win | of which Grand | Partial | Bust | Forked | Captures | Left behind | Final flight: Limit | Final flight: dawn | Suspicion at end | Turns used |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| easy | 3 | 85.9% | 42.1% | 11.9% | 2.3% | 0.0% | 0.00 | 0.00 | 2% | 0% | 3.9 | 9.1 |
-| easy | 4 | 85.8% | 39.9% | 12.1% | 2.1% | 0.0% | 0.01 | 0.00 | 2% | 0% | 4.3 | 9.0 |
-| easy | 5 | 84.2% | 41.9% | 12.4% | 3.4% | 0.0% | 0.01 | 0.00 | 3% | 0% | 4.6 | 9.0 |
-| standard | 3 | 66.0% | 0.0% | 26.3% | 7.8% | 0.0% | 0.00 | 0.00 | 13% | 0% | 5.4 | 9.7 |
-| standard | 4 | 62.0% | 0.0% | 28.8% | 9.2% | 0.1% | 0.01 | 0.00 | 15% | 0% | 5.7 | 9.3 |
-| standard | 5 | 54.4% | 0.0% | 31.6% | 13.8% | 0.3% | 0.00 | 0.00 | 22% | 0% | 6.0 | 9.0 |
-| hard | 3 | 13.1% | 0.0% | 23.6% | 63.1% | 0.2% | 0.00 | 0.00 | 32% | 0% | 5.1 | 8.5 |
-| hard | 4 | 10.5% | 0.0% | 21.3% | 67.8% | 0.3% | 0.00 | 0.00 | 40% | 0% | 5.2 | 7.8 |
-| hard | 5 | 7.8% | 0.0% | 18.5% | 73.4% | 0.4% | 0.00 | 0.00 | 49% | 0% | 5.4 | 7.2 |
+| easy | 3 | 91.0% | 55.6% | 1.1% | 7.0% | 0.9% | 0.08 | 0.02 | 10% | 9% | 5.1 | 10.4 |
+| easy | 4 | 92.0% | 54.5% | 1.2% | 6.3% | 0.4% | 0.08 | 0.02 | 12% | 7% | 5.1 | 10.3 |
+| easy | 5 | 91.3% | 57.6% | 1.3% | 7.0% | 0.4% | 0.10 | 0.02 | 13% | 9% | 5.0 | 10.2 |
+| standard | 3 | 74.9% | 0.0% | 11.3% | 9.6% | 4.3% | 0.15 | 0.05 | 23% | 0% | 7.3 | 9.9 |
+| standard | 4 | 77.3% | 0.0% | 10.7% | 9.3% | 2.8% | 0.14 | 0.04 | 22% | 0% | 7.3 | 9.9 |
+| standard | 5 | 74.8% | 0.0% | 12.0% | 10.0% | 3.2% | 0.18 | 0.05 | 24% | 0% | 7.3 | 9.8 |
+| hard | 3 | 56.0% | 0.0% | 17.9% | 19.0% | 7.1% | 0.21 | 0.09 | 36% | 0% | 9.6 | 9.6 |
+| hard | 4 | 56.0% | 0.0% | 17.3% | 20.1% | 6.6% | 0.24 | 0.13 | 39% | 0% | 9.7 | 9.4 |
+| hard | 5 | 56.9% | 0.0% | 18.1% | 19.9% | 5.2% | 0.24 | 0.12 | 41% | 0% | 9.7 | 9.1 |
 
 ## Dice
 
 | Rolls per raid | Success | Cost | Trouble | Crit (doubles) | Crit (beat 4) | Mask | Monster | Monster shows (per Monster roll) | Charges spent (mean) |
 |---|---|---|---|---|---|---|---|---|---|
-| 16.9 | 73.0% | 12.5% | 14.5% | 5.6% | 40.3% | 18.4% | 81.6% | 33.3% | 71.2% |
+| 21.9 | 62.9% | 14.9% | 22.2% | 4.9% | 30.2% | 16.6% | 83.4% | 33.1% | 90.6% |
 
 **Critical candidates** (share of all rolls; the Critical rule is open and has no effect yet):
 
 | Doubles on a Success | Beat by 4 | Beat by 5 | Beat by 6 | Beat by 7 | Beat by 8 |
 |---|---|---|---|---|---|
-| 5.6% | 40.3% | 32.4% | 25.3% | 19.1% | 13.8% |
+| 4.9% | 30.2% | 23.5% | 17.5% | 12.6% | 8.6% |
 
 ## Furniture: how the party's appetite changes the gamble
 
 | Policy | Goes for it | Grand Year when tried | Tried and lost a Win it had | Easy win | Standard win | Hard win |
 |---|---|---|---|---|---|---|
-| ifSafe | 15.9% | 86.6% | 4.0% | 85.3% | 60.8% | 10.5% |
-| always | 81.7% | 43.5% | 25.5% | 74.9% | 30.7% | 1.3% |
+| ifSafe | 20.0% | 93.0% | 2.8% | 91.5% | 75.6% | 56.3% |
+| always | 79.9% | 60.8% | 19.2% | 90.6% | 55.5% | 39.4% |
 
 "Tried and lost a Win it had" pairs each raid with the same raid (same party, town and dice seed) played with `furniturePolicy = never`.
 
@@ -81,9 +76,9 @@ Where a number moves a lot between generous and strict, the rules are underspeci
 
 | Reading | Easy win | Standard win | Hard win | Hard forked | Hard captures | Mask |
 |---|---|---|---|---|---|---|
-| baseline | 85% (+0.0) | 61% (+0.0) | 10% (+0.0) | 0.3% | 0.00 | 18% |
-| generous | 100% (+14.3) | 81% (+20.1) | 17% (+6.3) | 0.5% | 0.00 | 21% |
-| strict | 83% (-1.9) | 53% (-7.4) | 7% (-3.0) | 4.6% | 0.01 | 17% |
+| baseline | 91% (+0.0) | 76% (+0.0) | 56% (+0.0) | 6.3% | 0.23 | 17% |
+| generous | 94% (+2.3) | 84% (+8.4) | 64% (+7.6) | 4.2% | 0.26 | 19% |
+| strict | 66% (-25.6) | 39% (-36.8) | 24% (-32.1) | 8.3% | 0.45 | 14% |
 
 ## Sweeps: what each judgement call is worth
 
@@ -91,98 +86,131 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 
 | Variant | Easy win | Standard win | Hard win | Hard forked | Hard captures | Mask |
 |---|---|---|---|---|---|---|
-| critRule = "beat4" (rule) | 85% (+0.0) | 61% (+0.0) | 9% (+0.0) | 0.3% | 0.00 | 18% |
-| critEffect = "lead2" (rule) | 85% (+0.1) | 61% (+0.1) | 10% (+0.3) | 0.2% | 0.00 | 18% |
-| costChoice = "suspicion" (rule) | 99% (+14.3) | 70% (+8.8) | 8% (-0.9) | 0.3% | 0.00 | 13% |
-| costChoice = "lenient" (rule) | 100% (+14.5) | 80% (+18.7) | 15% (+5.4) | 0.3% | 0.00 | 21% |
-| dropRule = "recover" (rule) | 99% (+14.2) | 78% (+16.5) | 13% (+3.5) | 0.2% | 0.00 | 19% |
-| loudRule = "witness" (rule) | 85% (+0.2) | 62% (+0.8) | 11% (+1.9) | 0.3% | 0.00 | 19% |
-| loudRule = "both" (rule) | 85% (-0.1) | 60% (-0.5) | 9% (-0.1) | 0.3% | 0.00 | 19% |
-| loudRule = "none" (rule) | 85% (+0.3) | 63% (+1.7) | 12% (+2.3) | 0.2% | 0.00 | 19% |
-| openApproach = "switch" (rule) | 85% (-0.3) | 58% (-3.1) | 9% (-0.4) | 0.4% | 0.01 | 18% |
-| overdrawAtLimit = "forbidden" (rule) | 85% (+0.0) | 61% (+0.0) | 9% (+0.0) | 2.2% | 0.00 | 17% |
-| raiseCap = "perRoll" (rule) | 85% (+0.0) | 61% (-0.3) | 9% (-0.1) | 0.7% | 0.00 | 18% |
-| captiveItems = "kept" (rule) | 85% (+0.1) | 61% (+0.0) | 9% (+0.0) | 0.3% | 0.00 | 18% |
-| exitRule = "gate" (rule) | 84% (-1.3) | 57% (-3.9) | 9% (-0.7) | 0.6% | 0.00 | 19% |
-| monsterPolicy = "mask" (policy) | 80% (-5.1) | 54% (-6.7) | 8% (-1.0) | 4.0% | 0.01 | 100% |
-| monsterPolicy = "monster" (policy) | 87% (+1.9) | 60% (-1.1) | 8% (-0.8) | 0.5% | 0.00 | 0% |
-| chargePolicy = "hoard" (policy) | 83% (-2.3) | 48% (-13.4) | 4% (-5.1) | 0.7% | 0.01 | 19% |
-| furniturePolicy = "never" (policy) | 87% (+2.2) | 61% (+0.0) | 9% (+0.0) | 0.3% | 0.00 | 18% |
-| furniturePolicy = "always" (policy) | 74% (-11.3) | 31% (-30.1) | 1% (-8.1) | 0.3% | 0.01 | 17% |
-| dutyEdge = false (content) | 85% (+0.3) | 60% (-0.9) | 9% (-0.4) | 0.5% | 0.00 | 18% |
-| tellChance = 0 (content) | 85% (+0.3) | 69% (+8.0) | 21% (+11.3) | 0.1% | 0.00 | 18% |
-| tellChance = 0.3333333333333333 (content) | 84% (-0.7) | 49% (-12.5) | 4% (-5.6) | 0.3% | 0.00 | 17% |
-| weaknessLocal = 0 (content) | 85% (+0.2) | 61% (+0.4) | 9% (+0.1) | 0.3% | 0.00 | 19% |
-| weaknessLocal = 0.5 (content) | 85% (+0.0) | 61% (-0.1) | 9% (+0.0) | 0.3% | 0.00 | 18% |
-| weaknessFinal = 0.25 (content) | 85% (+0.0) | 61% (+0.0) | 9% (+0.0) | 0.3% | 0.00 | 18% |
-| weaknessFinal = 1 (content) | 85% (+0.0) | 61% (+0.0) | 9% (+0.0) | 0.3% | 0.00 | 18% |
+| critRule = "beat4" (rule) | 93% (+1.3) | 81% (+5.6) | 66% (+8.7) | 3.1% | 0.20 | 17% |
+| critRule = "beat6" (rule) | 92% (+0.6) | 79% (+3.5) | 61% (+4.6) | 4.6% | 0.20 | 16% |
+| critRule = "beat7" (rule) | 92% (+0.2) | 78% (+2.3) | 59% (+2.6) | 5.9% | 0.21 | 16% |
+| critEffect = "none" (rule) | 91% (-0.7) | 74% (-1.5) | 54% (-2.9) | 8.3% | 0.22 | 17% |
+| critEffect = "lead2" (rule) | 91% (-0.1) | 74% (-0.9) | 55% (-2.1) | 7.2% | 0.22 | 17% |
+| critEffect = "charge" (rule) | 91% (-0.6) | 75% (-0.6) | 56% (-1.0) | 7.7% | 0.22 | 16% |
+| costChoice = "suspicion" (rule) | 91% (-0.7) | 76% (+0.7) | 53% (-4.3) | 7.8% | 0.22 | 15% |
+| costChoice = "lenient" (rule) | 92% (+0.3) | 78% (+2.3) | 57% (+0.1) | 6.2% | 0.25 | 18% |
+| dropRule = "lost" (rule) | 77% (-14.8) | 56% (-19.5) | 39% (-17.5) | 5.9% | 0.23 | 17% |
+| dropRule = "extrasOnly" (rule) | 89% (-1.9) | 70% (-5.7) | 55% (-2.1) | 5.9% | 0.22 | 17% |
+| loudRule = "witness" (rule) | 91% (-0.4) | 75% (-0.1) | 57% (+0.1) | 6.3% | 0.24 | 17% |
+| loudRule = "both" (rule) | 91% (-0.2) | 75% (-0.6) | 56% (-0.5) | 6.5% | 0.22 | 17% |
+| loudRule = "none" (rule) | 92% (+0.5) | 77% (+1.5) | 60% (+2.8) | 5.4% | 0.23 | 17% |
+| openApproach = "switch" (rule) | 83% (-8.7) | 63% (-11.9) | 43% (-13.4) | 6.7% | 0.39 | 12% |
+| overdrawAtLimit = "free" (rule) | 92% (+0.3) | 76% (+1.1) | 58% (+1.0) | 1.5% | 0.22 | 19% |
+| overdrawAtLimit = "forbidden" (rule) | 91% (+0.0) | 75% (+0.1) | 57% (+0.0) | 6.1% | 0.22 | 17% |
+| overdrawAtLimit = "fury" (rule) | 89% (-2.3) | 74% (-1.5) | 54% (-3.1) | 19.5% | 0.22 | 15% |
+| raiseCap = "perRoll" (rule) | 91% (+0.0) | 75% (-0.1) | 57% (+0.2) | 5.9% | 0.22 | 16% |
+| captiveItems = "kept" (rule) | 92% (+1.1) | 77% (+1.9) | 58% (+0.9) | 6.3% | 0.22 | 17% |
+| monsterRule = "plus1" (rule) | 94% (+2.8) | 84% (+8.7) | 70% (+12.8) | 4.1% | 0.29 | 5% |
+| monsterRule = "tie" (rule) | 94% (+2.4) | 82% (+6.9) | 68% (+11.3) | 4.0% | 0.28 | 7% |
+| monsterRule = "d8" (rule) | 91% (-0.4) | 78% (+2.3) | 59% (+1.9) | 14.2% | 0.41 | 7% |
+| monsterRule = "maskSafe" (rule) | 99% (+8.1) | 96% (+21.0) | 92% (+35.4) | 0.5% | 0.00 | 36% |
+| chaseSusp = "no" (rule) | 95% (+3.5) | 82% (+6.3) | 63% (+5.7) | 3.1% | 0.43 | 21% |
+| slipRule = "cost" (rule) | 92% (+0.3) | 76% (+0.3) | 57% (+0.2) | 5.9% | 0.22 | 17% |
+| furnitureRule = "base" (rule) | 92% (+0.2) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 17% |
+| furnitureRule = "hardLoc" (rule) | 91% (-0.1) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 17% |
+| furnitureRule = "noisy" (rule) | 91% (-0.2) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 17% |
+| furnitureRule = "both" (rule) | 91% (-0.8) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 16% |
+| furnitureRule = "noisySlow" (rule) | 90% (-0.9) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 16% |
+| furniturePlace = "separate" (rule) | 92% (+0.3) | 77% (+1.9) | 57% (+0.3) | 6.0% | 0.24 | 18% |
+| exitRule = "free" (rule) | 92% (+0.5) | 77% (+1.9) | 57% (+0.3) | 4.5% | 0.23 | 17% |
+| exitRule = "gate" (rule) | 89% (-1.9) | 68% (-7.4) | 50% (-7.2) | 8.9% | 0.28 | 18% |
+| exitRule = "gateCarriers" (rule) | 91% (-0.7) | 79% (+3.2) | 59% (+1.8) | 4.1% | 0.21 | 16% |
+| groupRule = "best3" (rule) | 92% (+1.0) | 81% (+5.7) | 62% (+5.4) | 5.9% | 0.20 | 17% |
+| groupRule = "best4" (rule) | 91% (-0.3) | 77% (+2.1) | 58% (+0.7) | 6.3% | 0.21 | 17% |
+| tellScope = "entity" (rule) | 91% (+0.1) | 75% (+0.0) | 55% (-1.5) | 6.5% | 0.23 | 16% |
+| monsterPolicy = "mask" (policy) | 90% (-1.7) | 71% (-3.9) | 45% (-11.5) | 4.2% | 0.64 | 74% |
+| monsterPolicy = "monster" (policy) | 89% (-2.4) | 66% (-9.5) | 50% (-7.1) | 9.5% | 0.20 | 0% |
+| caughtWeight = 0.4 (policy) | 87% (-4.3) | 71% (-4.8) | 52% (-4.4) | 5.9% | 0.32 | 16% |
+| caughtWeight = 2 (policy) | 92% (+0.5) | 77% (+1.5) | 56% (-0.7) | 5.2% | 0.18 | 16% |
+| chargePolicy = "hoard" (policy) | 82% (-9.7) | 59% (-16.7) | 37% (-20.1) | 5.1% | 0.29 | 19% |
+| furniturePolicy = "never" (policy) | 92% (+0.5) | 75% (+0.0) | 57% (+0.0) | 6.3% | 0.22 | 17% |
+| furniturePolicy = "always" (policy) | 91% (-0.8) | 55% (-19.9) | 41% (-15.9) | 7.9% | 0.20 | 12% |
+| dutyEdge = false (content) | 91% (-0.3) | 75% (-0.1) | 55% (-2.2) | 6.4% | 0.23 | 17% |
+| tellChance = 0 (content) | 93% (+1.2) | 78% (+2.6) | 60% (+3.3) | 4.5% | 0.24 | 17% |
+| tellChance = 0.3333333333333333 (content) | 91% (-0.5) | 74% (-1.0) | 56% (-1.3) | 6.2% | 0.21 | 16% |
+| weaknessLocal = 0 (content) | 92% (+0.3) | 76% (+0.5) | 57% (+0.4) | 5.9% | 0.21 | 17% |
+| weaknessLocal = 0.5 (content) | 91% (-0.2) | 75% (+0.1) | 57% (-0.1) | 6.3% | 0.22 | 17% |
+| weaknessFinal = 0.25 (content) | 91% (+0.1) | 76% (+0.3) | 57% (+0.3) | 5.1% | 0.22 | 17% |
+| weaknessFinal = 1 (content) | 91% (-0.3) | 75% (-0.6) | 56% (-1.3) | 10.1% | 0.22 | 16% |
 
 ## Option outliers (win Δ, parties with vs without, same label and size)
 
-gift E1:hidden +1.6 · gift E6:hidden +1.4 · gift E7:open +1.4 · gift E8:hidden +1.1 · gift E2:hidden +1.1 · duty K4 +1.0 · gift E3:open +0.9 · entity E4 +0.9 · gift E4:hidden +0.7 · entity E7 +0.7 · entity E6 +0.5 · gift E2:raise +0.4 · duty K2 +0.3 · entity E2 +0.3 · gift E4:raise +0.2 · gift E7:switch +0.2 · entity E5 +0.1 · gift E5:hidden +0.0 · gift E5:open -0.0 · gift E5:switch -0.0 · gift E1:open -0.1 · gift E3:raise -0.2 · duty K3 -0.2 · duty K1 -0.2 · duty K5 -0.3 · entity E3 -0.3 · gift E8:raise -0.4 · entity E8 -0.4 · duty K6 -0.5 · gift E3:switch -0.6 · gift E6:open -0.7 · gift E6:raise -0.7 · gift E8:switch -0.8 · gift E4:switch -0.9 · gift E1:switch -1.5 · gift E2:open -1.5 · gift E7:raise -1.6 · entity E1 -1.7
+gift E6:open +5.7 · gift E5:open +5.0 · gift E1:open +4.7 · entity E4 +3.7 · gift E2:open +3.6 · entity E8 +2.4 · gift E7:open +2.1 · gift E3:open +1.6 · duty K2 +1.2 · gift E8:switch +1.0 · gift E8:raise +1.0 · gift E4:switch +1.0 · entity E7 +0.7 · gift E3:raise +0.5 · gift E4:raise +0.5 · duty K1 +0.3 · duty K3 +0.2 · gift E7:switch -0.1 · duty K4 -0.4 · duty K5 -0.6 · duty K6 -0.6 · gift E2:hidden -0.8 · entity E2 -1.0 · entity E5 -1.3 · entity E6 -1.4 · entity E1 -1.4 · gift E4:hidden -1.5 · entity E3 -1.7 · gift E8:hidden -1.9 · gift E6:hidden -2.0 · gift E7:raise -2.0 · gift E1:hidden -2.0 · gift E5:hidden -2.0 · gift E3:switch -2.1 · gift E1:switch -2.7 · gift E2:raise -2.7 · gift E5:switch -3.0 · gift E6:raise -3.9
 
 ## Detectors
 
 | Detector | Count | Per raid |
 |---|---|---|
-| overdraw in the final flight (its Suspicion cost means nothing) | 31372 | 1.743 |
-| a raise past d12 (lost) | 15512 | 0.862 |
-| a die stepped below d4 (floored at d4) | 121 | 0.007 |
+| a raise past d12 (lost) | 15660 | 0.870 |
+| a die stepped below d4 (floored at d4) | 616 | 0.034 |
+| final flight stalled (no end after max rounds) | 182 | 0.010 |
+| suspicion past the Limit (lost) | 10 | 0.001 |
 
 ## Counts (baseline)
 
 | Event | Per raid |
 |---|---|
-| ability:hidden | 2.941 |
-| ability:open | 2.855 |
-| ability:raise | 4.872 |
-| ability:switch | 1.932 |
-| captive slipped free | 0.004 |
-| captures | 0.004 |
-| charges spent | 8.544 |
-| cost:drop | 0.234 |
-| cost:stepdown | 0.390 |
-| cost:suspicion | 0.402 |
-| cost:turn | 0.397 |
-| declined rolls | 0.135 |
-| final flight escaped | 0.195 |
-| final flight: limit | 0.196 |
-| forked | 0.001 |
-| group checks | 2.371 |
-| group: forced low-value roll | 0.128 |
-| local chase ended by the Limit | 0.069 |
-| local chase escaped | 0.433 |
-| local chases | 0.506 |
-| lost turns | 0.327 |
-| overdraws:final | 4.053 |
-| overdraws:local | 0.001 |
-| overdraws:raid | 0.002 |
-| susp:chase | 0.390 |
-| susp:roll | 3.150 |
-| susp:slip | 0.001 |
-| susp:tell | 1.520 |
-| tells | 1.520 |
+| ability:hidden | 5.093 |
+| ability:open | 3.959 |
+| ability:raise | 2.500 |
+| ability:switch | 1.290 |
+| captive rescued | 0.007 |
+| captive slipped free | 0.090 |
+| captures | 0.158 |
+| charges regained by a Critical | 0.561 |
+| charges spent | 11.427 |
+| cost:drop | 0.296 |
+| cost:stepdown | 0.441 |
+| cost:suspicion | 0.451 |
+| cost:turn | 0.447 |
+| declined rolls | 0.167 |
+| final flight escaped | 0.226 |
+| final flight: dawn | 0.028 |
+| final flight: limit | 0.243 |
+| forked | 0.034 |
+| furniture dropped: carrier captured | 0.001 |
+| furniture dropped: final flight | 0.005 |
+| group checks | 2.353 |
+| group: forced low-value roll | 0.146 |
+| local chase ended by the Limit | 0.146 |
+| local chase escaped | 0.100 |
+| local chases | 0.404 |
+| lost turns | 0.653 |
+| overdraws:final | 0.069 |
+| overdraws:local | 0.130 |
+| overdraws:raid | 1.217 |
+| susp:chase | 1.208 |
+| susp:roll | 4.452 |
+| susp:slip | 0.102 |
+| susp:tell | 1.576 |
+| tells | 1.576 |
+| weakness taken by overdraw | 0.069 |
 
 ## Rule gaps found while building the simulator
 
 | # | Gap | Where | Parameter | Note |
 |---|---|---|---|---|
-| G1 | What a Critical does | CORE-RULES Rolling 3 | `critEffect` | The Critical rule itself is open (doubles vs beat by 4), and no effect is given. With "good results never lower Suspicion", a Critical needs some other reward, or it should be dropped. |
+| G1 | What a Critical does | CORE-RULES Rolling 3 | `critEffect` | RESOLVED by S8 (CORE-RULES 0.10): a Success on doubles; +2 Lead in a chase, otherwise one spent charge back. |
 | G2 | What "the loud way" does | DESIGN Suspicion package | `loudRule` | Obstacles list a loud option, but its cost is never stated (+1 Suspicion always? counts as witnessed?). |
 | G3 | What "open an approach nobody else can take" does | CORE-RULES Abilities | `openApproach` | Described only as fiction. Is it unwatched? A different Difficulty? Otherwise it is the same as using the ability's trait. |
-| G4 | Overdraw and the Monster die once Suspicion is at the Limit | CORE-RULES Abilities; Suspicion | `overdrawAtLimit` | In the final flight Suspicion has nowhere to go, so overdraw is free and the Mask has no use. The track's behaviour at the Limit needs one sentence (Heisty lesson: say what happens at the threat limit). |
+| G4 | Overdraw and the Monster die once Suspicion is at the Limit | CORE-RULES Abilities; Suspicion | `overdrawAtLimit` | RESOLVED by S1 (CORE-RULES 0.3): once the hunt is on, Suspicion stops, the Mask is off, and overdraw puts your Weakness in play for the rest of the flight. |
 | G5 | P7's raise cap: per die or per roll | CORE-RULES P7 | `raiseCap` | "No die is raised more than one size" lets the trait die and the second die each be raised once. If one raise per roll was meant, say so. Does a Castle Duty edge count toward it? |
 | G6 | A captive's loot | DESIGN Captured | `captiveItems` | Does the town take back what a captured Entity carried? |
 | G7 | Several Entities caught by one roll | DESIGN Two kinds of chase | `multiCaught` | A group check can catch several Entities at once. One local chase on a shared Lead (like the final flight), or one chase each? |
 | G8 | Does a chase take time? | CORE-RULES P4 | — | The simulator resolves a local chase inside the Turn it started. If chase rounds should use Turns, dawn gets closer. |
 | G9 | "Drop an item" with nothing carried | CORE-RULES P3 | `costChoice` | Early in the raid the party carries nothing, so this Cost is free. The Storyteller should pick a Cost that bites. |
-| G16 | Is a dropped item lost? | CORE-RULES P3 | `dropRule` | If "drop an item" means the item is gone, it is by far the harshest Cost: one Cost on the wrong roll turns a Win into a Partial (it decides about one Easy raid in ten). The other three Costs are mild. |
+| G16 | Is a dropped item lost? | CORE-RULES P3 | `dropRule` | RESOLVED by S3 (CORE-RULES 0.5): a dropped item falls where you are; picking it up costs that Entity its next action. |
 | G10 | Below d4 | CORE-RULES Carrying, Chase, P3 | — | Several effects make a die one size smaller; nothing says what is below a d4. The simulator floors at d4. |
 | G11 | Suspicion past the Limit | DESIGN Suspicion | — | A roll that adds +2 at one below the Limit loses the extra point. Harmless, but the book should say the track stops at the Limit. |
 | G12 | Who may roll at a single obstacle each Turn | CORE-RULES P4 | — | P4 gives every Entity one roll per Turn, so a big party can try the same lock four times in one Turn. The simulator allows it (each try risks Suspicion). |
 | G13 | Can two Entities take the same Castle Duty? | DESIGN Picks | — | Not stated. The simulator allows it. |
 | G14 | Where captives are held, and whether the rescue obstacle resets | DESIGN Captured | — | The simulator uses one lock-up per town (Sly, or Brawn the loud way, always watched) and a new rescue obstacle for each capture. |
-| G15 | Getting out of town costs nothing | CORE-RULES The raid | `exitRule` | Once the loot is in hand the party walks out with no roll unless the Limit or dawn has hit, so carrying furniture (no Mask, Nimble smaller) and late Suspicion cost almost nothing. Heisty lesson: losing must cost something even at the end; every scenario had 1–2 escape obstacles. |
+| G15 | Getting out of town costs nothing | CORE-RULES The raid | `exitRule` | RESOLVED by S4 (CORE-RULES 0.6): the way out is one watched obstacle, rolled by one Entity for the party. |
 
 ## What is modelled
 
@@ -209,18 +237,20 @@ gift E1:hidden +1.6 · gift E6:hidden +1.4 · gift E7:open +1.4 · gift E8:hidde
  "charges": 3,
  "overdrawSuspicion": 2,
  "lead": {
-  "localStart": 2,
+  "localStart": 1,
   "localEscape": 4,
   "finalStart": 2,
   "finalEscape": 6
  },
  "localMob": {
-  "base": 6,
+  "base": 10,
   "perSuspicion": 0.5,
   "max": 12
  },
- "finalMobPerExtraEntity": 1,
+ "finalMobPerExtraEntity": 0,
  "maxChaseRounds": 20,
+ "furyCap": 3,
+ "furyLambda": 0.25,
  "labels": {
   "easy": {
    "items": 3,
@@ -229,13 +259,14 @@ gift E1:hidden +1.6 · gift E6:hidden +1.4 · gift E7:open +1.4 · gift E8:hidde
    ],
    "limit": 10,
    "turns": 12,
-   "finalMob": 8,
-   "lockup": 8,
+   "finalMob": 10,
+   "lockup": 10,
    "exit": 6,
    "difficulty": {
-    "6": 0.4,
+    "6": 0.15,
     "8": 0.5,
-    "10": 0.1
+    "10": 0.3,
+    "12": 0.05
    },
    "obstacles": {
     "1": 0.5,
@@ -252,10 +283,10 @@ gift E1:hidden +1.6 · gift E6:hidden +1.4 · gift E7:open +1.4 · gift E8:hidde
     1,
     2
    ],
-   "limit": 8,
+   "limit": 11,
    "turns": 12,
-   "finalMob": 9,
-   "lockup": 8,
+   "finalMob": 11,
+   "lockup": 10,
    "exit": 8,
    "difficulty": {
     "6": 0.15,
@@ -273,14 +304,14 @@ gift E1:hidden +1.6 · gift E6:hidden +1.4 · gift E7:open +1.4 · gift E8:hidde
    "twoTraits": 0.6
   },
   "hard": {
-   "items": 5,
+   "items": 4,
    "essentials": [
     2
    ],
-   "limit": 6,
+   "limit": 12,
    "turns": 12,
-   "finalMob": 10,
-   "lockup": 10,
+   "finalMob": 11,
+   "lockup": 12,
    "exit": 8,
    "difficulty": {
     "8": 0.4,
