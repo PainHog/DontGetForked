@@ -2,7 +2,8 @@
 /**
  * Runs the simulator and writes sim/REPORT.md (sim/README.md §7).
  *
- *   node sim/run.mjs                       # baseline + presets + sweeps → sim/REPORT.md
+ *   node sim/run.mjs                       # P0 (rules as written) + package table + sweeps → sim/REPORT.md
+ *   node sim/run.mjs --package T2          # the same for package T2 → sim/REPORT-T2.md
  *   node sim/run.mjs --runs 2000 --sweep-runs 500 --seed 1
  *   node sim/run.mjs --numbers '{"labels":{"hard":{"limit":7}}}'   # try other numbers
  *   node sim/run.mjs --out sim/REPORT-x.md
@@ -15,7 +16,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeRng } from "./rng.mjs";
-import { PARAMS, PRESETS, NUMBERS, TARGETS, defaults } from "./params.mjs";
+import { PARAMS, PRESETS, NUMBERS, TARGETS, PACKAGES, defaults } from "./params.mjs";
 import { makeParty, ROSTER, DUTIES } from "./entities.mjs";
 import { makeTown } from "./town.mjs";
 import { playRaid } from "./engine.mjs";
@@ -31,6 +32,16 @@ export function merge(base, over) {
   if (typeof over !== "object" || Array.isArray(over)) return over;
   const out = Array.isArray(base) ? [...base] : { ...base };
   for (const [k, v] of Object.entries(over)) out[k] = k in out && typeof out[k] === "object" && !Array.isArray(out[k]) ? merge(out[k], v) : v;
+  return out;
+}
+
+/** Merge numbers, replacing (not merging) each label's Difficulty mix. */
+export function mergeNumbers(base, over) {
+  const out = merge(base, over);
+  for (const src of [over]) {
+    if (!src || !src.labels) continue;
+    for (const [k, v] of Object.entries(src.labels)) if (v && v.difficulty) out.labels[k].difficulty = { ...v.difficulty };
+  }
   return out;
 }
 
@@ -177,14 +188,27 @@ function sweepRow(name, M, B) {
   return [name, d("easy"), d("standard"), d("hard"), pct(M.byLabel.hard.forked), num(M.byLabel.hard.captures), pct(M.rolls.mask, 0)];
 }
 
-export function writeReport({ cmd, base, baseM, presets, sweeps, numbers, runs, sweepRuns, out }) {
+export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, runs, sweepRuns, out, packages, furniture }) {
   const lines = [];
-  lines.push("# Don't Get Forked — simulator report (rough, core rules draft 0.2)", "");
+  lines.push(`# Don't Get Forked — simulator report: ${pkg} (rough, core rules draft 0.2)`, "");
   lines.push(`Command: \`${cmd}\``, "");
-  lines.push(`${runs} raids per label × party size (3, 4, 5 Entities) for the baseline; ${sweepRuns} for the sweeps. Same seed → same report.`, "");
-  lines.push("**Everything here runs on placeholder content** (eight anonymous Entities, generated towns, placeholder Gifts, Duties, Weaknesses and Tells; see `sim/entities.mjs`). The numbers measure the core rules and the starting numbers in `sim/params.mjs`, not the finished game.", "");
+  lines.push(`${runs} raids per label × party size (3, 4, 5 Entities) for the package table and the detail below; ${sweepRuns} for the presets and sweeps. Same seed → same report.`, "");
+  lines.push("**Everything here runs on placeholder content** (eight anonymous Entities, generated towns, placeholder Gifts, Duties, Weaknesses and Tells; see `sim/entities.mjs`). The numbers measure the core rules and the numbers in `sim/params.mjs`, not the finished game.", "");
 
-  lines.push("## Against the targets (baseline)", "");
+  if (packages) {
+    lines.push("## Packages", "");
+    lines.push(Object.entries(PACKAGES).map(([k, p]) => `- **${k}**: ${p.title}.`).join("\n"), "");
+    const T = TARGETS;
+    const head = ["Package", "Easy win", "Standard win", "Hard win", "Forked E · S · H", "Hard captures", "Grand Year when tried", "Trouble", "Mask (raid rolls)", "Spend ≥ ½", "Hard win, 3 · 4 · 5 Entities"];
+    const trow = ["**target**", "87–93%", "72–78%", "55–60%", "≤2 · 3–7 · 8–12%", `≥ ${T.hardCaptures}`, "~50%", "10–20%", "≥ 25%", "≥ 50%", "close together"];
+    const prow = Object.entries(packages).map(([k, M]) => [k, pct(M.byLabel.easy.win), pct(M.byLabel.standard.win), pct(M.byLabel.hard.win),
+      `${pct(M.byLabel.easy.forked)} · ${pct(M.byLabel.standard.forked)} · ${pct(M.byLabel.hard.forked)}`, num(M.byLabel.hard.captures),
+      pct(M.furniture.grandGivenWent), pct(M.rolls.trouble), pct(M.rolls.maskRaid), pct(M.spendHalf),
+      SIZES.map((n) => pct(M.bySize.hard[n].win, 0)).join(" · ")]);
+    lines.push(table(head, [trow, ...prow]), "");
+  }
+
+  lines.push(`## ${pkg} against the targets`, "");
   lines.push(table(["Measure", "Target", "Simulated", ""], targetRows(baseM)), "");
 
   lines.push("## Results by label and party size", "");
@@ -199,6 +223,18 @@ export function writeReport({ cmd, base, baseM, presets, sweeps, numbers, runs, 
   const R = baseM.rolls;
   lines.push(table(["Rolls per raid", "Success", "Cost", "Trouble", "Crit (doubles)", "Crit (beat 4)", "Mask", "Monster", "Monster shows (per Monster roll)", "Charges spent (mean)"],
     [[num(R.perRaid, 1), pct(R.success), pct(R.cost), pct(R.trouble), pct(R.critDoubles), pct(R.critBeat4), pct(R.mask), pct(R.monster), pct(R.showPerMonster), pct(baseM.spendMean)]]), "");
+
+  lines.push("**Critical candidates** (share of all rolls; the Critical rule is open and has no effect yet):", "");
+  const mg = base.rec.rollTotals();
+  const beat = (k) => Object.entries(mg.margin).filter(([m]) => Number(m) >= k).reduce((a, [, v]) => a + v, 0) / mg.n;
+  lines.push(table(["Doubles on a Success", "Beat by 4", "Beat by 5", "Beat by 6", "Beat by 7", "Beat by 8"], [[pct(mg.critDoubles / mg.n), pct(beat(4)), pct(beat(5)), pct(beat(6)), pct(beat(7)), pct(beat(8))]]), "");
+
+  if (furniture) {
+    lines.push("## Furniture: how the party's appetite changes the gamble", "");
+    lines.push(table(["Policy", "Goes for it", "Grand Year when tried", "Tried and lost a Win it had", "Easy win", "Standard win", "Hard win"],
+      Object.entries(furniture).map(([k, M]) => [k, pct(M.furniture.went), pct(M.furniture.grandGivenWent), pct(M.furniture.dropBelowWin), pct(M.byLabel.easy.win), pct(M.byLabel.standard.win), pct(M.byLabel.hard.win)])), "");
+    lines.push("\"Tried and lost a Win it had\" pairs each raid with the same raid (same party, town and dice seed) played with `furniturePolicy = never`.", "");
+  }
 
   lines.push("## Presets: every ambiguous rule for or against the players", "");
   lines.push("Where a number moves a lot between generous and strict, the rules are underspecified there.", "");
@@ -235,7 +271,7 @@ export function writeReport({ cmd, base, baseM, presets, sweeps, numbers, runs, 
 // ---------------------------------------------------------------- CLI
 
 function args(argv) {
-  const a = { runs: 2000, sweepRuns: 500, seed: 1, numbers: null, out: "sim/REPORT.md", noSweeps: false };
+  const a = { runs: 2000, sweepRuns: 500, seed: 1, numbers: null, out: null, noSweeps: false, noPackages: false, pkg: "P0" };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     if (k === "--runs") a.runs = Number(argv[++i]);
@@ -244,18 +280,34 @@ function args(argv) {
     else if (k === "--numbers") a.numbers = JSON.parse(argv[++i]);
     else if (k === "--out") a.out = argv[++i];
     else if (k === "--no-sweeps") a.noSweeps = true;
+    else if (k === "--no-packages") a.noPackages = true;
+    else if (k === "--package") a.pkg = argv[++i];
   }
   return a;
 }
 
 async function main() {
   const a = args(process.argv.slice(2));
-  const numbers = merge(NUMBERS, a.numbers);
-  const P = defaults();
+  const pk = PACKAGES[a.pkg];
+  if (!pk) throw new Error(`unknown package ${a.pkg}; one of ${Object.keys(PACKAGES)}`);
+  const numbers = mergeNumbers(mergeNumbers(NUMBERS, pk.numbers), a.numbers);
+  const P = { ...defaults(), ...pk.params };
   const cfg = (params, runs) => runConfig({ params, numbers, runs, seed: a.seed });
   const base = cfg(P, a.runs);
   const never = cfg({ ...P, furniturePolicy: "never" }, a.runs);
   const baseM = metrics(base, never);
+  const furniture = { ifSafe: P.furniturePolicy === "ifSafe" ? baseM : metrics(cfg({ ...P, furniturePolicy: "ifSafe" }, a.runs), never) };
+  furniture.always = metrics(cfg({ ...P, furniturePolicy: "always" }, a.runs), never);
+  const packages = {};
+  if (!a.noPackages) {
+    for (const [k, p] of Object.entries(PACKAGES)) {
+      if (k === a.pkg && !a.numbers) { packages[k] = baseM; continue; }
+      const nb = mergeNumbers(NUMBERS, p.numbers);
+      const pp = { ...defaults(), ...p.params };
+      const run = (params) => runConfig({ params, numbers: nb, runs: a.runs, seed: a.seed });
+      packages[k] = metrics(run(pp), run({ ...pp, furniturePolicy: "never" }));
+    }
+  }
   const presets = {};
   const sweeps = [];
   if (!a.noSweeps) {
@@ -269,9 +321,10 @@ async function main() {
     }
   }
   const cmd = `node sim/run.mjs ${process.argv.slice(2).join(" ")}`.trim();
-  writeReport({ cmd, base, baseM, presets, sweeps, numbers, runs: a.runs, sweepRuns: a.sweepRuns, out: a.out });
+  const out = a.out || (a.pkg === "P0" ? "sim/REPORT.md" : `sim/REPORT-${a.pkg}.md`);
+  writeReport({ cmd, pkg: `${a.pkg} — ${pk.title}`, base, baseM, presets, sweeps, numbers, runs: a.runs, sweepRuns: a.sweepRuns, out, packages: a.noPackages ? null : packages, furniture });
   for (const r of targetRows(baseM)) console.log(r.join("  "));
-  console.log(`wrote ${a.out}`);
+  console.log(`wrote ${out}`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) main();

@@ -1,8 +1,20 @@
 # Rules simulator — method
 
-Nothing is simulated yet: the rules are not written. This file describes the method
-that worked on *Heisty Spideys*, so the simulator for Don’t Get Forked can be built the
-same way as soon as there are rules to test. Only `rng.mjs` exists so far.
+A first rough simulator exists for the core rules (`docs/CORE-RULES.md` draft 0.2), running
+on **placeholder content** (eight anonymous Entities, generated towns). Results:
+`sim/REPORT.md` (rules as written, with the package table) and `sim/REPORT-T2.md`; the
+findings in plain words are in `sim/FINDINGS.md`. This file describes the method that worked
+on *Heisty Spideys*, which the simulator follows.
+
+```
+node sim/run.mjs                      # P0 + package table + presets + sweeps → sim/REPORT.md (~2 min)
+node sim/run.mjs --package T2         # the same for a package → sim/REPORT-T2.md
+node sim/tune.mjs --params '{…}'      # search label numbers toward the targets
+npm test                              # includes test/sim.test.mjs
+```
+
+Until the rulebook exists, the dice rules live in `sim/rules.mjs`; they move to
+`module/logic/` when the book's rolling chapter is written (§1, §8).
 
 **Why simulate.** On Heisty Spideys the rulebook read as tense and risky, but the
 simulator showed that, as written, a party almost could not lose: the dice pools were far
@@ -98,16 +110,17 @@ verification playtest confirms the fixes at the table.
 hand-worked examples with fixed dice, the character generator’s legality, and each
 package’s rule switches.
 
-## Files (to be created)
+## Files
 | File | What |
 |---|---|
-| `rng.mjs` | Seeded RNG (mulberry32 + FNV-1a stream derivation). **Exists.** |
-| `params.mjs` | Every judgement call: defaults, alternatives, docs, refs; presets; clarified baseline; packages |
-| `character.mjs` | Legal random character generation + validator |
-| `scenarios.mjs` | The book’s ready-to-play scenarios as data |
-| `engine.mjs` | Plays one scenario by the rules text |
-| `recorder.mjs` | Stats + issue detectors |
-| `notes.mjs` | Rule gaps found; what is / isn’t modelled |
-| `run.mjs` | CLI → `REPORT.md` |
-| `packages.mjs` | CLI → package comparison (`BALANCE.md`) |
-| `playtests/` | Agent playtest logs |
+| `rng.mjs` | Seeded RNG (mulberry32 + FNV-1a stream derivation) |
+| `rules.mjs` | Core dice rules: die steps, P2 bands, Critical candidates, the Monster showing, exact odds, Lead moves |
+| `params.mjs` | Every judgement call (rule gaps, player policies, placeholder content) with defaults, alternatives, docs and refs; presets; the tunable numbers; the agreed targets; packages P0/T1/T2 |
+| `entities.mjs` | Placeholder Entities E1–E8 (guardrail 1 arrangements, standard-effect abilities, Gifts, Weakness type) + validator + party generator |
+| `town.mjs` | Random-table town generator (obstacles, locations, list, furniture, lock-up) and the placeholder chase table |
+| `engine.mjs` | Plays one raid by the core rules: Turns, obstacles, group checks, Costs, Suspicion, local chases, capture and rescue, the final flight, results |
+| `recorder.mjs` | Counts and issue detectors |
+| `notes.mjs` | Rule gaps found while building the simulator; what is and isn't modelled |
+| `run.mjs` | CLI → `REPORT.md` / `REPORT-<package>.md` |
+| `tune.mjs` | Searches label numbers toward the targets (a proposal tool, not a decision) |
+| `FINDINGS.md` | The first simulation's findings in plain words |
