@@ -29,6 +29,12 @@ export const PARAMS = {
     doc: "mixed = one of the four at random (dropping an item only if someone carries one); suspicion = always Suspicion +1; lenient = always the mildest (drop an item when nobody carries one, which costs nothing).",
     ref: "CORE-RULES P3",
   },
+  dropRule: {
+    kind: "rule", default: "lost", values: ["lost", "recover"],
+    title: "What \"drop an item\" means",
+    doc: "lost = the item is gone for this raid; recover = it falls where you are and picking it up costs that Entity its next action.",
+    ref: "CORE-RULES P3 (drop an item)",
+  },
   loudRule: {
     kind: "rule", default: "suspicion", values: ["suspicion", "witness", "both", "none"],
     title: "What \"the loud way\" does",
@@ -122,8 +128,9 @@ export function defaults() {
 
 /** Every ambiguous rule read for (generous) or against (strict) the players. */
 export const PRESETS = {
-  generous: { critEffect: "lead2", costChoice: "lenient", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "free", raiseCap: "perDie", captiveItems: "kept" },
-  strict: { critEffect: "none", costChoice: "suspicion", loudRule: "both", openApproach: "switch", overdrawAtLimit: "forbidden", raiseCap: "perRoll", captiveItems: "lost" },
+  generous: { critEffect: "lead2", costChoice: "lenient", dropRule: "recover", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "free", raiseCap: "perDie", captiveItems: "kept", exitRule: "free" },
+  // costChoice "mixed" keeps the harsh "drop an item" Cost in play ("suspicion" removes it and is easier at Easy).
+  strict: { critEffect: "none", costChoice: "mixed", dropRule: "lost", loudRule: "both", openApproach: "switch", overdrawAtLimit: "forbidden", raiseCap: "perRoll", captiveItems: "lost", exitRule: "gate" },
 };
 
 /**
@@ -169,4 +176,18 @@ export const TARGETS = {
   mask: 0.25,
   monster: 0.25,
   outlier: 0.025,
+};
+
+/**
+ * Packages (sim/README.md §4): rule readings + numbers compared side by side.
+ *  - P0: the starting numbers above, rules as written (defaults).
+ *  - T1: numbers tuned toward the targets (sim/tune.mjs), rules as written.
+ *  - T2: two proposed rule fixes (a roll to get out of town; a dropped item can
+ *        be picked up again) with numbers tuned for them.
+ * Every number and both fixes are proposals for Richard, not decisions.
+ */
+export const PACKAGES = {
+  P0: { title: "Starting numbers, rules as written", params: {}, numbers: {} },
+  T1: { title: "Tuned numbers, rules as written", params: {}, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 13}, "hard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 12, "finalMob": 14}}} },
+  T2: { title: "Tuned numbers + exit roll + recoverable drops (proposed)", params: { exitRule: "gate", dropRule: "recover" }, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 8, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}, "hard": {"difficulty": {"8": 0.4, "10": 0.45, "12": 0.15}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}}} },
 };

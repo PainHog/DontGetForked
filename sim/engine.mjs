@@ -460,6 +460,7 @@ function executeRoll(S, m, plan, phase) {
     phase, band: b, second: plan.second, show,
     critDoubles: isCritical(t, s, plan.difficulty, "doubles"),
     critBeat4: isCritical(t, s, plan.difficulty, "beat4"),
+    margin: t + s - plan.difficulty,
     entity: m.id,
   });
   return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind };
@@ -476,6 +477,7 @@ function pickCost(S, m) {
   S.rec.count(`cost:${kind}`);
   if (kind === "drop") {
     if (items.length === 0) { S.rec.detect("\"drop an item\" Cost with nothing carried (costs nothing)"); return kind; }
+    if (P.dropRule === "recover") { m.loseTurn = true; return kind; } // picking it up again takes the next action
     const holders = S.party.filter((h) => h.status === "active" && h.items.length);
     const h = S.rng.pick(holders);
     h.items.splice(S.rng.int(0, h.items.length - 1), 1);

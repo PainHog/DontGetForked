@@ -90,6 +90,18 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 12. **Foundry.** Online version from day one? The recommendation from Heisty is yes, automation-first, with the rules engine designed so every rule is automatable.
 13. **Name check.** Search for existing products called "Don't Get Forked" before committing to store pages or art with the title.
 
+### Raised by the first simulation (2026-10-04; details in `sim/FINDINGS.md`)
+Not decisions. These need Richard's call before the core rules are final:
+- **S1.** What happens once Suspicion is at the Limit: overdraw and the Monster die cost nothing in the final flight (worth 12 points at Standard and Hard).
+- **S2.** Mask or Monster isn't a real choice yet: always-Monster costs 1–2 points.
+- **S3.** Is a dropped item lost or recoverable? (14 points at Easy.)
+- **S4.** Getting out of town needs no roll, so carrying and late Suspicion barely matter.
+- **S5.** Bigger parties do worse (Hard 63 / 58 / 47% for 3 / 4 / 5 Entities).
+- **S6.** Captures are rare (0.11 per Hard raid against ≥ 0.3).
+- **S7.** Furniture is safe for a cautious party and a trap for a greedy one.
+- **S8.** The Critical rule and effect (beat by 7 or 8 lands in the 10–20% band).
+- **S9.** The proposed numbers (list sizes, Difficulty mixes, Limits, mob Difficulties, Lead numbers) in `sim/FINDINGS.md`.
+
 ## Rights note: classic monsters (not legal advice)
 - **Public-domain sources:** these literary characters are in the public domain:
   - Dracula (Bram Stoker, 1897)

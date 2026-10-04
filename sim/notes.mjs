@@ -23,6 +23,8 @@ export const GAPS = [
     note: "The simulator resolves a local chase inside the Turn it started. If chase rounds should use Turns, dawn gets closer." },
   { id: "G9", title: "\"Drop an item\" with nothing carried", ref: "CORE-RULES P3", param: "costChoice",
     note: "Early in the raid the party carries nothing, so this Cost is free. The Storyteller should pick a Cost that bites." },
+  { id: "G16", title: "Is a dropped item lost?", ref: "CORE-RULES P3", param: "dropRule",
+    note: "If \"drop an item\" means the item is gone, it is by far the harshest Cost: one Cost on the wrong roll turns a Win into a Partial (it decides about one Easy raid in ten). The other three Costs are mild." },
   { id: "G10", title: "Below d4", ref: "CORE-RULES Carrying, Chase, P3", param: null,
     note: "Several effects make a die one size smaller; nothing says what is below a d4. The simulator floors at d4." },
   { id: "G11", title: "Suspicion past the Limit", ref: "DESIGN Suspicion", param: null,
