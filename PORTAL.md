@@ -1,7 +1,7 @@
-Now: Settling the table: how long a session runs, the tone, and how much the Storyteller does.
-Next: The art direction, the online version, checking the name, and approving the one-page core rules.
-Number: Design decisions made = 47
-Number: Open design questions = 4
+Now: Choosing the art direction: the look of the book and how the monsters are drawn.
+Next: The online version, checking the name, and approving the one-page core rules.
+Number: Design decisions made = 48
+Number: Open design questions = 3
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->
@@ -21,7 +21,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Settle the remaining rule gaps
 - [ ] Approve the core rules
 - [x] Plan the campaign
-- [ ] Settle the table: players, session length and tone
+- [x] Settle the table: players, session length and tone
 - [ ] Set the art direction
 - [ ] Decide on the online version
 - [ ] Check the name
