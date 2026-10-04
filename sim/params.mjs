@@ -78,10 +78,10 @@ export const PARAMS = {
     ref: "CORE-RULES 0.4 Rolling 4 (S2)",
   },
   exitRule: {
-    kind: "rule", default: "free", values: ["free", "gate", "gateSingle", "gateCarriers"],
+    kind: "rule", default: "gateSingle", values: ["gateSingle", "free", "gate", "gateCarriers"],
     title: "Getting out of town",
     doc: "free = leaving takes a Turn and no roll (as written); gate = the way out is a watched group obstacle (Sly or Nimble, or Brawn the loud way) at the label's exit Difficulty; gateSingle = the same obstacle, but one Entity's roll gets everyone out; gateCarriers = only furniture carriers must roll (a group check), everyone else walks out.",
-    ref: "CORE-RULES The raid (nothing stands between the last location and the woods unless the Limit or dawn hits)",
+    ref: "CORE-RULES 0.6 Getting out (S4: gateSingle is the rule; free was draft 0.5)",
   },
   monsterPolicy: {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
