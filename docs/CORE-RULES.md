@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.7)
+# Don't Get Forked — core rules (draft 0.8)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -43,10 +43,10 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1].
 
 ## Chases
-- **The Lead track:** start with a small Lead [sim]. Each round, roll against the mob's Difficulty [sim]: in a local chase it rises with Suspicion; in the final flight it is set by the label and doesn't change with party size [S5]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
+- **The Lead track:** start with a small Lead [sim; a local chase starts at 1, S6]. Each round, roll against the mob's Difficulty [sim]: in a local chase it rises with Suspicion; in the final flight it is set by the label and doesn't change with party size [S5]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
 - **The ground:** each round, roll on a d6 chase table. The result lists the traits that work, always including one that isn't Nimble.
 - **Weakness:** once the mob brings your Weakness, you roll your trait one size smaller in the chase.
-- **Local chase:** cornered means **captured**. You're held at a location; the party can rescue you (it becomes an obstacle and costs Turns), and once per Turn you may try to slip free (a failed attempt: Suspicion +1). Anyone still held when the party leaves town is left behind.
+- **Local chase:** cornered means **captured**. You're held at a location; the party can rescue you (it becomes an obstacle and costs Turns), and once per Turn you may try to slip free; only a Success frees you [S6] (Trouble: Suspicion +1). Anyone still held when the party leaves town is left behind.
 - **Final flight:** everyone rolls each round. If successes outnumber trouble the Lead rises 1; if trouble outnumbers successes it falls 1. **Escape** = home with the goods. **Cornered** = **forked**: the monsters are killed and the raid is lost.
 - **Once the hunt is on [S1]:** the Mask is off, and everyone rolls the Monster die. An Entity may still overdraw, but its Weakness is then in play for the rest of the flight (its trait one size smaller), and once its Weakness is in play it can't overdraw again.
 

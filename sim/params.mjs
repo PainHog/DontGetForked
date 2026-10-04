@@ -84,9 +84,9 @@ export const PARAMS = {
     ref: "DESIGN Suspicion package; Chase",
   },
   slipRule: {
-    kind: "rule", default: "cost", values: ["cost", "success"],
-    title: "What frees a captive who tries to slip free (S6 candidate)",
-    doc: "cost = a Success or a Cost (the roll succeeds); success = only a clean Success.",
+    kind: "rule", default: "success", values: ["success", "cost"],
+    title: "What frees a captive who tries to slip free (S6)",
+    doc: "success = the rule since S6: only a clean Success; cost = draft 0.7: a Success or a Cost.",
     ref: "DESIGN Captured",
   },
   exitRule: {
@@ -177,7 +177,7 @@ export const PRESETS = {
 export const NUMBERS = {
   charges: 3,
   overdrawSuspicion: 2,
-  lead: { localStart: 2, localEscape: 4, finalStart: 2, finalEscape: 6 },
+  lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6: local chases start at 1 (draft 0.7: 2)
   localMob: { base: 6, perSuspicion: 0.5, max: 12 },
   finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
   maxChaseRounds: 20,
@@ -185,17 +185,17 @@ export const NUMBERS = {
   furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
   labels: {
     easy: {
-      items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 8, lockup: 8, exit: 6,
+      items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 8, lockup: 10, exit: 6,
       difficulty: { 6: 0.4, 8: 0.5, 10: 0.1 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 4, essentials: [1, 2], limit: 8, turns: 12, finalMob: 9, lockup: 8, exit: 8,
+      items: 4, essentials: [1, 2], limit: 8, turns: 12, finalMob: 9, lockup: 10, exit: 8,
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 5, essentials: [2], limit: 6, turns: 12, finalMob: 10, lockup: 10, exit: 8,
+      items: 5, essentials: [2], limit: 6, turns: 12, finalMob: 10, lockup: 12, exit: 8,
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },
