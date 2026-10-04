@@ -39,6 +39,16 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     furnitureCarried: null,
     skipped: new Set(),
   };
+  // furnitureRule "hardLoc"/"both" (S7 candidate): the furniture's location is 2 harder (at most 12).
+  if (P.furnitureRule === "hardLoc" || P.furnitureRule === "both") for (const o of town.furnitureLoc.obstacles) o.difficulty = Math.min(12, o.difficulty + 2);
+  // furniturePlace "onList" (S7 candidate): the piece stands at one of the list's locations, behind one extra
+  // obstacle the party may take on once that location's loot is in hand; no separate trip.
+  if (P.furniturePlace === "onList") {
+    const host = rng.pick(town.locations);
+    const fl = town.furnitureLoc;
+    host.furniturePending = { size: fl.furniture.size, obstacle: fl.obstacles[fl.obstacles.length - 1] };
+    fl.done = true;
+  }
   for (const m of party) {
     m.status = "active";
     m.items = [];
@@ -60,6 +70,8 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     if (S.at !== target) {
       // P4: each Turn, every Entity either rolls once or moves.
       S.turn++;
+      // furnitureRule "slow"/"noisySlow" (S7 candidate): carrying furniture, a move takes two Turns.
+      if (S.furnitureCarried && (S.P.furnitureRule === "slow" || S.P.furnitureRule === "noisySlow")) { S.turn++; noisyFurniture(S); if (S.phase !== "raid") break; }
       S.at = target;
       arrive(S, target);
       if (S.phase !== "raid") break;
@@ -71,8 +83,17 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     workLocation(S, target);
     if (S.phase !== "raid") break;
     captivesAct(S);
+    if (S.phase !== "raid") break;
+    noisyFurniture(S);
   }
   return summarise(S);
+}
+
+/** furnitureRule "noisy"/"both" (S7 candidate): +1 Suspicion at the end of each Turn a piece is carried in town. */
+function noisyFurniture(S) {
+  if (!S.furnitureCarried || !["noisy", "both", "noisySlow"].includes(S.P.furnitureRule)) return;
+  addSusp(S, 1, "furniture");
+  if (limitHit(S)) finalFlight(S, "limit");
 }
 
 // ---------------------------------------------------------------- helpers
@@ -279,11 +300,23 @@ function completeLocation(S, loc) {
   }
   loc.done = true;
   const act = active(S);
-  for (const it of loc.items) {
-    const holder = act.reduce((a, b) => (b.items.length < a.items.length ? b : a), act[0]);
-    holder.items.push(it);
+  if (!loc.itemsTaken) {
+    loc.itemsTaken = true;
+    for (const it of loc.items) {
+      const holder = act.reduce((a, b) => (b.items.length < a.items.length ? b : a), act[0]);
+      holder.items.push(it);
+    }
   }
-  if (loc.furniture) {
+  if (loc.furniturePending && wantsFurnitureHere(S, loc)) {
+    // furniturePlace "onList": take on the extra obstacle; the piece is carried once it is cleared.
+    loc.obstacles.push(loc.furniturePending.obstacle);
+    loc.furniture = { size: loc.furniturePending.size };
+    loc.furniturePending = null;
+    loc.done = false;
+    S.wentForFurniture = true;
+    return;
+  }
+  if (loc.furniture && !S.furnitureCarried) {
     // Carrying (DESIGN): Bulky = one carrier, Huge = two. Policy: the Entities with the smallest Nimble carry.
     const n = loc.furniture.size === "huge" ? 2 : 1;
     const carriers = [...act].sort((a, b) => a.ent.dice.nimble - b.ent.dice.nimble).slice(0, n);
@@ -293,6 +326,20 @@ function completeLocation(S, loc) {
       S.furnitureCarried = piece;
     }
   }
+}
+
+/**
+ * Policy for furniturePlace "onList": "always" takes it whenever there are carriers;
+ * "ifSafe" wants Suspicion to spare (headroom ≥ 3) and Turns for the rest of the list
+ * plus 2; "never" never does.
+ */
+function wantsFurnitureHere(S, loc) {
+  const pol = S.P.furniturePolicy;
+  if (pol === "never") return false;
+  if (active(S).length < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
+  if (pol === "always") return true;
+  const rest = S.town.locations.filter((l) => !l.done && l !== loc).reduce((a, l) => a + locationNeed(S, l), 0);
+  return S.limit - S.susp >= 3 && rest + 1 + 2 + 2 <= turnsLeft(S);
 }
 
 function dropFurniture(S, why) {
