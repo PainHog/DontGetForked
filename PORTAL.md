@@ -1,5 +1,5 @@
-Now: Early design, settling the core rules with Richard.
-Next: Deciding the engine: reuse the proven dice system from Richard's first game or build a new one.
+Now: Deciding the engine: reuse the proven dice system from Richard's first game or build a new one.
+Next: Choosing the Entities: which monsters, how many, and what makes each one play differently.
 Number: Design decisions made = 2
 Number: Open design questions = 13
 
