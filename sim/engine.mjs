@@ -552,7 +552,7 @@ function localChase(S, m) {
     const plan = planRoll(S, m, ctx);
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
-    addSusp(S, r.suspGain, "chase");
+    if (S.P.chaseSusp === "yes") addSusp(S, r.suspGain, "chase"); // chaseSusp "no" (S6 candidate): chase rolls don't raise Suspicion
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
     if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
     if (lead <= 0) return capture(S, m);
@@ -587,7 +587,8 @@ function captivesAct(S) {
     if (plan.value <= 0.05) continue;
     const r = executeRoll(S, m, plan, "slip");
     addSusp(S, r.suspGain, "slip");
-    if (r.band !== "trouble") freeCaptive(S, m, "slipped free");
+    // slipRule (S6 candidate): "cost" = a Success or a Cost frees you; "success" = only a Success does.
+    if (r.band === "success" || (r.band === "cost" && S.P.slipRule === "cost")) freeCaptive(S, m, "slipped free");
     if (limitHit(S)) return finalFlight(S, "limit");
   }
 }

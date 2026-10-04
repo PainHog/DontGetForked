@@ -77,6 +77,18 @@ export const PARAMS = {
     doc: "plus2 = the rule since S2 (CORE-RULES 0.4): the Monster shows when it rolls higher than the trait die, +2 Suspicion; plus1 = draft 0.3 (+1); tie = +1, shows when at least as high; d8 = +1, the Monster die is a d8; maskSafe = +1, and trouble on a Mask roll never gets you caught.",
     ref: "CORE-RULES 0.4 Rolling 4 (S2)",
   },
+  chaseSusp: {
+    kind: "rule", default: "yes", values: ["yes", "no"],
+    title: "Do local-chase rolls raise Suspicion? (S6 candidate)",
+    doc: "yes = as written: trouble and the Monster showing raise Suspicion in a chase like anywhere else; no = you are already caught, so chase rolls only move the Lead.",
+    ref: "DESIGN Suspicion package; Chase",
+  },
+  slipRule: {
+    kind: "rule", default: "cost", values: ["cost", "success"],
+    title: "What frees a captive who tries to slip free (S6 candidate)",
+    doc: "cost = a Success or a Cost (the roll succeeds); success = only a clean Success.",
+    ref: "DESIGN Captured",
+  },
   exitRule: {
     kind: "rule", default: "gateSingle", values: ["gateSingle", "free", "gate", "gateCarriers"],
     title: "Getting out of town",
