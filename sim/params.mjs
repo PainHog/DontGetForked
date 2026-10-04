@@ -48,9 +48,9 @@ export const PARAMS = {
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
-    kind: "rule", default: "free", values: ["free", "forbidden"],
-    title: "Overdraw once Suspicion is at the Limit",
-    doc: "free = nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight.",
+    kind: "rule", default: "free", values: ["free", "forbidden", "weakness", "fury"],
+    title: "Overdraw (and Suspicion triggers) once the hunt is on",
+    doc: "free = nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap).",
     ref: "CORE-RULES Abilities (overdraw costs Suspicion +2; the track can't go higher)",
   },
   raiseCap: {
@@ -145,6 +145,8 @@ export const NUMBERS = {
   localMob: { base: 6, perSuspicion: 0.5, max: 12 },
   finalMobPerExtraEntity: 1, // mob Difficulty + this for each Entity beyond 4 (fewer: minus)
   maxChaseRounds: 20,
+  furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
+  furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
   labels: {
     easy: {
       items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 8, lockup: 8, exit: 6,
