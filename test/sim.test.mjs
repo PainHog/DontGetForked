@@ -73,10 +73,11 @@ test("placeholder roster keeps guardrail 1 (one each of d4–d12) with distinct 
   assert.equal(arr.size, 8);
 });
 
-test("a party never has duplicate Entities", () => {
+test("a party never has duplicate Entities or Castle Duties (R8)", () => {
   for (let i = 0; i < 50; i++) {
     const p = makeParty(makeRng(1, "party", i), 5, 3);
     assert.equal(new Set(p.map((m) => m.id)).size, 5);
+    assert.equal(new Set(p.map((m) => m.duty)).size, 5);
   }
 });
 

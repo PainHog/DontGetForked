@@ -68,15 +68,16 @@ export function validateEntity(e) {
 
 /**
  * A party of `n` distinct Entities (no duplicates), each with a random Gift and
- * a random Castle Duty (two Entities may share a Duty: the rules don't say).
+ * a Castle Duty no one else in the party has (R8).
  */
 export function makeParty(rng, n, chargesEach) {
   const picks = rng.shuffle(ROSTER).slice(0, n);
-  return picks.map((e) => ({
+  const duties = rng.shuffle(DUTIES); // R8: no two Entities in a party take the same Castle Duty
+  return picks.map((e, k) => ({
     ent: e,
     id: e.id,
     gift: rng.pick(e.giftOptions),
-    duty: rng.pick(DUTIES),
+    duty: duties[k],
     charges: chargesEach,
     chargesStart: chargesEach,
     status: "active", // active | captured | home | forked | left
