@@ -89,6 +89,18 @@ export const PARAMS = {
     doc: "success = the rule since S6: only a clean Success; cost = draft 0.7: a Success or a Cost.",
     ref: "DESIGN Captured",
   },
+  furnitureRule: {
+    kind: "rule", default: "base", values: ["base", "hardLoc", "noisy", "both", "slow", "noisySlow"],
+    title: "What makes furniture risky (S7 candidates)",
+    doc: "base = carrying only (no Mask, Nimble one size smaller); hardLoc = the furniture's location is 2 harder; noisy = +1 Suspicion at the end of each Turn a piece is carried in town; both = hardLoc + noisy; slow = while carrying, a move takes two Turns; noisySlow = noisy + slow.",
+    ref: "DESIGN Furniture; S7",
+  },
+  furniturePlace: {
+    kind: "rule", default: "separate", values: ["separate", "onList"],
+    title: "Where the furniture is (S7 candidates)",
+    doc: "separate = its own location, a separate trip (as generated); onList = it stands at one of the list's locations behind one extra obstacle, so the party decides mid-raid whether to take it and carry it for the rest of the night.",
+    ref: "DESIGN Furniture; S7",
+  },
   exitRule: {
     kind: "rule", default: "gateSingle", values: ["gateSingle", "free", "gate", "gateCarriers"],
     title: "Getting out of town",
