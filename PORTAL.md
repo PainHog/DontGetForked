@@ -1,7 +1,7 @@
-Now: Choosing the starting numbers for each difficulty level (how much suspicion the town tolerates, how fierce the mob is) from the simulator's results.
+Now: Settling the last rule gaps the simulator found, starting with what a monster's "secret way in" power does.
 Next: Approving the one-page core rules, then deciding the campaign, the table (session length and tone), the art direction and the online version.
-Number: Design decisions made = 43
-Number: Open design questions = 6
+Number: Design decisions made = 44
+Number: Open design questions = 7
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->
@@ -16,7 +16,9 @@ Number: Simulated raids per balance check = 18000
 - [x] Design getting caught and the chase
 - [x] Write the one-page core rules
 - [x] Build the first balance simulation
-- [ ] Settle the simulator's findings (8 of 9 done)
+- [x] Settle the simulator's findings
+- [x] Set the starting numbers for each difficulty level
+- [ ] Settle the remaining rule gaps
 - [ ] Approve the core rules
 - [ ] Plan the campaign
 - [ ] Settle the table: players, session length and tone
