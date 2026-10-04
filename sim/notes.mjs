@@ -6,7 +6,7 @@
 
 export const GAPS = [
   { id: "G1", title: "What a Critical does", ref: "CORE-RULES Rolling 3", param: "critEffect",
-    note: "The Critical rule itself is open (doubles vs beat by 4), and no effect is given. With \"good results never lower Suspicion\", a Critical needs some other reward, or it should be dropped." },
+    note: "RESOLVED by S8 (CORE-RULES 0.10): a Success on doubles; +2 Lead in a chase, otherwise one spent charge back." },
   { id: "G2", title: "What \"the loud way\" does", ref: "DESIGN Suspicion package", param: "loudRule",
     note: "Obstacles list a loud option, but its cost is never stated (+1 Suspicion always? counts as witnessed?)." },
   { id: "G3", title: "What \"open an approach nobody else can take\" does", ref: "CORE-RULES Abilities", param: "openApproach",
