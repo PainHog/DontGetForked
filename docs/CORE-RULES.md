@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.4)
+# Don't Get Forked — core rules (draft 0.5)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -17,7 +17,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 2. **Choose the second die:** the **Mask d6** (passing as human) or the **Monster d10** (letting it out).
 3. **Add the two dice** [P2] and compare the total with the Difficulty **[P1: 6 easy · 8 standard · 10 hard · 12 daunting]**:
    - **Success:** the total meets the Difficulty.
-   - **Cost:** 1–2 short. You do it, at a cost **[P3: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**.
+   - **Cost:** 1–2 short. You do it, at a cost **[P3: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**. A dropped item falls where you are; picking it up costs that Entity its next action [S3].
    - **Trouble:** 3 or more short. It doesn't happen, Suspicion +1, and witnesses catch you.
    - **Critical:** open. The simulator compares "a success on doubles" with "beat the Difficulty by 4".
 4. **The Monster shows** if the Monster die rolls higher than the trait die: Suspicion +2 [S2].
@@ -64,7 +64,7 @@ Each Entity left behind drops the result one step (Bust is the floor short of Fo
 |---|---|---|---|
 | P1 | Difficulty ladder | 6 easy · 8 standard · 10 hard · 12 daunting | approved 2026-10-04 |
 | P2 | Result bands | Success ≥ Difficulty; Cost 1–2 short; Trouble 3+ short | approved 2026-10-04 |
-| P3 | What a Cost costs | Storyteller picks: Suspicion +1, drop an item, lose a Turn, or next roll one size smaller | approved 2026-10-04 |
+| P3 | What a Cost costs | Storyteller picks: Suspicion +1, drop an item (picking it up costs your next action, S3), lose a Turn, or next roll one size smaller | approved 2026-10-04 |
 | P4 | Time | The night is a number of Turns; each Turn, each Entity rolls once or moves | approved 2026-10-04 |
 | P5 | Dawn | At dawn, anyone still in town starts the final flight | approved 2026-10-04 |
 | P6 | Group checks | Everyone rolls and passes on their own result; Suspicion rises once, by the worst | approved 2026-10-04 |
