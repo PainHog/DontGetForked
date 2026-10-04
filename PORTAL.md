@@ -1,7 +1,7 @@
-Now: Deciding when and how to build the online version of the game.
-Next: Checking the name, then approving the one-page core rules.
-Number: Design decisions made = 49
-Number: Open design questions = 2
+Now: Checking whether anyone already uses the name "Don't Get Forked".
+Next: Approving the one-page core rules, then writing the eight monsters.
+Number: Design decisions made = 50
+Number: Open design questions = 1
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->
@@ -23,7 +23,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Plan the campaign
 - [x] Settle the table: players, session length and tone
 - [x] Set the art direction
-- [ ] Decide on the online version
+- [x] Decide on the online version
 - [ ] Check the name
 - [ ] Write the eight monsters: powers, weaknesses and tells
 - [ ] First full rulebook draft
