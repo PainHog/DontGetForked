@@ -42,9 +42,9 @@ export const PARAMS = {
     ref: "DESIGN Suspicion package (\"usually one of them the loud way\") — the effect is never defined",
   },
   openApproach: {
-    kind: "rule", default: "quiet", values: ["quiet", "switch", "easier"],
+    kind: "rule", default: "easier", values: ["easier", "quiet", "switch"],
     title: "What \"open an approach nobody else can take\" does",
-    doc: "quiet = roll the ability's trait and no one witnesses it (trouble can't get you caught); switch = the same as using the ability's trait instead of the one called; easier = the ability's trait at Difficulty 2 lower, watched as usual.",
+    doc: "easier = the rule since S10 (see below); quiet = roll the ability's trait and no one witnesses it (trouble can't get you caught); switch = the same as using the ability's trait instead of the one called; easier = the ability's trait at Difficulty 2 lower, watched as usual.",
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
@@ -197,19 +197,19 @@ export const NUMBERS = {
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
   furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
   labels: {
-    // S9 (approved 2026-10-04). `difficulty` is the share of each Difficulty among a label's obstacles.
+    // S9 (approved 2026-10-04); Limits raised in S10. `difficulty` is the share of each Difficulty among a label's obstacles.
     easy: {
-      items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 10, lockup: 10, exit: 6,
+      items: 3, essentials: [1], limit: 12, turns: 12, finalMob: 10, lockup: 10, exit: 6,
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 4, essentials: [1, 2], limit: 11, turns: 12, finalMob: 11, lockup: 10, exit: 8,
+      items: 4, essentials: [1, 2], limit: 13, turns: 12, finalMob: 11, lockup: 10, exit: 8,
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 4, essentials: [2], limit: 12, turns: 12, finalMob: 11, lockup: 12, exit: 8,
+      items: 4, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 12, exit: 8,
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },

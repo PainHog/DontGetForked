@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.11)
+# Don't Get Forked — core rules (draft 0.12)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a number; the starting values approved in S9 are in the table at the end. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -24,7 +24,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
-- **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll. **No ability ever passes automatically.** **[P7: an ability may target any Entity's roll at the same location, and no die is raised more than one size on one roll.]**
+- **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll: you roll the ability's trait at 2 lower Difficulty, watched as usual [S10]. **No ability ever passes automatically.** **[P7: an ability may target any Entity's roll at the same location, and no die is raised more than one size on one roll.]**
 - **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
 
 ## The raid
@@ -62,12 +62,12 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 Each Entity left behind drops the result one step (Bust is the floor short of Forked). The result decides the epilogue only; nothing carries over (optional campaign rules: Q9).
 
-## Starting numbers (S9, approved 2026-10-04)
+## Starting numbers (S9, approved 2026-10-04; Limits raised in S10)
 | | Easy | Standard | Hard |
 |---|---|---|---|
 | List size (essentials) | 3 (1) | 4 (1–2) | 4 (2) |
 | Obstacle Difficulties (share of 6 · 8 · 10 · 12) | 15 · 50 · 30 · 5% | 15 · 50 · 30 · 5% | 0 · 40 · 45 · 15% |
-| Suspicion Limit | 10 | 11 | 12 |
+| Suspicion Limit | 12 | 13 | 15 |
 | Exit Difficulty | 6 | 8 | 8 |
 | Final-flight mob Difficulty | 10 | 11 | 11 |
 | Lock-up Difficulty | 10 | 10 | 12 |
