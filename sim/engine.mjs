@@ -443,8 +443,8 @@ function planRoll(S, m, ctx) {
   const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (carriedItems(S).length ? 0.25 : 1 / 3) : 0;
   const loudSusp = P.loudRule === "suspicion" || P.loudRule === "both";
   const loudWitness = P.loudRule === "witness" || P.loudRule === "both";
-  const critKey = P.critRule === "doubles" ? "critDoubles" : "critBeat4";
-  const critExtra = P.critEffect === "lead2" && (phase === "local" || phase === "final");
+  const critKey = P.critRule === "doubles" ? "critDoubles" : "critBeat4"; // value estimate only (beatN uses beat4's odds)
+  const critExtra = (P.critEffect === "lead2" || P.critEffect === "both") && (phase === "local" || phase === "final");
 
   let best = null;
   for (const c of cands) {
@@ -528,6 +528,11 @@ function executeRoll(S, m, plan, phase) {
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
   const show = plan.second !== MASK && !plan.hidden && monsterShows(t, s, P.monsterRule === "tie");
+  // critEffect "charge"/"both" (S8 candidate): a Critical outside the chases gives the roller back one spent charge.
+  if (critical && (P.critEffect === "charge" || P.critEffect === "both") && phase !== "local" && phase !== "final" && m.charges < m.chargesStart) {
+    m.charges += 1;
+    S.rec.count("charges regained by a Critical");
+  }
   let gain = plan.fixedSusp;
   if (b === "trouble") gain = Math.max(gain, 1); // a trouble result +1
   if (show) gain = Math.max(gain, P.monsterRule === "plus2" ? 2 : 1); // the Monster shows +1
@@ -592,7 +597,7 @@ function localChase(S, m) {
   S.rec.count("local chases");
   const weak = m.ent.weakness === "mob" && S.rng.chance(S.P.weaknessLocal);
   let lead = N.lead.localStart;
-  const critW = S.P.critEffect === "lead2" ? 2 : 1;
+  const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
     const ctx = { phase: "local", options: chaseGround(S), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
@@ -656,7 +661,7 @@ function finalFlight(S, trigger) {
   if (fleeing.length === 0) { S.rec.count("final flight with nobody free"); return; }
   const weak = new Map(fleeing.map((m) => [m, m.ent.weakness === "mob" ? S.rng.chance(S.P.weaknessFinal) : trigger === "dawn"]));
   const baseMob = S.L.finalMob + (fleeing.length - 4) * N.finalMobPerExtraEntity;
-  const critW = S.P.critEffect === "lead2" ? 2 : 1;
+  const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
   let lead = N.lead.finalStart;
