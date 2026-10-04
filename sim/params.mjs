@@ -42,9 +42,9 @@ export const PARAMS = {
     ref: "DESIGN Suspicion package (\"usually one of them the loud way\") — the effect is never defined",
   },
   openApproach: {
-    kind: "rule", default: "quiet", values: ["quiet", "switch"],
+    kind: "rule", default: "quiet", values: ["quiet", "switch", "easier"],
     title: "What \"open an approach nobody else can take\" does",
-    doc: "quiet = roll the ability's trait and no one witnesses it (trouble can't get you caught); switch = the same as using the ability's trait instead of the one called.",
+    doc: "quiet = roll the ability's trait and no one witnesses it (trouble can't get you caught); switch = the same as using the ability's trait instead of the one called; easier = the ability's trait at Difficulty 2 lower, watched as usual.",
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
@@ -182,32 +182,34 @@ export const PRESETS = {
 };
 
 /**
- * Numbers the simulator tunes. Every one is a starting value for Richard's
- * approval, not a rule. `difficulty` is the share of each Difficulty (P1) among
+ * The numbers. Approved as the starting numbers in S9 (2026-10-04); the
+ * obstacle counts, witness, group and two-trait shares are generator settings
+ * for the placeholder towns, not rules. `difficulty` is the share of each Difficulty (P1) among
  * a label's obstacles (the random tables' difficulty budget).
  */
 export const NUMBERS = {
   charges: 3,
   overdrawSuspicion: 2,
-  lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6: local chases start at 1 (draft 0.7: 2)
-  localMob: { base: 6, perSuspicion: 0.5, max: 12 },
+  lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6/S9
+  localMob: { base: 10, perSuspicion: 0.5, max: 12 }, // S9
   finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
   maxChaseRounds: 20,
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
   furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
   labels: {
+    // S9 (approved 2026-10-04). `difficulty` is the share of each Difficulty among a label's obstacles.
     easy: {
-      items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 8, lockup: 10, exit: 6,
-      difficulty: { 6: 0.4, 8: 0.5, 10: 0.1 },
+      items: 3, essentials: [1], limit: 10, turns: 12, finalMob: 10, lockup: 10, exit: 6,
+      difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 4, essentials: [1, 2], limit: 8, turns: 12, finalMob: 9, lockup: 10, exit: 8,
+      items: 4, essentials: [1, 2], limit: 11, turns: 12, finalMob: 11, lockup: 10, exit: 8,
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 5, essentials: [2], limit: 6, turns: 12, finalMob: 10, lockup: 12, exit: 8,
+      items: 4, essentials: [2], limit: 12, turns: 12, finalMob: 11, lockup: 12, exit: 8,
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },
@@ -218,9 +220,9 @@ export const NUMBERS = {
 export const TARGETS = {
   win: { easy: [0.87, 0.93], standard: [0.72, 0.78], hard: [0.55, 0.60] },
   forked: { easy: [0, 0.02], standard: [0.03, 0.07], hard: [0.08, 0.12] },
-  hardCaptures: 0.3,
+  hardCaptures: 0.2, // S9: 0.2–0.3 (was ≥ 0.3)
   grandYear: { reach: 0.5, dropBelowWin: 0.2 },
-  trouble: [0.10, 0.20],
+  trouble: [0.10, 0.22], // S9: at most 22% (was 20%)
   critical: [0.03, 0.07], // S8: about 5% (was 10–20%)
   spendHalf: 0.5,
   mask: 0.25,
@@ -230,19 +232,10 @@ export const TARGETS = {
 
 /**
  * Packages (sim/README.md §4): rule readings + numbers compared side by side.
- *  - P0: the starting numbers above, rules as written (defaults).
- *  - T1: numbers tuned toward the targets (sim/tune.mjs), rules as written.
- *  - T2: two proposed rule fixes (a roll to get out of town; a dropped item can
- *        be picked up again) with numbers tuned for them.
- *  P0, T1 and T2 were measured under draft 0.2's rules; the defaults have since
- *  moved to the decided rules (S1–S8), so re-running them now gives new numbers.
- *  - D1: the decided rules with the S9 number proposal.
- * Every number and both fixes are proposals for Richard, not decisions.
+ * P0 is the decided rules (S1–S8, the defaults) with the approved numbers (S9).
+ * The draft 0.2 packages (T1, T2) and the S9 proposal (D1) are in the git
+ * history; new candidate packages go here as rule changes are proposed.
  */
 export const PACKAGES = {
-  P0: { title: "Starting numbers, rules as written", params: {}, numbers: {} },
-  T1: { title: "Tuned numbers, rules as written", params: {}, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 3, "essentials": [1], "limit": 12, "finalMob": 13}, "hard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 12, "finalMob": 14}}} },
-  T2: { title: "Tuned numbers + exit roll + recoverable drops (proposed)", params: { exitRule: "gate", dropRule: "recover" }, numbers: {"localMob": {"base": 9}, "labels": {"easy": {"difficulty": {"6": 0.4, "8": 0.5, "10": 0.1}, "items": 3, "essentials": [1], "limit": 8, "finalMob": 11}, "standard": {"difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}, "hard": {"difficulty": {"8": 0.4, "10": 0.45, "12": 0.15}, "items": 4, "essentials": [1, 2], "limit": 10, "finalMob": 12}}} },
-  // D1: the rules as decided through S8 (they are the defaults now) with the S9 number proposal.
-  D1: { title: "Decided rules (S1–S8) + proposed numbers (S9)", params: {}, numbers: {"lead": {"localStart": 1, "localEscape": 4, "finalStart": 2, "finalEscape": 6}, "localMob": {"base": 10, "perSuspicion": 0.5, "max": 12}, "labels": {"easy": {"items": 3, "essentials": [1], "difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "limit": 10, "exit": 6, "finalMob": 10, "lockup": 10}, "standard": {"items": 4, "essentials": [1, 2], "difficulty": {"6": 0.15, "8": 0.5, "10": 0.3, "12": 0.05}, "limit": 11, "exit": 8, "finalMob": 11, "lockup": 10}, "hard": {"items": 4, "essentials": [2], "difficulty": {"8": 0.4, "10": 0.45, "12": 0.15}, "limit": 12, "exit": 8, "finalMob": 11, "lockup": 12}}} },
+  P0: { title: "Decided rules (S1–S8) with the approved numbers (S9)", params: {}, numbers: {} },
 };

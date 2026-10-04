@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (draft 0.10)
+# Don't Get Forked — core rules (draft 0.11)
 
-*Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
+*Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a number; the starting values approved in S9 are in the table at the end. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone.
@@ -10,7 +10,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Five traits:** Brawn (force, lifting, breaking, fighting) · Nimble (climbing, running, slipping free) · Sly (sneaking, hiding, stealing) · Charm (talking, bluffing, passing as human) · Wits (noticing, knowing, figuring out). **Every Entity has one each of d12, d10, d8, d6 and d4**, placed differently.
 - **Fixed per Entity:** the dice arrangement, a signature ability, a **Weakness** (something the town can use against it) and a **Tell** (how it gives itself away).
 - **Three picks**, each with a marked default and a random-table entry: a **Gift** (one of three versions of its second ability), a **Perk** (one of three passive edges) and a **Castle Duty** (one of about six shared household jobs, with a small edge tied to the shopping list).
-- **Charges:** the same number for every Entity **[sim: 3]**, refilled once a year; unspent charges are lost. One charge = one use of an ability.
+- **Charges:** the same number for every Entity **[S9: 3]**, refilled once a year; unspent charges are lost. One charge = one use of an ability.
 
 ## Rolling
 1. **The obstacle sets the trait.** Each obstacle lists one or two traits that work, usually one of them the loud way. Any other trait needs an ability.
@@ -28,7 +28,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
 
 ## The raid
-- **Shopping list:** rolled on a table; the number of items is set by difficulty **[sim: 3 / 4 / 5]**. One or two are **essentials**, the rest **extras**. Premade raids give a fixed list.
+- **Shopping list:** rolled on a table; the number of items is set by difficulty **[S9: 3 / 4 / 4]**. One or two are **essentials**, the rest **extras**. Premade raids give a fixed list.
 - **The town** is built from shared parts: an **obstacle** (trait + Difficulty), a **location** (1–3 obstacles, some loot, at least two ways in), **the way out** and the **raid** (locations visited until dawn). There are three ways to build one: a premade sequence, a map, or random tables with a difficulty budget.
 - **Time [P4]:** the night lasts a set number of **Turns** before dawn [sim]. Each Turn, every Entity either makes one roll at its location or moves to another location. The party may split.
 - **Group checks [P6]:** when the party crosses the same obstacle together, everyone rolls and gets through on their own result; Suspicion rises once, by the worst result.
@@ -38,8 +38,8 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
-- **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2.
-- **Tells [S5]:** checked once each time the party arrives at a watched location, for the whole party; if one goes off, one Entity's Tell shows (+1 Suspicion). The chance is set with the Tell content [sim]. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
+- **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
+- **Tells [S5]:** checked once each time the party arrives at a watched location, for the whole party; if one goes off, one Entity's Tell shows (+1 Suspicion). The chance is set with the Tell content [sim].
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved.
 - **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1].
 
@@ -62,6 +62,18 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 Each Entity left behind drops the result one step (Bust is the floor short of Forked). The result decides the epilogue only; nothing carries over (optional campaign rules: Q9).
 
+## Starting numbers (S9, approved 2026-10-04)
+| | Easy | Standard | Hard |
+|---|---|---|---|
+| List size (essentials) | 3 (1) | 4 (1–2) | 4 (2) |
+| Obstacle Difficulties (share of 6 · 8 · 10 · 12) | 15 · 50 · 30 · 5% | 15 · 50 · 30 · 5% | 0 · 40 · 45 · 15% |
+| Suspicion Limit | 10 | 11 | 12 |
+| Exit Difficulty | 6 | 8 | 8 |
+| Final-flight mob Difficulty | 10 | 11 | 11 |
+| Lock-up Difficulty | 10 | 10 | 12 |
+
+Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead starts at 1 and escapes at 4, against a mob of 10 + half the Suspicion (at most 12); the final flight's Lead starts at 2 and escapes at 6. The Tell chance is set with the Tell content.
+
 ## Approved gap fills and open numbers
 | # | Item | Rule | Status |
 |---|---|---|---|
@@ -74,5 +86,5 @@ Each Entity left behind drops the result one step (Bust is the floor short of Fo
 | P7 | Abilities on others | Any Entity's roll at the same location; a die is raised at most one size per roll | approved 2026-10-04 |
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
-| — | Numbers | Charges (3), list size (3/4/5), Turns per night, Suspicion Limits, Lead start and escape numbers, mob Difficulty | simulator, then Richard |
+| — | Numbers | See Starting numbers above | decided (S9) |
 | — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness, Tell; Castle Duties; chase table; festival | Richard |

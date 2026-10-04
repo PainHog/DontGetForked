@@ -420,8 +420,11 @@ function planRoll(S, m, ctx) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
     if (ab.effect === "open") {
+      // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
+      // "easier" = the ability's trait at Difficulty 2 lower, watched as usual.
       const quiet = phase === "raid" && P.openApproach === "quiet";
-      cands.push({ trait: ab.trait, loud: false, quiet, via: { owner: m, ability: ab } });
+      const easier = phase === "raid" && P.openApproach === "easier" ? 2 : 0;
+      cands.push({ trait: ab.trait, loud: false, quiet, easier, via: { owner: m, ability: ab } });
     }
   }
   const raiseSrc = sources(S, m, ctx, "raise");
@@ -470,7 +473,7 @@ function planRoll(S, m, ctx) {
         for (const hid of hidOpts) {
           const td = applySteps(base, up + ro.t - down);
           const sd = ro.s ? stepUp(second, 1).die : second;
-          const D = ctx.difficulty;
+          const D = Math.max(2, ctx.difficulty - (c.easier || 0));
           const d = outcomeDist(td.die, sd, D, { monster: isMon, hidden: hid, tie });
           // Ability uses for this plan, and how many must be overdrawn.
           const uses = [];
