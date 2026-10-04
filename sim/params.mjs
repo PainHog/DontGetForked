@@ -66,9 +66,9 @@ export const PARAMS = {
     ref: "DESIGN Captured (says nothing about loot)",
   },
   multiCaught: {
-    kind: "rule", default: "separate", values: ["separate"],
+    kind: "rule", default: "separate", values: ["separate", "shared"],
     title: "Several Entities caught by one group check",
-    doc: "separate = each runs its own local chase (the shared-Lead rule is only given for the final flight).",
+    doc: "separate = each runs its own local chase; shared = they flee together on one Lead that moves by the majority rule, and are captured together if cornered.",
     ref: "DESIGN Two kinds of chase / Q8g",
   },
   monsterRule: {
@@ -118,6 +118,12 @@ export const PARAMS = {
     title: "Tells: once per watched location for the party (S5) or per Entity (draft 0.6)",
     doc: "entity = each Entity's Tell may trigger on arrival at a watched location; party = one chance for the party, as likely as four Entities' together.",
     ref: "DESIGN Weakness and Tell",
+  },
+  triesPerTurn: {
+    kind: "rule", default: "each", values: ["each", "one"],
+    title: "Tries at one obstacle per Turn",
+    doc: "each = P4 literally: every Entity has a roll each Turn, so several can try the same obstacle in one Turn; one = only one Entity may try a given obstacle each Turn.",
+    ref: "CORE-RULES P4 (gap G12)",
   },
   monsterPolicy: {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
