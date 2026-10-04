@@ -497,10 +497,24 @@ function pickCost(S, m) {
   if (kind === "drop") {
     if (items.length === 0) { S.rec.detect("\"drop an item\" Cost with nothing carried (costs nothing)"); return kind; }
     if (P.dropRule === "recover") { m.loseTurn = true; return kind; } // picking it up again takes the next action
+    if (P.dropRule === "extrasOnly") {
+      // Only an extra can be dropped (and is lost); with none carried the Storyteller picks another Cost.
+      const holders = S.party.filter((h) => h.status === "active" && h.items.some((i) => !i.essential));
+      if (holders.length === 0) { kind = S.rng.pick(["suspicion", "turn", "stepdown"]); S.rec.count(`cost:${kind} (instead of drop)`); return applyCost(S, m, kind); }
+      const h = S.rng.pick(holders);
+      const extras = h.items.filter((i) => !i.essential);
+      h.items.splice(h.items.indexOf(S.rng.pick(extras)), 1);
+      return kind;
+    }
     const holders = S.party.filter((h) => h.status === "active" && h.items.length);
     const h = S.rng.pick(holders);
     h.items.splice(S.rng.int(0, h.items.length - 1), 1);
-  } else if (kind === "turn") m.loseTurn = true;
+  } else applyCost(S, m, kind);
+  return kind;
+}
+
+function applyCost(S, m, kind) {
+  if (kind === "turn") m.loseTurn = true;
   else if (kind === "stepdown") m.nextStepDown += 1;
   return kind;
 }

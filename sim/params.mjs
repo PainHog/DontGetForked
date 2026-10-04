@@ -30,9 +30,9 @@ export const PARAMS = {
     ref: "CORE-RULES P3",
   },
   dropRule: {
-    kind: "rule", default: "lost", values: ["lost", "recover"],
+    kind: "rule", default: "lost", values: ["lost", "recover", "extrasOnly"],
     title: "What \"drop an item\" means",
-    doc: "lost = the item is gone for this raid; recover = it falls where you are and picking it up costs that Entity its next action.",
+    doc: "lost = the item is gone for this raid; recover = it falls where you are and picking it up costs that Entity its next action; extrasOnly = only an extra can be dropped (and is lost); if none is carried the Storyteller picks another Cost.",
     ref: "CORE-RULES P3 (drop an item)",
   },
   loudRule: {
