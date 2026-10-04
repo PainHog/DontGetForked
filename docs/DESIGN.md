@@ -37,6 +37,9 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 | 2026-10-04 | **Three ways to build a raid:** a few premade raids in the book built as a sequence of obstacles; a map of locations as an alternative; and random tables the Storyteller can roll a town on, if they want. | Richard's call, combining all three proposed structures. Proposed condition (awaiting Richard's confirmation): all three use the same building blocks and the random tables use a difficulty budget, so every mode can be balanced and labelled |
 | 2026-10-04 | **A new town every raid; every session stands alone.** It is always the first stock-up: the Entities have never seen or looted this town. No town memory. | Richard: the yearly return is the story premise, not a continuity mechanic. Difficulty labels come from each town's own content. Whether the castle or the Entities carry anything between sessions is open (Q6, Q9) |
 | 2026-10-04 | **The raid happens on the town's yearly festival night; everyone is in costume; dawn ends the raid.** | Explains why it is once a year and why the Mask works; keeps sunlight-type Weaknesses live (dawn is everyone's deadline). How the night's length is counted (stops, rounds) is open. The festival's name and customs are content still to be decided |
+| 2026-10-04 | **The shopping list is rolled:** the Storyteller rolls items on a table, the number set by difficulty; each item points to a kind of location. Premade raids give their own fixed list. | Chosen over fixed-by-town and a points menu. The example counts (Easy 3, Standard 4, Hard 5) are not decided; the simulator proposes them. Castle Duty edges apply to kinds of items |
+| 2026-10-04 | **Essentials and extras:** each list has 1–2 essential items; the rest are extras. A win is the essentials plus most of the extras; missing an essential is at best a partial. | Chosen over win-by-share and points. Still to define: "most" of the extras, and what makes a loss |
+| 2026-10-04 | **Nothing carries over by default.** The result decides the epilogue on a short "how the year went" table (story only). Optional campaign rules for groups who want continuity go in a sidebar (Q9). | Because nothing carries over, losing must be felt inside the session: the epilogue and what getting forked costs (Q8) |
 
 ## Open questions (work through these with Richard, roughly in this order)
 1. **Engine.** *Decided 2026-10-04: a new system using step dice, with guardrails 1 and 2 (see the Decisions log).* Left for later: the second die (Q3), Difficulty numbers, bands and Criticals (simulator), the Monster die (Q4). Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
@@ -53,7 +56,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
    - How a town is structured: a map of districts or shops, a sequence of obstacles, or a sandbox.
    - Is it the same town every year, changing as it remembers past raids?
    - When does the raid happen: night, a festival, market day? Do the Entities disguise themselves?
-6. **The shopping list.**
+6. **The shopping list.** *Decided 2026-10-04: rolled list; essentials + extras; nothing carries over by default (see the Decisions log).*
    - How the Storyteller sets what must be replenished, and how much.
    - What a partial haul means.
    - Do consequences carry over to the castle next year (running low, the castle decaying)?
