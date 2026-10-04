@@ -34,6 +34,9 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 | 2026-10-04 | **Charges: the same number for every Entity, fully refilled once a year at the castle; unspent charges are lost.** | Chosen over feeding in town and carry-over (death-spiral risk). The number is not decided: the simulator starts at 3 per raid and the result comes back to Richard. The book must tell players to spend; the simulator checks that most Entities spend at least half |
 | 2026-10-04 | **Each Entity has its own charges** (no shared pool) | Chosen over a shared castle pool and a per-Entity-plus-reserve mix. Settles per-character versus per-group for charges |
 | 2026-10-04 | **At zero charges an Entity may overdraw:** it can still use an ability, at a heavy cost | Chosen over "nothing more" and "your Tell shows at zero" (which punishes spending). The cost (a Suspicion rise, the Weakness flaring, or other) is open (Q8, simulator); it must not make the game easier |
+| 2026-10-04 | **Three ways to build a raid:** a few premade raids in the book built as a sequence of obstacles; a map of locations as an alternative; and random tables the Storyteller can roll a town on, if they want. | Richard's call, combining all three proposed structures. Proposed condition (awaiting Richard's confirmation): all three use the same building blocks and the random tables use a difficulty budget, so every mode can be balanced and labelled |
+| 2026-10-04 | **A new town every raid; every session stands alone.** It is always the first stock-up: the Entities have never seen or looted this town. No town memory. | Richard: the yearly return is the story premise, not a continuity mechanic. Difficulty labels come from each town's own content. Whether the castle or the Entities carry anything between sessions is open (Q6, Q9) |
+| 2026-10-04 | **The raid happens on the town's yearly festival night; everyone is in costume; dawn ends the raid.** | Explains why it is once a year and why the Mask works; keeps sunlight-type Weaknesses live (dawn is everyone's deadline). How the night's length is counted (stops, rounds) is open. The festival's name and customs are content still to be decided |
 
 ## Open questions (work through these with Richard, roughly in this order)
 1. **Engine.** *Decided 2026-10-04: a new system using step dice, with guardrails 1 and 2 (see the Decisions log).* Left for later: the second die (Q3), Difficulty numbers, bands and Criticals (simulator), the Monster die (Q4). Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
@@ -46,7 +49,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
    - How many abilities per Entity, and what a charge buys.
    - Whether charges refill: once a year, at the castle, or by some in-town action.
    - Whether there's a shared pool or one per Entity, and what happens at zero.
-5. **The town.**
+5. **The town.** *Decided 2026-10-04: premades + map + optional random tables; a new town every raid; festival night, ends at dawn (see the Decisions log).*
    - How a town is structured: a map of districts or shops, a sequence of obstacles, or a sandbox.
    - Is it the same town every year, changing as it remembers past raids?
    - When does the raid happen: night, a festival, market day? Do the Entities disguise themselves?
