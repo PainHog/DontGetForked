@@ -166,8 +166,7 @@ function targetRows(M) {
   rows.push(["Grand Year when the party goes for furniture", `~${pct(T.grandYear.reach, 0)}`, pct(M.furniture.grandGivenWent), mark(Math.abs(M.furniture.grandGivenWent - T.grandYear.reach) <= 0.1)]);
   rows.push(["Going for furniture costs the Win", `~${pct(T.grandYear.dropBelowWin, 0)}`, pct(M.furniture.dropBelowWin), mark(Math.abs(M.furniture.dropBelowWin - T.grandYear.dropBelowWin) <= 0.07)]);
   rows.push(["Trouble, share of rolls", "10–20%", pct(M.rolls.trouble), mark(inBand(M.rolls.trouble, T.trouble))]);
-  rows.push(["Critical (doubles), share of rolls", "10–20%", pct(M.rolls.critDoubles), mark(inBand(M.rolls.critDoubles, T.critical))]);
-  rows.push(["Critical (beat by 4), share of rolls", "10–20%", pct(M.rolls.critBeat4), mark(inBand(M.rolls.critBeat4, T.critical))]);
+  rows.push(["Critical (doubles on a Success, S8), share of rolls", `${pct(T.critical[0], 0)}–${pct(T.critical[1], 0)}`, pct(M.rolls.critDoubles), mark(inBand(M.rolls.critDoubles, T.critical))]);
   rows.push(["Entities spending ≥ half their charges", `≥ ${pct(T.spendHalf, 0)}`, pct(M.spendHalf), mark(M.spendHalf >= T.spendHalf)]);
   rows.push(["Mask, share of rolls (raid rolls)", "≥ 25%", `${pct(M.rolls.mask)} (${pct(M.rolls.maskRaid)})`, mark(M.rolls.mask >= T.mask)]);
   rows.push(["Monster, share of rolls (raid rolls)", "≥ 25%", `${pct(M.rolls.monster)} (${pct(M.rolls.monsterRaid)})`, mark(M.rolls.monster >= T.monster)]);

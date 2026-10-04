@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.9)
+# Don't Get Forked — core rules (draft 0.10)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -19,7 +19,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
    - **Success:** the total meets the Difficulty.
    - **Cost:** 1–2 short. You do it, at a cost **[P3: the Storyteller picks one: Suspicion +1, drop an item, lose a Turn, or your next roll one size smaller]**. A dropped item falls where you are; picking it up costs that Entity its next action [S3].
    - **Trouble:** 3 or more short. It doesn't happen, Suspicion +1, and witnesses catch you.
-   - **Critical:** open. The simulator compares "a success on doubles" with "beat the Difficulty by 4".
+   - **Critical [S8]:** a Success where both dice show the same face. In a chase it moves the Lead 2 (in the final flight it counts as two successes); anywhere else you get back one spent charge (never above your starting number).
 4. **The Monster shows** if the Monster die rolls higher than the trait die: Suspicion +2 [S2].
 
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
@@ -73,6 +73,6 @@ Each Entity left behind drops the result one step (Bust is the floor short of Fo
 | P6 | Group checks | Everyone rolls and passes on their own result; Suspicion rises once, by the worst | approved 2026-10-04 |
 | P7 | Abilities on others | Any Entity's roll at the same location; a die is raised at most one size per roll | approved 2026-10-04 |
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
-| — | Critical rule | Doubles on a success vs beat by 4 | simulator, then Richard |
+| — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | Charges (3), list size (3/4/5), Turns per night, Suspicion Limits, Lead start and escape numbers, mob Difficulty | simulator, then Richard |
 | — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness, Tell; Castle Duties; chase table; festival | Richard |

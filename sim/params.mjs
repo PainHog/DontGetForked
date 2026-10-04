@@ -18,9 +18,9 @@ export const PARAMS = {
     ref: "CORE-RULES Rolling 3 (Critical: open)",
   },
   critEffect: {
-    kind: "rule", default: "none", values: ["none", "lead2", "charge", "both"],
+    kind: "rule", default: "both", values: ["both", "none", "lead2", "charge"],
     title: "What a Critical does",
-    doc: "none = no extra effect (the rules don't define one); lead2 = in a chase a Critical moves the Lead 2 (counts as two successes in the final flight); charge = outside chases a Critical gives the roller back one spent charge; both = lead2 + charge.",
+    doc: "both = the rule since S8 (lead2 + charge); none = draft 0.9 (no effect given); lead2 = in a chase a Critical moves the Lead 2 (counts as two successes in the final flight); charge = outside chases a Critical gives the roller back one spent charge; both = lead2 + charge.",
     ref: "CORE-RULES Rolling 3 (no effect given)",
   },
   costChoice: {
@@ -176,9 +176,9 @@ export function defaults() {
 
 /** Every ambiguous rule read for (generous) or against (strict) the players. */
 export const PRESETS = {
-  generous: { critEffect: "lead2", costChoice: "lenient", dropRule: "recover", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "weakness", raiseCap: "perDie", captiveItems: "kept", exitRule: "free" },
+  generous: { critEffect: "both", costChoice: "lenient", dropRule: "recover", loudRule: "none", openApproach: "quiet", overdrawAtLimit: "weakness", raiseCap: "perDie", captiveItems: "kept", exitRule: "free" },
   // costChoice "mixed" keeps the harsh "drop an item" Cost in play ("suspicion" removes it and is easier at Easy).
-  strict: { critEffect: "none", costChoice: "mixed", dropRule: "lost", loudRule: "both", openApproach: "switch", overdrawAtLimit: "forbidden", raiseCap: "perRoll", captiveItems: "lost", exitRule: "gate" },
+  strict: { critEffect: "both", costChoice: "mixed", dropRule: "lost", loudRule: "both", openApproach: "switch", overdrawAtLimit: "forbidden", raiseCap: "perRoll", captiveItems: "lost", exitRule: "gate" },
 };
 
 /**
@@ -221,7 +221,7 @@ export const TARGETS = {
   hardCaptures: 0.3,
   grandYear: { reach: 0.5, dropBelowWin: 0.2 },
   trouble: [0.10, 0.20],
-  critical: [0.10, 0.20],
+  critical: [0.03, 0.07], // S8: about 5% (was 10–20%)
   spendHalf: 0.5,
   mask: 0.25,
   monster: 0.25,
