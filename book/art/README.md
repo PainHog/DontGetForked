@@ -7,11 +7,21 @@ rendered piece is looked at (`node book/tools/preview-art.mjs <outDir>`) before 
 called done. Every SVG has a `viewBox` and **no** fixed width or height; the CSS sizes it.
 No `<image>`, `<script>`, filters such as `feTurbulence`, or external links.
 
-## House style — TBD
+## House style — storybook gothic woodcut (decided 2026-10-04)
 
-The art direction is **undecided**. Until the author picks it, art uses the neutral
-PLACEHOLDER palette below (the same tokens as `book/src/book.css` and `C` in
-`book/tools/art-gen/lib.mjs`; change all three together).
+- **Look:** bold ink linework and hatching, like an old chapbook or woodcut print. Flat
+  shapes and line hatching only (no filters), which suits this vector pipeline.
+- **Palette direction:** bone white, ink black, pumpkin orange and moss green, with
+  festival-lantern glows as the accent. Exact values are chosen and approved when art starts.
+- **Entities:** each drawn twice, in festival costume (the Mask) and revealed (the Monster),
+  each with one bold visual hook and an unmistakable silhouette. Original designs only:
+  never the Universal film looks (`docs/DESIGN.md`, rights note), nothing close to
+  *Hotel Transylvania*.
+- No art is made until Richard approves the core rules.
+
+Until the palette is approved, art uses the neutral PLACEHOLDER palette below (the same
+tokens as `book/src/book.css` and `C` in `book/tools/art-gen/lib.mjs`; change all three
+together).
 
 ## Palette — TBD (placeholder values)
 

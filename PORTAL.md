@@ -1,7 +1,7 @@
-Now: Choosing the art direction: the look of the book and how the monsters are drawn.
-Next: The online version, checking the name, and approving the one-page core rules.
-Number: Design decisions made = 48
-Number: Open design questions = 3
+Now: Deciding when and how to build the online version of the game.
+Next: Checking the name, then approving the one-page core rules.
+Number: Design decisions made = 49
+Number: Open design questions = 2
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->
@@ -22,7 +22,7 @@ Number: Simulated raids per balance check = 18000
 - [ ] Approve the core rules
 - [x] Plan the campaign
 - [x] Settle the table: players, session length and tone
-- [ ] Set the art direction
+- [x] Set the art direction
 - [ ] Decide on the online version
 - [ ] Check the name
 - [ ] Write the eight monsters: powers, weaknesses and tells
