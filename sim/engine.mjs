@@ -53,7 +53,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
     let target = chooseTarget(S);
     if (target === "leave") {
-      if (S.P.exitRule === "free") { S.turn++; leaveTown(S); break; }
+      if (S.P.exitRule === "free" || (S.P.exitRule === "gateCarriers" && !S.furnitureCarried)) { S.turn++; leaveTown(S); break; }
       target = exitLocation(S); // exitRule "gate": getting out is a group check like any other
     }
     if (target === "wait") { S.turn++; captivesAct(S); continue; }
@@ -122,7 +122,7 @@ function chooseTarget(S) {
 
   if (haveEssentials && headroom <= 1 && captives(S).length === 0) return "leave";
 
-  const exitNeed = S.P.exitRule === "gate" ? 2 : 1;
+  const exitNeed = S.P.exitRule === "free" ? 1 : 2;
   const feasible = (loc) => locationNeed(S, loc) + exitNeed <= left;
   for (const l of ess) {
     if (feasible(l)) return l;
@@ -155,24 +155,30 @@ function furnitureTarget(S, haveEssentials, headroom, left) {
   if (active(S).length < (fl.furniture.size === "huge" ? 2 : 1)) return null;
   if (!haveEssentials) return null;
   const need = locationNeed(S, fl);
-  const exitNeed = S.P.exitRule === "gate" ? 2 : 1;
+  const exitNeed = S.P.exitRule === "free" ? 1 : 2;
   const ok = S.P.furniturePolicy === "always" ? need + exitNeed <= left : headroom >= 3 && need + exitNeed + 1 <= left;
   if (!ok) { S.skipped.add(fl); return null; }
   S.wentForFurniture = true;
   return fl;
 }
 
-/** exitRule "gate" (gap G15): the way out of town is one watched group obstacle: Sly or Nimble, or Brawn the loud way. */
+/**
+ * exitRule (gap G15, S4): the way out of town is one watched obstacle — Sly or
+ * Nimble, or Brawn the loud way. "gate": a group check for everyone;
+ * "gateSingle": one Entity's roll gets the party out; "gateCarriers": a group
+ * check only for furniture carriers (everyone else walks out).
+ */
 function exitLocation(S) {
   if (!S.exitLoc) {
     S.exitLoc = {
       id: "exit", kind: null, items: [], furniture: null, done: false,
       obstacles: [{
         options: [{ trait: "sly", loud: false }, { trait: "nimble", loud: false }, { trait: "brawn", loud: true }],
-        difficulty: S.L.exit, witnessed: true, group: true, cleared: false, passed: new Set(),
+        difficulty: S.L.exit, witnessed: true, group: S.P.exitRule !== "gateSingle", cleared: false, passed: new Set(),
       }],
     };
   }
+  if (S.P.exitRule === "gateCarriers") for (const m of active(S)) if (!m.furniture) S.exitLoc.obstacles[0].passed.add(m.id);
   return S.exitLoc;
 }
 
