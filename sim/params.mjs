@@ -54,7 +54,7 @@ export const PARAMS = {
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
   raiseCap: {
-    kind: "rule", default: "perDie", values: ["perDie", "perRoll"],
+    kind: "rule", default: "perRoll", values: ["perRoll", "perDie"],
     title: "How many raises one roll can take",
     doc: "perDie = literal P7: no die raised more than one size, so the trait die and the second die can each be raised once; perRoll = one raise per roll in total.",
     ref: "CORE-RULES P7",
@@ -66,7 +66,7 @@ export const PARAMS = {
     ref: "DESIGN Captured (says nothing about loot)",
   },
   multiCaught: {
-    kind: "rule", default: "separate", values: ["separate", "shared"],
+    kind: "rule", default: "shared", values: ["shared", "separate"],
     title: "Several Entities caught by one group check",
     doc: "separate = each runs its own local chase; shared = they flee together on one Lead that moves by the majority rule, and are captured together if cornered.",
     ref: "DESIGN Two kinds of chase / Q8g",

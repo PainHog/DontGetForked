@@ -1,7 +1,7 @@
-Now: Settling a batch of small rule gaps the simulator had to fill in (who chases whom, what happens at the edges of the rules).
+Now: Deciding whether a run of raids can be played as a campaign, and what carries over from one year to the next.
 Next: Approving the one-page core rules, then deciding the campaign, the table (session length and tone), the art direction and the online version.
-Number: Design decisions made = 45
-Number: Open design questions = 6
+Number: Design decisions made = 46
+Number: Open design questions = 5
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->
@@ -18,7 +18,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Build the first balance simulation
 - [x] Settle the simulator's findings
 - [x] Set the starting numbers for each difficulty level
-- [ ] Settle the remaining rule gaps
+- [x] Settle the remaining rule gaps
 - [ ] Approve the core rules
 - [ ] Plan the campaign
 - [ ] Settle the table: players, session length and tone
