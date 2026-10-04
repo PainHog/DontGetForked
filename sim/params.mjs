@@ -90,14 +90,14 @@ export const PARAMS = {
     ref: "DESIGN Captured",
   },
   furnitureRule: {
-    kind: "rule", default: "base", values: ["base", "hardLoc", "noisy", "both", "slow", "noisySlow"],
-    title: "What makes furniture risky (S7 candidates)",
+    kind: "rule", default: "slow", values: ["slow", "base", "hardLoc", "noisy", "both", "noisySlow"],
+    title: "What makes furniture risky (S7: slow is the rule)",
     doc: "base = carrying only (no Mask, Nimble one size smaller); hardLoc = the furniture's location is 2 harder; noisy = +1 Suspicion at the end of each Turn a piece is carried in town; both = hardLoc + noisy; slow = while carrying, a move takes two Turns; noisySlow = noisy + slow.",
     ref: "DESIGN Furniture; S7",
   },
   furniturePlace: {
-    kind: "rule", default: "separate", values: ["separate", "onList"],
-    title: "Where the furniture is (S7 candidates)",
+    kind: "rule", default: "onList", values: ["onList", "separate"],
+    title: "Where the furniture is (S7: onList is the rule)",
     doc: "separate = its own location, a separate trip (as generated); onList = it stands at one of the list's locations behind one extra obstacle, so the party decides mid-raid whether to take it and carry it for the rest of the night.",
     ref: "DESIGN Furniture; S7",
   },
