@@ -12,7 +12,7 @@ export const GAPS = [
   { id: "G3", title: "What \"open an approach nobody else can take\" does", ref: "CORE-RULES Abilities", param: "openApproach",
     note: "Described only as fiction. Is it unwatched? A different Difficulty? Otherwise it is the same as using the ability's trait." },
   { id: "G4", title: "Overdraw and the Monster die once Suspicion is at the Limit", ref: "CORE-RULES Abilities; Suspicion", param: "overdrawAtLimit",
-    note: "In the final flight Suspicion has nowhere to go, so overdraw is free and the Mask has no use. The track's behaviour at the Limit needs one sentence (Heisty lesson: say what happens at the threat limit)." },
+    note: "RESOLVED by S1 (CORE-RULES 0.3): once the hunt is on, Suspicion stops, the Mask is off, and overdraw puts your Weakness in play for the rest of the flight." },
   { id: "G5", title: "P7's raise cap: per die or per roll", ref: "CORE-RULES P7", param: "raiseCap",
     note: "\"No die is raised more than one size\" lets the trait die and the second die each be raised once. If one raise per roll was meant, say so. Does a Castle Duty edge count toward it?" },
   { id: "G6", title: "A captive's loot", ref: "DESIGN Captured", param: "captiveItems",
