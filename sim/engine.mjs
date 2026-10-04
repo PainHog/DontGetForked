@@ -312,8 +312,18 @@ function chargeCost(S, phase) {
   return phase === "raid" ? (late ? 0.02 : 0.08) : 0.02;
 }
 
-function overdrawAllowed(S, phase) {
-  return phase !== "final" || S.P.overdrawAtLimit === "free";
+/**
+ * Overdraw (CORE-RULES Abilities) once the hunt is on (gap G4, overdrawAtLimit):
+ * free; forbidden; "weakness" = allowed, but the overdrawing Entity's Weakness is
+ * in play for the rest of the flight (so not when it already is); "fury" = allowed,
+ * its +2 feeds the mob's fury instead of Suspicion.
+ */
+function overdrawAllowed(S, phase, owner, ctx) {
+  if (phase !== "final") return true;
+  const r = S.P.overdrawAtLimit;
+  if (r === "forbidden") return false;
+  if (r === "weakness") return !(ctx && ctx.weakOf && ctx.weakOf(owner));
+  return true;
 }
 
 /** Usable ability sources: {owner, ability}. An owner at zero may overdraw if allowed. */
@@ -323,7 +333,7 @@ function sources(S, m, ctx, effect) {
   for (const o of owners) {
     for (const ab of abilitiesOf(o)) {
       if (ab.effect !== effect) continue;
-      if (o.charges > 0 || overdrawAllowed(S, ctx.phase)) out.push({ owner: o, ability: ab });
+      if (o.charges > 0 || overdrawAllowed(S, ctx.phase, o, ctx)) out.push({ owner: o, ability: ab });
     }
   }
   // Prefer owners with the most charges left.
@@ -346,7 +356,7 @@ function planRoll(S, m, ctx) {
   const phase = ctx.phase;
   const cands = ctx.options.map((o) => ({ trait: o.trait, loud: o.loud, quiet: false, via: null }));
   for (const ab of abilitiesOf(m)) {
-    if (!(m.charges > 0 || overdrawAllowed(S, phase))) continue;
+    if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
     if (ab.effect === "open") {
       const quiet = phase === "raid" && P.openApproach === "quiet";
@@ -363,7 +373,7 @@ function planRoll(S, m, ctx) {
   else seconds = [MASK, MONSTER];
 
   const headroom = S.limit - S.susp;
-  const lambda = phase === "final" ? 0 : 1.2 / Math.max(0.5, headroom);
+  const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
   const mu = phase === "raid" ? 0.4 : 0;
   const cc = chargeCost(S, phase);
   const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (carriedItems(S).length ? 0.25 : 1 / 3) : 0;
@@ -406,7 +416,9 @@ function planRoll(S, m, ctx) {
           for (const u of uses) need.set(u.owner, (need.get(u.owner) || 0) + 1);
           let overdraws = 0;
           for (const [o, n] of need) overdraws += Math.max(0, n - o.charges);
-          if (overdraws && !overdrawAllowed(S, phase)) continue;
+          let odBlocked = false;
+          for (const [o, n] of need) if (n > o.charges && !overdrawAllowed(S, phase, o, ctx)) odBlocked = true;
+          if (odBlocked) continue;
           const odSusp = overdraws ? S.N.overdrawSuspicion : 0;
           // Expected Suspicion: one roll raises it once, by its biggest trigger.
           const fixed = Math.max(c.loud && loudSusp ? 1 : 0, odSusp);
@@ -420,7 +432,8 @@ function planRoll(S, m, ctx) {
           if (phase === "local" || phase === "final") gain = d.success - d.trouble + (critExtra ? d[critKey] : 0);
           else if (phase === "slip") gain = d.success + 0.8 * d.cost;
           else gain = d.success + 0.6 * d.cost;
-          const value = gain - lambda * eSusp - mu * (witnessed ? d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0);
+          const weakCost = phase === "final" && P.overdrawAtLimit === "weakness" ? 0.3 * overdraws : 0;
+          const value = gain - lambda * eSusp - mu * (witnessed ? d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0) - weakCost;
           if (!best || value > best.value + 1e-12) {
             best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, difficulty: D, fixedSusp: fixed };
           }
@@ -434,12 +447,13 @@ function planRoll(S, m, ctx) {
 /** Make the roll a plan describes, spend what it spends, and read the result (P2, CORE-RULES Rolling). */
 function executeRoll(S, m, plan, phase) {
   const P = S.P;
+  const overdrawn = [];
   for (const u of plan.uses) {
     if (u.owner.charges > 0) { u.owner.charges -= 1; S.rec.count("charges spent"); }
-    else S.rec.count(`overdraws:${phase}`);
+    else { S.rec.count(`overdraws:${phase}`); overdrawn.push(u.owner); }
     S.rec.count(`ability:${u.ability.effect}`);
   }
-  if (plan.overdraws && phase === "final") S.rec.detect("overdraw in the final flight (its Suspicion cost means nothing)");
+  if (plan.overdraws && phase === "final" && P.overdrawAtLimit === "free") S.rec.detect("overdraw in the final flight (its Suspicion cost means nothing)");
   if (plan.under > 0) S.rec.detect("a die stepped below d4 (floored at d4)");
   if (plan.over > 0) S.rec.detect("a raise past d12 (lost)");
   m.nextStepDown = 0;
@@ -463,7 +477,7 @@ function executeRoll(S, m, plan, phase) {
     margin: t + s - plan.difficulty,
     entity: m.id,
   });
-  return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind };
+  return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind, overdrawn };
 }
 
 /** P3: the Storyteller picks a Cost (costChoice). */
@@ -560,18 +574,34 @@ function finalFlight(S, trigger) {
   for (const m of captives(S)) m.status = "left";
   if (fleeing.length === 0) { S.rec.count("final flight with nobody free"); return; }
   const weak = new Map(fleeing.map((m) => [m, m.ent.weakness === "mob" ? S.rng.chance(S.P.weaknessFinal) : trigger === "dawn"]));
-  const mobD = S.L.finalMob + (fleeing.length - 4) * N.finalMobPerExtraEntity;
+  const baseMob = S.L.finalMob + (fleeing.length - 4) * N.finalMobPerExtraEntity;
   const critW = S.P.critEffect === "lead2" ? 2 : 1;
+  const furyRule = S.P.overdrawAtLimit === "fury";
+  let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
   let lead = N.lead.finalStart;
   for (let round = 0; round < N.maxChaseRounds; round++) {
+    const mobD = baseMob + fury;
     // Policy: carriers drop the furniture when the mob is about to corner them.
     if (lead <= 1 && S.furnitureCarried) dropFurniture(S, "final flight");
     const ground = chaseGround(S);
     const results = [];
     for (const m of fleeing) {
-      const ctx = { phase: "final", options: ground, difficulty: mobD, witnessed: false, helpers: fleeing.filter((h) => h !== m), locKind: null, weakness: weak.get(m) };
+      const ctx = {
+        phase: "final", options: ground, difficulty: mobD, witnessed: false, helpers: fleeing.filter((h) => h !== m),
+        locKind: null, weakness: weak.get(m), weakOf: (o) => weak.get(o),
+        furyLambda: furyRule && fury < N.furyCap ? N.furyLambda : 0,
+      };
       const plan = planRoll(S, m, ctx);
-      results.push(executeRoll(S, m, plan, "final"));
+      const r = executeRoll(S, m, plan, "final");
+      if (S.P.overdrawAtLimit === "weakness") for (const o of r.overdrawn) { if (!weak.get(o)) S.rec.count("weakness taken by overdraw"); weak.set(o, true); }
+      results.push(r);
+    }
+    if (furyRule) {
+      // The round raises the fury once, by its biggest trigger (as a group check raises Suspicion).
+      const add = Math.max(0, ...results.map((r) => r.suspGain));
+      const before = fury;
+      fury = Math.min(N.furyCap, fury + add);
+      S.rec.count("fury", fury - before);
     }
     lead += majorityMove(results, critW);
     if (lead >= N.lead.finalEscape) {
