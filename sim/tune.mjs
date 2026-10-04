@@ -20,9 +20,9 @@ export const MIXES = {
 };
 
 const SPACE = {
-  easy: { mix: ["soft", "mid"], items: [3], limit: [8, 10, 12, 14], finalMob: [9, 10, 11, 12] },
-  standard: { mix: ["soft", "mid", "stiff"], items: [3, 4], limit: [8, 10, 12, 14], finalMob: [10, 11, 12, 13] },
-  hard: { mix: ["mid", "stiff"], items: [4, 5], limit: [8, 10, 12, 14], finalMob: [11, 12, 13, 14] },
+  easy: { mix: ["soft", "mid"], items: [3], limit: [8, 10, 12, 14], finalMob: [10, 11, 12, 13] },
+  standard: { mix: ["soft", "mid", "stiff"], items: [3, 4], limit: [10, 12, 14, 16], finalMob: [10, 11, 12, 13] },
+  hard: { mix: ["mid", "stiff"], items: [4, 5], limit: [10, 12, 14, 16], finalMob: [10, 11, 12, 13] },
 };
 
 const mid = ([lo, hi]) => (lo + hi) / 2;
