@@ -14,7 +14,7 @@
  *  - Perks are not modelled; Gifts, Duties, Weaknesses and Tells are placeholders
  *    (entities.mjs).
  */
-import { MASK, MONSTER, stepUp, stepDown, band, isCritical, outcomeDist, majorityMove, leadMove } from "./rules.mjs";
+import { MASK, MONSTER, stepUp, stepDown, band, isCritical, outcomeDist, majorityMove, leadMove, monsterShows } from "./rules.mjs";
 import { abilitiesOf } from "./entities.mjs";
 import { rescueObstacle, CHASE_TABLE } from "./town.mjs";
 
@@ -367,14 +367,17 @@ function planRoll(S, m, ctx) {
   const hiddenSrc = sources(S, m, ctx, "hidden");
   const carrying = !!m.furniture;
   let seconds;
-  if (carrying || phase === "final") seconds = [MONSTER]; // carrying: no Mask; S1: once the hunt is on the Mask is off
+  const MON = P.monsterRule === "d8" ? 8 : MONSTER;
+  if (carrying || phase === "final") seconds = [MON]; // carrying: no Mask; S1: once the hunt is on the Mask is off
   else if (P.monsterPolicy === "mask") seconds = [MASK];
-  else if (P.monsterPolicy === "monster") seconds = [MONSTER];
-  else seconds = [MASK, MONSTER];
+  else if (P.monsterPolicy === "monster") seconds = [MON];
+  else seconds = [MASK, MON];
+  const tie = P.monsterRule === "tie";
+  const showVal = P.monsterRule === "plus2" ? 2 : 1;
 
   const headroom = S.limit - S.susp;
   const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
-  const mu = phase === "raid" ? 0.4 : 0;
+  const mu = phase === "raid" ? P.caughtWeight : 0;
   const cc = chargeCost(S, phase);
   const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (carriedItems(S).length ? 0.25 : 1 / 3) : 0;
   const loudSusp = P.loudRule === "suspicion" || P.loudRule === "both";
@@ -400,13 +403,14 @@ function planRoll(S, m, ctx) {
         raiseOpts.push({ t: 0, s: 1 });
       }
       if (raiseSrc.length >= 2 && maxRaises >= 2 && !traitRaised) raiseOpts.push({ t: 1, s: 1 });
-      const hidOpts = second === MONSTER && hiddenSrc.length ? [false, true] : [false];
+      const isMon = second !== MASK;
+      const hidOpts = isMon && hiddenSrc.length ? [false, true] : [false];
       for (const ro of raiseOpts) {
         for (const hid of hidOpts) {
           const td = applySteps(base, up + ro.t - down);
           const sd = ro.s ? stepUp(second, 1).die : second;
           const D = ctx.difficulty;
-          const d = outcomeDist(td.die, sd, D, { monster: second === MONSTER, hidden: hid });
+          const d = outcomeDist(td.die, sd, D, { monster: isMon, hidden: hid, tie });
           // Ability uses for this plan, and how many must be overdrawn.
           const uses = [];
           if (c.via) uses.push(c.via);
@@ -424,10 +428,11 @@ function planRoll(S, m, ctx) {
           const fixed = Math.max(c.loud && loudSusp ? 1 : 0, odSusp);
           const showS = d.show.success, showC = d.show.cost, showT = d.show.trouble;
           const eSusp =
-            (d.success - showS) * fixed + showS * Math.max(fixed, 1) +
-            (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, 1) +
-            d.trouble * Math.max(fixed, 1);
-          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness));
+            (d.success - showS) * fixed + showS * Math.max(fixed, showVal) +
+            (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
+            (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1);
+          // monsterRule "maskSafe" (S2 candidate): trouble on a Mask roll never gets you caught.
+          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon);
           let gain;
           if (phase === "local" || phase === "final") gain = d.success - d.trouble + (critExtra ? d[critKey] : 0);
           else if (phase === "slip") gain = d.success + 0.8 * d.cost;
@@ -461,10 +466,10 @@ function executeRoll(S, m, plan, phase) {
   const s = S.rng.die(plan.secondDie);
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
-  const show = plan.second === MONSTER && !plan.hidden && s > t;
+  const show = plan.second !== MASK && !plan.hidden && monsterShows(t, s, P.monsterRule === "tie");
   let gain = plan.fixedSusp;
   if (b === "trouble") gain = Math.max(gain, 1); // a trouble result +1
-  if (show) gain = Math.max(gain, 1); // the Monster shows +1
+  if (show) gain = Math.max(gain, P.monsterRule === "plus2" ? 2 : 1); // the Monster shows +1
   let costKind = null;
   if (b === "cost" && phase !== "local" && phase !== "final") {
     costKind = pickCost(S, m);
