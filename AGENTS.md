@@ -28,3 +28,8 @@ Author and designer: **Richard Moore**. This project reuses the tools and the le
 - Keep model names out of commits, code and docs (except the required commit trailer).
 - Credits: "Game design & writing: Richard Moore".
 - Releases of the Foundry system go out through the release workflow (workflow_dispatch with a version) only when Richard says so.
+
+## Portal
+- Keep PORTAL.md at the repo root up to date as part of your work: set "Now:" to what you're working on and "Next:" to the next step, and keep its checklist of real milestones ("- [ ]" / "- [x]"), ticking items when they're finished and adding new ones when the plan grows. Keep its "Number: Label = value" lines (2 to 6 numbers you can measure from the project itself) current too. Plain words for family and friends; never repo names, usernames, file paths or commit IDs.
+- In each commit that changes something people would notice, add a line below the first line: "Portal-Update: <one plain sentence>".
+- PORTAL.md lists at most one "Screenshot: path = caption" line: the project's starting screen (for this game, the rulebook cover once it exists), saved under docs/portal/ as a still image under 1 MB, nothing private visible. When it changes a lot, replace the file and push; Richard approves each new picture in the portal.
