@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.13)
+# Don't Get Forked — core rules (draft 0.14)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a number; the starting values approved in S9 are in the table at the end. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -60,7 +60,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 | **Bust** [P8] | Less than half the list home |
 | **Forked** | Cornered in the final flight. The session ends |
 
-Each Entity left behind drops the result one step (Bust is the floor short of Forked). The result decides the epilogue only; nothing carries over (optional campaign rules: Q9).
+Each Entity left behind drops the result one step (Bust is the floor short of Forked). The result decides the epilogue only; nothing carries over. **Optional campaign rules** (a sidebar): furniture brought home becomes a castle upgrade with a small, capped bonus in later raids; nothing negative carries over, and the Entities don't change.
 
 ## Rulings R1–R11 (S11, provisional)
 Approved on 2026-10-04 to be tested and changed later: R1 loud way +1 Suspicion · R2 one raise per roll · R3 the town takes a captive's loot · R4 a shared Lead when several are caught · R5 a local chase takes no extra Turns · R6 nothing below a d4 · R7 several tries per obstacle per Turn · R8 unique Castle Duties · R9 the lock-up · R10 "drop an item" only when someone carries loot · R11 Suspicion stops at the Limit.
