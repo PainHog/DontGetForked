@@ -1,7 +1,7 @@
-Now: Settling the last rule gaps the simulator found, starting with what a monster's "secret way in" power does.
+Now: Settling a batch of small rule gaps the simulator had to fill in (who chases whom, what happens at the edges of the rules).
 Next: Approving the one-page core rules, then deciding the campaign, the table (session length and tone), the art direction and the online version.
-Number: Design decisions made = 44
-Number: Open design questions = 7
+Number: Design decisions made = 45
+Number: Open design questions = 6
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->

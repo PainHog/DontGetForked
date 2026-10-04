@@ -10,7 +10,7 @@ export const GAPS = [
   { id: "G2", title: "What \"the loud way\" does", ref: "DESIGN Suspicion package", param: "loudRule",
     note: "Obstacles list a loud option, but its cost is never stated (+1 Suspicion always? counts as witnessed?)." },
   { id: "G3", title: "What \"open an approach nobody else can take\" does", ref: "CORE-RULES Abilities", param: "openApproach",
-    note: "Described only as fiction. Is it unwatched? A different Difficulty? Otherwise it is the same as using the ability's trait." },
+    note: "RESOLVED by S10 (CORE-RULES 0.12): roll the ability's trait at 2 lower Difficulty, watched as usual." },
   { id: "G4", title: "Overdraw and the Monster die once Suspicion is at the Limit", ref: "CORE-RULES Abilities; Suspicion", param: "overdrawAtLimit",
     note: "RESOLVED by S1 (CORE-RULES 0.3): once the hunt is on, Suspicion stops, the Mask is off, and overdraw puts your Weakness in play for the rest of the flight." },
   { id: "G5", title: "P7's raise cap: per die or per roll", ref: "CORE-RULES P7", param: "raiseCap",

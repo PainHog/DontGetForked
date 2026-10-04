@@ -8,7 +8,7 @@ node sim/run.mjs --runs 2000 --sweep-runs 500
 
 **Caveat:** everything runs on placeholder content: eight anonymous Entities, generated towns, and placeholder Gifts, Duties, Weaknesses and Tells. The simulated players follow simple documented policies (`sim/params.mjs`). The results show how the core rules and numbers behave, not how the finished game will play.
 
-## Where things stand (after S1–S9, 2026-10-04)
+## Where things stood after S9 (2026-10-04; S10 then changed the approach effect and the Limits; the report will be re-run after S11)
 
 | Measure | Target | Simulated |
 |---|---|---|
@@ -38,6 +38,7 @@ The first run (core rules draft 0.2, starting numbers) was far off: Hard was won
 | S7 | Carrying cost almost nothing (carriers let others roll) | Furniture stands on the way; carrying it, every move takes two Turns |
 | S8 | Criticals had no effect | Doubles on a Success: +2 Lead in a chase, otherwise a charge back |
 | S9 | Numbers | The starting numbers (`docs/CORE-RULES.md`, Starting numbers) |
+| S10 | "Open an approach" was described only in fiction and, read as unwatched, was the strongest effect | An easier way: the ability's trait at 2 lower Difficulty, watched as usual; Limits 12 / 13 / 15 |
 
 Along the way the simulated players were improved (they now weigh the cost of being caught properly, which plays 1–3 points better), and several things were measured that matter for the rest of the design:
 - **The final flight is a knife-edge.** One point of mob Difficulty moves the forked rate by 10–20 points, because the majority rule turns a small edge per roll into a big edge per round. Forking is decided in the first two or three rounds.
@@ -45,7 +46,6 @@ Along the way the simulated players were improved (they now weigh the cost of be
 - **Tells are a big lever.** The placeholder Tell chance moves Hard by ±9–10 points, so the real Tells need their frequency designed with them.
 
 ## Still open
-- **S10.** What "open an approach nobody else can take" does: unwatched (the current reading), easier, or just another trait switch. Worth 9–13 win points.
 - **S11.** Smaller gaps the simulator had to fill (`sim/notes.mjs`): what the loud way costs, several Entities caught by one roll, whether chases take Turns, below a d4, several tries at one obstacle in a Turn, shared Castle Duties, the lock-up, a captive's loot, P7's raise cap.
 
 ## What the simulation can't tell yet
