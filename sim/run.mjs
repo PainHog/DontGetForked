@@ -167,7 +167,7 @@ function targetRows(M) {
   rows.push(["Captures per Hard raid", `≥ ${T.hardCaptures}`, num(M.byLabel.hard.captures), mark(M.byLabel.hard.captures >= T.hardCaptures)]);
   rows.push(["Grand Year when the party goes for furniture", `~${pct(T.grandYear.reach, 0)}`, pct(M.furniture.grandGivenWent), mark(Math.abs(M.furniture.grandGivenWent - T.grandYear.reach) <= 0.1)]);
   rows.push(["Going for furniture costs the Win", `~${pct(T.grandYear.dropBelowWin, 0)}`, pct(M.furniture.dropBelowWin), mark(Math.abs(M.furniture.dropBelowWin - T.grandYear.dropBelowWin) <= 0.07)]);
-  rows.push(["Trouble, share of rolls", "10–20%", pct(M.rolls.trouble), mark(inBand(M.rolls.trouble, T.trouble))]);
+  rows.push(["Trouble, share of rolls", `${pct(T.trouble[0], 0)}–${pct(T.trouble[1], 0)}`, pct(M.rolls.trouble), mark(inBand(M.rolls.trouble, T.trouble))]);
   rows.push(["Critical (doubles on a Success, S8), share of rolls", `${pct(T.critical[0], 0)}–${pct(T.critical[1], 0)}`, pct(M.rolls.critDoubles), mark(inBand(M.rolls.critDoubles, T.critical))]);
   rows.push(["Entities spending ≥ half their charges", `≥ ${pct(T.spendHalf, 0)}`, pct(M.spendHalf), mark(M.spendHalf >= T.spendHalf)]);
   // S1: the Mask is off in the final flight, so the choice is measured on the rolls where it exists.
