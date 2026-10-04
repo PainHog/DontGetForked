@@ -83,6 +83,18 @@ export const PARAMS = {
     doc: "free = leaving takes a Turn and no roll (as written); gate = the way out is a watched group obstacle (Sly or Nimble, or Brawn the loud way) at the label's exit Difficulty; gateSingle = the same obstacle, but one Entity's roll gets everyone out; gateCarriers = only furniture carriers must roll (a group check), everyone else walks out.",
     ref: "CORE-RULES 0.6 Getting out (S4: gateSingle is the rule; free was draft 0.5)",
   },
+  groupRule: {
+    kind: "rule", default: "all", values: ["all", "best3", "best4"],
+    title: "Who rolls a group check (S5 candidates)",
+    doc: "all = P6: every Entity rolls and gets through on its own result; best3 / best4 = at most three / four roll (the best placed), and the rest get through with them once those have.",
+    ref: "CORE-RULES P6",
+  },
+  tellScope: {
+    kind: "content", default: "entity", values: ["entity", "party"],
+    title: "Placeholder Tells: per Entity or per party (S5 candidates)",
+    doc: "entity = each Entity's Tell may trigger on arrival at a watched location; party = one chance for the party, as likely as four Entities' together.",
+    ref: "DESIGN Weakness and Tell",
+  },
   monsterPolicy: {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
     title: "When players choose the Monster die",
