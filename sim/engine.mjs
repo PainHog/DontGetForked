@@ -664,7 +664,7 @@ function finalFlight(S, trigger) {
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
-  let lead = N.lead.finalStart;
+  let lead = S.L.finalStart ?? N.lead.finalStart; // a label may set its own starting Lead
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = baseMob + fury;
     // Policy: carriers drop the furniture when the mob is about to corner them.

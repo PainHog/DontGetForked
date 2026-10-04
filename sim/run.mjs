@@ -81,12 +81,14 @@ export function metrics({ raids, rec }, paired = null) {
   }
   const all = rec.rollTotals();
   const raid = rec.rollTotals(["raid", "slip"]);
+  const choice = rec.rollTotals(["raid", "slip", "local"]);
   out.rolls = {
     perRaid: all.n / raids.length,
     trouble: all.trouble / all.n, cost: all.cost / all.n, success: all.success / all.n,
     critDoubles: all.critDoubles / all.n, critBeat4: all.critBeat4 / all.n,
     mask: all.mask / all.n, monster: all.monster / all.n,
     maskRaid: raid.n ? raid.mask / raid.n : NaN, monsterRaid: raid.n ? raid.monster / raid.n : NaN,
+    maskChoice: choice.n ? choice.mask / choice.n : NaN,
     showPerMonster: all.monster ? all.show / all.monster : NaN,
   };
   const spends = raids.flatMap((r) => r.spend);
@@ -168,8 +170,9 @@ function targetRows(M) {
   rows.push(["Trouble, share of rolls", "10–20%", pct(M.rolls.trouble), mark(inBand(M.rolls.trouble, T.trouble))]);
   rows.push(["Critical (doubles on a Success, S8), share of rolls", `${pct(T.critical[0], 0)}–${pct(T.critical[1], 0)}`, pct(M.rolls.critDoubles), mark(inBand(M.rolls.critDoubles, T.critical))]);
   rows.push(["Entities spending ≥ half their charges", `≥ ${pct(T.spendHalf, 0)}`, pct(M.spendHalf), mark(M.spendHalf >= T.spendHalf)]);
-  rows.push(["Mask, share of rolls (raid rolls)", "≥ 25%", `${pct(M.rolls.mask)} (${pct(M.rolls.maskRaid)})`, mark(M.rolls.mask >= T.mask)]);
-  rows.push(["Monster, share of rolls (raid rolls)", "≥ 25%", `${pct(M.rolls.monster)} (${pct(M.rolls.monsterRaid)})`, mark(M.rolls.monster >= T.monster)]);
+  // S1: the Mask is off in the final flight, so the choice is measured on the rolls where it exists.
+  rows.push(["Mask, share of rolls where you choose (all rolls)", "≥ 25%", `${pct(M.rolls.maskChoice)} (${pct(M.rolls.mask)})`, mark(M.rolls.maskChoice >= T.mask)]);
+  rows.push(["Monster, share of rolls where you choose (all rolls)", "≥ 25%", `${pct(1 - M.rolls.maskChoice)} (${pct(M.rolls.monster)})`, mark(1 - M.rolls.maskChoice >= T.monster)]);
   const worst = M.outliers.filter((o) => Number.isFinite(o.delta)).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0];
   rows.push(["Largest option outlier", "within ±2.5 pts", worst ? `${worst.what} ${(100 * worst.delta).toFixed(1)} pts` : "—", mark(!worst || Math.abs(worst.delta) <= T.outlier)]);
   return rows;
