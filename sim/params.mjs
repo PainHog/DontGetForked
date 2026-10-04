@@ -12,15 +12,15 @@
 
 export const PARAMS = {
   critRule: {
-    kind: "rule", default: "doubles", values: ["doubles", "beat4"],
+    kind: "rule", default: "doubles", values: ["doubles", "beat4", "beat6", "beat7"],
     title: "What counts as a Critical",
-    doc: "doubles = a Success with both dice the same face; beat4 = total ≥ Difficulty + 4. Only matters where a Critical has an effect (critEffect).",
+    doc: "doubles = a Success with both dice the same face; beatN = total ≥ Difficulty + N. Only matters where a Critical has an effect (critEffect).",
     ref: "CORE-RULES Rolling 3 (Critical: open)",
   },
   critEffect: {
-    kind: "rule", default: "none", values: ["none", "lead2"],
+    kind: "rule", default: "none", values: ["none", "lead2", "charge", "both"],
     title: "What a Critical does",
-    doc: "none = no extra effect (the rules don't define one); lead2 = in a chase a Critical moves the Lead 2 (counts as two successes in the final flight).",
+    doc: "none = no extra effect (the rules don't define one); lead2 = in a chase a Critical moves the Lead 2 (counts as two successes in the final flight); charge = outside chases a Critical gives the roller back one spent charge; both = lead2 + charge.",
     ref: "CORE-RULES Rolling 3 (no effect given)",
   },
   costChoice: {

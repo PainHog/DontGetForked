@@ -57,13 +57,14 @@ export function band(total, difficulty) {
 /**
  * Critical (open in CORE-RULES; the simulator measures both candidates):
  *  - "doubles": a Success where both dice show the same face;
- *  - "beat4":   the total beats the Difficulty by 4 or more.
+ *  - "beatN":   the total beats the Difficulty by N or more ("beat4", "beat7", …).
  */
 export function isCritical(traitFace, secondFace, difficulty, rule) {
   const total = traitFace + secondFace;
   if (total < difficulty) return false;
   if (rule === "doubles") return traitFace === secondFace;
-  if (rule === "beat4") return total >= difficulty + 4;
+  const m = /^beat(\d+)$/.exec(rule);
+  if (m) return total >= difficulty + Number(m[1]);
   throw new Error(`unknown critical rule: ${rule}`);
 }
 
