@@ -1,0 +1,38 @@
+{
+  "id": "dont-get-forked",
+  "type": "system",
+  "title": "Don't Get Forked",
+  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore. Early skeleton: the game's rules are not written yet.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Richard Moore",
+      "url": "https://github.com/PainHog/DontGetForked"
+    }
+  ],
+  "esmodules": [
+    "module/dont-get-forked.mjs"
+  ],
+  "styles": [
+    "styles/dont-get-forked.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "socket": true,
+  "url": "https://github.com/PainHog/DontGetForked",
+  "bugs": "https://github.com/PainHog/DontGetForked/issues",
+  "manifest": "https://github.com/PainHog/DontGetForked/releases/latest/download/system.json",
+  "download": "https://github.com/PainHog/DontGetForked/releases/latest/download/system.zip",
+  "license": "LICENSE",
+  "readme": "README.md"
+}
