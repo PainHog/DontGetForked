@@ -20,9 +20,10 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 |---|---|---|
 | 2026-10-04 | Title, premise and core loop as in the pitch above | — |
 | 2026-10-04 | Private repository; same toolchain as Heisty Spideys (book pipeline, simulator, Foundry system) | Foundry automation-first is the default from Heisty's lessons; confirm in the first session |
+| 2026-10-04 | **Engine: build a new resolution system** (not a reskin or adaptation of the Heisty Spideys engine) | Chosen over reuse-as-is and adapt-the-dice-core. Consequences: balance is simulated from zero; the Foundry dice, roll dialog and threat ledger and the simulator engine are written fresh for this game (the toolchain stays). The lessons in `docs/LESSONS.md` still apply to the new system. Which system: still open (Q1) |
 
 ## Open questions (work through these with Richard, roughly in this order)
-1. **Engine.** Reskin the proven *Heisty Spideys* engine, or build something new? Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
+1. **Engine.** *Decided 2026-10-04: build new.* Still open: which resolution system. (Original question: reskin the proven *Heisty Spideys* engine, or build something new?) Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
 2. **Entities.**
    - Which monsters, how many at launch, and whether two players can pick the same one.
    - Premade only, or premade with choices (e.g. pick perks)?
