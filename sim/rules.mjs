@@ -67,9 +67,12 @@ export function isCritical(traitFace, secondFace, difficulty, rule) {
   throw new Error(`unknown critical rule: ${rule}`);
 }
 
-/** Decisions log 2026-10-04: the Monster shows if the Monster die rolls higher than the trait die. */
-export function monsterShows(traitFace, monsterFace) {
-  return monsterFace > traitFace;
+/**
+ * Decisions log 2026-10-04: the Monster shows if the Monster die rolls higher than
+ * the trait die. `tie` = the S2 candidate "at least as high".
+ */
+export function monsterShows(traitFace, monsterFace, tie = false) {
+  return tie ? monsterFace >= traitFace : monsterFace > traitFace;
 }
 
 /** Roll one trait die and one second die. */
@@ -90,8 +93,8 @@ const DIST_CACHE = new Map();
  *            show:{success:number,cost:number,trouble:number},
  *            critDoubles:number, critBeat4:number}}
  */
-export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, hidden = false } = {}) {
-  const key = `${traitDie}|${secondDie}|${difficulty}|${monster ? 1 : 0}|${hidden ? 1 : 0}`;
+export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, hidden = false, tie = false } = {}) {
+  const key = `${traitDie}|${secondDie}|${difficulty}|${monster ? 1 : 0}|${hidden ? 1 : 0}|${tie ? 1 : 0}`;
   const hit = DIST_CACHE.get(key);
   if (hit) return hit;
   const out = { success: 0, cost: 0, trouble: 0, show: { success: 0, cost: 0, trouble: 0 }, critDoubles: 0, critBeat4: 0 };
@@ -100,7 +103,7 @@ export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, 
     for (let s = 1; s <= secondDie; s++) {
       const b = band(t + s, difficulty);
       out[b] += w;
-      if (monster && !hidden && monsterShows(t, s)) out.show[b] += w;
+      if (monster && !hidden && monsterShows(t, s, tie)) out.show[b] += w;
       if (isCritical(t, s, difficulty, "doubles")) out.critDoubles += w;
       if (isCritical(t, s, difficulty, "beat4")) out.critBeat4 += w;
     }

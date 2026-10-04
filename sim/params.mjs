@@ -71,6 +71,12 @@ export const PARAMS = {
     doc: "separate = each runs its own local chase (the shared-Lead rule is only given for the final flight).",
     ref: "DESIGN Two kinds of chase / Q8g",
   },
+  monsterRule: {
+    kind: "rule", default: "base", values: ["base", "tie", "plus2", "d8", "maskSafe"],
+    title: "S2 candidates: how the Monster die is priced",
+    doc: "base = the Monster shows when it rolls higher than the trait die (+1 Suspicion); tie = it shows when it rolls at least as high; plus2 = a show is +2 Suspicion; d8 = the Monster die is a d8; maskSafe = trouble on a Mask roll never gets you caught.",
+    ref: "DESIGN Mask/Monster decisions; S2",
+  },
   exitRule: {
     kind: "rule", default: "free", values: ["free", "gate"],
     title: "Getting out of town",
@@ -81,6 +87,12 @@ export const PARAMS = {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
     title: "When players choose the Monster die",
     doc: "smart = weigh the better odds against the Suspicion risk; mask = always the Mask unless forced; monster = always the Monster.",
+    ref: "player policy",
+  },
+  caughtWeight: {
+    kind: "policy", default: 1.2, values: [1.2, 0.4, 2.0],
+    title: "How much the simulated players fear being caught",
+    doc: "The value a roll loses per point of chance that trouble gets the roller caught (a local chase, Suspicion, maybe capture). Success is worth 1.",
     ref: "player policy",
   },
   chargePolicy: {
