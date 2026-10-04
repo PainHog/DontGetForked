@@ -194,8 +194,11 @@ function lockupLocation(S) {
 /** Placeholder Tells: each Entity may give itself away on arriving where there are witnesses. */
 function arrive(S, loc) {
   if (!loc.obstacles.some((o) => o.witnessed)) return;
-  for (const m of active(S)) {
-    if (S.rng.chance(S.P.tellChance)) {
+  // tellScope "party" (S5 candidate): one chance for the whole party, as likely as four Entities' together.
+  const who = S.P.tellScope === "party" ? [null] : active(S);
+  const chance = S.P.tellScope === "party" ? Math.min(1, 1 - (1 - S.P.tellChance) ** 4) : S.P.tellChance;
+  for (const m of who) {
+    if (S.rng.chance(chance)) {
       addSusp(S, 1, "tell"); // DESIGN Suspicion package: a Tell +1 when triggered (its own event)
       S.rec.count("tells");
       if (limitHit(S)) return finalFlight(S, "limit");
@@ -216,13 +219,18 @@ function workLocation(S, loc) {
 
     if (ob.group) {
       // P6: everyone rolls and gets through on their own result; Suspicion rises once, by the worst.
-      const rollers = avail.filter((m) => !ob.passed.has(m.id));
+      // groupRule "best3" (S5 candidate): at most three roll, and the rest get through with them.
+      const cap = S.P.groupRule === "best3" ? 3 : S.P.groupRule === "best4" ? 4 : Infinity;
+      const need = Math.min(cap, active(S).length);
+      const passedNow = () => active(S).filter((m) => ob.passed.has(m.id)).length;
+      if (passedNow() >= need) { ob.cleared = true; continue; }
+      let rollers = avail.filter((m) => !ob.passed.has(m.id)).map((m) => ({ m, plan: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")) }));
+      if (cap < Infinity) rollers = rollers.sort((a, b) => b.plan.value - a.plan.value).slice(0, need - passedNow());
       if (rollers.length === 0) { ob.cleared = true; continue; }
       let worst = 0;
       const caught = [];
-      for (const m of rollers) {
+      for (const { m, plan } of rollers) {
         acted.add(m);
-        const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
         if (plan.value <= 0 && rollers.length > 1) S.rec.count("group: forced low-value roll");
         const r = executeRoll(S, m, plan, "raid");
         worst = Math.max(worst, r.suspGain);
@@ -236,7 +244,7 @@ function workLocation(S, loc) {
         localChase(S, m);
         if (S.phase !== "raid") return;
       }
-      if (active(S).every((m) => ob.passed.has(m.id))) ob.cleared = true;
+      if (passedNow() >= Math.min(cap, active(S).length)) ob.cleared = true;
       continue;
     }
 
