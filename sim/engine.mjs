@@ -230,6 +230,7 @@ function arrive(S, loc) {
 /** One Turn of work at a location: every available Entity rolls once (P4). */
 function workLocation(S, loc) {
   const acted = new Set();
+  const tried = new Set();
   for (const m of active(S)) if (m.loseTurn) { m.loseTurn = false; acted.add(m); S.rec.count("lost turns"); }
 
   while (S.phase === "raid") {
@@ -261,15 +262,23 @@ function workLocation(S, loc) {
       S.rec.count("group checks");
       addSusp(S, worst, "roll");
       if (limitHit(S)) return finalFlight(S, "limit");
-      for (const m of caught) {
-        localChase(S, m);
+      if (caught.length > 1 && S.P.multiCaught === "shared") {
+        groupChase(S, caught); // S11 candidate: one chase on a shared Lead (majority rule)
         if (S.phase !== "raid") return;
+      } else {
+        for (const m of caught) {
+          localChase(S, m);
+          if (S.phase !== "raid") return;
+        }
       }
+      if (active(S).length === 0) break;
       if (passedNow() >= Math.min(cap, active(S).length)) ob.cleared = true;
       continue;
     }
 
     // A single obstacle: the best-placed available Entity tries it.
+    // triesPerTurn "one" (S11 candidate): only one Entity may try a given obstacle each Turn.
+    if (S.P.triesPerTurn === "one" && tried.has(ob)) break;
     let best = null;
     for (const m of avail) {
       const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
@@ -277,6 +286,7 @@ function workLocation(S, loc) {
     }
     if (best.plan.value <= 0) { S.rec.count("declined rolls"); break; }
     acted.add(best.m);
+    tried.add(ob);
     const r = executeRoll(S, best.m, best.plan, "raid");
     addSusp(S, r.suspGain, "roll");
     if (r.band !== "trouble") ob.cleared = true;
@@ -287,7 +297,7 @@ function workLocation(S, loc) {
     }
   }
 
-  if (S.phase === "raid" && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
+  if (S.phase === "raid" && active(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
 }
 
 function completeLocation(S, loc) {
@@ -298,8 +308,9 @@ function completeLocation(S, loc) {
     loc.done = false; // a later capture needs a new rescue
     return;
   }
-  loc.done = true;
   const act = active(S);
+  if (act.length === 0) return; // everyone was caught: nobody is here to take the loot
+  loc.done = true;
   if (!loc.itemsTaken) {
     loc.itemsTaken = true;
     for (const it of loc.items) {
@@ -611,6 +622,26 @@ function localChase(S, m) {
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
     if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
     if (lead <= 0) return capture(S, m);
+  }
+  S.rec.detect("local chase stalled (no end after max rounds)");
+}
+
+/** multiCaught "shared" (S11 candidate): several Entities caught by one roll flee together on one Lead. */
+function groupChase(S, group) {
+  const N = S.N;
+  S.rec.count("local chases (shared)");
+  const weak = new Map(group.map((m) => [m, m.ent.weakness === "mob" && S.rng.chance(S.P.weaknessLocal)]));
+  let lead = N.lead.localStart;
+  const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
+  for (let round = 0; round < N.maxChaseRounds; round++) {
+    const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
+    const ground = chaseGround(S);
+    const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: ground, difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
+    lead += majorityMove(results, critW);
+    if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
+    if (limitHit(S)) return finalFlight(S, "limit");
+    if (lead >= N.lead.localEscape) return;
+    if (lead <= 0) { for (const m of group) capture(S, m); return; }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
 }
