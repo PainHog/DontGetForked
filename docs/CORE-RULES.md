@@ -1,4 +1,4 @@
-# Don't Get Forked — core rules (draft 0.6)
+# Don't Get Forked — core rules (draft 0.7)
 
 *Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a starting number the simulator will tune. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
@@ -37,12 +37,13 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [sim].
-- **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
+- **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2.
+- **Tells [S5]:** checked once each time the party arrives at a watched location, for the whole party; if one goes off, one Entity's Tell shows (+1 Suspicion). The chance is set with the Tell content [sim]. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved.
 - **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1].
 
 ## Chases
-- **The Lead track:** start with a small Lead [sim]. Each round, roll against the mob's Difficulty, which rises with Suspicion and party size [sim]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
+- **The Lead track:** start with a small Lead [sim]. Each round, roll against the mob's Difficulty [sim]: in a local chase it rises with Suspicion; in the final flight it is set by the label and doesn't change with party size [S5]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
 - **The ground:** each round, roll on a d6 chase table. The result lists the traits that work, always including one that isn't Nimble.
 - **Weakness:** once the mob brings your Weakness, you roll your trait one size smaller in the chase.
 - **Local chase:** cornered means **captured**. You're held at a location; the party can rescue you (it becomes an obstacle and costs Turns), and once per Turn you may try to slip free (a failed attempt: Suspicion +1). Anyone still held when the party leaves town is left behind.

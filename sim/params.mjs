@@ -90,8 +90,8 @@ export const PARAMS = {
     ref: "CORE-RULES P6",
   },
   tellScope: {
-    kind: "content", default: "entity", values: ["entity", "party"],
-    title: "Placeholder Tells: per Entity or per party (S5 candidates)",
+    kind: "rule", default: "party", values: ["party", "entity"],
+    title: "Tells: once per watched location for the party (S5) or per Entity (draft 0.6)",
     doc: "entity = each Entity's Tell may trigger on arrival at a watched location; party = one chance for the party, as likely as four Entities' together.",
     ref: "DESIGN Weakness and Tell",
   },
@@ -167,7 +167,7 @@ export const NUMBERS = {
   overdrawSuspicion: 2,
   lead: { localStart: 2, localEscape: 4, finalStart: 2, finalEscape: 6 },
   localMob: { base: 6, perSuspicion: 0.5, max: 12 },
-  finalMobPerExtraEntity: 1, // mob Difficulty + this for each Entity beyond 4 (fewer: minus)
+  finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
   maxChaseRounds: 20,
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
   furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
