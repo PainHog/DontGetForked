@@ -1,5 +1,5 @@
 Now: Playtesting the approved rules with computer players and real dice, and fixing anything unclear in the text.
-Next: Writing the rules chapters of the rulebook and the online version's rules engine, then the eight monsters.
+Next: Writing the eight monsters with the author: their dice, powers, weaknesses and tells.
 Number: Design decisions made = 52
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
@@ -27,6 +27,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Check the name
 - [ ] Playtest the core rules by the book (and a verification playtest after fixes)
 - [ ] Write the eight monsters: powers, weaknesses and tells
+- [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
 - [ ] Foundry system playable
