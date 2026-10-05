@@ -59,6 +59,18 @@ export const PARAMS = {
     doc: "perDie = literal P7: no die raised more than one size, so the trait die and the second die can each be raised once; perRoll = one raise per roll in total.",
     ref: "CORE-RULES P7",
   },
+  raiseDie: {
+    kind: "rule", default: "any", values: ["any", "trait"],
+    title: "Which die a raise can raise",
+    doc: "any = the trait die or the Mask/Monster die (d6 → d8, d10 → d12), as simulated up to PT1–PT2; trait = only the trait die (both playtests' reading).",
+    ref: "CORE-RULES Abilities (\"raise a die one size\"); PT1 A28, PT2 A27",
+  },
+  openTrait: {
+    kind: "rule", default: "any", values: ["any", "unlisted"],
+    title: "Which traits \"open an approach\" can use",
+    doc: "any = the ability's trait at 2 lower Difficulty even when the obstacle already lists it, as simulated up to PT1–PT2; unlisted = only when the obstacle doesn't list that trait (\"nobody else can take\").",
+    ref: "CORE-RULES Abilities (S10); PT2 A7",
+  },
   captiveItems: {
     kind: "rule", default: "lost", values: ["lost", "kept"],
     title: "What a captured Entity's loot does",
