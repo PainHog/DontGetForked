@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ART = ROOT / "book" / "art"
 MANIFEST = ART / "stand-in" / "manifest.json"
 CACHE = Path(os.environ.get("ART_CACHE", Path.home() / ".cache" / "dgf-stand-in"))
-UA = "DontGetForkedBook/0.1 (rulebook stand-in art)"
+UA = "DontGetForkedBook/0.1 (https://github.com/PainHog/DontGetForked; rulebook stand-in art)"
 
 
 def hex_rgb(h):

@@ -142,6 +142,14 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1841.
 - **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects.
 
+## spot-bonfire: Spot (Chapter 8 end)
+
+- **Work:** Kinderen bij een vreugdevuur op St. Maarten, RP-T-2016-35.jpg ("van St. Martens Vuurtje", children at a St Martin's Day bonfire, the Dutch lantern festival; added 2026-10-05 with Lantern Night)
+- **Artist:** Christiaan Andriessen (Dutch, 1775-1846); 1805-1808, pen and watercolour
+- **Source:** https://commons.wikimedia.org/wiki/File:Kinderen_bij_een_vreugdevuur_op_St._Maarten,_RP-T-2016-35.jpg (prepared from Commons' 1920 px rendition; the full scan is throttled)
+- **Licence:** CC0 (CC-zero), checked 2026-10-05. Rijksmuseum Amsterdam scan released CC0; artist died 1846.
+- **Audit:** Seven figures standing or kneeling on the ground round a bonfire, their shadows running out from the fire across the ground; the fire on the ground among their feet; a tree rooted at the left, its branches overhead; fence posts set in the ground at the right. Faces that turn to us show two eyes. The artist's handwritten date and title are cropped off.
+
 ## The Entities' portraits (Chapter 2)
 
 Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration"): two per Entity, in costume and revealed, in frames about 0.85:1 (1.66 × 1.95 in). Licences re-checked on Commons the same day. Every monster is a pre-1930 print, so none borrows the Universal film looks; they show what the illustrator's originals should be about, not how they should look.

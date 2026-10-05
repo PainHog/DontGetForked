@@ -219,6 +219,7 @@ const SPOTS = {
   "ch-05": ["spot-watchman"],
   "ch-06": ["spot-windmill"],
   "ch-07": ["spot-cart"],
+  "ch-08": ["spot-bonfire"],
 };
 const PT_PER_IN = 72;
 const BOTTOM_LIMIT_PT = (0.78 + BLEED_IN) * PT_PER_IN;   // @page bottom margin: content must end above this
