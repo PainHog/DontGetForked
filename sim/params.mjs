@@ -186,9 +186,9 @@ export const PARAMS = {
     ref: "player policy",
   },
   roster: {
-    kind: "content", default: "approved", values: ["approved", "placeholder"],
+    kind: "content", default: "approved", values: ["approved", "placeholder", "proposed"],
     title: "Which Entities",
-    doc: "approved = the real roster's dice (C1) and signature abilities (C2), with placeholder Gifts and Weakness types; placeholder = the anonymous E1–E8.",
+    doc: "approved = the real roster's dice (C1) and signature abilities (C2), with placeholder Gifts and Weakness types; placeholder = the anonymous E1–E8; proposed = approved plus the Gifts, Perks and Weakness timings proposed for the current interview question.",
     ref: "DESIGN Decisions log (C1); module/config.mjs DGF.entities",
   },
   dutyEdge: {
@@ -197,6 +197,12 @@ export const PARAMS = {
     doc: "true = an Entity's trait die is one size larger at a location holding an item of its duty's kind (placeholder for the real Duties).",
     ref: "DESIGN Picks (Castle Duty content not written)",
   },
+  tellPartyChance: {
+    kind: "rule", default: 0.5, values: [0.5, 1 / 3, 2 / 3],
+    title: "Tell chance per check (whole party)",
+    doc: "C4: a d6 roll of 4–6 at each newly reached watched location (tellScope \"party\").",
+    ref: "CORE-RULES Suspicion (Tells); C4",
+  },
   tellChance: {
     kind: "content", default: 1 / 6, values: [1 / 6, 0, 1 / 3],
     title: "Placeholder Tell frequency",
@@ -204,9 +210,9 @@ export const PARAMS = {
     ref: "DESIGN Weakness and Tell (content not written)",
   },
   weaknessRule: {
-    kind: "content", default: "chance", values: ["chance", "always", "soon", "table"],
+    kind: "content", default: "timing", values: ["timing", "chance", "always", "soon", "table"],
     title: "When the mob brings a Weakness (C3 candidates)",
-    doc: "chance = placeholder chances at the start of each chase (below); always = from round 1 of every chase; soon = from round 3; table = from the round the chase table shows a 6, for everyone in that chase. Sunlight-type Weaknesses only bite in a dawn flight.",
+    doc: "timing = each Entity's own Weakness timing (C3; \"soon\" until its Weakness is written); chance = placeholder chances at the start of each chase (below); always = from round 1 of every chase; soon = from round 3; table = from the round the chase table shows a 6, for everyone in that chase. Sunlight-type Weaknesses only bite in a dawn flight.",
     ref: "CORE-RULES Chases (Weakness); content C3",
   },
   weaknessLocal: {

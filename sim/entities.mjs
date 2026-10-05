@@ -91,11 +91,47 @@ function buildApproved() {
       giftOptions: Object.freeze(EFFECTS.filter((x) => x !== std)),
       giftTrait: order.find((t) => t !== sig.trait) ?? order[1],
       formDice: e.forms ? Object.freeze({ jekyll: Object.freeze({ ...e.forms.jekyll }), hyde: Object.freeze({ ...e.forms.hyde }) }) : null,
+      key: e.key,
+      // C3: the Weakness's timing once written ("dawn" = sunlight-type); until then the placeholder type.
+      ...(e.weakness ? { weakness: e.weakness.timing === "dawn" ? "sunlight" : "mob", weaknessTiming: e.weakness.timing } : {}),
     });
   }));
 }
 
-export const ROSTERS = Object.freeze({ placeholder: ROSTER, approved: buildApproved() });
+/**
+ * PROPOSED content for the next interview question (not decided): Gifts (three
+ * versions of the second ability: name, effect, trait), Perks (ids the engine knows,
+ * see engine.mjs PERKS) and the Weakness timing. Entities not listed keep the
+ * approved roster's placeholders.
+ */
+const PROPOSED = {
+  dracula: {
+    gifts: [{ name: "Bat", effect: "switch", trait: "nimble" }, { name: "Mist", effect: "hidden" }, { name: "Wolf", effect: "raise" }],
+    perks: ["oldMoney", "hypnoticEyes", "wallCrawler"],
+    weaknessTiming: "always", // garlic
+  },
+  creature: {
+    gifts: [{ name: "Mountain Stride", effect: "open", trait: "nimble" }, { name: "Hovel Watcher", effect: "hidden" }, { name: "Book-Learned", effect: "raise" }],
+    perks: ["strongBack", "tireless", "builtToLast"],
+    weaknessTiming: "soon", // fire
+  },
+};
+
+function buildProposed() {
+  return Object.freeze(buildApproved().map((e) => {
+    const c = PROPOSED[e.key];
+    if (!c) return e;
+    return Object.freeze({
+      ...e,
+      giftOptions: Object.freeze(c.gifts.map((g) => Object.freeze({ ...g }))),
+      perkOptions: Object.freeze([...c.perks]),
+      weakness: c.weaknessTiming === "dawn" ? "sunlight" : "mob",
+      weaknessTiming: c.weaknessTiming,
+    });
+  }));
+}
+
+export const ROSTERS = Object.freeze({ placeholder: ROSTER, approved: buildApproved(), proposed: buildProposed() });
 
 /** Validator: rejects an Entity that breaks the decided structure. */
 export function validateEntity(e) {
@@ -119,6 +155,7 @@ export function makeParty(rng, n, chargesEach, roster = ROSTER) {
     ent: e,
     id: e.id,
     gift: rng.pick(e.giftOptions),
+    perk: e.perkOptions ? rng.pick(e.perkOptions) : null,
     duty: duties[k],
     charges: chargesEach,
     chargesStart: chargesEach,
@@ -133,6 +170,8 @@ export function makeParty(rng, n, chargesEach, roster = ROSTER) {
 export function abilitiesOf(m) {
   return [
     { effect: m.ent.signature.effect, trait: m.ent.signature.trait, source: "signature" },
-    { effect: m.gift, trait: m.ent.giftTrait, source: "gift" },
+    typeof m.gift === "object"
+      ? { effect: m.gift.effect, trait: m.gift.trait ?? m.ent.giftTrait, source: "gift" }
+      : { effect: m.gift, trait: m.ent.giftTrait, source: "gift" },
   ];
 }
