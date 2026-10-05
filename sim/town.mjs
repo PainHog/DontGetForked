@@ -83,3 +83,15 @@ export const CHASE_TABLE = Object.freeze([
   ["sly", "charm"],
   ["brawn", "wits"],
 ]);
+
+/**
+ * Chase tables proposed for content question C12 (not decided). A: two traits a row,
+ * each trait 2–3 times (Nimble and Sly three); B: three traits a row; C: Nimble on every
+ * row plus one other.
+ */
+export const CHASE_TABLES = Object.freeze({
+  placeholder: CHASE_TABLE,
+  A: [["sly", "charm"], ["nimble", "sly"], ["brawn", "nimble"], ["nimble", "wits"], ["charm", "sly"], ["brawn", "wits"]],
+  B: [["sly", "charm", "nimble"], ["nimble", "sly", "wits"], ["brawn", "nimble", "charm"], ["nimble", "wits", "brawn"], ["charm", "sly", "brawn"], ["brawn", "wits", "sly"]],
+  C: [["nimble", "sly"], ["nimble", "charm"], ["nimble", "brawn"], ["nimble", "wits"], ["nimble", "sly"], ["nimble", "brawn"]],
+});

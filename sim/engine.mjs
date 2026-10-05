@@ -16,7 +16,7 @@
  */
 import { MASK, MONSTER, stepUp, stepDown, band, isCritical, outcomeDist, majorityMove, leadMove, monsterShows } from "./rules.mjs";
 import { abilitiesOf } from "./entities.mjs";
-import { rescueObstacle, CHASE_TABLE } from "./town.mjs";
+import { rescueObstacle, CHASE_TABLE, CHASE_TABLES } from "./town.mjs";
 
 const LADDER = ["bust", "partial", "win", "grand"];
 
@@ -824,9 +824,10 @@ function applyCost(S, m, kind) {
 // ---------------------------------------------------------------- chases, capture
 
 function chaseGround(S) {
-  const row = S.rng.int(0, CHASE_TABLE.length - 1);
+  const table = CHASE_TABLES[S.P.chaseTable] || CHASE_TABLE;
+  const row = S.rng.int(0, table.length - 1);
   S.groundRow = row;
-  return CHASE_TABLE[row].map((t) => ({ trait: t, loud: false }));
+  return table[row].map((t) => ({ trait: t, loud: false }));
 }
 
 /** wallCrawler: in a chase you can always roll Nimble. */
