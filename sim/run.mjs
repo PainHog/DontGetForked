@@ -56,7 +56,7 @@ export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, si
         const party = makeParty(rng.fork("party"), size, numbers.charges, ROSTERS[params.roster] || ROSTER);
         const town = makeTown(rng.fork("town"), label, numbers);
         const s = playRaid({ party, town, params, numbers, rng: rng.fork("dice"), rec });
-        raids.push({ label, size, i, members: party.map((m) => ({ id: m.id, gift: m.gift, duty: m.duty })), ...s });
+        raids.push({ label, size, i, members: party.map((m) => ({ id: m.id, ent: m.ent, gift: m.gift, perk: m.perk, duty: m.duty })), ...s });
       }
     }
   }
@@ -143,10 +143,13 @@ function outliers(raids) {
   };
   const res = [];
   const ids = [...new Set(raids.flatMap((r) => r.members.map((m) => m.id)))];
-  for (const e of ids.map((id) => Object.values(ROSTERS).flat().find((x) => x.id === id))) {
+  for (const e of ids.map((id) => raids.flatMap((r) => r.members).find((m) => m.id === id).ent)) {
     res.push({ what: `entity ${e.id}`, delta: deltas((r) => r.members.some((m) => m.id === e.id)) });
     for (const g of e.giftOptions) {
-      res.push({ what: `gift ${e.id}:${g}`, delta: deltas((r) => r.members.some((m) => m.id === e.id && m.gift === g), (r) => r.members.some((m) => m.id === e.id)) });
+      res.push({ what: `gift ${e.id}:${g.name ?? g}`, delta: deltas((r) => r.members.some((m) => m.id === e.id && m.gift === g), (r) => r.members.some((m) => m.id === e.id)) });
+    }
+    for (const k of e.perkOptions ?? []) {
+      res.push({ what: `perk ${e.id}:${k}`, delta: deltas((r) => r.members.some((m) => m.id === e.id && m.perk === k), (r) => r.members.some((m) => m.id === e.id)) });
     }
   }
   for (const d of DUTIES) res.push({ what: `duty ${d}`, delta: deltas((r) => r.members.some((m) => m.duty === d)) });

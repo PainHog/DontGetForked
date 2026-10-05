@@ -1,6 +1,6 @@
 Now: The monsters' dice and signature powers are set; free public-domain engravings are being gathered as stand-in art until the illustrator's work arrives.
 Next: Writing the eight monsters with the author: their powers, weaknesses and tells.
-Number: Design decisions made = 57
+Number: Design decisions made = 58
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 

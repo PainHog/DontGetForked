@@ -229,6 +229,17 @@ const active = (S) => S.party.filter((m) => m.status === "active");
 const captives = (S) => S.party.filter((m) => m.status === "captured");
 /** The Entities working the current location: the whole party, or (split play) one group. */
 const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : active(S));
+/**
+ * Perks (C5: narrow, always on). The engine knows these proposed ones:
+ *  oldMoney      a Cost on a Charm roll is never Suspicion +1
+ *  hypnoticEyes  on Charm rolls the Monster shows only if it beats the trait die by 2+
+ *  wallCrawler   in a chase you can always roll Nimble
+ *  strongBack    carries a Huge piece alone
+ *  tireless      carrying doesn't make Nimble smaller
+ *  builtToLast   slips free from the lock-up on a Success or a Cost
+ */
+const hasPerk = (m, k) => m.perk === k;
+
 /** An Entity's dice now (Jekyll & Hyde: the form it's in). */
 const diceOf = (m) => (m.ent.formDice ? m.ent.formDice[m.form === "hyde" ? "hyde" : "jekyll"] : m.ent.dice);
 const carriedItems = (S) => S.party.flatMap((m) => (m.status === "active" ? m.items : []));
@@ -351,7 +362,7 @@ function arrive(S, loc) {
   if (!loc.obstacles.some((o) => o.witnessed || (o.alt && S.P.waysIn === "two" && o.alt.witnessed))) return;
   // tellScope "party" (S5 candidate): one chance for the whole party, as likely as four Entities' together.
   const who = S.P.tellScope === "party" ? [null] : active(S);
-  const chance = S.P.tellScope === "party" ? Math.min(1, 1 - (1 - S.P.tellChance) ** 4) : S.P.tellChance;
+  const chance = S.P.tellScope === "party" ? S.P.tellPartyChance : S.P.tellChance; // C4: 4–6 on a d6 for the party
   for (const m of who) {
     if (S.rng.chance(chance)) {
       addSusp(S, 1, "tell"); // DESIGN Suspicion package: a Tell +1 when triggered (its own event)
@@ -496,8 +507,9 @@ function completeLocation(S, loc) {
   }
   if (loc.furniture && !S.furnitureCarried) {
     // Carrying (DESIGN): Bulky = one carrier, Huge = two. Policy: the Entities with the smallest Nimble carry.
-    const n = loc.furniture.size === "huge" ? 2 : 1;
-    const carriers = [...act].sort((a, b) => diceOf(a).nimble - diceOf(b).nimble).slice(0, n);
+    const strong = act.find((m) => hasPerk(m, "strongBack"));
+    const n = loc.furniture.size === "huge" && !strong ? 2 : 1;
+    const carriers = strong ? [strong] : [...act].sort((a, b) => diceOf(a).nimble - diceOf(b).nimble).slice(0, n);
     if (carriers.length === n) {
       const piece = { ...loc.furniture, carriers: carriers.map((c) => c.id) };
       for (const c of carriers) c.furniture = piece;
@@ -514,7 +526,8 @@ function completeLocation(S, loc) {
 function wantsFurnitureHere(S, loc) {
   const pol = S.P.furniturePolicy;
   if (pol === "never") return false;
-  if ((loc.solo ? 1 : hereOf(S).length) < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
+  const strong = hereOf(S).some((m) => hasPerk(m, "strongBack"));
+  if ((loc.solo ? 1 : hereOf(S).length) < (loc.furniturePending.size === "huge" && !strong ? 2 : 1)) return false;
   if (pol === "always") return true;
   const rest = S.town.locations.filter((l) => !l.done && l !== loc).reduce((a, l) => a + locationNeed(S, l), 0);
   return S.limit - S.susp >= 3 && rest + 1 + 2 + 2 <= turnsLeft(S);
@@ -641,7 +654,7 @@ function planRoll(S, m, ctx) {
     let down = m.nextStepDown;
     const duty = P.dutyEdge && phase === "raid" && ctx.locKind && ctx.locKind === m.duty;
     if (duty) up += 1;
-    if (c.trait === "nimble" && carrying) down += 1; // carriers roll Nimble one size smaller
+    if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless")) down += 1; // carriers roll Nimble one size smaller
     if (ctx.weakness) down += 1; // the mob brought your Weakness: one size smaller in the chase
     const traitRaised = duty; // counts toward P7's cap
     for (const second of seconds) {
@@ -716,7 +729,8 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   const s = S.rng.die(plan.secondDie);
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
-  const show = plan.second !== MASK && !plan.hidden && monsterShows(t, s, P.monsterRule === "tie");
+  const eyes = hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm"; // shows only if it beats the trait die by 2+
+  const show = plan.second !== MASK && !plan.hidden && (eyes ? s - t >= 2 : monsterShows(t, s, P.monsterRule === "tie"));
   if (plan.cand.formChange) { m.form = m.form === "hyde" ? "jekyll" : "hyde"; S.rec.count("the draught"); }
   // C2b: when the Monster shows on one of Jekyll's rolls, Hyde takes over, free.
   if (m.ent.formDice && m.form !== "hyde" && plan.second !== MASK && monsterShows(t, s, P.monsterRule === "tie")) { m.form = "hyde"; S.rec.count("Hyde takes over"); }
@@ -730,7 +744,7 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   if (show) gain = Math.max(gain, P.monsterRule === "plus2" ? 2 : 1); // the Monster shows +1
   let costKind = null;
   if (b === "cost" && phase !== "local" && phase !== "final" && !noCost) {
-    costKind = pickCost(S, m, gain);
+    costKind = pickCost(S, m, hasPerk(m, "oldMoney") && plan.cand.trait === "charm" ? 9 : gain);
     if (costKind === "suspicion") gain = Math.max(gain, 1);
   }
   S.rec.roll({
@@ -788,6 +802,11 @@ function chaseGround(S) {
   return CHASE_TABLE[row].map((t) => ({ trait: t, loud: false }));
 }
 
+/** wallCrawler: in a chase you can always roll Nimble. */
+function groundFor(m, ground) {
+  return hasPerk(m, "wallCrawler") && !ground.some((o) => o.trait === "nimble") ? [...ground, { trait: "nimble", loud: false }] : ground;
+}
+
 /**
  * weaknessRule (C3 candidates): when the mob brings a mob-type Weakness.
  * "chance" = a placeholder chance at the start of each chase (weaknessLocal / weaknessFinal);
@@ -797,14 +816,14 @@ function chaseGround(S) {
  */
 function weakStart(S, m, final, trigger) {
   if (m.ent.weakness !== "mob") return final && trigger === "dawn";
-  const r = S.P.weaknessRule;
+  const r = S.P.weaknessRule === "timing" ? (m.ent.weaknessTiming ?? "soon") : S.P.weaknessRule;
   if (r === "always") return true;
   if (r === "soon" || r === "table") return false;
   return S.rng.chance(final ? S.P.weaknessFinal : S.P.weaknessLocal);
 }
 function weakNow(S, m, was, round) {
   if (was || m.ent.weakness !== "mob") return was;
-  const r = S.P.weaknessRule;
+  const r = S.P.weaknessRule === "timing" ? (m.ent.weaknessTiming ?? "soon") : S.P.weaknessRule;
   return (r === "soon" && round >= 2) || (r === "table" && S.groundRow === CHASE_TABLE.length - 1);
 }
 
@@ -819,7 +838,7 @@ function localChase(S, m) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
     const options = chaseGround(S);
     weak = weakNow(S, m, weak, round);
-    const ctx = { phase: "local", options, difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
+    const ctx = { phase: "local", options: groundFor(m, options), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
     const plan = planRoll(S, m, ctx);
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
@@ -842,7 +861,7 @@ function groupChase(S, group) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
     const ground = chaseGround(S);
     for (const m of group) weak.set(m, weakNow(S, m, weak.get(m), round));
-    const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: ground, difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
+    const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
     lead += majorityMove(results, critW);
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
     if (limitHit(S)) return finalFlight(S, "limit");
@@ -882,7 +901,7 @@ function captivesAct(S) {
     const r = executeRoll(S, m, plan, "slip");
     addSusp(S, r.suspGain, "slip");
     // slipRule (S6 candidate): "cost" = a Success or a Cost frees you; "success" = only a Success does.
-    if (r.band === "success" || (r.band === "cost" && S.P.slipRule === "cost")) freeCaptive(S, m, "slipped free");
+    if (r.band === "success" || (r.band === "cost" && (S.P.slipRule === "cost" || hasPerk(m, "builtToLast")))) freeCaptive(S, m, "slipped free");
     if (limitHit(S)) return finalFlight(S, "limit");
   }
 }
@@ -916,7 +935,7 @@ function finalFlight(S, trigger) {
     const results = [];
     for (const m of fleeing) {
       const ctx = {
-        phase: "final", options: ground, difficulty: mobD, witnessed: false, helpers: fleeing.filter((h) => h !== m),
+        phase: "final", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: fleeing.filter((h) => h !== m),
         locKind: null, weakness: weak.get(m), weakOf: (o) => weak.get(o),
         furyLambda: furyRule && fury < N.furyCap ? N.furyLambda : 0,
       };

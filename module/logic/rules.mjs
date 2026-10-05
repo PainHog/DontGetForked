@@ -133,6 +133,24 @@ export function localMobDifficulty(suspicion) {
   return Math.min(M.max, M.base + Math.floor(suspicion * M.perSuspicion));
 }
 
+/** C4: does a Tell check go off? */
+export function tellGoesOff(face) {
+  return face >= DGF.tell.goesOffOn;
+}
+
+/**
+ * C3: is a Weakness in play this chase round (1-based)? "always" from round 1,
+ * "soon" from round 3, "dawn" only in a final flight that dawn started. An
+ * overdraw in the final flight puts any Weakness in play (S1), passed as `overdrawn`.
+ */
+export function weaknessInPlay({ timing, round, final = false, byDawn = false, overdrawn = false }) {
+  if (overdrawn) return true;
+  if (timing === "always") return true;
+  if (timing === "soon") return round >= DGF.weaknessSoonRound;
+  if (timing === "dawn") return final && byDawn;
+  throw new Error(`unknown Weakness timing: ${timing}`);
+}
+
 /**
  * How the year went (P8, Grand Year, left-behind steps). Pass what came home.
  * Returns "grand" | "win" | "partial" | "bust" | "forked".

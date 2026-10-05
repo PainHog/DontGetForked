@@ -46,6 +46,13 @@ DGF.entities = Object.freeze([
   },
 ].map((e) => Object.freeze(e)));
 
+/** C4: a Tell check is a d6; on this or higher a Tell goes off (whose: roll among the Entities arriving). */
+DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });
+
+/** C3: when the mob brings a Weakness. "soon" bites from this round of a chase (1-based). */
+DGF.weaknessTimings = Object.freeze(["always", "soon", "dawn"]);
+DGF.weaknessSoonRound = 3;
+
 /** CORE-RULES Rolling 2: the second die. */
 DGF.second = Object.freeze({ mask: 6, monster: 10 });
 

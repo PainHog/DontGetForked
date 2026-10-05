@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -112,4 +112,15 @@ test("C1: every Entity (and Hyde) has one each of d12, d10, d8, d6 and d4", () =
     ok(e.dice);
     for (const f of Object.values(e.forms || {})) ok(f);
   }
+});
+
+test("C4 Tells go off on 4-6; C3 Weakness timings", () => {
+  assert.deepEqual([1, 2, 3, 4, 5, 6].map(tellGoesOff), [false, false, false, true, true, true]);
+  assert.equal(weaknessInPlay({ timing: "always", round: 1 }), true);
+  assert.equal(weaknessInPlay({ timing: "soon", round: 2 }), false);
+  assert.equal(weaknessInPlay({ timing: "soon", round: 3 }), true);
+  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: true, byDawn: false }), false);
+  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: true, byDawn: true }), true);
+  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: false }), false);
+  assert.equal(weaknessInPlay({ timing: "soon", round: 1, overdrawn: true }), true);
 });
