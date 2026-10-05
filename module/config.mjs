@@ -32,7 +32,7 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Hyde for free (C2b). Gifts, Perks, Weaknesses and Tells are still to be written.
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" },
     gift: {
       name: "Shape of the Night",
       versions: [
@@ -49,7 +49,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Garlic", timing: "always", text: "Every kitchen in town has some, and the mob knows it." },
     tell: { name: "No Reflection", text: "A shop window shows everyone but him." },
   },
-  { key: "creature", name: "Frankenstein’s Creature", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" },
+  { key: "creature", name: "Frankenstein’s Creature", duty: "handyman", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" },
     gift: {
       name: "Made, Not Born",
       versions: [
@@ -66,7 +66,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Fire", timing: "soon", text: "Someone has to light the torches." },
     tell: { name: "Head and Shoulders", text: "He stands a head above the whole crowd, and no costume hides it." },
   },
-  { key: "mummy", name: "The Mummy", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits" },
+  { key: "mummy", name: "The Mummy", duty: "librarian", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits" },
     gift: {
       name: "Secrets of the Tomb",
       versions: [
@@ -83,7 +83,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
   },
-  { key: "werewolf", name: "The Werewolf", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden" },
+  { key: "werewolf", name: "The Werewolf", duty: "gardener", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden" },
     gift: {
       name: "The Wolf Within",
       versions: [
@@ -100,7 +100,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
   },
-  { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" },
+  { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" },
     gift: {
       name: "A Scientist’s Tricks",
       versions: [
@@ -117,7 +117,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Flour", timing: "soon", text: "Someone throws a bag of flour, and there he is." },
     tell: { name: "Bandages and Goggles", text: "A wrapped head, dark goggles, a false nose, and a sneeze from nowhere." },
   },
-  { key: "ghost", name: "A Ghost", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "sly", noLoot: true },
+  { key: "ghost", name: "A Ghost", duty: "butler", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "sly", noLoot: true },
     gift: {
       name: "Haunting",
       versions: [
@@ -134,7 +134,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" },
+  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" },
     gift: {
       name: "Witchcraft",
       versions: [
@@ -152,7 +152,7 @@ DGF.entities = Object.freeze([
     tell: { name: "A Black Cat", text: "A black cat follows her everywhere and stares at people." },
   },
   {
-    key: "jekyll-hyde", name: "Jekyll & Hyde", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
+    key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
     signature: { name: "The Draught", effect: "form" },
     gift: {
       name: "The Other Self",
@@ -172,6 +172,21 @@ DGF.entities = Object.freeze([
     forms: { jekyll: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 }, hyde: { brawn: 12, nimble: 10, sly: 8, charm: 4, wits: 6 } },
   },
 ].map((e) => Object.freeze(e)));
+
+/**
+ * C10: the Castle Duties, one per kind of shopping-list item (a d6 in this order).
+ * Edge: at a location whose list item is your Duty's kind, your trait die is one size
+ * larger on your own rolls there (it counts as the roll's one raise, R2). No two
+ * Entities in a party share a Duty (R8); if two defaults clash, the second rolls again.
+ */
+DGF.duties = Object.freeze([
+  { key: "cook", name: "Cook", kind: "food and drink", where: "the baker, the butcher, the tavern cellar", role: "keeps the castle fed and knows every kitchen door" },
+  { key: "gardener", name: "Gardener", kind: "plants and seeds", where: "the market garden, the florist, the seed merchant", role: "knows what grows where, and what’s poisonous" },
+  { key: "librarian", name: "Librarian", kind: "books and paper", where: "the bookseller, the printer, the schoolhouse", role: "reads the town’s notices and signs" },
+  { key: "butler", name: "Butler", kind: "silver, china and linen", where: "the silversmith, the china shop", role: "knows how fine houses run, and where they keep the good spoons" },
+  { key: "handyman", name: "Handyman", kind: "tools and hardware", where: "the smithy, the ironmonger, the carpenter", role: "knows how locks and hinges work" },
+  { key: "tailor", name: "Tailor", kind: "cloth and costumes", where: "the draper, the tailor, the hatter", role: "keeps everyone’s disguises in one piece" },
+].map((d) => Object.freeze(d)));
 
 /** C4: a Tell check is a d6; on this or higher a Tell goes off (whose: roll among the Entities arriving). */
 DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });

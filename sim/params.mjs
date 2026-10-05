@@ -193,8 +193,8 @@ export const PARAMS = {
   },
   dutyEdge: {
     kind: "content", default: true, values: [true, false],
-    title: "Placeholder Castle Duty edge",
-    doc: "true = an Entity's trait die is one size larger at a location holding an item of its duty's kind (placeholder for the real Duties).",
+    title: "Castle Duty edge (C10)",
+    doc: "true = an Entity's trait die is one size larger on its own rolls at a location holding an item of its Duty's kind (C10, approved 2026-10-05); false = no Duty edge.",
     ref: "DESIGN Picks (Castle Duty content not written)",
   },
   tellPartyChance: {

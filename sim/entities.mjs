@@ -22,8 +22,8 @@ export const TRAITS = Object.freeze(["brawn", "nimble", "sly", "charm", "wits"])
 /** CORE-RULES Abilities: the four standard effects. */
 export const EFFECTS = Object.freeze(["raise", "switch", "hidden", "open"]);
 
-/** Placeholder Castle Duties: one per placeholder item kind. */
-export const DUTIES = Object.freeze(["K1", "K2", "K3", "K4", "K5", "K6"]);
+/** The Castle Duties (C10), one per kind of shopping-list item; read from the Foundry config. */
+export const DUTIES = Object.freeze(DGF.duties.map((d) => d.key));
 
 const SUNLIGHT = new Set(["E3", "E7"]);
 

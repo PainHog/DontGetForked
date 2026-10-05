@@ -27,6 +27,7 @@ export function sheetHtml(e) {
   if (e.perks) {
     out.push(`<p class="pick"><strong>Perk.</strong> ${e.perks.map((k) => `<em>${k.name}</em>${k.default ? " (default)" : ""}: ${lowerFirst(k.text)}`).join(" · ")}</p>`);
   }
+  if (e.duty) out.push(`<p class="pick"><strong>Castle Duty</strong> (default): ${DGF.duties.find((d) => d.key === e.duty).name}.</p>`);
   if (e.weakness) out.push(`<p class="sig"><strong>Weakness: ${e.weakness.name}</strong> (${cap(e.weakness.timing)}). ${e.weakness.text}</p>`);
   if (e.tell) out.push(`<p class="sig"><strong>Tell: ${e.tell.name}.</strong> ${e.tell.text}</p>`);
   return out.join("\n    ");
