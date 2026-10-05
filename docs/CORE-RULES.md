@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (1.4)
+# Don't Get Forked — core rules (1.5)
 
-*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]); 1.4 (2026-10-05) adds rulings U1–U2 and the Entities' dice (C1). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
+*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]); 1.4 (2026-10-05) adds rulings U1–U2 and the Entities' dice (C1); 1.5 adds their signature abilities (C2, C2b). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone: 3–5 players and a Storyteller, 2–3 hours, horror-comedy for about 12+.
@@ -10,17 +10,17 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Five traits:** Brawn (force, lifting, breaking, fighting) · Nimble (climbing, running, slipping free) · Sly (sneaking, hiding, stealing) · Charm (talking, bluffing, passing as human) · Wits (noticing, knowing, figuring out). **Every Entity has one each of d12, d10, d8, d6 and d4**, placed differently.
 - **Dice arrangements [C1]:**
 
-| Entity | Brawn | Nimble | Sly | Charm | Wits |
-|---|---|---|---|---|---|
-| Dracula | d8 | d10 | d6 | d12 | d4 |
-| Frankenstein's creature | d12 | d8 | d6 | d4 | d10 |
-| The Mummy | d10 | d4 | d6 | d8 | d12 |
-| The Werewolf | d10 | d12 | d6 | d4 | d8 |
-| The Invisible Man | d4 | d8 | d12 | d6 | d10 |
-| A Ghost | d4 | d12 | d10 | d8 | d6 |
-| A Witch | d6 | d4 | d10 | d8 | d12 |
-| Jekyll & Hyde: Jekyll | d4 | d6 | d8 | d12 | d10 |
-| Jekyll & Hyde: Hyde | d12 | d10 | d8 | d4 | d6 |
+| Entity | Brawn | Nimble | Sly | Charm | Wits | Signature [C2] |
+|---|---|---|---|---|---|---|
+| Dracula | d8 | d10 | d6 | d12 | d4 | Mesmerise: open an approach with Charm |
+| Frankenstein's creature | d12 | d8 | d6 | d4 | d10 | Brute Force: use Brawn instead |
+| The Mummy | d10 | d4 | d6 | d8 | d12 | Ancient Lore: use Wits instead |
+| The Werewolf | d10 | d12 | d6 | d4 | d8 | Good Dog: the Monster die without risking Suspicion |
+| The Invisible Man | d4 | d8 | d12 | d6 | d10 | Unseen: the Monster die without risking Suspicion |
+| A Ghost | d4 | d12 | d10 | d8 | d6 | Through the Wall: open an approach with Nimble |
+| A Witch | d6 | d4 | d10 | d8 | d12 | Hedge Spell: raise a die (any roll in the same place) |
+| Jekyll & Hyde: Jekyll | d4 | d6 | d8 | d12 | d10 | The Draught: change form (lasts until the next draught); the Monster showing on a Jekyll roll makes him Hyde, free [C2b] |
+| Jekyll & Hyde: Hyde | d12 | d10 | d8 | d4 | d6 | |
 
 - **Fixed per Entity:** the dice arrangement, a signature ability, a **Weakness** (something the town can use against it) and a **Tell** (how it gives itself away).
 - **Three picks**, each with a marked default and a random-table entry: a **Gift** (one of three versions of its second ability), a **Perk** (one of three passive edges) and a **Castle Duty** (one of about six shared household jobs, with a small edge tied to the shopping list; no two Entities in a party take the same one [R8]).
@@ -104,4 +104,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | Each Entity's abilities (and how Jekyll becomes Hyde), Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
+| — | Content | Each Entity's Gifts, Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |

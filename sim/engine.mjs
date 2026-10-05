@@ -56,6 +56,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     m.nextStepDown = 0;
     m.loseTurn = false;
     m.charges = m.chargesStart;
+    m.form = "jekyll"; // Jekyll & Hyde starts each raid as Jekyll
   }
 
   if (P.partyPolicy !== "together") playSplit(S);
@@ -228,6 +229,8 @@ const active = (S) => S.party.filter((m) => m.status === "active");
 const captives = (S) => S.party.filter((m) => m.status === "captured");
 /** The Entities working the current location: the whole party, or (split play) one group. */
 const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : active(S));
+/** An Entity's dice now (Jekyll & Hyde: the form it's in). */
+const diceOf = (m) => (m.ent.formDice ? m.ent.formDice[m.form === "hyde" ? "hyde" : "jekyll"] : m.ent.dice);
 const carriedItems = (S) => S.party.flatMap((m) => (m.status === "active" ? m.items : []));
 
 /** Raise Suspicion. DESIGN: one town-wide track to a Limit; at the Limit the whole town hunts. */
@@ -494,7 +497,7 @@ function completeLocation(S, loc) {
   if (loc.furniture && !S.furnitureCarried) {
     // Carrying (DESIGN): Bulky = one carrier, Huge = two. Policy: the Entities with the smallest Nimble carry.
     const n = loc.furniture.size === "huge" ? 2 : 1;
-    const carriers = [...act].sort((a, b) => a.ent.dice.nimble - b.ent.dice.nimble).slice(0, n);
+    const carriers = [...act].sort((a, b) => diceOf(a).nimble - diceOf(b).nimble).slice(0, n);
     if (carriers.length === n) {
       const piece = { ...loc.furniture, carriers: carriers.map((c) => c.id) };
       for (const c of carriers) c.furniture = piece;
@@ -594,8 +597,11 @@ function planRoll(S, m, ctx) {
   for (const ab of abilitiesOf(m)) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
-    // proposed C2 (Jekyll & Hyde): change form for this roll, rolling Hyde's die for the called trait.
-    if (ab.effect === "form" && m.ent.formDice) for (const o of ctx.options) cands.push({ trait: o.trait, loud: o.loud, quiet: false, die: m.ent.formDice[o.trait], via: { owner: m, ability: ab } });
+    // C2 (Jekyll & Hyde): The Draught changes form, so this roll and the next use the other form's dice.
+    if (ab.effect === "form" && m.ent.formDice) {
+      const other = m.ent.formDice[m.form === "hyde" ? "jekyll" : "hyde"];
+      for (const o of ctx.options) cands.push({ trait: o.trait, loud: o.loud, quiet: false, die: other[o.trait], formChange: true, via: { owner: m, ability: ab } });
+    }
     if (ab.effect === "open") {
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
@@ -630,7 +636,7 @@ function planRoll(S, m, ctx) {
 
   let best = null;
   for (const c of cands) {
-    const base = c.die ?? m.ent.dice[c.trait];
+    const base = c.die ?? diceOf(m)[c.trait];
     let up = 0;
     let down = m.nextStepDown;
     const duty = P.dutyEdge && phase === "raid" && ctx.locKind && ctx.locKind === m.duty;
@@ -711,6 +717,9 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
   const show = plan.second !== MASK && !plan.hidden && monsterShows(t, s, P.monsterRule === "tie");
+  if (plan.cand.formChange) { m.form = m.form === "hyde" ? "jekyll" : "hyde"; S.rec.count("the draught"); }
+  // C2b: when the Monster shows on one of Jekyll's rolls, Hyde takes over, free.
+  if (m.ent.formDice && m.form !== "hyde" && plan.second !== MASK && monsterShows(t, s, P.monsterRule === "tie")) { m.form = "hyde"; S.rec.count("Hyde takes over"); }
   // critEffect "charge"/"both" (S8 candidate): a Critical outside the chases gives the roller back one spent charge.
   if (critical && (P.critEffect === "charge" || P.critEffect === "both") && phase !== "local" && phase !== "final" && m.charges < m.chargesStart) {
     m.charges += 1;
