@@ -1,7 +1,7 @@
-Now: Every monster in the rulebook now has two old public-domain pictures, in costume and revealed, as inspiration for the illustrator.
-Next: The town's festival, decided with the author.
-Number: Design decisions made = 66
-Number: Open design questions = 1
+Now: The town's festival has a name, Lantern Night, and a table of local customs so every town keeps it its own way.
+Next: The shopping list table, decided with the author.
+Number: Design decisions made = 67
+Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
@@ -34,6 +34,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Castle Duties and the cover text
 - [x] The chase table
 - [x] Monster portraits filled with stand-in pictures
+- [x] The town's festival: Lantern Night
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator

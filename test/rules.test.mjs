@@ -124,3 +124,9 @@ test("C4 Tells go off on 4-6; C3 Weakness timings", () => {
   assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: false }), false);
   assert.equal(weaknessInPlay({ timing: "soon", round: 1, overdrawn: true }), true);
 });
+
+test("C13: Lantern Night has six local customs, one per face of a d6", () => {
+  assert.equal(DGF.festival.name, "Lantern Night");
+  assert.equal(DGF.festival.customs.length, 6);
+  assert.equal(new Set(DGF.festival.customs.map((c) => c.key)).size, 6);
+});
