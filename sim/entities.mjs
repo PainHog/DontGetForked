@@ -55,6 +55,35 @@ function buildRoster() {
 
 export const ROSTER = buildRoster();
 
+/**
+ * CANDIDATE dice arrangements for the real roster (a proposal for Richard, not
+ * decided content). Abilities, Gifts and Weakness types stay the placeholders of
+ * the matching E1–E8 slot, so only the dice differ from ROSTER.
+ */
+const CANDIDATE_A = [
+  ["Dracula", { charm: 12, nimble: 10, brawn: 8, sly: 6, wits: 4 }, "sunlight"],
+  ["Frankenstein's creature", { brawn: 12, wits: 10, nimble: 8, sly: 6, charm: 4 }, "mob"],
+  ["The Mummy", { wits: 12, brawn: 10, charm: 8, sly: 6, nimble: 4 }, "mob"],
+  ["The Werewolf", { nimble: 12, brawn: 10, wits: 8, sly: 6, charm: 4 }, "mob"],
+  ["The Invisible Man", { sly: 12, wits: 10, nimble: 8, charm: 6, brawn: 4 }, "mob"],
+  ["A Ghost", { nimble: 12, sly: 10, charm: 8, wits: 6, brawn: 4 }, "mob"],
+  ["A Witch", { wits: 12, sly: 10, charm: 8, brawn: 6, nimble: 4 }, "mob"],
+  ["Jekyll & Hyde (Jekyll)", { charm: 12, wits: 10, sly: 8, nimble: 6, brawn: 4 }, "mob"],
+];
+
+function buildCandidate(rows) {
+  return Object.freeze(rows.map(([name, dice, weakness], i) => {
+    const base = ROSTER[i];
+    const order = Object.entries(dice).sort((a, b) => b[1] - a[1]).map(([t]) => t);
+    return Object.freeze({
+      ...base, id: name, dice: Object.freeze({ ...dice }), weakness,
+      signature: Object.freeze({ effect: base.signature.effect, trait: order[0] }), giftTrait: order[1],
+    });
+  }));
+}
+
+export const ROSTERS = Object.freeze({ placeholder: ROSTER, candidateA: buildCandidate(CANDIDATE_A) });
+
 /** Validator: rejects an Entity that breaks the decided structure. */
 export function validateEntity(e) {
   const errors = [];
@@ -70,8 +99,8 @@ export function validateEntity(e) {
  * A party of `n` distinct Entities (no duplicates), each with a random Gift and
  * a Castle Duty no one else in the party has (R8).
  */
-export function makeParty(rng, n, chargesEach) {
-  const picks = rng.shuffle(ROSTER).slice(0, n);
+export function makeParty(rng, n, chargesEach, roster = ROSTER) {
+  const picks = rng.shuffle(roster).slice(0, n);
   const duties = rng.shuffle(DUTIES); // R8: no two Entities in a party take the same Castle Duty
   return picks.map((e, k) => ({
     ent: e,
