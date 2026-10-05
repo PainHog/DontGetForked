@@ -11,9 +11,9 @@
   <ul>
     <li><strong>A premade raid:</strong> a fixed sequence of locations and obstacles, ready to run.</li>
     <li><strong>A map:</strong> a set of locations the party picks its route through.</li>
-    <li><strong>The random tables:</strong> roll the locations, obstacles, loot and villagers. A difficulty budget keeps a rolled town playing at the difficulty it promises.</li>
+    <li><strong>The random tables:</strong> roll the locations, obstacles, loot and villagers. A ceiling on the hardest obstacles keeps a rolled town playing at the difficulty it promises.</li>
   </ul>
-  <p class="placeholder">PLACEHOLDER — the premade raids, maps and random tables are still to be written.</p>
+  <p class="placeholder">PLACEHOLDER — the premade raids, maps, and the obstacle and villager tables are still to be written.</p>
 
   <aside class="box gm"><h4>Obstacles</h4>
     <p>Give each obstacle one or two traits that work. When there are two, usually one is the loud way. Mark which obstacles are watched — Trouble there gets an Entity caught — and which are group obstacles that each Entity must roll for itself. Give each location two versions of its first obstacle, with different traits: its two ways in.</p>
@@ -35,6 +35,22 @@
     </table>
   </div>
 
+  <h3>Rolling a Town</h3>
+  <ol>
+    <li><strong>Locations:</strong> one for each item on the list, at one of the three places its kind is found (Chapter 2): roll a d3 or pick.</li>
+    <li><strong>Obstacles:</strong> roll a d20 for how many each location has.</li>
+    <li><strong>Each obstacle</strong> (both versions of the first, its two ways in, and the furniture’s extra one): the obstacle table for what it is, a d20 for its Difficulty, a d10 for whether it’s watched.</li>
+    <li><strong>The ceiling:</strong> at most one Difficulty 12 in an Easy or Standard town, two in a Hard town. Reroll any extra.</li>
+  </ol>
+  <table class="tbl wide">
+    <thead><tr><th>Roll</th><th>Easy</th><th>Standard</th><th>Hard</th></tr></thead>
+    <tbody>
+      <tr><td>Obstacles at a location (d20)</td><td>1–10: one · 11–18: two · 19–20: three</td><td>1–6: one · 7–15: two · 16–20: three</td><td>1–4: one · 5–13: two · 14–20: three</td></tr>
+      <tr><td>Difficulty (d20)</td><td>1–3: 6 · 4–13: 8 · 14–19: 10 · 20: 12</td><td>1–3: 6 · 4–13: 8 · 14–19: 10 · 20: 12</td><td>1–8: 8 · 9–17: 10 · 18–20: 12</td></tr>
+      <tr><td>Watched (d10)</td><td>1–4</td><td>1–5</td><td>1–6</td></tr>
+    </tbody>
+  </table>
+
   <h3>Difficulty</h3>
   <p>Choose Easy, Standard or Hard. The difficulty sets these numbers:</p>
   <table class="tbl">
@@ -48,7 +64,7 @@
       <tr><td>The lock-up: Difficulty</td><td class="num">10</td><td class="num">10</td><td class="num">12</td></tr>
     </tbody>
   </table>
-  <p>On every difficulty: 3 charges per Entity, 12 Turns, overdraw +2 Suspicion; a local chase starts at Lead 1 and escapes at 4 against a mob of 10 plus half the Suspicion (at most 12); the final flight starts at Lead 2 and escapes at 6.</p>
+  <p class="span-all">On every difficulty: 3 charges per Entity, 12 Turns, overdraw +2 Suspicion; a local chase starts at Lead 1 and escapes at 4 against a mob of 10 plus half the Suspicion (at most 12); the final flight starts at Lead 2 and escapes at 6.</p>
 
   <div class="keep">
     <h3>The Shopping List</h3>

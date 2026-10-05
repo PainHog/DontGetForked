@@ -119,3 +119,5 @@ How uneven the towns are (4,000 four-item towns; the town's mean Difficulty, 5th
 | Rolled | 7.75–9.27; 1.5% | 8.80–10.18; 25.1% |
 | Budget | 8.00–9.00; 0% | 9.09–9.83; 11.7% |
 | Cap on 12s | 7.73–9.17; 0% | 8.77–9.85; 0% |
+
+**Decided (C17):** the cap. It is now the simulator's default (`NUMBERS.townBudget = "cap"`), so baseline figures from here on include it (Hard about +1.7 win points). A test checks that the generator's shares equal the book's dice.

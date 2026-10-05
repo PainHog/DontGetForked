@@ -179,6 +179,32 @@ export function startingCharges(upgradesGiven = 0) {
   return DGF.charges + upgradesGiven * DGF.campaign.chargesPerUpgrade;
 }
 
+/** C17: read a die face off a band table ([lowest, highest, result] rows). */
+export function band20(bands, face) {
+  const row = bands.find(([lo, hi]) => face >= lo && face <= hi);
+  if (!row) throw new Error(`no band for ${face}`);
+  return row[2];
+}
+
+/** C17: how many obstacles a location has (d20), an obstacle's Difficulty (d20), whether it's watched (d10). */
+export function obstacleCount(label, d20) { return band20(DGF.townDice.obstacles[label], d20); }
+export function obstacleDifficulty(label, d20) { return band20(DGF.townDice.difficulty[label], d20); }
+export function obstacleWatched(label, d10) { return d10 <= DGF.townDice.watchedOn[label]; }
+
+/**
+ * C17: the ceiling. Given the town's Difficulties in the order rolled, reroll every
+ * Difficulty 12 past the label's allowance (`rollD20` gives fresh d20 faces) until it isn't 12.
+ */
+export function capTwelves(label, difficulties, rollD20) {
+  let n = 0;
+  return difficulties.map((d) => {
+    if (d !== 12 || ++n <= DGF.townDice.twelves[label]) return d;
+    let r;
+    do r = obstacleDifficulty(label, rollD20()); while (r === 12);
+    return r;
+  });
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;

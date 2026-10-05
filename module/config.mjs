@@ -211,6 +211,26 @@ DGF.furniture = Object.freeze([
 /** C16 (optional campaign rules): each piece brought home is an upgrade worth one extra charge to one Entity per raid; the castle holds three. */
 DGF.campaign = Object.freeze({ chargesPerUpgrade: 1, maxUpgrades: 3 });
 
+/**
+ * C17: rolling a town. Bands are [lowest, highest, result] on the die named.
+ * Obstacles at a location (d20), each obstacle's Difficulty (d20), watched on this
+ * d10 face or lower, and the ceiling on Difficulty-12 obstacles per town (extras rerolled).
+ */
+DGF.townDice = Object.freeze({
+  obstacles: Object.freeze({
+    easy: [[1, 10, 1], [11, 18, 2], [19, 20, 3]],
+    standard: [[1, 6, 1], [7, 15, 2], [16, 20, 3]],
+    hard: [[1, 4, 1], [5, 13, 2], [14, 20, 3]],
+  }),
+  difficulty: Object.freeze({
+    easy: [[1, 3, 6], [4, 13, 8], [14, 19, 10], [20, 20, 12]],
+    standard: [[1, 3, 6], [4, 13, 8], [14, 19, 10], [20, 20, 12]],
+    hard: [[1, 8, 8], [9, 17, 10], [18, 20, 12]],
+  }),
+  watchedOn: Object.freeze({ easy: 4, standard: 5, hard: 6 }),
+  twelves: Object.freeze({ easy: 1, standard: 1, hard: 2 }),
+});
+
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },
