@@ -26,7 +26,7 @@ export const PARAMS = {
   costChoice: {
     kind: "rule", default: "mixed", values: ["mixed", "suspicion", "lenient"],
     title: "Which Cost the Storyteller picks",
-    doc: "mixed = one of the four at random (dropping an item only if someone carries one); suspicion = always Suspicion +1; lenient = always the mildest (drop an item when nobody carries one, which costs nothing).",
+    doc: "mixed = one of the four at random, never one that costs nothing (no Suspicion +1 when the roll already raised it; \"drop an item\" only if the roller carries loot, and it drops its own) (T10); suspicion = always Suspicion +1; lenient = always the mildest (drop an item when nobody carries one, which costs nothing).",
     ref: "CORE-RULES P3",
   },
   dropRule: {
@@ -60,16 +60,22 @@ export const PARAMS = {
     ref: "CORE-RULES P7",
   },
   raiseDie: {
-    kind: "rule", default: "any", values: ["any", "trait"],
+    kind: "rule", default: "trait", values: ["trait", "any"],
     title: "Which die a raise can raise",
-    doc: "any = the trait die or the Mask/Monster die (d6 → d8, d10 → d12), as simulated up to PT1–PT2; trait = only the trait die (both playtests' reading).",
+    doc: "trait = only the trait die (T6, decided 2026-10-05); any = the trait die or the Mask/Monster die (d6 → d8, d10 → d12), as simulated before T6.",
     ref: "CORE-RULES Abilities (\"raise a die one size\"); PT1 A28, PT2 A27",
   },
   openTrait: {
-    kind: "rule", default: "any", values: ["any", "unlisted"],
+    kind: "rule", default: "unlisted", values: ["unlisted", "any"],
     title: "Which traits \"open an approach\" can use",
-    doc: "any = the ability's trait at 2 lower Difficulty even when the obstacle already lists it, as simulated up to PT1–PT2; unlisted = only when the obstacle doesn't list that trait (\"nobody else can take\").",
+    doc: "unlisted = only when the obstacle doesn't list that trait, and only on obstacles, never in a chase (T5, decided 2026-10-05); any = also on a listed trait, as simulated before T5.",
     ref: "CORE-RULES Abilities (S10); PT2 A7",
+  },
+  waysIn: {
+    kind: "rule", default: "two", values: ["two", "one"],
+    title: "A location's two ways in",
+    doc: "two = a location's first obstacle comes in two versions (different traits, Difficulty, witnesses) and the party picks one (T2, decided 2026-10-05); one = a single first obstacle, as simulated before T2.",
+    ref: "CORE-RULES The raid; PT1 A2, PT2 A23",
   },
   captiveItems: {
     kind: "rule", default: "lost", values: ["lost", "kept"],
@@ -261,5 +267,10 @@ export const TARGETS = {
  * history; new candidate packages go here as rule changes are proposed.
  */
 export const PACKAGES = {
-  P0: { title: "Decided rules (S1–S8) with the approved numbers (S9)", params: {}, numbers: {} },
+  P0: { title: "Decided rules (S1–S11, T1–T10) with the approved numbers (S9, S10)", params: {}, numbers: {} },
+  N1: {
+    title: "Proposed retune after T1–T10: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
+    params: {},
+    numbers: { lead: { finalStart: 3 }, labels: { easy: { finalMob: 11 }, standard: { limit: 12, finalMob: 12 }, hard: { limit: 14, finalMob: 12 } } },
+  },
 };

@@ -1,7 +1,7 @@
-Now: Two computer playtests are done and the unclear wording is fixed; waiting for the author's calls on ten rule questions they raised.
-Next: Fixing the rules to match those calls, a check-up playtest, then writing the eight monsters with the author.
-Number: Design decisions made = 52
-Number: Open design questions = 11
+Now: The author's ten playtest rulings are in the rulebook; a check-up playtest is running, and a small retune of the numbers awaits the author.
+Next: Writing the eight monsters with the author: their dice, powers, weaknesses and tells.
+Number: Design decisions made = 53
+Number: Open design questions = 2
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->

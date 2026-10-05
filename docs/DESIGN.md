@@ -70,6 +70,7 @@ Living document. The **Pitch** is Richard's. **Decisions** are only what Richard
 | 2026-10-04 | **Online version: Foundry from day one, automation-first, in two phases.** Now: the pure rules logic (Foundry-free, unit-tested) written alongside the book, shared by the simulator and Foundry. Once the chapters settle: the Foundry sheets, roll cards and Raid tracker. Every rule is written to be automatable (GM-authoritative writes, every automation can be switched off). | Chosen over book-first (repeats Heisty's ~5,000-line retrofit) and a light sheets-and-dice version (the Storyteller would track Suspicion, Turns, the Lead and charges by hand). Confirms the automation-first default from project setup |
 | 2026-10-05 | **Name: keep "Don't Get Forked".** | A web check (general web, itch.io, BoardGameGeek, DriveThruRPG, Kickstarter) found no product with the name; near misses only ("Get Forked", a Minute to Win It challenge; Fork, Fork Milk Kidnap, Fork Yeah!; and the similar-themed card game Grab Your Pitchforks and Torches). **Legal checks (trademark registers, the monster roster) happen before launch, not now** (Richard) |
 | 2026-10-05 | **Core rules approved** (`docs/CORE-RULES.md` draft 0.16, now 1.0). Rulebook chapters, art and the Foundry rules logic are unlocked. | Approved while the first agent playtests (PT1 Standard / 4 Entities, PT2 Hard / 5 Entities) were running: wording clarifications from them go in directly; anything that changes a rule or number comes back to Richard first |
+| 2026-10-05 | **Playtest rulings T1–T10** (all as recommended). **T1** an obstacle stays beaten for the whole party once anyone gets a Success or Cost on it, unless it's marked **group**: then each Entity who wants past rolls for itself (several in one Turn = a group check). **T2** a location's obstacles are crossed in order; its two ways in are two versions of the first obstacle (different traits) and the party picks one; beating the last puts the loot in that Entity's hand. **T3** Tells are checked once, the first time anyone reaches each watched location. **T4** the party leaves together (everyone not captured at the way out); an exit Cost costs nothing more. **T5** "open an approach" works only with a trait the obstacle doesn't list, only on obstacles (the lock-up included), never in a chase, and only the opener gets through. **T6** a raise raises only the trait die. **T7** several abilities may go on one roll, still at most one raise. **T8** slipping free: Sly or Nimble, or Brawn the loud way, at the lock-up Difficulty. **T9** a captive's loot is gone for the night (R3 kept). **T10** the Storyteller never picks a Cost that costs nothing right then; "drop an item" only if the roller carries loot, and it drops its own. | Questions raised by playtests PT1 (Standard, 4) and PT2 (Hard, 5) that the decisions didn't answer. Simulated with the approved numbers: wins 91.5 / 78.1 / 61.8% (Standard and Hard above target, mostly from T2's second way in, about +5 points); a retune is proposed separately |
 
 ## Open questions (work through these with Richard, roughly in this order)
 1. **Engine.** *Decided 2026-10-04: a new system using step dice, with guardrails 1 and 2 (see the Decisions log).* Left for later: the second die (Q3), Difficulty numbers, bands and Criticals (simulator), the Monster die (Q4). Heisty's engine is a d6 pool with Successes on 5–6, Difficulty, an Alert track to a Limit, and Silk Points; it is fully simulated, balanced and automated in Foundry. Options include reusing it as-is, reusing its core dice with new subsystems, or a new resolution system.
@@ -122,17 +123,17 @@ Not decisions. These need Richard's call before the core rules are final:
 - ~~**S11.**~~ *Decided 2026-10-04 (provisional): rulings R1–R11 (see the Decisions log).*
 
 ### Raised by the first playtests (2026-10-05; details in `sim/playtests/PT1-standard-4.md` and `PT2-hard-5.md`)
-Rule questions the playtests found that the decisions don't answer. Wording-only fixes went straight in (core rules 1.1, `book/REVIEW.md` row 14). These need Richard's call:
-- **T1.** Does one Entity's success open an obstacle for the whole party, or must each Entity roll?
-- **T2.** A location's layout: are obstacles crossed in order, what are "two ways in", and when is the loot in hand?
-- **T3.** Tells when the party splits: how many checks?
-- **T4.** Leaving town: must the whole party leave together, and what does a Cost on the exit cost?
-- **T5.** "Open an approach": with any trait or only one the obstacle doesn't list; in chases too?
-- **T6.** Which die a raise raises (trait die only, or the Mask/Monster die too).
-- **T7.** Several abilities on one roll (still at most one raise)?
-- **T8.** Which traits slip free from the lock-up.
-- **T9.** A captive's loot (R3, provisional): gone, back at its location, or kept by the captive?
-- **T10.** How the Storyteller chooses a Cost, and whose item "drop an item" drops.
+Rule questions the playtests found that the decisions don't answer. Wording-only fixes went straight in (core rules 1.1, `book/REVIEW.md` row 14). *All ten decided 2026-10-05 as recommended (see the Decisions log).*
+- ~~**T1.**~~ Does one Entity's success open an obstacle for the whole party, or must each Entity roll?
+- ~~**T2.**~~ A location's layout: are obstacles crossed in order, what are "two ways in", and when is the loot in hand?
+- ~~**T3.**~~ Tells when the party splits: how many checks?
+- ~~**T4.**~~ Leaving town: must the whole party leave together, and what does a Cost on the exit cost?
+- ~~**T5.**~~ "Open an approach": with any trait or only one the obstacle doesn't list; in chases too?
+- ~~**T6.**~~ Which die a raise raises (trait die only, or the Mask/Monster die too).
+- ~~**T7.**~~ Several abilities on one roll (still at most one raise)?
+- ~~**T8.**~~ Which traits slip free from the lock-up.
+- ~~**T9.**~~ A captive's loot (R3, provisional): gone, back at its location, or kept by the captive?
+- ~~**T10.**~~ How the Storyteller chooses a Cost, and whose item "drop an item" drops.
 
 ## Rights note: classic monsters (not legal advice)
 - **Public-domain sources:** these literary characters are in the public domain:
