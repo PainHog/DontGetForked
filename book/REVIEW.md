@@ -26,3 +26,4 @@ why, and the source (author / playtest / simulator). Rows 1–12 point at `docs/
 | 19 | 2026-10-05 | Chapters 2, 5, 6; CORE-RULES 1.6 | C3: the three Weakness timings (Always, Soon, Dawn); C4: a Tell check goes off on 4–6 on a d6, and a roll picks whose; C5: what a Perk is | Content interview | author |
 | 20 | 2026-10-05 | Chapter 2 | C6: Dracula's and Frankenstein's creature's Gifts, Perks, Weaknesses and Tells (rendered from the shared table by book/tools/entity-sheet.mjs) | Content interview | author |
 | 21 | 2026-10-05 | Chapter 2 | C7: the Mummy's and the Werewolf's Gifts, Perks, Weaknesses and Tells | Content interview | author |
+| 22 | 2026-10-05 | Chapter 2; CORE-RULES | C8: the Invisible Man's and the Ghost's Gifts, Perks, Weaknesses and Tells; Through the Wall opens with Sly and not while carrying | Simulated: the Ghost was over the ±2.5 target (+3.8) | author (simulator) |

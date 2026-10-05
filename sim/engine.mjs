@@ -129,7 +129,9 @@ function playSplit(S) {
         if (g.at !== dest) {
           g.at = dest;
           if (g.members.some((m) => m.status === "active" && m.furniture)) g.busy = 1;
+          S.arrivers = g.members;
           arrive(S, dest);
+          S.arrivers = null;
           continue;
         }
         if (dest === exit) continue; // waiting for the others
@@ -249,6 +251,12 @@ const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : ac
  *  spectral      you get past group obstacles without rolling
  *  rattle        the Monster showing on your roll is +1 Suspicion, not +2
  *  alreadyDead   cornered in a local chase, you lose your next Turn instead of being captured
+ *  familiarsWarning  a Tell check where you arrive goes off only if a second d6 also does
+ *  flyByNight    in a chase you can always roll Wits
+ *  wiseWoman     a Cost on your Wits roll is never "lose a Turn"
+ *  practisedHand changing back to Jekyll costs no charge
+ *  steadyNerves  Hyde takes over only if the Monster beats Jekyll's trait die by 2+
+ *  bruteStrength as Hyde, carrying doesn't make your Nimble smaller
  */
 const unseen = (m) => hasPerk(m, "outOfSight") && !m.items.length && !m.furniture;
 const hasPerk = (m, k) => m.perk === k;
@@ -375,7 +383,8 @@ function arrive(S, loc) {
   if (!loc.obstacles.some((o) => o.witnessed || (o.alt && S.P.waysIn === "two" && o.alt.witnessed))) return;
   // tellScope "party" (S5 candidate): one chance for the whole party, as likely as four Entities' together.
   const who = S.P.tellScope === "party" ? [null] : active(S);
-  const chance = S.P.tellScope === "party" ? S.P.tellPartyChance : S.P.tellChance; // C4: 4–6 on a d6 for the party
+  let chance = S.P.tellScope === "party" ? S.P.tellPartyChance : S.P.tellChance; // C4: 4–6 on a d6 for the party
+  if ((S.arrivers || active(S)).some((m) => m.status === "active" && hasPerk(m, "familiarsWarning"))) chance *= chance; // the cat warns: roll again
   for (const m of who) {
     if (S.rng.chance(chance)) {
       addSusp(S, 1, "tell"); // DESIGN Suspicion package: a Tell +1 when triggered (its own event)
@@ -669,7 +678,7 @@ function planRoll(S, m, ctx) {
     let down = m.nextStepDown;
     const duty = P.dutyEdge && phase === "raid" && ctx.locKind && ctx.locKind === m.duty;
     if (duty) up += 1;
-    if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless")) down += 1; // carriers roll Nimble one size smaller
+    if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless") && !(hasPerk(m, "bruteStrength") && m.form === "hyde")) down += 1; // carriers roll Nimble one size smaller
     if (ctx.weakness) down += 1; // the mob brought your Weakness: one size smaller in the chase
     const traitRaised = duty; // counts toward P7's cap
     for (const second of seconds) {
@@ -733,6 +742,7 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   const P = S.P;
   const overdrawn = [];
   for (const u of plan.uses) {
+    if (u.ability.effect === "form" && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) { S.rec.count("practised hand"); continue; }
     if (u.owner.charges > 0) { u.owner.charges -= 1; S.rec.count("charges spent"); }
     else { S.rec.count(`overdraws:${phase}`); overdrawn.push(u.owner); }
     S.rec.count(`ability:${u.ability.effect}`);
@@ -745,11 +755,12 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   const s = S.rng.die(plan.secondDie);
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
+  m.lastTrait = plan.cand.trait;
   const eyes = hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm"; // shows only if it beats the trait die by 2+
   const show = plan.second !== MASK && !plan.hidden && (eyes ? s - t >= 2 : monsterShows(t, s, P.monsterRule === "tie"));
   if (plan.cand.formChange) { m.form = m.form === "hyde" ? "jekyll" : "hyde"; S.rec.count("the draught"); }
   // C2b: when the Monster shows on one of Jekyll's rolls, Hyde takes over, free.
-  if (m.ent.formDice && m.form !== "hyde" && plan.second !== MASK && monsterShows(t, s, P.monsterRule === "tie")) { m.form = "hyde"; S.rec.count("Hyde takes over"); }
+  if (m.ent.formDice && m.form !== "hyde" && plan.second !== MASK && (hasPerk(m, "steadyNerves") ? s - t >= 2 : monsterShows(t, s, P.monsterRule === "tie"))) { m.form = "hyde"; S.rec.count("Hyde takes over"); }
   // critEffect "charge"/"both" (S8 candidate): a Critical outside the chases gives the roller back one spent charge.
   if (critical && (P.critEffect === "charge" || P.critEffect === "both") && phase !== "local" && phase !== "final" && m.charges < m.chargesStart) {
     m.charges += 1;
@@ -783,7 +794,7 @@ function pickCost(S, m, gain = 0) {
   else if (P.costChoice === "lenient") kind = items.length === 0 ? "drop" : "stepdown";
   else {
     // T10: the Storyteller never picks a Cost that costs nothing (a Suspicion +1 the roll already raised).
-    const opts = hasPerk(m, "patienceOfAges") ? ["stepdown"] : ["turn", "stepdown"];
+    const opts = hasPerk(m, "patienceOfAges") || (hasPerk(m, "wiseWoman") && m.lastTrait === "wits") ? ["stepdown"] : ["turn", "stepdown"];
     if (gain < 1) opts.push("suspicion");
     if (items.length && !hasPerk(m, "keeperOfTreasures")) opts.push("drop");
     kind = S.rng.pick(opts);
@@ -820,7 +831,8 @@ function chaseGround(S) {
 
 /** wallCrawler: in a chase you can always roll Nimble. */
 function groundFor(m, ground) {
-  return hasPerk(m, "wallCrawler") && !ground.some((o) => o.trait === "nimble") ? [...ground, { trait: "nimble", loud: false }] : ground;
+  const extra = hasPerk(m, "wallCrawler") ? "nimble" : hasPerk(m, "flyByNight") ? "wits" : null;
+  return extra && !ground.some((o) => o.trait === extra) ? [...ground, { trait: extra, loud: false }] : ground;
 }
 
 /**
