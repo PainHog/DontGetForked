@@ -23,12 +23,14 @@ Dracula, Frankenstein's creature, the Mummy, the Werewolf, the Invisible Man, a 
 - Before launch, Richard will have the final roster and designs checked by someone qualified.
 
 ## Pieces the book needs (current layout)
+
+Until your pieces arrive, the draft uses public-domain engravings as stand-ins (`book/art/stand-in/SOURCES.md`); each is replaced as soon as yours is ready.
 | Piece | Shape | How many |
 |---|---|---|
 | Front cover | 612 × 792 (US Letter, portrait) | 1 |
 | Back-cover panel | 4:3 | 1 |
 | Part title pages | 3:1 wide | 2 |
-| Chapter header vignettes | 3:1 wide | 8 |
+| Chapter header vignettes | about 4:1 (7.1 × 1.8 in) | 8 |
 | Entity portraits (costume + revealed) | to agree with Richard | 16 |
 | Chapter-end spot illustrations | 4:3, various heights | as many as fit |
 

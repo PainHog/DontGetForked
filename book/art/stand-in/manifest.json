@@ -1,0 +1,218 @@
+[
+ {
+  "name": "cover-castle",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Kasteel_op_een_klif%2C_RP-P-1892-A-17662.jpg",
+  "crop": [
+   0.06,
+   0.06,
+   0.94,
+   1
+  ],
+  "width": 1900,
+  "aspect": 0.7727,
+  "quality": 66
+ },
+ {
+  "name": "part1-tower",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Samuel_Palmer_-_The_Lonely_Tower_-_Google_Art_Project_%282397075%29.jpg",
+  "crop": [
+   0.045,
+   0.12,
+   0.955,
+   1
+  ],
+  "width": 1600,
+  "aspect": 3,
+  "quality": 70
+ },
+ {
+  "name": "part2-village",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/5/51/Dorpje_aan_het_water%2C_bij_maanlicht%2C_RP-P-1995-419.jpg",
+  "crop": [
+   0.045,
+   0.255,
+   0.83,
+   1
+  ],
+  "width": 1600,
+  "aspect": 3,
+  "quality": 70
+ },
+ {
+  "name": "ch01-castle",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Idylls_of_the_King_3.jpg",
+  "crop": [
+   0.2,
+   0.1946,
+   1.0,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch02-curiosities",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/RitrattoMuseoFerranteImperato.jpg",
+  "crop": [
+   0.02,
+   0.0708,
+   0.98,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch03-dice",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Drie_dobbelaars_bij_kaarslicht%2C_RP-P-OB-75.053.jpg",
+  "crop": [
+   0.065,
+   0.0927,
+   0.935,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch04-parade",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Fakkeloptocht_door_een_stad%2C_RP-P-1903-A-23931.jpg",
+  "crop": [
+   0.1,
+   0.3409,
+   0.902,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch05-bellman",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Samuel_Palmer_-_The_Bellman_-_Google_Art_Project.jpg",
+  "crop": [
+   0.0,
+   0.3872,
+   1.0,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch06-crowd",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/1/12/F%C3%A9lix_Vallotton%2C_La_Manifestation_%28The_Demonstration%29%2C_1893%2C_NGA_42211.jpg",
+  "crop": [
+   0.3,
+   0.2786,
+   0.955,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch07-dawn",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Samuel_Palmer_-_Opening_the_Fold_-_Google_Art_Project.jpg",
+  "crop": [
+   0.125,
+   0.3721,
+   0.87,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "ch08-town",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/5/54/Schedelsche_Weltchronik_Trier_1497.jpg",
+  "crop": [
+   0.045,
+   0.2157,
+   0.965,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
+  "name": "back-moonrise",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Samuel_Palmer%2C_The_Rising_Moon%2C_1857%2C_NGA_119976.jpg",
+  "crop": [
+   0.2,
+   0.1,
+   0.915,
+   1
+  ],
+  "width": 1300,
+  "aspect": 1.3333,
+  "quality": 70
+ },
+ {
+  "name": "spot-watchman",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Nachtwaker%2C_RP-P-OB-14.117.jpg",
+  "crop": [
+   0.15,
+   0.07,
+   0.915,
+   0.735
+  ],
+  "width": 809,
+  "quality": 70
+ },
+ {
+  "name": "spot-cart",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Boerin_op_een_paardenkar_met_twee_wielen%2C_RP-P-BI-1178.jpg",
+  "crop": [
+   0.02,
+   0.1,
+   0.975,
+   0.955
+  ],
+  "width": 900,
+  "quality": 70
+ },
+ {
+  "name": "spot-lantern",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Lantaarn%2C_RP-P-BI-6405X.jpg",
+  "crop": [
+   0.11,
+   0.13,
+   0.885,
+   0.83
+  ],
+  "width": 900,
+  "quality": 70
+ },
+ {
+  "name": "spot-owl",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Bewick_Thomas_Barn_Owl_Tyto_alba.png",
+  "crop": [
+   0.03,
+   0.0,
+   0.97,
+   0.74
+  ],
+  "width": 900,
+  "quality": 70
+ },
+ {
+  "name": "spot-windmill",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Landschap_met_molen_bij_maanlicht%2C_RP-P-BI-6653.jpg",
+  "crop": [
+   0.05,
+   0.08,
+   0.955,
+   0.87
+  ],
+  "width": 900,
+  "quality": 70
+ }
+]

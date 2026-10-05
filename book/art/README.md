@@ -7,6 +7,17 @@ rendered piece is looked at (`node book/tools/preview-art.mjs <outDir>`) before 
 called done. Every SVG has a `viewBox` and **no** fixed width or height; the CSS sizes it.
 No `<image>`, `<script>`, filters such as `feTurbulence`, or external links.
 
+## Stand-in art (2026-10-05)
+
+Until the illustrator's pieces arrive, public-domain prints fill the cover, the part pages,
+the chapter headers, the back cover and the chapter-end spots (`stand-in/SOURCES.md`: every
+source, its licence and its checklist audit). They are JPEGs made by
+`book/tools/prep-art.py` from `stand-in/manifest.json`; the build wraps each in an SVG of
+its own size, so a stand-in is replaced simply by adding an SVG (or JPEG) of the same name.
+The "no `<image>`" rule above applies to drawn SVG art. Shapes the layout gives each slot:
+cover 8.5 × 11 in; part pages 3:1; **chapter headers about 4:1 (7.1 × 1.8 in)**; back cover
+4:3; spots any shape, sized to the gap.
+
 ## House style — storybook gothic woodcut (decided 2026-10-04)
 
 - **Look:** bold ink linework and hatching, like an old chapbook or woodcut print. Flat
