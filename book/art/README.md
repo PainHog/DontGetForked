@@ -10,7 +10,8 @@ No `<image>`, `<script>`, filters such as `feTurbulence`, or external links.
 ## Stand-in art (2026-10-05)
 
 Until the illustrator's pieces arrive, public-domain prints fill the cover, the part pages,
-the chapter headers, the back cover and the chapter-end spots (`stand-in/SOURCES.md`: every
+the chapter headers, the back cover, the chapter-end spots and the Entities' portraits
+(`stand-in/SOURCES.md`: every
 source, its licence and its checklist audit). They are JPEGs made by
 `book/tools/prep-art.py` from `stand-in/manifest.json`; the build wraps each in an SVG of
 its own size, so a stand-in is replaced simply by adding an SVG (or JPEG) of the same name.
@@ -61,6 +62,7 @@ together).
 | Wide | about 3:1 | chapter vignettes (`.chapter-art`, 1.8in tall), part pages (`.part-art`) |
 | Spot | about 4:3 | end-of-chapter spots (placed by the build), back-cover panel |
 | Portrait / badge | square | `.entry .portrait`, `.entry .badge`, `.statblock .portrait` |
+| Entity portraits (a pair: `<key>-costume`, `<key>-revealed`) | about 0.85:1 (1.66 × 1.95 in) | `.entry .portraits` |
 
 ## Catalogue
 

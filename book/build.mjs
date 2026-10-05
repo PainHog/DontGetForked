@@ -134,9 +134,11 @@ body = body.replace(/<table class="tbl([^"]*)">([\s\S]*?)<\/table>/g, (m, cls, i
 // Markup can override per table: class "flow" lets a short table split across the
 // columns (so it doesn't leave a column-high hole beside it), class "nosplit" keeps a
 // longer table whole with its heading (so it never strands a row or two on its own).
+// (The heading's text may not run past its own closing tag, so a heading followed by
+// anything else — an article, a div — is left alone rather than swallowing what comes next.)
 body = body.replace(
-  /(<h[34]\b[^>]*>[\s\S]*?<\/h[34]>)(\s*)(<(p|table|aside|ul|ol)\b([^>]*)>[\s\S]*?<\/\4>)/g,
-  (m, head, ws, block, tag, attrs) => {
+  /(<h([34])\b[^>]*>(?:(?!<\/?h[1-6]\b)[\s\S])*<\/h\2>)(\s*)(<(p|table|aside|ul|ol)\b([^>]*)>[\s\S]*?<\/\5>)/g,
+  (m, head, _level, ws, block, tag, attrs) => {
     if (tag === "table" && /\bnosplit\b/.test(attrs)) return `<div class="keep">${head}${ws}${block}</div>`;
     if (tag === "table" && (/\b(wide|flow)\b/.test(attrs) || (block.match(/<tr\b/g) ?? []).length > 9)) return m;
     if ((tag === "ul" || tag === "ol") && (block.match(/<li\b/g) ?? []).length > 6) return m;
@@ -327,7 +329,7 @@ async function printPdf(browser, html, out) {
     return [...document.querySelectorAll("body *")]
       .filter(el => !el.ownerSVGElement && el.getBoundingClientRect().right > W + 1)
       .slice(0, 8)
-      .map(el => `${el.tagName.toLowerCase()}.${el.getAttribute("class") ?? ""} "${(el.textContent ?? "").trim().slice(0, 40)}"`);
+      .map(el => `${el.tagName.toLowerCase()}.${el.getAttribute("class") ?? ""} "${(el.textContent ?? "").trim().slice(0, 40)}" in ${el.closest("[data-art]")?.getAttribute("data-art") ?? "?"} right=${Math.round(el.getBoundingClientRect().right)}/${W}`);
   });
   if (wide.length) throw new Error(`content wider than the page (Chromium would shrink every page):\n  ${wide.join("\n  ")}`);
   await p.pdf({ path: out, preferCSSPageSize: true, printBackground: true, tagged: true, outline: true });

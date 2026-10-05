@@ -6,6 +6,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 CH = ROOT / "book/src/chapters/12-ch02.html"
 NAMES = {"dracula": "Dracula", "creature": "Frankenstein’s Creature", "mummy": "The Mummy", "werewolf": "The Werewolf",
          "invisible": "The Invisible Man", "ghost": "A Ghost", "witch": "A Witch", "jekyll-hyde": "Jekyll &amp; Hyde"}
+# (bound to the heading in a .keep, since Chromium's columns don't reliably honour break-after: avoid)
+PORTRAITS = ('    <div class="keep"><h3>{name}</h3>\n'
+             '    <div class="portraits"><figure class="art" data-art="{key}-costume"><figcaption>In costume</figcaption></figure>'
+             '<figure class="art" data-art="{key}-revealed"><figcaption>Revealed</figcaption></figure></div></div>\n')
 s = CH.read_text()
 for key in sys.argv[1:]:
     html = subprocess.run(["node", "book/tools/entity-sheet.mjs", key], capture_output=True, text=True, cwd=ROOT, check=True).stdout.strip()
@@ -14,6 +18,9 @@ for key in sys.argv[1:]:
     m = re.search(r"(<h3>" + re.escape(name) + r"</h3>[\s\S]*?<p class=\"sig\"><strong>[^<]*</strong> \(signature\).*?</p>\n    )([\s\S]*?)(\n  </article>)", s)
     if not m:
         sys.exit(f"no entry for {name}")
-    s = s[:m.start(2)] + html + '\n    <p class="placeholder">PLACEHOLDER — the costume and revealed portraits.</p>' + s[m.end(2):]
+    s = s[:m.start(2)] + html + s[m.end(2):]
+    # the two portraits (costume, revealed) sit under the heading
+    if f'data-art="{key}-costume"' not in s:
+        s = s.replace(f"    <h3>{name}</h3>\n", PORTRAITS.format(name=name, key=key), 1)
 CH.write_text(s)
 print("ok")

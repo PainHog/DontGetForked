@@ -214,5 +214,237 @@
   ],
   "width": 900,
   "quality": 70
+ },
+ {
+  "name": "dracula-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Sc%C3%A8ne_uit_toneeldrama_De_kinderroofster%2C_RP-P-1877-A-168.jpg",
+  "crop": [
+   0.45,
+   0.185,
+   0.84,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "invisible-costume-1.jpg"
+ },
+ {
+  "name": "dracula-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Philippe-Am%C3%A9d%C3%A9e_Roustan_dans_le_r%C3%B4le_de_Lord_Ruthwen.jpg",
+  "crop": [
+   0.01,
+   0.105,
+   0.99,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "dracula-revealed-1.jpg"
+ },
+ {
+  "name": "creature-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Ca%27_Rezzonico_-_Il_gigante_Magrat_1760_-_Pietro_Longhi.jpg",
+  "crop": [
+   0.04,
+   0.07,
+   0.96,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "frankenstein-costume-1.jpg"
+ },
+ {
+  "name": "creature-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Frankenstein_Cooke_1823_original.jpg",
+  "crop": [
+   0.05,
+   0.08,
+   0.95,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "frankenstein-revealed-1.jpg"
+ },
+ {
+  "name": "mummy-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/A%C3%AFda_-_vingt-quatre_projets_de_costumes_-_attribu%C3%A9s_%C3%A0_Auguste_Mariette_-_btv1b52503433g_%2818_of_25%29.jpg",
+  "crop": [
+   0.29,
+   0.2,
+   0.81,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "mummy-costume-2.jpg"
+ },
+ {
+  "name": "mummy-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg",
+  "crop": [
+   0.2,
+   0.0,
+   0.82,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "mummy-revealed-1.jpg"
+ },
+ {
+  "name": "werewolf-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Le_Chaperon_rouge_fut_bien_%C3%A9tonn%C3%A9_de_voir_comment_sa_grand%27m%C3%A8re_%C3%A9tait_faite_en_son_d%C3%A9shabill%C3%A9.jpg",
+  "crop": [
+   0.0,
+   0.0,
+   0.55,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "werewolf-costume-2.jpg"
+ },
+ {
+  "name": "werewolf-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/6/61/Loup_garou_02.jpg",
+  "crop": [
+   0.42,
+   0.0,
+   0.96,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "werewolf-revealed-1.jpg"
+ },
+ {
+  "name": "invisible-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/3/30/-Qui_diable_%C3%A7a_peut-il_%C3%AAtre._G.31461.jpg",
+  "crop": [
+   0.18,
+   0.235,
+   0.8,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "jekyll-costume-1.jpg",
+  "erase": [
+   [
+    0.852,
+    0.888,
+    0.935,
+    0.97
+   ]
+  ]
+ },
+ {
+  "name": "invisible-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Wells_Strimpl_-_L%27homme_invisible.jpg",
+  "crop": [
+   0.18,
+   0.38,
+   0.82,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "invisible-revealed-1.jpg"
+ },
+ {
+  "name": "ghost-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Hammersmith_Ghost.PNG",
+  "crop": [
+   0.0,
+   0.04,
+   1.0,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "ghost-costume-1.png"
+ },
+ {
+  "name": "ghost-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/Marley%27s_Ghost-John_Leech%2C_1843.jpg",
+  "crop": [
+   0.08,
+   0.13,
+   0.92,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "ghost-revealed-1.jpg"
+ },
+ {
+  "name": "witch-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Page_10_of_%27Red_Apple_and_Silver_Bells._A_book_of_verse_for_children_..._Illustrated_by_A._B._Woodward%27_%2811149264234%29.jpg",
+  "crop": [
+   0.0,
+   0.05,
+   1.0,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "witch-costume-1.jpg"
+ },
+ {
+  "name": "witch-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Illustration_at_page_180_in_Europa%27s_Fairy_Book.png",
+  "crop": [
+   0.2,
+   0.04,
+   0.98,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "witch-revealed-2.png"
+ },
+ {
+  "name": "jekyll-hyde-costume",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Jekyll.and.Hyde.Ch3.Drawing1.jpg",
+  "crop": [
+   0.1,
+   0.12,
+   0.95,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "jekyll-revealed-1.jpg"
+ },
+ {
+  "name": "jekyll-hyde-revealed",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Jekyll.and.Hyde.Ch2.Drawing2.jpg",
+  "crop": [
+   0.08,
+   0.05,
+   0.95,
+   1
+  ],
+  "aspect": 0.85,
+  "width": 640,
+  "quality": 70,
+  "source_file": "jekyll-revealed-2.jpg"
  }
 ]
