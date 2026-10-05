@@ -94,6 +94,9 @@ function buildApproved() {
       key: e.key,
       // C3: the Weakness's timing once written ("dawn" = sunlight-type); until then the placeholder type.
       ...(e.weakness ? { weakness: e.weakness.timing === "dawn" ? "sunlight" : "mob", weaknessTiming: e.weakness.timing } : {}),
+      // Approved Gifts and Perks (C6 on) replace the placeholders.
+      ...(e.gift ? { giftOptions: Object.freeze(e.gift.versions.map((v) => Object.freeze({ name: v.name, effect: v.effect, trait: v.trait }))) } : {}),
+      ...(e.perks ? { perkOptions: Object.freeze(e.perks.map((k) => k.key)) } : {}),
     });
   }));
 }
@@ -105,15 +108,15 @@ function buildApproved() {
  * approved roster's placeholders.
  */
 const PROPOSED = {
-  dracula: {
-    gifts: [{ name: "Bat", effect: "switch", trait: "nimble" }, { name: "Mist", effect: "hidden" }, { name: "Wolf", effect: "raise" }],
-    perks: ["oldMoney", "hypnoticEyes", "wallCrawler"],
-    weaknessTiming: "always", // garlic
+  mummy: {
+    gifts: [{ name: "Royal Bearing", effect: "open", trait: "charm" }, { name: "Just a Costume", effect: "hidden" }, { name: "Old Curse", effect: "raise" }],
+    perks: ["patienceOfAges", "keeperOfTreasures", "fearTheCurse"],
+    weaknessTiming: "soon", // a loose thread
   },
-  creature: {
-    gifts: [{ name: "Mountain Stride", effect: "open", trait: "nimble" }, { name: "Hovel Watcher", effect: "hidden" }, { name: "Book-Learned", effect: "raise" }],
-    perks: ["strongBack", "tireless", "builtToLast"],
-    weaknessTiming: "soon", // fire
+  werewolf: {
+    gifts: [{ name: "Keen Nose", effect: "switch", trait: "wits" }, { name: "Through the Hedge", effect: "open", trait: "brawn" }, { name: "Howl", effect: "raise" }],
+    perks: ["nightRunner", "shortcut", "fetch"],
+    weaknessTiming: "soon", // hounds
   },
 };
 

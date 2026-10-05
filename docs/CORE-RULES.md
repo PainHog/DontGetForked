@@ -104,4 +104,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | Each Entity's Gifts, Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
+| — | Content | Gifts, Perks, Weakness and Tell for six Entities (Dracula and Frankenstein's creature done: C6, Chapter 2); each Entity's Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |

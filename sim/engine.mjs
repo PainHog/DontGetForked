@@ -237,6 +237,12 @@ const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : ac
  *  strongBack    carries a Huge piece alone
  *  tireless      carrying doesn't make Nimble smaller
  *  builtToLast   slips free from the lock-up on a Success or a Cost
+ *  patienceOfAges   "lose a Turn" is never your Cost
+ *  keeperOfTreasures "drop an item" is never your Cost
+ *  fearTheCurse  the mob in your local chase is 1 easier
+ *  nightRunner   your local chase starts at Lead 2
+ *  shortcut      the way out is 2 easier when you roll it
+ *  fetch         picking up a dropped item doesn't cost your action
  */
 const hasPerk = (m, k) => m.perk === k;
 
@@ -553,7 +559,7 @@ function leaveTown(S) {
 function ctxFor(S, m, ob, loc, phase) {
   const helpers = hereOf(S).filter((h) => h !== m); // P7: only Entities at the same location
   return {
-    phase, options: ob.options, difficulty: ob.difficulty, witnessed: ob.witnessed,
+    phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0), witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false,
   };
 }
@@ -767,15 +773,15 @@ function pickCost(S, m, gain = 0) {
   else if (P.costChoice === "lenient") kind = items.length === 0 ? "drop" : "stepdown";
   else {
     // T10: the Storyteller never picks a Cost that costs nothing (a Suspicion +1 the roll already raised).
-    const opts = ["turn", "stepdown"];
+    const opts = hasPerk(m, "patienceOfAges") ? ["stepdown"] : ["turn", "stepdown"];
     if (gain < 1) opts.push("suspicion");
-    if (items.length) opts.push("drop");
+    if (items.length && !hasPerk(m, "keeperOfTreasures")) opts.push("drop");
     kind = S.rng.pick(opts);
   }
   S.rec.count(`cost:${kind}`);
   if (kind === "drop") {
     if (items.length === 0) { S.rec.detect("\"drop an item\" Cost with nothing carried (costs nothing)"); return kind; }
-    if (P.dropRule === "recover") { m.loseTurn = true; return kind; } // picking it up again takes the next action
+    if (P.dropRule === "recover") { if (!hasPerk(m, "fetch")) m.loseTurn = true; return kind; } // picking it up again takes the next action
     if (P.dropRule === "extrasOnly") {
       // Only an extra can be dropped (and is lost); with none carried the Storyteller picks another Cost.
       const extras = m.items.filter((i) => !i.essential);
@@ -832,10 +838,11 @@ function localChase(S, m) {
   const N = S.N;
   S.rec.count("local chases");
   let weak = weakStart(S, m, false);
-  let lead = N.lead.localStart;
+  let lead = N.lead.localStart + (hasPerk(m, "nightRunner") ? 1 : 0);
+  const curse = hasPerk(m, "fearTheCurse") ? 1 : 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
-    const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
+    const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion)) - curse;
     const options = chaseGround(S);
     weak = weakNow(S, m, weak, round);
     const ctx = { phase: "local", options: groundFor(m, options), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };

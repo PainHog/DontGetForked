@@ -32,8 +32,40 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Hyde for free (C2b). Gifts, Perks, Weaknesses and Tells are still to be written.
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" } },
-  { key: "creature", name: "Frankenstein’s Creature", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" } },
+  { key: "dracula", name: "Dracula", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" },
+    gift: {
+      name: "Shape of the Night",
+      versions: [
+        { key: "bat", name: "Bat", effect: "switch", trait: "nimble", text: "He flits up to the window.", default: true },
+        { key: "mist", name: "Mist", effect: "hidden", text: "If he shows, it’s only fog." },
+        { key: "wolf", name: "Wolf", effect: "raise", text: "The strength and speed of a wolf." },
+      ],
+    },
+    perks: [
+      { key: "hypnoticEyes", name: "Hypnotic Eyes", text: "On Charm rolls, the Monster shows only if it beats your trait die by 2 or more.", default: true },
+      { key: "oldMoney", name: "Old Money", text: "A Cost on a Charm roll is never Suspicion +1." },
+      { key: "wallCrawler", name: "Wall-Crawler", text: "In a chase you can always roll Nimble." },
+    ],
+    weakness: { name: "Garlic", timing: "always", text: "Every kitchen in town has some, and the mob knows it." },
+    tell: { name: "No Reflection", text: "A shop window shows everyone but him." },
+  },
+  { key: "creature", name: "Frankenstein’s Creature", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" },
+    gift: {
+      name: "Made, Not Born",
+      versions: [
+        { key: "mountainStride", name: "Mountain Stride", effect: "open", trait: "nimble", text: "He bounds over walls the way he crossed the glaciers.", default: true },
+        { key: "hovelWatcher", name: "Hovel Watcher", effect: "hidden", text: "He learned to watch unseen." },
+        { key: "bookLearned", name: "Book-Learned", effect: "raise", text: "He taught himself from books." },
+      ],
+    },
+    perks: [
+      { key: "strongBack", name: "Strong Back", text: "You carry a Huge piece alone.", default: true },
+      { key: "tireless", name: "Tireless", text: "Carrying doesn’t make your Nimble smaller." },
+      { key: "builtToLast", name: "Built to Last", text: "You slip free from the lock-up on a Success or a Cost." },
+    ],
+    weakness: { name: "Fire", timing: "soon", text: "Someone has to light the torches." },
+    tell: { name: "Head and Shoulders", text: "He stands a head above the whole crowd, and no costume hides it." },
+  },
   { key: "mummy", name: "The Mummy", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits" } },
   { key: "werewolf", name: "The Werewolf", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden" } },
   { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" } },
