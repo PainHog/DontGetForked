@@ -134,10 +134,41 @@ DGF.entities = Object.freeze([
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" } },
+  { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" },
+    gift: {
+      name: "Witchcraft",
+      versions: [
+        { key: "broomstick", name: "Broomstick", effect: "open", trait: "sly", text: "In over the rooftops, quiet as an owl.", default: true },
+        { key: "blackCat", name: "Black Cat", effect: "hidden", text: "Everyone blames the cat." },
+        { key: "potionForThat", name: "A Potion for That", effect: "switch", trait: "wits", text: "There’s a potion for everything." },
+      ],
+    },
+    perks: [
+      { key: "familiarsWarning", name: "Familiar’s Warning", text: "When you arrive, a Tell check goes off only if a second d6 also rolls 4–6: the cat warns you.", default: true },
+      { key: "flyByNight", name: "Fly by Night", text: "In a chase you can always roll Wits." },
+      { key: "wiseWoman", name: "Wise Woman", text: "A Cost on your Wits roll is never “lose a Turn”." },
+    ],
+    weakness: { name: "Rowan", timing: "soon", text: "A sprig of rowan, the old charm against witches: somebody’s grandmother always has one." },
+    tell: { name: "A Black Cat", text: "A black cat follows her everywhere and stares at people." },
+  },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
     signature: { name: "The Draught", effect: "form" },
+    gift: {
+      name: "The Other Self",
+      versions: [
+        { key: "doctorsBag", name: "Doctor’s Bag", effect: "raise", text: "The right instrument for the job.", default: true },
+        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", text: "A respectable doctor having a funny turn (if the Monster shows, Hyde still takes over)." },
+        { key: "trample", name: "Trample", effect: "open", trait: "brawn", text: "A d4 as Jekyll, a d12 as Hyde." },
+      ],
+    },
+    perks: [
+      { key: "practisedHand", name: "Practised Hand", text: "Changing back to Jekyll costs no charge.", default: true },
+      { key: "steadyNerves", name: "Steady Nerves", text: "Hyde takes over only if the Monster beats your trait die by 2 or more." },
+      { key: "bruteStrength", name: "Brute Strength", text: "As Hyde, carrying doesn’t make your Nimble smaller." },
+    ],
+    weakness: { name: "A Familiar Face", timing: "soon", text: "Someone in the mob recognises the good doctor." },
+    tell: { name: "The Wrong Hand", text: "One hand a gentleman’s, the other hairy and knotted." },
     forms: { jekyll: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 }, hyde: { brawn: 12, nimble: 10, sly: 8, charm: 4, wits: 6 } },
   },
 ].map((e) => Object.freeze(e)));
