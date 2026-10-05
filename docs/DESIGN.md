@@ -121,6 +121,19 @@ Not decisions. These need Richard's call before the core rules are final:
 - ~~**S10.**~~ *Decided 2026-10-04: an easier way (2 lower Difficulty), watched as usual; Limits 12 / 13 / 15.*
 - ~~**S11.**~~ *Decided 2026-10-04 (provisional): rulings R1–R11 (see the Decisions log).*
 
+### Raised by the first playtests (2026-10-05; details in `sim/playtests/PT1-standard-4.md` and `PT2-hard-5.md`)
+Rule questions the playtests found that the decisions don't answer. Wording-only fixes went straight in (core rules 1.1, `book/REVIEW.md` row 14). These need Richard's call:
+- **T1.** Does one Entity's success open an obstacle for the whole party, or must each Entity roll?
+- **T2.** A location's layout: are obstacles crossed in order, what are "two ways in", and when is the loot in hand?
+- **T3.** Tells when the party splits: how many checks?
+- **T4.** Leaving town: must the whole party leave together, and what does a Cost on the exit cost?
+- **T5.** "Open an approach": with any trait or only one the obstacle doesn't list; in chases too?
+- **T6.** Which die a raise raises (trait die only, or the Mask/Monster die too).
+- **T7.** Several abilities on one roll (still at most one raise)?
+- **T8.** Which traits slip free from the lock-up.
+- **T9.** A captive's loot (R3, provisional): gone, back at its location, or kept by the captive?
+- **T10.** How the Storyteller chooses a Cost, and whose item "drop an item" drops.
+
 ## Rights note: classic monsters (not legal advice)
 - **Public-domain sources:** these literary characters are in the public domain:
   - Dracula (Bram Stoker, 1897)

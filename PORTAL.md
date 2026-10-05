@@ -1,7 +1,7 @@
-Now: Playtesting the approved rules with computer players and real dice, and fixing anything unclear in the text.
-Next: Writing the eight monsters with the author: their dice, powers, weaknesses and tells.
+Now: Two computer playtests are done and the unclear wording is fixed; waiting for the author's calls on ten rule questions they raised.
+Next: Fixing the rules to match those calls, a check-up playtest, then writing the eight monsters with the author.
 Number: Design decisions made = 52
-Number: Open design questions = 0
+Number: Open design questions = 11
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->
@@ -25,7 +25,8 @@ Number: Simulated raids per balance check = 18000
 - [x] Set the art direction
 - [x] Decide on the online version
 - [x] Check the name
-- [ ] Playtest the core rules by the book (and a verification playtest after fixes)
+- [x] First computer playtests of the core rules, with real dice
+- [ ] Settle the playtest questions and re-test
 - [ ] Write the eight monsters: powers, weaknesses and tells
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
