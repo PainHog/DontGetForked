@@ -1,25 +1,20 @@
 /**
  * Don't Get Forked — core dice rules for the simulator.
  *
- * Implements docs/CORE-RULES.md draft 0.2 ("Rolling", P1/P2). There is no
- * rulebook yet, so these functions live in sim/ for now; when the book's
- * rolling chapter exists they move to module/logic/ (Foundry-free) and the
- * simulator imports them from there, with a frozen copy of this version kept
- * for the baseline (sim/README.md §8).
+ * The decided rules live in module/logic/rules.mjs (CORE-RULES 1.0) and are
+ * re-exported here; this file adds the variants the simulator sweeps. When the
+ * live rules change, freeze a copy of the old functions for the old baseline
+ * (sim/README.md §8).
  *
  * Plain data in, plain data out. No Foundry, no randomness except through the
  * rng passed in.
  */
 
-/** Die sizes, smallest to largest. CORE-RULES "Entities": d4 … d12. */
-export const DIE_STEPS = Object.freeze([4, 6, 8, 10, 12]);
-
-/** The second die. CORE-RULES "Rolling" 2: Mask d6, Monster d10. */
-export const MASK = 6;
-export const MONSTER = 10;
-
-/** P1 Difficulty ladder. */
-export const DIFFICULTY = Object.freeze({ easy: 6, standard: 8, hard: 10, daunting: 12 });
+// The decided rules come from the Foundry system's pure logic, so the simulator,
+// the table and the VTT run the same code (sim/README.md §1). Only the variants the
+// simulator sweeps (Critical rules, the "tie" Monster reading) stay here.
+export { DIE_STEPS, MASK, MONSTER, DIFFICULTY, band } from "../module/logic/rules.mjs";
+import { DIE_STEPS, band } from "../module/logic/rules.mjs";
 
 /**
  * Raise a die `n` sizes (CORE-RULES "Abilities": raise a die one size).
@@ -44,15 +39,6 @@ export function stepDown(die, n = 1) {
   return { die: DIE_STEPS[j], under: n - (i - j) };
 }
 
-/**
- * P2 result bands: Success if the total meets the Difficulty, Cost if 1–2 short,
- * Trouble if 3 or more short.
- */
-export function band(total, difficulty) {
-  if (total >= difficulty) return "success";
-  if (total >= difficulty - 2) return "cost";
-  return "trouble";
-}
 
 /**
  * Critical (open in CORE-RULES; the simulator measures both candidates):
