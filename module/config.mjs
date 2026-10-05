@@ -244,6 +244,25 @@ DGF.suspicion = Object.freeze({ trouble: 1, monsterShows: 2, tell: 1, overdraw: 
 /** P8 + Grand Year: the year's results, worst to best (Forked stands apart). */
 DGF.results = Object.freeze(["bust", "partial", "win", "grand"]);
 
+/** C15: the epilogue (story only): one line for the result, then one for each kind of item (by Castle Duty) that didn't come home. */
+DGF.epilogue = Object.freeze({
+  year: Object.freeze({
+    grand: "A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there.",
+    win: "Full larders, warm fires. The castle creaks happily through another year.",
+    partial: "The castle gets by, just. Someone has to sleep in the draughty tower.",
+    bust: "A long, thin year, and a lot of arguing about whose fault it was.",
+    forked: "The town tells the story for years. Next Lantern Night, the bells ring a little louder.",
+  }),
+  missing: Object.freeze({
+    cook: "Turnip soup every night until spring.",
+    gardener: "Nothing grows but nettles, and the nettles win.",
+    librarian: "Nobody knows what the town is saying, or what day it is.",
+    butler: "Dinner is served on old coffin lids.",
+    handyman: "Every door in the castle creaks, sticks or falls off.",
+    tailor: "Next year’s disguises are held together with string and hope.",
+  }),
+});
+
 /** S9 / S10 starting numbers (CORE-RULES, Starting numbers). */
 DGF.charges = 3;
 DGF.turns = 12;

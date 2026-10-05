@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -147,4 +147,12 @@ test("C14: rolling the list: kind die then item die, a repeat rolled again, the 
   assert.equal(list[1].duty, "butler");
   assert.equal(list[3].kind, DGF.duties[1].kind);
   assert.equal(faces.length, 0);
+});
+
+test("C15: the epilogue: the result's line, then each missing kind once, in table order", () => {
+  for (const r of [...DGF.results, "forked"]) assert.ok(DGF.epilogue.year[r]);
+  assert.deepEqual(Object.keys(DGF.epilogue.missing), DGF.duties.map((d) => d.key));
+  const lines = epilogueLines({ result: "partial", missingDuties: ["tailor", "cook", "tailor"] });
+  assert.deepEqual(lines, [DGF.epilogue.year.partial, DGF.epilogue.missing.cook, DGF.epilogue.missing.tailor]);
+  assert.throws(() => epilogueLines({ result: "great" }));
 });

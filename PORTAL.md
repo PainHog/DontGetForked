@@ -1,6 +1,6 @@
-Now: The shopping list is in: 36 things the castle runs out of, from a wheel of strong cheese to boots in a very large size.
-Next: The "how the year went" ending table, decided with the author.
-Number: Design decisions made = 68
+Now: The ending is in: how the castle's year goes, and what it went without, from turnip soup to dinner on old coffin lids.
+Next: The castle upgrades for groups who play several raids, decided with the author.
+Number: Design decisions made = 69
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -36,6 +36,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Monster portraits filled with stand-in pictures
 - [x] The town's festival: Lantern Night
 - [x] The shopping list table
+- [x] The ending: how the year went
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
