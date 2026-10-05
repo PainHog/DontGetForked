@@ -198,6 +198,19 @@ DGF.chaseTable = Object.freeze([
   { key: "deadEnd", name: "A dead end", text: "Break through, or think fast.", traits: ["brawn", "wits"] },
 ].map((r) => Object.freeze(r)));
 
+/** C13: the festival, and a d6 table of local customs (flavour only, no rules). */
+DGF.festival = Object.freeze({
+  name: "Lantern Night",
+  customs: Object.freeze([
+  { key: "lanterns", text: "Turnip lanterns in every window." },
+  { key: "parade", text: "A costume parade through the square at midnight." },
+  { key: "maskedBall", text: "A masked ball at the mayor’s house." },
+  { key: "pies", text: "Pies left on doorsteps “for the wanderers”." },
+  { key: "bonfire", text: "A bonfire in the square, and a straw monster burned at dawn." },
+  { key: "bells", text: "Bells rung every hour to keep the real monsters away. They never work." },
+  ].map((c) => Object.freeze(c))),
+});
+
 /** C4: a Tell check is a d6; on this or higher a Tell goes off (whose: roll among the Entities arriving). */
 DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });
 
