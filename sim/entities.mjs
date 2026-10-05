@@ -58,10 +58,8 @@ export const ROSTER = buildRoster();
 
 /**
  * The real roster's dice (C1, approved 2026-10-05), read from the Foundry config
- * so the book, the system and the simulator share one table. Abilities, Gifts and
- * Weakness types are still the placeholders of the matching E1–E8 slot (Dracula's
- * Weakness is placeholder sunlight-type); Jekyll & Hyde plays as Jekyll until the
- * change between forms is written.
+ * so the book, the system and the simulator share one table. Gifts and Weakness
+ * types are still placeholders (Dracula's Weakness is placeholder sunlight-type).
  */
 const APPROVED = DGF.entities.map((e) => [e.name, e.dice, e.key === "dracula" ? "sunlight" : "mob"]);
 
@@ -77,39 +75,27 @@ function buildCandidate(rows) {
 }
 
 /**
- * PROPOSED signature abilities (C2, a proposal for Richard, not decided content):
- * effect + trait per Entity. Jekyll & Hyde's signature is the change of form,
- * modelled as "roll this one roll with Hyde's die for the called trait" (form).
+ * The approved signatures (C2) from the Foundry config. Jekyll & Hyde's is "form"
+ * (The Draught; Hyde takes over when the Monster shows on a Jekyll roll, C2b).
  * Gifts stay placeholders: the three standard effects the signature doesn't use.
  */
-const C2 = {
-  dracula: { effect: "open", trait: "charm" },
-  creature: { effect: "switch", trait: "brawn" },
-  mummy: { effect: "switch", trait: "wits" },
-  werewolf: { effect: "hidden", trait: "nimble" },
-  invisible: { effect: "hidden", trait: "sly" },
-  ghost: { effect: "open", trait: "nimble" },
-  witch: { effect: "raise", trait: "wits" },
-  "jekyll-hyde": { effect: "form", trait: "charm" },
-};
-
-function buildProposed() {
+function buildApproved() {
+  const dice = buildCandidate(APPROVED);
   return Object.freeze(DGF.entities.map((e, i) => {
-    const base = buildCandidate(APPROVED)[i];
-    const sig = C2[e.key];
+    const sig = e.signature;
     const order = Object.entries(e.dice).sort((a, b) => b[1] - a[1]).map(([t]) => t);
     const std = sig.effect === "form" ? "switch" : sig.effect;
     return Object.freeze({
-      ...base,
-      signature: Object.freeze({ ...sig }),
+      ...dice[i],
+      signature: Object.freeze({ effect: sig.effect, trait: sig.trait ?? order[0], name: sig.name }),
       giftOptions: Object.freeze(EFFECTS.filter((x) => x !== std)),
       giftTrait: order.find((t) => t !== sig.trait) ?? order[1],
-      formDice: e.forms ? Object.freeze({ ...e.forms.hyde }) : null,
+      formDice: e.forms ? Object.freeze({ jekyll: Object.freeze({ ...e.forms.jekyll }), hyde: Object.freeze({ ...e.forms.hyde }) }) : null,
     });
   }));
 }
 
-export const ROSTERS = Object.freeze({ placeholder: ROSTER, approved: buildCandidate(APPROVED), proposedC2: buildProposed() });
+export const ROSTERS = Object.freeze({ placeholder: ROSTER, approved: buildApproved() });
 
 /** Validator: rejects an Entity that breaks the decided structure. */
 export function validateEntity(e) {

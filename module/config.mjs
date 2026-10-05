@@ -24,20 +24,24 @@ DGF.traits = Object.freeze(["brawn", "nimble", "sly", "charm", "wits"]);
 DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
 
 /**
- * The eight Entities' dice (C1, approved by Richard 2026-10-05; rulebook Chapter 2).
- * Jekyll & Hyde is one sheet with two arrangements of the same dice (`forms`).
- * Abilities, Gifts, Perks, Weaknesses and Tells are still to be written.
+ * The eight Entities' dice (C1) and signature abilities (C2), approved by Richard
+ * 2026-10-05 (rulebook Chapter 2). Jekyll & Hyde is one sheet with two arrangements
+ * of the same dice (`forms`). A signature does one standard effect (with its trait
+ * for "switch" and "open"); Jekyll & Hyde's is "form": The Draught changes Jekyll to
+ * Hyde or back (one charge), and the Monster showing on a Jekyll roll turns him into
+ * Hyde for free (C2b). Gifts, Perks, Weaknesses and Tells are still to be written.
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 } },
-  { key: "creature", name: "Frankenstein’s Creature", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 } },
-  { key: "mummy", name: "The Mummy", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 } },
-  { key: "werewolf", name: "The Werewolf", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 } },
-  { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 } },
-  { key: "ghost", name: "A Ghost", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 } },
-  { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 } },
+  { key: "dracula", name: "Dracula", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" } },
+  { key: "creature", name: "Frankenstein’s Creature", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" } },
+  { key: "mummy", name: "The Mummy", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits" } },
+  { key: "werewolf", name: "The Werewolf", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden" } },
+  { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" } },
+  { key: "ghost", name: "A Ghost", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "nimble" } },
+  { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" } },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
+    signature: { name: "The Draught", effect: "form" },
     forms: { jekyll: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 }, hyde: { brawn: 12, nimble: 10, sly: 8, charm: 4, wits: 6 } },
   },
 ].map((e) => Object.freeze(e)));

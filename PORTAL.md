@@ -1,6 +1,6 @@
-Now: The monsters' dice are set, the last playtest questions are settled, and free public-domain engravings are being gathered as stand-in art until the illustrator's work arrives.
+Now: The monsters' dice and signature powers are set; free public-domain engravings are being gathered as stand-in art until the illustrator's work arrives.
 Next: Writing the eight monsters with the author: their powers, weaknesses and tells.
-Number: Design decisions made = 56
+Number: Design decisions made = 57
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -28,7 +28,8 @@ Number: Simulated raids per balance check = 18000
 - [x] First computer playtests of the core rules, with real dice
 - [x] Settle the playtest questions and re-test
 - [x] Set the eight monsters' dice
-- [ ] Write the eight monsters: powers, weaknesses and tells
+- [x] Set the eight monsters' signature powers
+- [ ] Write the eight monsters: second powers, perks, weaknesses and tells
 - [ ] Stand-in art in the rulebook (free public-domain engravings)
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
