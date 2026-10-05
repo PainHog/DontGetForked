@@ -1,7 +1,7 @@
-Now: Checking whether anyone already uses the name "Don't Get Forked".
-Next: Approving the one-page core rules, then writing the eight monsters.
-Number: Design decisions made = 50
-Number: Open design questions = 1
+Now: Waiting for the author to approve the one-page core rules.
+Next: Writing the eight monsters: their dice, powers, weaknesses and tells.
+Number: Design decisions made = 51
+Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->
@@ -24,9 +24,10 @@ Number: Simulated raids per balance check = 18000
 - [x] Settle the table: players, session length and tone
 - [x] Set the art direction
 - [x] Decide on the online version
-- [ ] Check the name
+- [x] Check the name
 - [ ] Write the eight monsters: powers, weaknesses and tells
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
 - [ ] Foundry system playable
 - [ ] First playtest
+- [ ] Legal checks before launch (the name and the monster roster)

@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (draft 0.15)
+# Don't Get Forked — core rules (draft 0.16)
 
-*Draft, 2026-10-04. It summarises the decisions in `docs/DESIGN.md`; nothing here is final until he approves it. **[sim]** marks a number; the starting values approved in S9 are in the table at the end. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
+*Draft, 2026-10-05, for Richard's approval. It summarises the decisions in `docs/DESIGN.md`. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone: 3–5 players and a Storyteller, 2–3 hours, horror-comedy for about 12+.
@@ -25,28 +25,28 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
 - **Abilities** (one charge each) do one of four things: raise a die one size; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion; open an approach nobody else can take, still with a roll: you roll the ability's trait at 2 lower Difficulty, watched as usual [S10]. **No ability ever passes automatically.** **[P7: an ability may target any Entity's roll at the same location.]** A roll takes at most one raise, from any source, Castle Duty included [R2]. No die goes below a d4; further steps down are lost [R6].
-- **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [sim]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
+- **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [S9]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
 
 ## The raid
 - **Shopping list:** rolled on a table; the number of items is set by difficulty **[S9: 3 / 4 / 4]**. One or two are **essentials**, the rest **extras**. Premade raids give a fixed list.
 - **The town** is built from shared parts: an **obstacle** (trait + Difficulty), a **location** (1–3 obstacles, some loot, at least two ways in), **the way out** and the **raid** (locations visited until dawn). There are three ways to build one: a premade sequence, a map, or random tables with a difficulty budget.
-- **Time [P4]:** the night lasts a set number of **Turns** before dawn [sim]. Each Turn, every Entity either makes one roll at its location or moves to another location. Several Entities may try the same obstacle in one Turn; each try risks Trouble [R7]. The party may split.
+- **Time [P4]:** the night lasts a set number of **Turns** before dawn [S9: 12]. Each Turn, every Entity either makes one roll at its location or moves to another location. Several Entities may try the same obstacle in one Turn; each try risks Trouble [R7]. The party may split.
 - **Group checks [P6]:** when the party crosses the same obstacle together, everyone rolls and gets through on their own result; Suspicion rises once, by the worst result.
-- **Getting out [S4]:** the way out of town is one watched obstacle: Sly or Nimble, or Brawn the loud way, at the label's exit Difficulty [sim]. One Entity rolls for the party. A Success or Cost gets everyone out; Trouble raises Suspicion and that Entity is caught, and the party may try again next Turn.
+- **Getting out [S4]:** the way out of town is one watched obstacle: Sly or Nimble, or Brawn the loud way, at the label's exit Difficulty [S9]. One Entity rolls for the party. A Success or Cost gets everyone out; Trouble raises Suspicion and that Entity is caught, and the party may try again next Turn.
 - **Furniture [S7]:** a piece stands at one of the list's locations, behind one extra obstacle the party may take on once that location's loot is in hand.
 - **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. While carrying furniture, every move takes two Turns [S7]. You can drop a piece at any time.
 
 ## Suspicion
-- **One town-wide track** up to a **Limit** set by difficulty [sim].
+- **One town-wide track** up to a **Limit** set by difficulty [S9].
 - **Raised by:** trouble +1 · the Monster shows +2 [S2] · a Tell +1 · overdraw +2. **One roll raises it once, by its biggest trigger.** Good results never lower it; only a few specific abilities or Perks can, within limits.
 - **Tells [S5]:** checked once each time the party arrives at a watched location, for the whole party; if one goes off, one Entity's Tell shows (+1 Suspicion). The chance is set with the Tell content [sim].
 - **Caught:** trouble in front of witnesses starts a **local chase** for the Entities involved. Several Entities caught by one roll flee together on one shared Lead (majority rule) and are captured together if cornered [R4]. A local chase happens within the Turn it started [R5].
 - **At the Limit** **[P5: or at dawn, for anyone still in town]**, the whole town hunts. Every Entity who isn't captured flees together in the **final flight**. From then on Suspicion stops [S1]. The track never goes past the Limit; extra points are lost [R11].
 
 ## Chases
-- **The Lead track:** start with a small Lead [sim; a local chase starts at 1, S6]. Each round, roll against the mob's Difficulty [sim]: in a local chase it rises with Suspicion; in the final flight it is set by the label and doesn't change with party size [S5]. Success +1, cost no change, trouble −1. Reach the escape number [sim] and you're clear; reach 0 and you're cornered.
+- **The Lead track:** start with a small Lead [S9: 1 in a local chase, 2 in the final flight]. Each round, roll against the mob's Difficulty [S9]: in a local chase it rises with Suspicion; in the final flight it is set by the label and doesn't change with party size [S5]. Success +1, cost no change, trouble −1. Reach the escape number [S9: 4 local, 6 final] and you're clear; reach 0 and you're cornered.
 - **The ground:** each round, roll on a d6 chase table. The result lists the traits that work, always including one that isn't Nimble.
-- **Weakness:** once the mob brings your Weakness, you roll your trait one size smaller in the chase.
+- **Weakness:** once the mob brings your Weakness, you roll your trait one size smaller in the chase. When the mob brings each Weakness is set with the Weakness content [sim].
 - **Local chase:** cornered means **captured**, and the town takes back what you carried [R3]. You're held at the town's lock-up, an obstacle (Sly, or Brawn the loud way, always watched) at the lock-up Difficulty, with a new rescue obstacle for each capture [R9]; the party can rescue you (costs Turns), and once per Turn you may try to slip free; only a Success frees you [S6] (Trouble: Suspicion +1). Anyone still held when the party leaves town is left behind.
 - **Final flight:** everyone rolls each round. If successes outnumber trouble the Lead rises 1; if trouble outnumbers successes it falls 1. **Escape** = home with the goods. **Cornered** = **forked**: the monsters are killed and the raid is lost.
 - **Once the hunt is on [S1]:** the Mask is off, and everyone rolls the Monster die. An Entity may still overdraw, but its Weakness is then in play for the rest of the flight (its trait one size smaller), and once its Weakness is in play it can't overdraw again.
@@ -90,4 +90,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness, Tell; Castle Duties; chase table; festival | Richard |
+| — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
