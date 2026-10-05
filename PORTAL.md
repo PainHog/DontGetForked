@@ -1,6 +1,6 @@
-Now: Waiting for the author to approve the one-page core rules.
-Next: Writing the eight monsters: their dice, powers, weaknesses and tells.
-Number: Design decisions made = 51
+Now: Playtesting the approved rules with computer players and real dice, and fixing anything unclear in the text.
+Next: Writing the rules chapters of the rulebook and the online version's rules engine, then the eight monsters.
+Number: Design decisions made = 52
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -19,12 +19,13 @@ Number: Simulated raids per balance check = 18000
 - [x] Settle the simulator's findings
 - [x] Set the starting numbers for each difficulty level
 - [x] Settle the remaining rule gaps
-- [ ] Approve the core rules
+- [x] Approve the core rules
 - [x] Plan the campaign
 - [x] Settle the table: players, session length and tone
 - [x] Set the art direction
 - [x] Decide on the online version
 - [x] Check the name
+- [ ] Playtest the core rules by the book (and a verification playtest after fixes)
 - [ ] Write the eight monsters: powers, weaknesses and tells
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
