@@ -50,13 +50,19 @@ Along the way the simulated players were improved (they now weigh the cost of be
 Playtests PT1 and PT2 raised ten rule questions; Richard decided all ten as recommended (`docs/DESIGN.md`). In the simulator:
 - **Two ways in (T2) is worth about +5 win points** at Standard and Hard: the party picks the better of two first obstacles. Raising only the trait die (T6) changes nothing measurable; open on unlisted traits only (T5) costs about 1 point.
 - With the approved numbers the rules now win **91.5 / 78.1 / 61.8%** (Standard and Hard above target; forked 0.7 / 2.0 / 4.2%).
-- **Package N1** (proposed, not decided) puts all six win and forked rates on target: the final flight's Lead starts at 3 everywhere, the final mob is 11 / 12 / 12 and the Limits 12 / 12 / 14. Trouble rises to 22.5% of rolls (target 10–22%). A Lead of 3 also makes the final flight one step shorter, which PT2 found long.
-- **The playtests split the party; the simulator doesn't.** Both raids finished with Turns to spare. Modelling a split party comes before the balance pass.
+- **Package N1** puts all six win and forked rates on target **for a party that stays together**: the final flight's Lead starts at 3 everywhere, the final mob is 11 / 12 / 12 and the Limits 12 / 12 / 14.
+
+## Splitting the party (2026-10-05)
+Both playtests split up, so the simulator now can too (`partyPolicy`: "pairs", the new default; "together"; "singles"). Each group takes its own location, abilities help only within a group, and everyone regroups at the way out (T4).
+- **Splitting is much stronger:** with the approved numbers, wins go from 91 / 78 / 62% (together) to **95 / 85 / 69%** (pairs; singles about 1–2 points more). Suspicion, captures and Limit flights hardly change: the gain is time. A party that stays together runs short of Turns and leaves extras behind; a split party doesn't.
+- **The 12-Turn clock doesn't bite a split party.** Raids end around Turn 7–8, as both playtests did (Turn 9 and Turn 6).
+- **A shorter night isn't the fix on its own.** At 8 Turns (package N2) the overall rates land near target, but Hard wins 42% with 3 Entities against 72% with 5: small parties can't cover the town in time. N1 under split play reaches only 95 / 82 / 65%.
+- So the retune belongs with the town tables (how many obstacles a location has and how far apart they are decide how long a raid takes) and the real abilities, in the balance pass.
 
 ## Still open
-The N1 retune awaits Richard. The next balance work needs the real Entities, Tells and towns.
+Win rates are above target under split play (95 / 85 / 69%); the retune waits for the balance pass, after the real Entities, Tells and town tables. Time pressure that doesn't punish small parties is a design question for that pass.
 
 ## What the simulation can't tell yet
 - **Real content.** Entity balance, real Tells and Weaknesses, and Perks all need the actual Entities.
-- **Splitting the party, maps and entrances,** and premade raids.
+- **Maps and entrances,** and premade raids (splitting is now modelled, simply).
 - **How real players choose** between Mask and Monster, when they go for furniture, and when they rescue a captive.
