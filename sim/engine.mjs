@@ -425,6 +425,16 @@ function workLocation(S, loc) {
     if (best.plan.value <= 0) { S.rec.count("declined rolls"); break; }
     acted.add(best.m);
     tried.add(ob);
+    // U2 (policy): before a watched roll, the roller hands its loot to someone at the same place (free).
+    if (S.P.lootHandover === "free" && best.plan.witnessed && best.m.items.length) {
+      const others = past().filter((h) => h !== best.m);
+      if (others.length) {
+        const to = others.reduce((a, b) => (b.items.length < a.items.length ? b : a));
+        to.items.push(...best.m.items);
+        best.m.items = [];
+        S.rec.count("loot handed over");
+      }
+    }
     const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
     addSusp(S, r.suspGain, "roll");
     if (r.band !== "trouble") {

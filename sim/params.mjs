@@ -83,6 +83,12 @@ export const PARAMS = {
     doc: "merge = overdraw's +2 is one of the roll's triggers (only the biggest counts), as in the Foundry logic; stack = overdraw is paid on top of the roll's own rise.",
     ref: "CORE-RULES Suspicion; PT3 M5",
   },
+  lootHandover: {
+    kind: "rule", default: "free", values: ["free", "none"],
+    title: "Handing loot to each other",
+    doc: "free = Entities at the same place hand loot over at any time, free (U2, decided 2026-10-05); the simulated players hand theirs over before a watched roll; none = no handing over.",
+    ref: "CORE-RULES The raid (Carrying); PT3 M6",
+  },
   partyPolicy: {
     kind: "policy", default: "pairs", values: ["pairs", "together", "singles"],
     title: "Does the party split up?",
@@ -180,10 +186,10 @@ export const PARAMS = {
     ref: "player policy",
   },
   roster: {
-    kind: "content", default: "placeholder", values: ["placeholder", "candidateA"],
+    kind: "content", default: "approved", values: ["approved", "placeholder"],
     title: "Which Entities",
-    doc: "placeholder = the anonymous E1–E8; candidateA = proposed dice arrangements for the real roster (abilities still placeholders).",
-    ref: "DESIGN Roster (arrangements are content for Richard to approve)",
+    doc: "approved = the real roster's dice (C1, approved 2026-10-05) with placeholder abilities, Gifts and Weakness types; placeholder = the anonymous E1–E8.",
+    ref: "DESIGN Decisions log (C1); module/config.mjs DGF.entities",
   },
   dutyEdge: {
     kind: "content", default: true, values: [true, false],

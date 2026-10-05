@@ -1,7 +1,7 @@
-Now: The check-up playtest is done: most earlier problems are fixed, the wording is tidied, and two small rule questions wait for the author.
-Next: Writing the eight monsters with the author: their dice, powers, weaknesses and tells.
-Number: Design decisions made = 53
-Number: Open design questions = 3
+Now: The monsters' dice are set, the last playtest questions are settled, and free public-domain engravings are being gathered as stand-in art until the illustrator's work arrives.
+Next: Writing the eight monsters with the author: their powers, weaknesses and tells.
+Number: Design decisions made = 56
+Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see CLAUDE.md, Portal) -->
@@ -26,8 +26,10 @@ Number: Simulated raids per balance check = 18000
 - [x] Decide on the online version
 - [x] Check the name
 - [x] First computer playtests of the core rules, with real dice
-- [ ] Settle the playtest questions and re-test
+- [x] Settle the playtest questions and re-test
+- [x] Set the eight monsters' dice
 - [ ] Write the eight monsters: powers, weaknesses and tells
+- [ ] Stand-in art in the rulebook (free public-domain engravings)
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator

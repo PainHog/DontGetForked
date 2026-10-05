@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (1.3)
+# Don't Get Forked — core rules (1.4)
 
-*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
+*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]); 1.4 (2026-10-05) adds rulings U1–U2 and the Entities' dice (C1). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone: 3–5 players and a Storyteller, 2–3 hours, horror-comedy for about 12+.
@@ -8,6 +8,20 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 ## Entities
 - **Eight premade Entities, no duplicates in a party:** Dracula, Frankenstein's creature, the Mummy, the Werewolf, the Invisible Man, a Ghost, a Witch, Jekyll & Hyde (two forms: one sheet, two arrangements of the same dice).
 - **Five traits:** Brawn (force, lifting, breaking, fighting) · Nimble (climbing, running, slipping free) · Sly (sneaking, hiding, stealing) · Charm (talking, bluffing, passing as human) · Wits (noticing, knowing, figuring out). **Every Entity has one each of d12, d10, d8, d6 and d4**, placed differently.
+- **Dice arrangements [C1]:**
+
+| Entity | Brawn | Nimble | Sly | Charm | Wits |
+|---|---|---|---|---|---|
+| Dracula | d8 | d10 | d6 | d12 | d4 |
+| Frankenstein's creature | d12 | d8 | d6 | d4 | d10 |
+| The Mummy | d10 | d4 | d6 | d8 | d12 |
+| The Werewolf | d10 | d12 | d6 | d4 | d8 |
+| The Invisible Man | d4 | d8 | d12 | d6 | d10 |
+| A Ghost | d4 | d12 | d10 | d8 | d6 |
+| A Witch | d6 | d4 | d10 | d8 | d12 |
+| Jekyll & Hyde: Jekyll | d4 | d6 | d8 | d12 | d10 |
+| Jekyll & Hyde: Hyde | d12 | d10 | d8 | d4 | d6 |
+
 - **Fixed per Entity:** the dice arrangement, a signature ability, a **Weakness** (something the town can use against it) and a **Tell** (how it gives itself away).
 - **Three picks**, each with a marked default and a random-table entry: a **Gift** (one of three versions of its second ability), a **Perk** (one of three passive edges) and a **Castle Duty** (one of about six shared household jobs, with a small edge tied to the shopping list; no two Entities in a party take the same one [R8]).
 - **Charges:** the same number for every Entity **[S9: 3]**, refilled once a year; unspent charges are lost. One charge = one use of an ability.
@@ -24,7 +38,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 *Odds at Difficulty 8 (trouble): d8 trait 21% with the Mask, 13% with the Monster; d4 trait 42% and 25%.*
 
-- **Abilities** (one charge each) do one of four things: raise your trait die one size (a d12 can't go higher) [T6]; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion (if it shows, Suspicion doesn't rise for it; Trouble or a Cost on that roll still counts) [W]; open an approach nobody else can take, still with a roll: with a trait the obstacle doesn't list, you roll the ability's trait at 2 lower Difficulty, watched as usual; only on obstacles (the lock-up included), never in a chase, and only you get through [S10, T5]. **No ability ever passes automatically.** Spend abilities before you roll; helping another Entity at the same place (the way out and the lock-up included, whether or not the helper has crossed its obstacles) costs the charge, not your action [W]. **[P7: an ability may target any Entity's roll at the same location.]** Several abilities may go on one roll, but it takes at most one raise, from any source, Castle Duty included [R2, T7]. Raises and steps down cancel out [W]. No die goes below a d4; further steps down are lost [R6].
+- **Abilities** (one charge each) do one of four things: raise your trait die one size (a d12 can't go higher) [T6]; use the ability's trait instead of the one called; roll the Monster die without risking Suspicion (if it shows, Suspicion doesn't rise for it; Trouble or a Cost on that roll still counts) [W]; open an approach nobody else can take, still with a roll: with a trait the obstacle doesn't list, you roll the ability's trait at 2 lower Difficulty, watched as usual; only on obstacles, never in a chase, and only you get through, though the way out still takes everyone, a rescue still frees every captive, and a captive may open its own way to slip free [S10, T5, U1]. **No ability ever passes automatically.** Spend abilities before you roll; helping another Entity at the same place (the way out and the lock-up included, whether or not the helper has crossed its obstacles) costs the charge, not your action [W]. **[P7: an ability may target any Entity's roll at the same location.]** Several abilities may go on one roll, but it takes at most one raise, from any source, Castle Duty included [R2, T7]. Raises and steps down cancel out [W]. No die goes below a d4; further steps down are lost [R6].
 - **Overdraw:** at zero charges you can still use an ability, for Suspicion +2 [S9]. Once the hunt is on, overdraw costs your Weakness instead (see Chases) [S1].
 
 ## The raid
@@ -34,7 +48,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 - **Group checks [P6]:** when several Entities roll the same group obstacle in one Turn, they declare their dice and abilities, then roll together [W]; everyone rolls and gets through on their own result; Suspicion rises once, by the biggest single trigger among all the rolls [W].
 - **Getting out [S4]:** the way out of town is one watched obstacle: Sly or Nimble, or Brawn the loud way, at the label's exit Difficulty [S9]. The party leaves together: every Entity who isn't captured must be at the way out [T4]. One Entity rolls for the party. A Success or Cost gets everyone out, with nothing more to pay [T4]; Trouble raises Suspicion and that Entity is caught (a local chase), and the party may try again next Turn.
 - **Furniture [S7]:** a piece stands at one of the list's locations, behind one extra obstacle the party may take on once that location's loot is in hand.
-- **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. While carrying furniture, every move takes two Turns [S7]. You can drop a piece at any time. Small loot has no carrying limit [W]. Decor counts as furniture. Taking a piece needs no action, and nobody re-crosses obstacles on the way out [W].
+- **Carrying:** Bulky pieces need one carrier, Huge pieces two. Carriers can't use the Mask die and roll Nimble one size smaller. Huge pieces don't fit small entrances. While carrying furniture, every move takes two Turns [S7]. You can drop a piece at any time. Small loot has no carrying limit [W], and Entities in the same place can hand it to each other at any time, free [U2]. Decor counts as furniture. Taking a piece needs no action, and nobody re-crosses obstacles on the way out [W].
 
 ## Suspicion
 - **One town-wide track** up to a **Limit** set by difficulty [S9].
@@ -90,4 +104,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | Each Entity's arrangement, abilities, Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
+| — | Content | Each Entity's abilities (and how Jekyll becomes Hyde), Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
