@@ -186,9 +186,9 @@ export const PARAMS = {
     ref: "player policy",
   },
   roster: {
-    kind: "content", default: "approved", values: ["approved", "placeholder"],
+    kind: "content", default: "approved", values: ["approved", "placeholder", "proposedC2"],
     title: "Which Entities",
-    doc: "approved = the real roster's dice (C1, approved 2026-10-05) with placeholder abilities, Gifts and Weakness types; placeholder = the anonymous E1–E8.",
+    doc: "approved = the real roster's dice (C1, approved 2026-10-05) with placeholder abilities, Gifts and Weakness types; placeholder = the anonymous E1–E8; proposedC2 = the approved dice with the proposed signature abilities (C2, not decided).",
     ref: "DESIGN Decisions log (C1); module/config.mjs DGF.entities",
   },
   dutyEdge: {
