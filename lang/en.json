@@ -1,3 +1,24 @@
 {
-  "DGF.SystemTitle": "Don't Get Forked"
+  "DGF.SystemTitle": "Don't Get Forked",
+  "DGF.Trait.brawn": "Brawn",
+  "DGF.Trait.nimble": "Nimble",
+  "DGF.Trait.sly": "Sly",
+  "DGF.Trait.charm": "Charm",
+  "DGF.Trait.wits": "Wits",
+  "DGF.Second.mask": "Mask",
+  "DGF.Second.monster": "Monster",
+  "DGF.Band.success": "Success",
+  "DGF.Band.cost": "Cost",
+  "DGF.Band.trouble": "Trouble",
+  "DGF.Critical": "Critical",
+  "DGF.MonsterShows": "The Monster shows",
+  "DGF.Suspicion": "Suspicion",
+  "DGF.Limit": "Limit",
+  "DGF.Lead": "Lead",
+  "DGF.Charges": "Charges",
+  "DGF.Result.grand": "Grand Year",
+  "DGF.Result.win": "Win",
+  "DGF.Result.partial": "Partial",
+  "DGF.Result.bust": "Bust",
+  "DGF.Result.forked": "Forked"
 }
