@@ -50,7 +50,7 @@ Along the way the simulated players were improved (they now weigh the cost of be
 Playtests PT1 and PT2 raised ten rule questions; Richard decided all ten as recommended (`docs/DESIGN.md`). In the simulator:
 - **Two ways in (T2) is worth about +5 win points** at Standard and Hard: the party picks the better of two first obstacles. Raising only the trait die (T6) changes nothing measurable; open on unlisted traits only (T5) costs about 1 point.
 - With the approved numbers the rules now win **91.5 / 78.1 / 61.8%** (Standard and Hard above target; forked 0.7 / 2.0 / 4.2%).
-- **Package N1** puts all six win and forked rates on target **for a party that stays together**: the final flight's Lead starts at 3 everywhere, the final mob is 11 / 12 / 12 and the Limits 12 / 12 / 14.
+- **Package N1** put all six win and forked rates on target **for a party that stays together** (before the T5 fix below): the final flight's Lead starts at 3 everywhere, the final mob is 11 / 12 / 12 and the Limits 12 / 12 / 14.
 
 ## Splitting the party (2026-10-05)
 Both playtests split up, so the simulator now can too (`partyPolicy`: "pairs", the new default; "together"; "singles"). Each group takes its own location, abilities help only within a group, and everyone regroups at the way out (T4).
@@ -58,6 +58,19 @@ Both playtests split up, so the simulator now can too (`partyPolicy`: "pairs", t
 - **The 12-Turn clock doesn't bite a split party.** Raids end around Turn 7–8, as both playtests did (Turn 9 and Turn 6).
 - **A shorter night isn't the fix on its own.** At 8 Turns (package N2) the overall rates land near target, but Hard wins 42% with 3 Entities against 72% with 5: small parties can't cover the town in time. N1 under split play reaches only 95 / 82 / 65%.
 - So the retune belongs with the town tables (how many obstacles a location has and how far apart they are decide how long a raid takes) and the real abilities, in the balance pass.
+
+## Fixes after PT3 (2026-10-05)
+- **T5 in the simulator:** an obstacle someone opened now lets only the opener go on (it used to clear the way for everyone). That costs about 1 point with a split party and 3–5 with a party that stays together.
+- **Capture timing:** a captive's first try to slip free is the Turn after its capture (the simulator let it try the same Turn).
+- **Overdraw** merging with the roll's other triggers or paid on top changes nothing measurable (overdraws during the raid are rare).
+
+## For the balance pass (from PT1–PT3 and the simulator)
+- **Win rates under split play are above target** (95 / 85 / 69% with the approved numbers); a shorter night alone punishes small parties.
+- **A local chase is far deadlier than the final flight.** From Lead 1 against 12 with a d12 trait: 51% escape with the Monster, 19% with the Mask; a three-Entity final flight escapes 84–96%. The local mob reaches its cap of 12 at Suspicion 4, so "rises with Suspicion" hardly matters, and near the Limit the final flight is safer than a local chase.
+- **The final flight runs long** (PT2: 9 rounds of 5 rolls) with no choices once charges are gone.
+- **The fourth item can be worthless:** with one essential and three extras, a Win allows one extra missing, so once three items are home the fourth adds nothing (PT3 skipped it).
+- **A group check raises Suspicion once,** so when one roller risks the Monster the others can too at no extra cost (P6, as decided).
+- For the ability writing: hidden does nothing once the hunt is on and open is barred in chases, so only raise and switch work in a final flight; a raise on a d12 is wasted; the d4 floor can erase the carrying penalty; a Weakness in play from round 1 (a sunlight Weakness at dawn) bars overdraw for the whole flight.
 
 ## Still open
 Win rates are above target under split play (95 / 85 / 69%); the retune waits for the balance pass, after the real Entities, Tells and town tables. Time pressure that doesn't punish small parties is a design question for that pass.
