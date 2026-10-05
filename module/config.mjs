@@ -100,8 +100,40 @@ DGF.entities = Object.freeze([
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
   },
-  { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" } },
-  { key: "ghost", name: "A Ghost", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "nimble" } },
+  { key: "invisible", name: "The Invisible Man", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" },
+    gift: {
+      name: "A Scientist’s Tricks",
+      versions: [
+        { key: "throughTheGap", name: "Through the Gap", effect: "open", trait: "nimble", text: "He slips through as the door swings shut.", default: true },
+        { key: "poltergeist", name: "Poltergeist", effect: "raise", text: "Things move by themselves, and everyone looks the other way." },
+        { key: "workItOut", name: "Work It Out", effect: "switch", trait: "wits", text: "A scientist’s mind finds another way." },
+      ],
+    },
+    perks: [
+      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you carry loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
+      { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep what you carry." },
+      { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
+    ],
+    weakness: { name: "Flour", timing: "soon", text: "Someone throws a bag of flour, and there he is." },
+    tell: { name: "Bandages and Goggles", text: "A wrapped head, dark goggles, a false nose, and a sneeze from nowhere." },
+  },
+  { key: "ghost", name: "A Ghost", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "sly", noLoot: true },
+    gift: {
+      name: "Haunting",
+      versions: [
+        { key: "chill", name: "Chill", effect: "raise", text: "A sudden cold, and fingers fumble.", default: true },
+        { key: "whisper", name: "Whisper", effect: "switch", trait: "charm", text: "A voice in the ear." },
+        { key: "fade", name: "Fade", effect: "hidden", text: "A trick of the light." },
+      ],
+    },
+    perks: [
+      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling.", default: true },
+      { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously." },
+      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you lose your next Turn instead of being captured." },
+    ],
+    weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
+    tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
+  },
   { key: "witch", name: "A Witch", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" } },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },

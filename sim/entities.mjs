@@ -87,7 +87,7 @@ function buildApproved() {
     const std = sig.effect === "form" ? "switch" : sig.effect;
     return Object.freeze({
       ...dice[i],
-      signature: Object.freeze({ effect: sig.effect, trait: sig.trait ?? order[0], name: sig.name }),
+      signature: Object.freeze({ effect: sig.effect, trait: sig.trait ?? order[0], name: sig.name, noLoot: !!sig.noLoot }),
       giftOptions: Object.freeze(EFFECTS.filter((x) => x !== std)),
       giftTrait: order.find((t) => t !== sig.trait) ?? order[1],
       formDice: e.forms ? Object.freeze({ jekyll: Object.freeze({ ...e.forms.jekyll }), hyde: Object.freeze({ ...e.forms.hyde }) }) : null,
@@ -108,16 +108,15 @@ function buildApproved() {
  * approved roster's placeholders.
  */
 const PROPOSED = {
-  invisible: {
-    gifts: [{ name: "Through the Gap", effect: "open", trait: "nimble" }, { name: "Poltergeist", effect: "raise" }, { name: "Work It Out", effect: "switch", trait: "wits" }],
-    perks: ["outOfSight", "hiddenPockets", "lightStep"],
-    weaknessTiming: "soon", // flour
+  witch: {
+    gifts: [{ name: "Broomstick", effect: "open", trait: "sly" }, { name: "Black Cat", effect: "hidden" }, { name: "A Potion for That", effect: "switch", trait: "wits" }],
+    perks: ["familiarsWarning", "flyByNight", "wiseWoman"],
+    weaknessTiming: "soon", // rowan
   },
-  ghost: {
-    gifts: [{ name: "Chill", effect: "raise" }, { name: "Whisper", effect: "switch", trait: "charm" }, { name: "Fade", effect: "hidden" }],
-    perks: ["spectral", "rattle", "alreadyDead"],
-    weaknessTiming: "always", // cold iron
-    signature: { trait: "sly", noLoot: true }, // proposed change to Through the Wall (C8)
+  "jekyll-hyde": {
+    gifts: [{ name: "Doctor’s Bag", effect: "raise" }, { name: "Pillar of Society", effect: "hidden" }, { name: "Trample", effect: "open", trait: "brawn" }],
+    perks: ["practisedHand", "steadyNerves", "bruteStrength"],
+    weaknessTiming: "soon", // a familiar face
   },
 };
 

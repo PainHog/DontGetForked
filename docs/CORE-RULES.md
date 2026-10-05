@@ -17,7 +17,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 | The Mummy | d10 | d4 | d6 | d8 | d12 | Ancient Lore: use Wits instead |
 | The Werewolf | d10 | d12 | d6 | d4 | d8 | Good Dog: the Monster die without risking Suspicion |
 | The Invisible Man | d4 | d8 | d12 | d6 | d10 | Unseen: the Monster die without risking Suspicion |
-| A Ghost | d4 | d12 | d10 | d8 | d6 | Through the Wall: open an approach with Nimble |
+| A Ghost | d4 | d12 | d10 | d8 | d6 | Through the Wall: open an approach with Sly, not while carrying loot or furniture [C8] |
 | A Witch | d6 | d4 | d10 | d8 | d12 | Hedge Spell: raise a die (any roll in the same place) |
 | Jekyll & Hyde: Jekyll | d4 | d6 | d8 | d12 | d10 | The Draught: change form (lasts until the next draught); the Monster showing on a Jekyll roll makes him Hyde, free [C2b] |
 | Jekyll & Hyde: Hyde | d12 | d10 | d8 | d4 | d6 | |
@@ -104,4 +104,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | Gifts, Perks, Weakness and Tell for six Entities (Dracula and Frankenstein's creature done: C6, Chapter 2); each Entity's Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
+| — | Content | Gifts, Perks, Weakness and Tell for the Witch and Jekyll & Hyde (the other six done: C6–C8, Chapter 2); each Entity's Gifts, Perks, Weakness (and when the mob brings it), Tell (and its chance); Castle Duties; chase table; festival; campaign upgrades | Richard |
