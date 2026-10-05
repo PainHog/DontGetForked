@@ -209,7 +209,15 @@ const FOOTER_CSS = `@page { @bottom-center { content: ${cssString(BOOK_TITLE + "
  *   e.g.  "ch-01": ["spot-something", "spot-spare"],
  * Empty until the art exists (the build then warns about large unfilled gaps).
  */
-const SPOTS = {};
+const SPOTS = {
+  // stand-in engravings (book/art/stand-in/SOURCES.md) until the illustrator's spots arrive;
+  // each has one home chapter, and an unused one fills any other gap
+  "ch-01": ["spot-lantern"],
+  "ch-02": ["spot-owl"],
+  "ch-05": ["spot-watchman"],
+  "ch-06": ["spot-windmill"],
+  "ch-07": ["spot-cart"],
+};
 const PT_PER_IN = 72;
 const BOTTOM_LIMIT_PT = (0.78 + BLEED_IN) * PT_PER_IN;   // @page bottom margin: content must end above this
 const TEXT_H_IN = 11 - 0.72 - 0.78;   // the text area's height (the print bleed adds to both the page and its margins)

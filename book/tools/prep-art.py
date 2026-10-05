@@ -6,6 +6,7 @@ Reads book/art/stand-in/manifest.json, one entry per piece:
   { "name": "ch06-mob",              # becomes book/art/<name>.jpg (the data-art name)
     "url": "https://upload.wikimedia.org/...",   # the original scan (Wikimedia Commons)
     "crop": [x0, y0, x1, y1],        # the part to keep, as fractions of the scan (0–1)
+    "aspect": 3,                     # optional: width/height; y1 is then worked out from x0, x1 and y0
     "width": 2000,                   # output width in pixels (height follows the crop)
     "ink": "#161618", "paper": "#f2f1ee" }   # optional duotone ends (default: the book's)
 
@@ -53,6 +54,11 @@ def prep(entry):
     src = ImageOps.exif_transpose(src).convert("L")
     w, h = src.size
     x0, y0, x1, y1 = entry.get("crop", [0, 0, 1, 1])
+    if "aspect" in entry:
+        # keep x0, x1 and the top y0; the bottom follows from the aspect (width / height)
+        y1 = y0 + (x1 - x0) * w / entry["aspect"] / h
+        if y1 > 1:
+            raise SystemExit(f"{entry['name']}: crop runs off the bottom (y1 = {y1:.3f})")
     im = src.crop((round(x0 * w), round(y0 * h), round(x1 * w), round(y1 * h)))
     out_w = entry.get("width", 2000)
     if im.width > out_w:

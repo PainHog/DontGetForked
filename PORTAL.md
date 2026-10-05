@@ -1,10 +1,10 @@
-Now: All eight monsters are fully written and balanced in the simulator. Next up are the castle's household jobs; stand-in pictures are being gathered.
+Now: All eight monsters are written and the rulebook has stand-in pictures: old public-domain engravings until the illustrator's art arrives. Waiting on the author's call on the castle's household jobs.
 Next: The castle's household jobs, the chase table and the festival, decided with the author.
 Number: Design decisions made = 62
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
-<!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->
+Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
 - [x] Decide the engine
 - [x] Choose the Entities
@@ -30,7 +30,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Set the eight monsters' dice
 - [x] Set the eight monsters' signature powers
 - [x] Write the eight monsters: second powers, perks, weaknesses and tells
-- [ ] Stand-in art in the rulebook (free public-domain engravings)
+- [x] Stand-in art in the rulebook (free public-domain engravings)
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
