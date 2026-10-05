@@ -54,11 +54,33 @@ const cssString = s => `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')
 
 /* ---------------------------------------------------------------- art -- */
 const artCache = new Map();
+
+/** Pixel size of a JPEG or PNG, read from its header. */
+function rasterSize(buf) {
+  if (buf[0] === 0x89 && buf.toString("ascii", 1, 4) === "PNG") return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+  for (let i = 2; i < buf.length - 9;) {
+    if (buf[i] !== 0xff) { i++; continue; }
+    const marker = buf[i + 1];
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
+    i += 2 + buf.readUInt16BE(i + 2);
+  }
+  throw new Error("can't read the image size");
+}
+
+/** The art file for a name: SVG first, then a raster (stand-in engravings, book/art/stand-in/SOURCES.md). */
+const artFile = name => [".svg", ".jpg", ".png"].map(ext => join(ART, `${name}${ext}`)).find(f => existsSync(f));
+
 function loadArt(name) {
   if (artCache.has(name)) return artCache.get(name);
-  const file = join(ART, `${name}.svg`);
+  const file = artFile(name);
   let svg;
-  if (existsSync(file)) {
+  if (file && !file.endsWith(".svg")) {
+    // A raster piece goes inside an SVG of its own size, so it sizes and places like the vector art.
+    const buf = readFileSync(file);
+    const { w, h } = rasterSize(buf);
+    const mime = file.endsWith(".png") ? "image/png" : "image/jpeg";
+    svg = `<svg role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><image width="${w}" height="${h}" href="data:${mime};base64,${buf.toString("base64")}"/></svg>`;
+  } else if (file) {
     svg = readFileSync(file, "utf8")
       .replace(/<\?xml[^>]*\?>/g, "")
       .replace(/<!DOCTYPE[^>]*>/gi, "")
@@ -206,7 +228,7 @@ function planSpots(ends) {
     // preferred spots first, then any spot not used yet; never a repeat (the same
     // illustration twice in one book reads as a mistake)
     const all = [...new Set(Object.values(SPOTS).flat())];
-    const have = a => existsSync(join(ART, `${a}.svg`));
+    const have = a => !!artFile(a);
     // don't take a spot a later chapter prefers
     const later = new Set(order.slice(idx + 1).flatMap(k => SPOTS[k] ?? []));
     const art = prefs.find(a => !used.has(a) && have(a))

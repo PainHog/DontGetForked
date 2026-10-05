@@ -15,62 +15,62 @@ Command: `node sim/run.mjs`
 | Package | Easy win | Standard win | Hard win | Forked E · S · H | Hard captures | Grand Year when tried | Trouble | Mask (raid rolls) | Spend ≥ ½ | Hard win, 3 · 4 · 5 Entities |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **target** | 87–93% | 72–78% | 55–60% | ≤2 · 3–7 · 8–12% | ≥ 0.2 | ~50% | 10–20% | ≥ 25% | ≥ 50% | close together |
-| P0 | 95.0% | 83.7% | 69.0% | 0.1% · 1.9% · 3.5% | 0.34 | 88.5% | 18.3% | 40.9% | 65.4% | 66% · 68% · 73% |
-| N1 | 95.0% | 81.8% | 66.7% | 0.3% · 4.5% · 8.1% | 0.33 | 88.1% | 22.0% | 42.2% | 66.8% | 64% · 66% · 70% |
-| N2 | 94.8% | 67.7% | 48.7% | 0.0% · 2.9% · 4.1% | 0.25 | 93.2% | 17.4% | 38.0% | 53.4% | 36% · 40% · 71% |
+| P0 | 95.6% | 85.5% | 71.0% | 0.2% · 2.3% · 4.4% | 0.33 | 88.9% | 18.9% | 40.9% | 65.7% | 67% · 72% · 74% |
+| N1 | 95.6% | 82.8% | 67.6% | 0.4% · 5.8% · 10.0% | 0.32 | 88.4% | 22.7% | 42.2% | 67.2% | 64% · 68% · 70% |
+| N2 | 94.9% | 68.8% | 49.1% | 0.2% · 3.1% · 5.0% | 0.25 | 92.7% | 17.9% | 38.2% | 53.7% | 35% · 40% · 72% |
 
 ## P0 — Decided rules (S1–S11, T1–T10) with the approved numbers (S9, S10) against the targets
 
 | Measure | Target | Simulated |  |
 |---|---|---|---|
-| Win, easy | 87%–93% | 95.0% | ✗ |
-| Win, standard | 72%–78% | 83.7% | ✗ |
-| Win, hard | 55%–60% | 69.0% | ✗ |
-| Forked, easy | 0%–2% | 0.1% | ✓ |
-| Forked, standard | 3%–7% | 1.9% | ✗ |
-| Forked, hard | 8%–12% | 3.5% | ✗ |
-| Captures per Hard raid | ≥ 0.2 | 0.34 | ✓ |
-| Grand Year when the party goes for furniture | ~50% | 88.5% | ✗ |
-| Going for furniture costs the Win | ~20% | 2.8% | ✗ |
-| Trouble, share of rolls | 10%–22% | 18.3% | ✓ |
-| Critical (doubles on a Success, S8), share of rolls | 3%–7% | 5.2% | ✓ |
-| Entities spending ≥ half their charges | ≥ 50% | 65.4% | ✓ |
-| Mask, share of rolls where you choose (all rolls) | ≥ 25% | 36.7% (26.8%) | ✓ |
-| Monster, share of rolls where you choose (all rolls) | ≥ 25% | 63.3% (73.2%) | ✓ |
-| Largest option outlier | within ±2.5 pts | gift E3:open 3.4 pts | ✗ |
+| Win, easy | 87%–93% | 95.6% | ✗ |
+| Win, standard | 72%–78% | 85.5% | ✗ |
+| Win, hard | 55%–60% | 71.0% | ✗ |
+| Forked, easy | 0%–2% | 0.2% | ✓ |
+| Forked, standard | 3%–7% | 2.3% | ✗ |
+| Forked, hard | 8%–12% | 4.4% | ✗ |
+| Captures per Hard raid | ≥ 0.2 | 0.33 | ✓ |
+| Grand Year when the party goes for furniture | ~50% | 88.9% | ✗ |
+| Going for furniture costs the Win | ~20% | 1.8% | ✗ |
+| Trouble, share of rolls | 10%–22% | 18.9% | ✓ |
+| Critical (doubles on a Success, S8), share of rolls | 3%–7% | 5.1% | ✓ |
+| Entities spending ≥ half their charges | ≥ 50% | 65.7% | ✓ |
+| Mask, share of rolls where you choose (all rolls) | ≥ 25% | 36.8% (26.3%) | ✓ |
+| Monster, share of rolls where you choose (all rolls) | ≥ 25% | 63.2% (73.7%) | ✓ |
+| Largest option outlier | within ±2.5 pts | gift The Invisible Man:open 3.0 pts | ✗ |
 
 ## Results by label and party size
 
 | Label | Entities | Win | of which Grand | Partial | Bust | Forked | Captures | Left behind | Final flight: Limit | Final flight: dawn | Suspicion at end | Turns used |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| easy | 3 | 93.8% | 58.2% | 1.8% | 4.0% | 0.4% | 0.10 | 0.03 | 7% | 0% | 4.9 | 7.7 |
-| easy | 4 | 95.5% | 64.4% | 1.4% | 3.1% | 0.1% | 0.10 | 0.02 | 6% | 0% | 4.8 | 7.6 |
-| easy | 5 | 95.8% | 63.9% | 1.9% | 2.3% | 0.1% | 0.09 | 0.03 | 5% | 0% | 4.7 | 6.3 |
-| standard | 3 | 81.5% | 15.2% | 8.3% | 7.8% | 2.4% | 0.21 | 0.07 | 15% | 0% | 7.7 | 8.8 |
-| standard | 4 | 83.9% | 21.9% | 8.0% | 6.6% | 1.7% | 0.21 | 0.08 | 14% | 0% | 7.4 | 8.6 |
-| standard | 5 | 85.7% | 33.0% | 7.3% | 5.4% | 1.6% | 0.20 | 0.06 | 14% | 0% | 7.4 | 7.6 |
-| hard | 3 | 66.0% | 8.0% | 14.8% | 14.4% | 4.8% | 0.33 | 0.15 | 23% | 0% | 10.9 | 9.0 |
-| hard | 4 | 68.2% | 11.8% | 14.5% | 13.7% | 3.6% | 0.35 | 0.16 | 25% | 0% | 10.9 | 8.7 |
-| hard | 5 | 72.9% | 20.0% | 12.0% | 12.8% | 2.3% | 0.35 | 0.17 | 22% | 0% | 10.7 | 7.8 |
+| easy | 3 | 94.7% | 59.2% | 1.6% | 3.5% | 0.3% | 0.10 | 0.03 | 7% | 0% | 4.9 | 7.7 |
+| easy | 4 | 95.3% | 63.0% | 1.8% | 2.8% | 0.2% | 0.11 | 0.03 | 6% | 0% | 4.9 | 7.6 |
+| easy | 5 | 96.9% | 64.4% | 0.9% | 1.9% | 0.2% | 0.10 | 0.02 | 4% | 0% | 4.6 | 6.3 |
+| standard | 3 | 83.0% | 15.4% | 9.0% | 5.0% | 3.1% | 0.19 | 0.07 | 14% | 0% | 7.6 | 8.8 |
+| standard | 4 | 85.5% | 21.6% | 8.9% | 3.5% | 2.1% | 0.21 | 0.07 | 14% | 0% | 7.4 | 8.6 |
+| standard | 5 | 88.2% | 31.6% | 6.1% | 4.0% | 1.7% | 0.21 | 0.07 | 13% | 0% | 7.4 | 7.6 |
+| hard | 3 | 67.0% | 7.8% | 14.7% | 12.8% | 5.5% | 0.32 | 0.14 | 25% | 0% | 11.1 | 8.9 |
+| hard | 4 | 71.7% | 12.2% | 14.0% | 9.8% | 4.6% | 0.33 | 0.16 | 24% | 0% | 10.9 | 8.6 |
+| hard | 5 | 74.4% | 20.1% | 12.0% | 10.4% | 3.2% | 0.35 | 0.17 | 24% | 0% | 10.8 | 7.8 |
 
 ## Dice
 
 | Rolls per raid | Success | Cost | Trouble | Crit (doubles) | Crit (beat 4) | Mask | Monster | Monster shows (per Monster roll) | Charges spent (mean) |
 |---|---|---|---|---|---|---|---|---|---|
-| 15.6 | 68.1% | 13.6% | 18.3% | 5.2% | 35.9% | 26.8% | 73.2% | 34.5% | 65.2% |
+| 15.8 | 67.4% | 13.7% | 18.9% | 5.1% | 35.2% | 26.3% | 73.7% | 35.3% | 65.6% |
 
 **Critical candidates** (share of all rolls; the Critical rule is open and has no effect yet):
 
 | Doubles on a Success | Beat by 4 | Beat by 5 | Beat by 6 | Beat by 7 | Beat by 8 |
 |---|---|---|---|---|---|
-| 5.2% | 35.9% | 28.6% | 22.0% | 16.4% | 11.5% |
+| 5.1% | 35.2% | 28.1% | 21.6% | 16.0% | 11.2% |
 
 ## Furniture: how the party's appetite changes the gamble
 
 | Policy | Goes for it | Grand Year when tried | Tried and lost a Win it had | Easy win | Standard win | Hard win |
 |---|---|---|---|---|---|---|
-| ifSafe | 37.2% | 88.5% | 2.8% | 95.0% | 83.7% | 69.0% |
-| always | 73.3% | 78.5% | 6.2% | 95.1% | 82.8% | 67.3% |
+| ifSafe | 36.9% | 88.9% | 1.8% | 95.6% | 85.5% | 71.0% |
+| always | 73.7% | 78.8% | 5.3% | 95.5% | 85.3% | 70.3% |
 
 "Tried and lost a Win it had" pairs each raid with the same raid (same party, town and dice seed) played with `furniturePolicy = never`.
 
@@ -80,9 +80,9 @@ Where a number moves a lot between generous and strict, the rules are underspeci
 
 | Reading | Easy win | Standard win | Hard win | Hard forked | Hard captures | Mask |
 |---|---|---|---|---|---|---|
-| baseline | 95% (+0.0) | 84% (+0.0) | 69% (+0.0) | 3.5% | 0.34 | 27% |
-| generous | 93% (-1.8) | 80% (-3.3) | 69% (+0.1) | 4.9% | 0.36 | 18% |
-| strict | 85% (-10.4) | 62% (-21.5) | 45% (-23.6) | 6.1% | 0.47 | 14% |
+| baseline | 96% (+0.0) | 86% (+0.0) | 71% (+0.0) | 4.4% | 0.33 | 26% |
+| generous | 93% (-2.5) | 79% (-6.6) | 68% (-3.4) | 6.1% | 0.36 | 18% |
+| strict | 85% (-10.3) | 63% (-23.0) | 46% (-25.4) | 7.9% | 0.48 | 13% |
 
 ## Sweeps: what each judgement call is worth
 
@@ -90,124 +90,126 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 
 | Variant | Easy win | Standard win | Hard win | Hard forked | Hard captures | Mask |
 |---|---|---|---|---|---|---|
-| critRule = "beat4" (rule) | 96% (+0.9) | 86% (+2.3) | 73% (+3.4) | 1.0% | 0.31 | 30% |
-| critRule = "beat6" (rule) | 95% (+0.5) | 85% (+1.0) | 72% (+2.4) | 1.6% | 0.32 | 28% |
-| critRule = "beat7" (rule) | 95% (+0.4) | 84% (+0.6) | 71% (+1.3) | 2.3% | 0.32 | 27% |
-| critEffect = "none" (rule) | 95% (-0.3) | 83% (-1.1) | 69% (-1.0) | 4.1% | 0.33 | 26% |
-| critEffect = "lead2" (rule) | 95% (-0.1) | 84% (-0.1) | 69% (-0.2) | 3.2% | 0.33 | 27% |
-| critEffect = "charge" (rule) | 95% (-0.1) | 83% (-0.7) | 69% (-0.8) | 3.7% | 0.33 | 26% |
-| costChoice = "suspicion" (rule) | 95% (+0.1) | 84% (+0.0) | 69% (-1.0) | 2.7% | 0.33 | 26% |
-| costChoice = "lenient" (rule) | 95% (+0.1) | 85% (+0.7) | 69% (-0.4) | 3.0% | 0.35 | 27% |
-| dropRule = "lost" (rule) | 92% (-3.1) | 79% (-5.1) | 63% (-6.3) | 2.9% | 0.33 | 27% |
-| dropRule = "extrasOnly" (rule) | 95% (+0.0) | 84% (+0.0) | 70% (+0.1) | 2.9% | 0.33 | 27% |
-| loudRule = "witness" (rule) | 95% (-0.2) | 84% (-0.2) | 70% (+0.0) | 3.4% | 0.35 | 27% |
-| loudRule = "both" (rule) | 95% (-0.3) | 84% (-0.1) | 70% (+0.2) | 3.3% | 0.33 | 27% |
-| loudRule = "none" (rule) | 95% (+0.1) | 85% (+0.8) | 70% (+0.1) | 3.1% | 0.35 | 27% |
-| openApproach = "quiet" (rule) | 95% (+0.1) | 84% (+0.4) | 72% (+2.5) | 2.4% | 0.26 | 17% |
-| openApproach = "switch" (rule) | 93% (-2.1) | 79% (-5.1) | 61% (-8.7) | 4.0% | 0.40 | 14% |
-| overdrawAtLimit = "free" (rule) | 95% (+0.0) | 84% (+0.2) | 70% (+0.5) | 1.5% | 0.33 | 28% |
-| overdrawAtLimit = "forbidden" (rule) | 95% (+0.0) | 84% (+0.0) | 70% (+0.0) | 3.1% | 0.33 | 27% |
-| overdrawAtLimit = "fury" (rule) | 94% (-1.2) | 80% (-3.4) | 66% (-3.9) | 17.3% | 0.33 | 26% |
-| raiseCap = "perDie" (rule) | 95% (+0.0) | 84% (+0.0) | 70% (+0.0) | 3.1% | 0.33 | 27% |
-| raiseDie = "any" (rule) | 95% (+0.2) | 84% (-0.3) | 70% (+0.4) | 2.5% | 0.32 | 27% |
-| openTrait = "any" (rule) | 96% (+0.9) | 85% (+1.2) | 69% (-0.4) | 3.9% | 0.34 | 30% |
-| waysIn = "one" (rule) | 92% (-3.1) | 80% (-3.5) | 63% (-6.8) | 4.0% | 0.42 | 21% |
-| overdrawStack = "stack" (rule) | 95% (-0.1) | 84% (-0.3) | 69% (-0.4) | 3.4% | 0.33 | 27% |
-| partyPolicy = "together" (policy) | 92% (-2.4) | 72% (-11.7) | 55% (-14.2) | 2.7% | 0.30 | 25% |
-| partyPolicy = "singles" (policy) | 95% (+0.1) | 85% (+1.5) | 70% (+0.5) | 2.9% | 0.33 | 27% |
-| captiveItems = "kept" (rule) | 96% (+0.9) | 86% (+2.2) | 73% (+3.0) | 3.1% | 0.33 | 27% |
-| multiCaught = "separate" (rule) | 95% (+0.0) | 84% (-0.3) | 69% (-0.1) | 3.1% | 0.33 | 27% |
-| monsterRule = "plus1" (rule) | 96% (+1.3) | 89% (+4.8) | 76% (+6.1) | 2.0% | 0.41 | 14% |
-| monsterRule = "tie" (rule) | 96% (+1.0) | 88% (+4.1) | 75% (+5.4) | 2.2% | 0.40 | 18% |
-| monsterRule = "d8" (rule) | 95% (-0.3) | 81% (-2.5) | 64% (-5.8) | 6.9% | 0.60 | 18% |
-| monsterRule = "maskSafe" (rule) | 100% (+4.9) | 99% (+15.5) | 99% (+29.2) | 0.1% | 0.00 | 65% |
-| chaseSusp = "no" (rule) | 97% (+2.0) | 88% (+4.3) | 76% (+6.7) | 0.9% | 0.48 | 33% |
-| slipRule = "cost" (rule) | 95% (+0.1) | 84% (+0.5) | 70% (+0.7) | 3.3% | 0.33 | 27% |
-| furnitureRule = "base" (rule) | 95% (+0.0) | 84% (+0.0) | 70% (+0.0) | 3.1% | 0.33 | 27% |
-| furnitureRule = "hardLoc" (rule) | 94% (-0.7) | 84% (-0.3) | 70% (+0.1) | 3.1% | 0.33 | 26% |
-| furnitureRule = "noisy" (rule) | 94% (-0.5) | 84% (+0.2) | 70% (+0.1) | 3.3% | 0.32 | 25% |
-| furnitureRule = "both" (rule) | 94% (-1.0) | 84% (-0.3) | 70% (+0.0) | 3.3% | 0.32 | 24% |
-| furnitureRule = "noisySlow" (rule) | 94% (-0.5) | 84% (+0.2) | 70% (+0.1) | 3.3% | 0.32 | 25% |
-| furniturePlace = "separate" (rule) | 96% (+0.7) | 84% (+0.0) | 69% (-0.5) | 1.9% | 0.35 | 27% |
-| exitRule = "free" (rule) | 92% (-2.5) | 75% (-9.1) | 62% (-7.5) | 4.9% | 0.40 | 23% |
-| exitRule = "gate" (rule) | 92% (-2.5) | 75% (-9.1) | 62% (-7.5) | 4.9% | 0.40 | 23% |
-| exitRule = "gateCarriers" (rule) | 95% (+0.5) | 87% (+2.7) | 72% (+2.4) | 2.4% | 0.30 | 26% |
-| groupRule = "best3" (rule) | 95% (+0.3) | 84% (-0.1) | 70% (+0.1) | 3.0% | 0.33 | 27% |
-| groupRule = "best4" (rule) | 95% (+0.3) | 84% (+0.0) | 70% (+0.1) | 3.0% | 0.33 | 27% |
-| tellScope = "entity" (rule) | 94% (-1.1) | 83% (-0.7) | 69% (-0.1) | 3.3% | 0.32 | 27% |
-| triesPerTurn = "one" (rule) | 95% (+0.1) | 84% (-0.3) | 68% (-1.2) | 3.1% | 0.33 | 27% |
-| monsterPolicy = "mask" (policy) | 92% (-3.3) | 73% (-10.8) | 52% (-17.6) | 1.4% | 0.89 | 88% |
-| monsterPolicy = "monster" (policy) | 94% (-1.1) | 79% (-4.5) | 67% (-2.6) | 5.3% | 0.31 | 0% |
-| caughtWeight = 0.4 (policy) | 95% (-0.1) | 83% (-1.3) | 70% (+0.7) | 3.2% | 0.35 | 27% |
-| caughtWeight = 2 (policy) | 95% (-0.2) | 85% (+0.7) | 67% (-3.0) | 2.9% | 0.28 | 25% |
-| chargePolicy = "hoard" (policy) | 93% (-2.3) | 76% (-7.6) | 56% (-13.9) | 3.3% | 0.37 | 24% |
-| furniturePolicy = "never" (policy) | 95% (+0.5) | 84% (+0.2) | 69% (-0.1) | 2.9% | 0.32 | 28% |
-| furniturePolicy = "always" (policy) | 95% (+0.3) | 84% (+0.1) | 67% (-2.5) | 3.6% | 0.35 | 25% |
-| roster = "candidateA" (content) | 95% (+0.1) | 84% (+0.0) | 70% (+0.6) | 4.8% | 0.31 | 26% |
-| dutyEdge = false (content) | 95% (-0.1) | 85% (+0.7) | 68% (-1.5) | 3.2% | 0.33 | 27% |
-| tellChance = 0 (content) | 96% (+0.9) | 86% (+2.1) | 74% (+4.7) | 2.2% | 0.34 | 27% |
-| tellChance = 0.3333333333333333 (content) | 95% (+0.0) | 82% (-2.1) | 68% (-1.7) | 4.4% | 0.32 | 26% |
-| weaknessLocal = 0 (content) | 95% (+0.2) | 84% (+0.4) | 70% (+0.7) | 2.7% | 0.31 | 27% |
-| weaknessLocal = 0.5 (content) | 95% (-0.1) | 83% (-0.7) | 69% (-0.8) | 3.3% | 0.34 | 27% |
-| weaknessFinal = 0.25 (content) | 95% (+0.0) | 84% (+0.0) | 70% (+0.1) | 2.7% | 0.33 | 27% |
-| weaknessFinal = 1 (content) | 95% (+0.0) | 83% (-0.5) | 69% (-0.3) | 4.6% | 0.33 | 26% |
+| critRule = "beat4" (rule) | 97% (+1.0) | 89% (+4.2) | 75% (+3.8) | 1.7% | 0.29 | 29% |
+| critRule = "beat6" (rule) | 96% (+0.5) | 87% (+2.5) | 72% (+1.0) | 3.4% | 0.31 | 28% |
+| critRule = "beat7" (rule) | 96% (+0.3) | 86% (+1.5) | 72% (+0.2) | 4.7% | 0.31 | 27% |
+| critEffect = "none" (rule) | 95% (-0.7) | 84% (-0.5) | 69% (-2.1) | 5.9% | 0.33 | 25% |
+| critEffect = "lead2" (rule) | 96% (+0.0) | 85% (-0.1) | 71% (-0.4) | 5.1% | 0.32 | 26% |
+| critEffect = "charge" (rule) | 95% (-0.8) | 84% (-0.5) | 69% (-1.9) | 5.7% | 0.32 | 26% |
+| costChoice = "suspicion" (rule) | 96% (+0.5) | 84% (-0.7) | 70% (-1.5) | 5.0% | 0.33 | 25% |
+| costChoice = "lenient" (rule) | 96% (+0.8) | 86% (+0.9) | 72% (+0.3) | 5.1% | 0.34 | 27% |
+| dropRule = "lost" (rule) | 94% (-1.8) | 81% (-3.7) | 66% (-5.9) | 4.5% | 0.32 | 26% |
+| dropRule = "extrasOnly" (rule) | 95% (-0.1) | 85% (+0.0) | 71% (-0.3) | 4.7% | 0.32 | 26% |
+| loudRule = "witness" (rule) | 95% (-0.3) | 84% (-0.5) | 71% (-0.3) | 4.5% | 0.35 | 27% |
+| loudRule = "both" (rule) | 95% (-0.2) | 85% (+0.2) | 71% (+0.1) | 4.4% | 0.32 | 26% |
+| loudRule = "none" (rule) | 96% (+0.3) | 86% (+1.0) | 71% (+0.1) | 4.8% | 0.34 | 27% |
+| openApproach = "quiet" (rule) | 95% (-0.6) | 86% (+0.7) | 71% (-0.6) | 4.3% | 0.27 | 17% |
+| openApproach = "switch" (rule) | 93% (-2.6) | 80% (-5.3) | 60% (-11.7) | 5.9% | 0.40 | 14% |
+| overdrawAtLimit = "free" (rule) | 96% (+0.0) | 85% (+0.3) | 72% (+0.9) | 1.3% | 0.31 | 27% |
+| overdrawAtLimit = "forbidden" (rule) | 96% (+0.0) | 85% (+0.0) | 71% (-0.1) | 4.9% | 0.31 | 26% |
+| overdrawAtLimit = "fury" (rule) | 95% (-1.0) | 81% (-3.4) | 67% (-4.3) | 18.3% | 0.31 | 26% |
+| raiseCap = "perDie" (rule) | 96% (+0.0) | 85% (+0.0) | 71% (+0.0) | 4.7% | 0.31 | 26% |
+| raiseDie = "any" (rule) | 96% (+0.0) | 84% (-0.5) | 72% (+0.3) | 4.4% | 0.30 | 27% |
+| openTrait = "any" (rule) | 95% (-0.1) | 86% (+0.7) | 70% (-1.1) | 3.7% | 0.35 | 29% |
+| waysIn = "one" (rule) | 93% (-2.1) | 79% (-5.4) | 64% (-7.4) | 5.2% | 0.40 | 20% |
+| overdrawStack = "stack" (rule) | 95% (-0.1) | 85% (-0.1) | 71% (-0.7) | 4.5% | 0.32 | 26% |
+| lootHandover = "none" (rule) | 95% (-0.5) | 84% (-1.0) | 70% (-1.3) | 4.8% | 0.31 | 26% |
+| partyPolicy = "together" (policy) | 93% (-2.6) | 74% (-11.1) | 58% (-13.7) | 2.3% | 0.32 | 26% |
+| partyPolicy = "singles" (policy) | 95% (-0.5) | 86% (+0.9) | 71% (+0.0) | 3.8% | 0.31 | 26% |
+| captiveItems = "kept" (rule) | 96% (+0.8) | 86% (+1.1) | 73% (+1.3) | 4.7% | 0.31 | 26% |
+| multiCaught = "separate" (rule) | 96% (+0.1) | 85% (-0.1) | 71% (-0.3) | 4.6% | 0.31 | 26% |
+| monsterRule = "plus1" (rule) | 97% (+1.2) | 91% (+5.7) | 76% (+5.1) | 2.8% | 0.41 | 14% |
+| monsterRule = "tie" (rule) | 97% (+1.0) | 89% (+4.3) | 76% (+5.0) | 2.5% | 0.40 | 18% |
+| monsterRule = "d8" (rule) | 96% (+0.4) | 83% (-2.2) | 65% (-6.3) | 8.0% | 0.61 | 18% |
+| monsterRule = "maskSafe" (rule) | 100% (+4.3) | 100% (+15.0) | 99% (+27.4) | 0.1% | 0.00 | 65% |
+| chaseSusp = "no" (rule) | 98% (+2.0) | 90% (+5.3) | 78% (+7.0) | 0.8% | 0.46 | 32% |
+| slipRule = "cost" (rule) | 96% (+0.1) | 85% (+0.1) | 72% (+0.7) | 4.6% | 0.31 | 26% |
+| furnitureRule = "base" (rule) | 96% (+0.0) | 85% (+0.0) | 71% (+0.0) | 4.7% | 0.31 | 26% |
+| furnitureRule = "hardLoc" (rule) | 95% (-0.2) | 84% (-0.5) | 71% (-0.1) | 4.7% | 0.31 | 25% |
+| furnitureRule = "noisy" (rule) | 95% (-0.7) | 84% (-0.5) | 71% (-0.6) | 5.0% | 0.31 | 25% |
+| furnitureRule = "both" (rule) | 95% (-0.7) | 84% (-1.1) | 71% (-0.5) | 4.8% | 0.31 | 23% |
+| furnitureRule = "noisySlow" (rule) | 95% (-0.7) | 84% (-0.5) | 71% (-0.6) | 5.0% | 0.31 | 25% |
+| furniturePlace = "separate" (rule) | 95% (-0.6) | 85% (+0.0) | 73% (+1.8) | 2.8% | 0.32 | 27% |
+| exitRule = "free" (rule) | 92% (-3.3) | 75% (-9.7) | 63% (-8.5) | 7.0% | 0.40 | 23% |
+| exitRule = "gate" (rule) | 92% (-3.3) | 75% (-9.7) | 63% (-8.5) | 7.0% | 0.40 | 23% |
+| exitRule = "gateCarriers" (rule) | 96% (+0.2) | 87% (+2.6) | 74% (+2.1) | 4.1% | 0.29 | 26% |
+| groupRule = "best3" (rule) | 96% (+0.1) | 84% (-0.5) | 71% (-0.1) | 4.8% | 0.33 | 26% |
+| groupRule = "best4" (rule) | 96% (+0.1) | 84% (-0.5) | 71% (-0.1) | 4.8% | 0.33 | 26% |
+| tellScope = "entity" (rule) | 96% (+0.1) | 84% (-0.8) | 68% (-3.6) | 4.7% | 0.33 | 26% |
+| triesPerTurn = "one" (rule) | 96% (+0.3) | 85% (+0.6) | 72% (+0.4) | 4.7% | 0.31 | 27% |
+| monsterPolicy = "mask" (policy) | 94% (-1.9) | 76% (-9.0) | 54% (-17.5) | 1.8% | 0.89 | 87% |
+| monsterPolicy = "monster" (policy) | 94% (-1.1) | 80% (-5.3) | 67% (-4.0) | 6.9% | 0.31 | 0% |
+| caughtWeight = 0.4 (policy) | 96% (+0.0) | 83% (-1.6) | 70% (-1.8) | 5.4% | 0.37 | 27% |
+| caughtWeight = 2 (policy) | 95% (-0.7) | 85% (-0.2) | 67% (-3.9) | 3.8% | 0.27 | 24% |
+| chargePolicy = "hoard" (policy) | 92% (-3.3) | 77% (-7.5) | 59% (-12.8) | 5.6% | 0.35 | 23% |
+| furniturePolicy = "never" (policy) | 95% (-0.4) | 85% (-0.2) | 71% (-0.5) | 4.5% | 0.31 | 27% |
+| furniturePolicy = "always" (policy) | 96% (+0.2) | 85% (-0.2) | 69% (-2.5) | 5.5% | 0.34 | 25% |
+| roster = "placeholder" (content) | 96% (+0.1) | 85% (-0.2) | 71% (-0.5) | 3.1% | 0.33 | 27% |
+| dutyEdge = false (content) | 96% (+0.0) | 84% (-1.1) | 71% (-0.7) | 4.7% | 0.32 | 26% |
+| tellChance = 0 (content) | 96% (+0.9) | 87% (+1.7) | 75% (+3.5) | 2.6% | 0.35 | 27% |
+| tellChance = 0.3333333333333333 (content) | 95% (-0.5) | 82% (-2.4) | 68% (-3.4) | 5.4% | 0.31 | 26% |
+| weaknessLocal = 0 (content) | 95% (-0.1) | 85% (+0.5) | 73% (+1.2) | 4.1% | 0.30 | 26% |
+| weaknessLocal = 0.5 (content) | 95% (-0.1) | 84% (-0.9) | 70% (-1.0) | 4.7% | 0.33 | 26% |
+| weaknessFinal = 0.25 (content) | 96% (+0.1) | 85% (+0.1) | 72% (+0.5) | 3.3% | 0.31 | 27% |
+| weaknessFinal = 1 (content) | 95% (-0.1) | 84% (-0.5) | 71% (-0.9) | 7.1% | 0.31 | 26% |
 
 ## Option outliers (win Δ, parties with vs without, same label and size)
 
-gift E3:open +3.4 · gift E5:open +2.6 · gift E2:open +2.4 · gift E1:open +2.3 · gift E7:open +2.0 · gift E6:open +1.7 · entity E4 +1.6 · gift E4:switch +1.2 · entity E8 +1.2 · gift E8:hidden +1.1 · entity E2 +0.9 · gift E1:switch +0.5 · duty K3 +0.5 · gift E2:hidden +0.3 · duty K2 +0.2 · duty K5 +0.1 · duty K6 +0.1 · duty K1 +0.0 · entity E7 -0.1 · gift E8:switch -0.3 · gift E4:hidden -0.4 · gift E6:hidden -0.4 · entity E3 -0.5 · gift E7:switch -0.6 · entity E6 -0.7 · gift E8:raise -0.7 · gift E4:raise -0.8 · duty K4 -0.8 · entity E1 -0.9 · gift E5:hidden -0.9 · gift E3:raise -1.1 · gift E6:raise -1.2 · entity E5 -1.4 · gift E7:raise -1.5 · gift E5:switch -1.6 · gift E3:switch -2.3 · gift E2:raise -2.8 · gift E1:hidden -2.8
+gift The Invisible Man:open +3.0 · gift Frankenstein’s Creature:open +2.4 · entity The Werewolf +2.4 · gift The Mummy:open +2.4 · duty K5 +1.8 · gift A Ghost:open +1.5 · entity Jekyll & Hyde +1.5 · gift Dracula:open +1.1 · gift A Witch:open +1.0 · gift The Werewolf:hidden +0.9 · gift A Ghost:hidden +0.8 · gift Jekyll & Hyde:raise +0.7 · duty K3 +0.3 · gift Dracula:hidden +0.1 · duty K1 -0.0 · gift The Mummy:switch -0.1 · gift Frankenstein’s Creature:hidden -0.1 · gift The Werewolf:switch -0.1 · gift A Witch:switch -0.1 · gift Jekyll & Hyde:switch -0.2 · duty K4 -0.3 · entity Dracula -0.3 · entity Frankenstein’s Creature -0.3 · entity A Witch -0.4 · entity A Ghost -0.4 · gift Jekyll & Hyde:hidden -0.5 · duty K2 -0.6 · gift The Werewolf:raise -0.8 · gift A Witch:raise -0.8 · entity The Invisible Man -1.0 · duty K6 -1.1 · gift The Invisible Man:switch -1.1 · gift Dracula:switch -1.2 · entity The Mummy -1.3 · gift The Invisible Man:hidden -1.8 · gift The Mummy:raise -2.2 · gift A Ghost:raise -2.3 · gift Frankenstein’s Creature:raise -2.3
 
 ## Detectors
 
 | Detector | Count | Per raid |
 |---|---|---|
-| a raise past d12 (lost) | 12080 | 0.671 |
-| a die stepped below d4 (floored at d4) | 108 | 0.006 |
-| final flight stalled (no end after max rounds) | 100 | 0.006 |
-| suspicion past the Limit (lost) | 1 | 0.000 |
+| a raise past d12 (lost) | 11953 | 0.664 |
+| a die stepped below d4 (floored at d4) | 2710 | 0.151 |
+| final flight stalled (no end after max rounds) | 147 | 0.008 |
+| suspicion past the Limit (lost) | 4 | 0.000 |
 
 ## Counts (baseline)
 
 | Event | Per raid |
 |---|---|
-| ability:hidden | 2.533 |
-| ability:open | 3.812 |
-| ability:raise | 1.000 |
-| ability:switch | 1.131 |
-| captive rescued | 0.043 |
-| captive slipped free | 0.088 |
-| captures | 0.216 |
-| charges regained by a Critical | 0.470 |
-| charges spent | 8.298 |
-| cost:drop | 0.078 |
-| cost:stepdown | 0.359 |
-| cost:suspicion | 0.252 |
-| cost:turn | 0.364 |
-| declined rolls | 0.286 |
-| final flight escaped | 0.120 |
+| ability:hidden | 2.525 |
+| ability:open | 3.852 |
+| ability:raise | 1.006 |
+| ability:switch | 1.199 |
+| captive rescued | 0.046 |
+| captive slipped free | 0.083 |
+| captures | 0.213 |
+| charges regained by a Critical | 0.465 |
+| charges spent | 8.335 |
+| cost:drop | 0.063 |
+| cost:stepdown | 0.367 |
+| cost:suspicion | 0.249 |
+| cost:turn | 0.371 |
+| declined rolls | 0.276 |
+| final flight escaped | 0.114 |
 | final flight with nobody free | 0.000 |
 | final flight: dawn | 0.000 |
-| final flight: limit | 0.144 |
-| forked | 0.019 |
+| final flight: limit | 0.145 |
+| forked | 0.023 |
 | furniture dropped: carrier captured | 0.001 |
-| furniture dropped: final flight | 0.002 |
-| group checks | 2.162 |
-| group: forced low-value roll | 0.017 |
-| local chase ended by the Limit | 0.098 |
-| local chase escaped | 0.126 |
-| local chases | 0.436 |
+| furniture dropped: final flight | 0.003 |
+| group checks | 2.161 |
+| group: forced low-value roll | 0.016 |
+| local chase ended by the Limit | 0.100 |
+| local chase escaped | 0.125 |
+| local chases | 0.434 |
 | local chases (shared) | 0.005 |
-| lost turns | 0.421 |
-| opened: only the opener goes on | 1.360 |
-| overdraws:final | 0.001 |
-| overdraws:local | 0.071 |
-| overdraws:raid | 0.107 |
-| overdraws:slip | 0.000 |
-| susp:chase | 1.372 |
-| susp:roll | 4.110 |
-| susp:slip | 0.128 |
-| susp:tell | 2.113 |
-| tells | 2.113 |
-| weakness taken by overdraw | 0.001 |
+| loot handed over | 1.191 |
+| lost turns | 0.414 |
+| opened: only the opener goes on | 1.366 |
+| overdraws:final | 0.037 |
+| overdraws:local | 0.100 |
+| overdraws:raid | 0.108 |
+| overdraws:slip | 0.002 |
+| susp:chase | 1.388 |
+| susp:roll | 4.102 |
+| susp:slip | 0.135 |
+| susp:tell | 2.117 |
+| tells | 2.117 |
+| weakness taken by overdraw | 0.037 |
 
 ## Rule gaps found while building the simulator
 
