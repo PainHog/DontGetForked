@@ -8,6 +8,8 @@ Reads book/art/stand-in/manifest.json, one entry per piece:
     "crop": [x0, y0, x1, y1],        # the part to keep, as fractions of the scan (0–1)
     "aspect": 3,                     # optional: width/height; y1 is then worked out from x0, x1 and y0
     "width": 2000,                   # output width in pixels (height follows the crop)
+    "erase": [[x0, y0, x1, y1]],     # optional: patches of the result (fractions) painted the scan's paper tone,
+                                     #   for a collector's stamp on blank paper; never over the drawing
     "ink": "#161618", "paper": "#f2f1ee" }   # optional duotone ends (default: the book's)
 
 Each scan is downloaded once into a cache outside the repository, cropped, turned into
@@ -66,7 +68,14 @@ def prep(entry):
     # Level: the scan's paper goes to white, its ink to black (1% clipped at each end).
     im = ImageOps.autocontrast(im, cutoff=entry.get("cutoff", 1))
     # Two-tone from the book's ink to its paper colour.
-    im = ImageOps.colorize(im, black=hex_rgb(entry.get("ink", "#161618")), white=hex_rgb(entry.get("paper", "#f2f1ee")))
+    paper = hex_rgb(entry.get("paper", "#f2f1ee"))
+    im = ImageOps.colorize(im, black=hex_rgb(entry.get("ink", "#161618")), white=paper)
+    for ex0, ey0, ex1, ey1 in entry.get("erase", []):
+        box = (round(ex0 * im.width), round(ey0 * im.height), round(ex1 * im.width), round(ey1 * im.height))
+        # the scan's own paper tone, from a band just outside the patch
+        band = im.crop((max(box[0] - 6, 0), max(box[1] - 6, 0), min(box[2] + 6, im.width), min(box[3] + 6, im.height)))
+        px = sorted(getattr(band, "get_flattened_data", band.getdata)(), key=sum)
+        im.paste(px[len(px) * 3 // 4], box)
     out = ART / f"{entry['name']}.jpg"
     im.save(out, "JPEG", quality=entry.get("quality", 82), optimize=True, progressive=True)
     print(f"{out.relative_to(ROOT)}  {im.width}x{im.height}  {out.stat().st_size // 1024} KB")

@@ -326,7 +326,7 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
 /* the Entity's two portraits, in festival costume and revealed, side by side under its name */
 .entry .portraits { display: flex; gap: 0.1in; margin: 0.03in 0 0.07in; break-inside: avoid; break-after: avoid; }
 .entry .portraits figure { flex: 1 1 0; margin: 0; }
-.entry .portraits figure svg { display: block; width: 100%; height: 1.95in; border: 1px solid var(--paper-edge); border-radius: 4px; background: var(--paper-2); }
+.entry .portraits figure svg { display: block; box-sizing: border-box; width: 100%; height: 1.95in; border: 1px solid var(--paper-edge); border-radius: 4px; background: var(--paper-2); }
 .entry .portraits figcaption { margin-top: 0.025in; text-align: center; font: 800 7.4pt var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 .entry .ability, .entry .signature {
   clear: both;
@@ -492,7 +492,7 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
   position: relative;
   break-before: page; break-after: page;
   display: flex; flex-direction: column; align-items: center; text-align: center;
-  padding-top: 1.35in;
+  padding-top: 0.95in;
 }
 /* optional small ornament hanging from the top edge of the paper */
 .credits .credits-art { position: absolute; top: calc(-1 * var(--page-mt)); left: 50%; transform: translateX(-50%); width: 0.5in; }

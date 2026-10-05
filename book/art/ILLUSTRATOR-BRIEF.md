@@ -31,7 +31,7 @@ Until your pieces arrive, the draft uses public-domain engravings as stand-ins (
 | Back-cover panel | 4:3 | 1 |
 | Part title pages | 3:1 wide | 2 |
 | Chapter header vignettes | about 4:1 (7.1 × 1.8 in) | 8 |
-| Entity portraits (costume + revealed) | to agree with Richard | 16 |
+| Entity portraits (costume + revealed) | about 0.85:1 in the draft (1.66 × 1.95 in); final size to agree with Richard | 16 |
 | Chapter-end spot illustrations | 4:3, various heights | as many as fit |
 
 Later: town maps, a character sheet, and the online version's tokens and icons.

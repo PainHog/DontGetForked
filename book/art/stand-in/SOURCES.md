@@ -1,6 +1,6 @@
 # Stand-in art: sources and checks
 
-Public-domain prints standing in until the illustrator's work arrives (decided by Richard on 2026-10-05; `docs/DESIGN.md`). Every piece was checked against its Wikimedia Commons licence data on 2026-10-05 (CC0 museum release or public domain; no restrictions recorded), looked at, and audited against `book/art/ART-CHECKLIST.md`. No monster is shown: the Entities stay placeholders for the illustrator.
+Public-domain prints standing in until the illustrator's work arrives (decided by Richard on 2026-10-05; `docs/DESIGN.md`). Every piece was checked against its Wikimedia Commons licence data on 2026-10-05 (CC0 museum release or public domain; no restrictions recorded), looked at, and audited against `book/art/ART-CHECKLIST.md`. The monsters appear only in the Entities' portraits (the last section), which Richard asked for as inspiration for the illustrator.
 
 `book/tools/prep-art.py` downloads each scan, crops it (fractions in `manifest.json`), turns it into a two-tone image from the book's ink to its paper colour, and saves the JPEG used by the build. The pieces are credited on the credits page.
 
@@ -141,3 +141,135 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Source:** https://commons.wikimedia.org/wiki/File:Landschap_met_molen_bij_maanlicht,_RP-P-BI-6653.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1841.
 - **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects.
+
+## The Entities' portraits (Chapter 2)
+
+Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration"): two per Entity, in costume and revealed, in frames about 0.85:1 (1.66 × 1.95 in). Licences re-checked on Commons the same day. Every monster is a pre-1930 print, so none borrows the Universal film looks; they show what the illustrator's originals should be about, not how they should look.
+
+### dracula-costume: Dracula, in costume
+
+- **Work:** Scène uit toneeldrama De kinderroofster, RP-P-1877-A-168.jpg
+- **Artist:** Charles Rochussen (1814-1894); 1868 (playbill for 'De Kinderroofster', Amsterdam Stadsschouwburg)
+- **Source:** https://commons.wikimedia.org/wiki/File:Sc%C3%A8ne_uit_toneeldrama_De_kinderroofster,_RP-P-1877-A-168.jpg
+- **Licence:** CC0 (CC-Zero). Artist died 1894; Rijksmuseum scan released CC0 (CC-Zero).
+- **Audit:** A masked man in a broad-brimmed hat and cloak, his right hand resting on a table among papers; a candle burning in a bottle on the table. Character: two eyes behind the half-mask, two arms (one hand on the table, fingers spread on the papers; the other under the cloak), legs run out of the frame at the bottom. The pleading woman is cut by the left frame edge, deliberately; the playbill's lettering is cropped off.
+
+### dracula-revealed: Dracula, revealed
+
+- **Work:** Philippe-Amédée Roustan dans le rôle de Lord Ruthwen.jpg
+- **Artist:** Anonymous engraver, for Charles Malo's Almanach des Spectacles (Paris, Louis Janet); 1821 (role created 1820, Théâtre de la Porte Saint-Martin)
+- **Source:** https://commons.wikimedia.org/wiki/File:Philippe-Am%C3%A9d%C3%A9e_Roustan_dans_le_r%C3%B4le_de_Lord_Ruthwen.jpg
+- **Licence:** Public domain (PD-anon-70-EU). Anonymous work published 1821 (205 years old, over the 150-year bar for unknown artists); Commons tags it PD-anon-70-EU.
+- **Audit:** The actor stands on the stage floor, both feet down; sword hung from his belt, plumed hat on his head. Character: two eyes (profile, one visible), two arms (right pointing, five fingers; left on hip), two legs. The plate's printed border shows at the left edge; the caption is cropped off.
+
+### creature-costume: Frankenstein’s Creature, in costume
+
+- **Work:** Ca' Rezzonico - Il gigante Magrat 1760 - Pietro Longhi.jpg
+- **Artist:** Pietro Longhi (1701-1785); c. 1760 ('Il gigante Magrat', Ca' Rezzonico, Venice)
+- **Source:** https://commons.wikimedia.org/wiki/File:Ca%27_Rezzonico_-_Il_gigante_Magrat_1760_-_Pietro_Longhi.jpg
+- **Licence:** Public domain (PD-old-100-expired, CC-PD-Mark). Painter died 1785; 2D reproduction, Commons: PD-old-100-expired (PD-Art).
+- **Audit:** The giant stands on the pavement, both feet down, hand on hip; masked revellers in tricorns and bautas stand beside him; a notice pinned to the wall. Character: two eyes, two arms, two legs. Not the film look: an ordinary big man in a greatcoat.
+
+### creature-revealed: Frankenstein’s Creature, revealed
+
+- **Work:** Frankenstein Cooke 1823 original.jpg
+- **Artist:** Thomas Charles Wageman (painter, c.1787-1863); drawn on stone by Nathaniel Whittock (1791-1860); 1823
+- **Source:** https://commons.wikimedia.org/wiki/File:Frankenstein_Cooke_1823_original.jpg
+- **Licence:** Public domain (PD-old-100-expired, CC-PD-Mark). Artists died 1860 and 1863; published 1823; Commons: PD-old-100-expired.
+- **Audit:** The Creature stands barefoot on the stage floor, right fist gripping a broken sword's hilt, left arm flung out (open hand, five fingers); Frankenstein fallen on the floor at the right; a balustrade behind. Character: two eyes, two arms, two legs. Not the 1931 film look (curls, drapery, no bolts, no flat head).
+
+### mummy-costume: the Mummy, in costume
+
+- **Work:** Aïda - vingt-quatre projets de costumes - attribués à Auguste Mariette - btv1b52503433g (18 of 25).jpg
+- **Artist:** Auguste Mariette (1821-1881), attributed; 1871 (Aida costume designs)
+- **Source:** https://commons.wikimedia.org/wiki/File:A%C3%AFda_-_vingt-quatre_projets_de_costumes_-_attribu%C3%A9s_%C3%A0_Auguste_Mariette_-_btv1b52503433g_(18_of_25).jpg
+- **Licence:** Public domain (PD US expired, PD France). Designer died 1881; made 1871; Commons: PD France + PD US expired.
+- **Audit:** An extra standing, holding a standard in his right hand (the pole runs out of the frame at top and bottom); the headdress on his head, armbands on his arms. Character: two eyes, two arms, legs cut by the bottom frame. The designer's notes are cropped off.
+
+### mummy-revealed: the Mummy, revealed
+
+- **Work:** Lot No. 249 by Martin van Maële 1.jpg
+- **Artist:** Martin van Maële (1863-1926); 1906 (French edition of Conan Doyle's 'Lot No. 249', Société d'Édition et de Publications)
+- **Source:** https://commons.wikimedia.org/wiki/File:Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg
+- **Licence:** Public domain (CC-PD-Mark, PD-old-95-expired). Artist died 1926; published 1906; Commons: PD-old-95-expired.
+- **Audit:** The mummy sits up in its sarcophagus, both hands on the rim; a hieroglyph frieze on the sarcophagus; a bird-headed statue standing behind. Character: two eyes, two arms, head-wrapping on. Low-resolution scan: reference only. Not the film look.
+
+### werewolf-costume: the Werewolf, in costume
+
+- **Work:** Le Chaperon rouge fut bien étonné de voir comment sa grand'mère était faite en son déshabillé.jpg
+- **Artist:** Gustave Doré (1832-1883); 1862 (Perrault's Contes, Hetzel)
+- **Source:** https://commons.wikimedia.org/wiki/File:Le_Chaperon_rouge_fut_bien_%C3%A9tonn%C3%A9_de_voir_comment_sa_grand%27m%C3%A8re_%C3%A9tait_faite_en_son_d%C3%A9shabill%C3%A9.jpg
+- **Licence:** Public domain (PD Old, CC-PD-Mark). Artist died 1883; published 1862; Commons: PD-old.
+- **Audit:** The wolf lies in bed under the bedclothes, Grandmother's frilled nightcap on its head, both forepaws on the sheet. Character: two eyes, two forepaws with claws; the rest under the covers.
+
+### werewolf-revealed: the Werewolf, revealed
+
+- **Work:** Loup garou 02.jpg
+- **Artist:** Maurice Sand (1823-1889); 1858 (George Sand, 'Légendes rustiques', plate 'Les Lupins')
+- **Source:** https://commons.wikimedia.org/wiki/File:Loup_garou_02.jpg
+- **Licence:** Public domain (PD-old-100-expired, PD-Art (PD-old-100-expired), CC-PD-Mark, PD-Art missing SDC copyright status, PD-old missing SDC copyright status). Artist died 1889; published 1858; Commons: PD-old-100-expired / PD-Art.
+- **Audit:** Five upright wolf-men stand on the grass against a wall, each on two legs, their shadows on the wall; trees above. The leftmost is cut by the frame edge, deliberately. Low-resolution scan: reference only.
+
+### invisible-costume: the Invisible Man, in costume
+
+- **Work:** -Qui diable ça peut-il être. G.31461.jpg
+- **Artist:** Paul Gavarni (designer, 1804-1866); engraved by Pierre Verdeil (1812-after 1874); 1840s ('Le Carnaval à Paris: bals masqués par Gavarni', Œuvres de Gavarni)
+- **Source:** https://commons.wikimedia.org/wiki/File:-Qui_diable_%C3%A7a_peut-il_%C3%AAtre._G.31461.jpg
+- **Licence:** CC0 (CC-Zero). Designer died 1866; engraver born 1812; Paris Musées (Musée Carnavalet) scan released CC0.
+- **Audit:** Two gentlemen in top hats and evening coats stand on the floor, both feet down, each in a false nose and moustache; one whispers to the other; a crowd in the doorway behind. Character rows: two eyes, two arms, two legs each. A collector's stamp on the blank paper at bottom right is painted out (`erase` in the manifest); the caption is cropped off.
+
+### invisible-revealed: the Invisible Man, revealed
+
+- **Work:** Wells Strimpl - L'homme invisible.jpg
+- **Artist:** Ludvík Strimpl (1880-1937); 1912 (cover of 'L'Homme invisible', Calmann-Lévy, Nouvelle Collection illustrée)
+- **Source:** https://commons.wikimedia.org/wiki/File:Wells_Strimpl_-_L%27homme_invisible.jpg
+- **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark). Artist died 1937; published 1912; Commons: PD-old-80-expired / PD-Art.
+- **Audit:** A skeleton crouches on a ledge by a window, hands and feet on the ledge, in a beam of light. Character: two arms, two legs, the skull turned away. Nothing floats.
+
+### ghost-costume: a Ghost, in costume
+
+- **Work:** Hammersmith Ghost.PNG
+- **Artist:** Anonymous engraver, Kirby's Wonderful and Scientific Museum, vol. II (London); 1804
+- **Source:** https://commons.wikimedia.org/wiki/File:Hammersmith_Ghost.PNG
+- **Licence:** Public domain (Author died more than 100 years ago public domain images, CC-PD-Mark). Anonymous work published 1804 (222 years old); Commons: author died more than 100 years ago.
+- **Audit:** A man under a white sheet, holding it up over his head, face peeping out; a door on its hinges with a bolt at the right, a lattice fence at the left, moon and clouds in the sky. The sheet runs out of the frame at the bottom.
+
+### ghost-revealed: a Ghost, revealed
+
+- **Work:** Marley's Ghost-John Leech, 1843.jpg
+- **Artist:** John Leech (1817-1864); 1843 (Dickens, A Christmas Carol, first edition)
+- **Source:** https://commons.wikimedia.org/wiki/File:Marley%27s_Ghost-John_Leech,_1843.jpg
+- **Licence:** Public domain (PD-old-100-expired, PD-Art (PD-old-auto-expired), CC-PD-Mark, PD-Art missing SDC copyright status, PD-old missing SDC copyright status). Artist died 1864; published 1843; Commons: PD-old-100-expired.
+- **Audit:** Scrooge sits in his armchair, bare feet on the floor; a basin on the floor; a table with a candlestick and a bowl on it, its legs on the floor; Marley's ghost stands at the right, its chain and cash-boxes trailing to the floor; the fireplace behind. Character rows: two eyes, two arms, two legs each.
+
+### witch-costume: a Witch, in costume
+
+- **Work:** Page 10 of 'Red Apple and Silver Bells. A book of verse for children ... Illustrated by A. B. Woodward' (11149264234).jpg
+- **Artist:** Alice B. Woodward (1862-1951); 1897 (Hamish Hendry, 'Red Apple and Silver Bells', Blackie)
+- **Source:** https://commons.wikimedia.org/wiki/File:Page_10_of_%27Red_Apple_and_Silver_Bells._A_book_of_verse_for_children_..._Illustrated_by_A._B._Woodward%27_(11149264234).jpg
+- **Licence:** Public domain (Author died more than 70 years ago public domain images, CC-PD-Mark). Artist died 1951 (before 1955), published 1897; Commons: author died more than 70 years ago (British Library scan).
+- **Audit:** A child dressed as a witch (pointed hat, cloak) holds a tall staff topped with a ball, a large moon disc behind her; she runs out of the frame at the bottom. Character: two eyes, two hands on the staff.
+
+### witch-revealed: a Witch, revealed
+
+- **Work:** Illustration at page 180 in Europa's Fairy Book.png
+- **Artist:** John D. Batten (1860-1932); 1916 (Joseph Jacobs, Europa's Fairy Book, 'Johnnie and Grizzle')
+- **Source:** https://commons.wikimedia.org/wiki/File:Illustration_at_page_180_in_Europa%27s_Fairy_Book.png
+- **Licence:** Public domain (PD-old-80-expired, CC-PD-Mark, PD-old missing SDC copyright status). Artist died 1932; published 1916; Commons: PD-old-80-expired.
+- **Audit:** A hooded witch stands, cane on the floor, a ring of keys hanging from her belt, one hand at a drawer; shelves of jars and bags behind, every jar on a shelf or the floor. Character: one eye (profile), two arms, feet on the floor.
+
+### jekyll-hyde-costume: Jekyll & Hyde, in costume
+
+- **Work:** Jekyll.and.Hyde.Ch3.Drawing1.jpg
+- **Artist:** Charles Raymond Macauley (1871-1934); 1904 (Strange Case of Dr Jekyll and Mr Hyde, Scott-Thaw, New York)
+- **Source:** https://commons.wikimedia.org/wiki/File:Jekyll.and.Hyde.Ch3.Drawing1.jpg
+- **Licence:** Public domain (PD Old, CC-PD-Mark, PD-old missing SDC copyright status). Artist died 1934; published 1904; Commons: PD-old.
+- **Audit:** Dr Jekyll sits in his armchair, hands on its arms; legs run out of the frame at the bottom. Character: two eyes, two arms.
+
+### jekyll-hyde-revealed: Jekyll & Hyde, revealed
+
+- **Work:** Jekyll.and.Hyde.Ch2.Drawing2.jpg
+- **Artist:** Charles Raymond Macauley (1871-1934); 1904 (same edition, chapter 2 'Search for Mr Hyde')
+- **Source:** https://commons.wikimedia.org/wiki/File:Jekyll.and.Hyde.Ch2.Drawing2.jpg
+- **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark, PD-Art missing SDC copyright status, PD-old missing SDC copyright status). Artist died 1934; published 1904; Commons: PD-old-80-expired / PD-Art.
+- **Audit:** Mr Hyde stands in profile by a door in a top hat and heavy coat, one arm bent behind his back; the door on its frame at the left; legs run out of the frame at the bottom. Character: profile (one eye), one arm visible, the other hidden by the coat. Low contrast: reference only.
