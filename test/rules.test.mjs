@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -129,4 +129,22 @@ test("C13: Lantern Night has six local customs, one per face of a d6", () => {
   assert.equal(DGF.festival.name, "Lantern Night");
   assert.equal(DGF.festival.customs.length, 6);
   assert.equal(new Set(DGF.festival.customs.map((c) => c.key)).size, 6);
+});
+
+test("C14: the d66 shopping table follows the Castle Duty order, six items a kind", () => {
+  assert.deepEqual(DGF.shoppingTable.map((r) => r.duty), DGF.duties.map((d) => d.key));
+  for (const r of DGF.shoppingTable) assert.equal(r.items.length, 6);
+  assert.equal(new Set(DGF.shoppingTable.flatMap((r) => r.items)).size, 36);
+});
+
+test("C14: rolling the list: kind die then item die, a repeat rolled again, the first rolled are essentials", () => {
+  const faces = [1, 3, 1, 3, 4, 1, 6, 2, 2, 5];
+  const roll = () => faces.shift();
+  const list = rollShoppingList({ size: 4, essentials: 2, roll });
+  assert.deepEqual(list.map((x) => x.roll), ["13", "41", "62", "25"]);
+  assert.deepEqual(list.map((x) => x.essential), [true, true, false, false]);
+  assert.equal(list[0].name, DGF.shoppingTable[0].items[2]);
+  assert.equal(list[1].duty, "butler");
+  assert.equal(list[3].kind, DGF.duties[1].kind);
+  assert.equal(faces.length, 0);
 });
