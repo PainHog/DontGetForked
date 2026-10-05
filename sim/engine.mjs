@@ -364,10 +364,16 @@ function workLocation(S, loc) {
   const tried = new Set();
   for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = false; acted.add(m); S.rec.count("lost turns"); }
 
+  // T5: past an obstacle someone opened, only the opener goes on (if it's caught, the way closes again).
+  if (loc.solo && loc.solo.status !== "active") {
+    for (const o of loc.obstacles) if (o.openedOnly) { o.cleared = false; o.openedOnly = false; }
+    loc.solo = null;
+  }
+  const past = () => hereOf(S).filter((m) => !loc.solo || m === loc.solo);
   while (S.phase === "raid") {
     const ob = loc.obstacles.find((o) => !o.cleared);
     if (!ob) break;
-    const avail = hereOf(S).filter((m) => !acted.has(m));
+    const avail = past().filter((m) => !acted.has(m));
     if (avail.length === 0) break;
     if (ob.alt) pickWayIn(S, ob, loc, avail);
 
@@ -375,8 +381,8 @@ function workLocation(S, loc) {
       // P6: everyone rolls and gets through on their own result; Suspicion rises once, by the worst.
       // groupRule "best3" (S5 candidate): at most three roll, and the rest get through with them.
       const cap = S.P.groupRule === "best3" ? 3 : S.P.groupRule === "best4" ? 4 : Infinity;
-      const need = Math.min(cap, hereOf(S).length);
-      const passedNow = () => hereOf(S).filter((m) => ob.passed.has(m.id)).length;
+      const need = Math.min(cap, past().length);
+      const passedNow = () => past().filter((m) => ob.passed.has(m.id)).length;
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id)).map((m) => ({ m, plan: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")) }));
       if (cap < Infinity) rollers = rollers.sort((a, b) => b.plan.value - a.plan.value).slice(0, need - passedNow());
@@ -403,8 +409,8 @@ function workLocation(S, loc) {
           if (S.phase !== "raid") return;
         }
       }
-      if (hereOf(S).length === 0) break;
-      if (passedNow() >= Math.min(cap, hereOf(S).length)) ob.cleared = true;
+      if (past().length === 0) break;
+      if (passedNow() >= Math.min(cap, past().length)) ob.cleared = true;
       continue;
     }
 
@@ -421,7 +427,11 @@ function workLocation(S, loc) {
     tried.add(ob);
     const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
     addSusp(S, r.suspGain, "roll");
-    if (r.band !== "trouble") ob.cleared = true;
+    if (r.band !== "trouble") {
+      ob.cleared = true;
+      const opened = S.P.openTrait === "unlisted" && best.plan.cand.via && best.plan.cand.via.ability.effect === "open" && loc.id !== "exit" && loc.id !== "lockup";
+      if (opened && !loc.solo && past().length > 1) { loc.solo = best.m; ob.openedOnly = true; S.rec.count("opened: only the opener goes on"); }
+    }
     if (limitHit(S)) return finalFlight(S, "limit");
     if (r.caught) {
       localChase(S, best.m);
@@ -452,7 +462,7 @@ function completeLocation(S, loc) {
     loc.done = false; // a later capture needs a new rescue
     return;
   }
-  const act = hereOf(S);
+  const act = loc.solo && loc.solo.status === "active" ? [loc.solo] : hereOf(S); // T5: only the opener got through
   if (act.length === 0) return; // everyone was caught: nobody is here to take the loot
   loc.done = true;
   if (!loc.itemsTaken) {
@@ -491,7 +501,7 @@ function completeLocation(S, loc) {
 function wantsFurnitureHere(S, loc) {
   const pol = S.P.furniturePolicy;
   if (pol === "never") return false;
-  if (hereOf(S).length < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
+  if ((loc.solo ? 1 : hereOf(S).length) < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
   if (pol === "always") return true;
   const rest = S.town.locations.filter((l) => !l.done && l !== loc).reduce((a, l) => a + locationNeed(S, l), 0);
   return S.limit - S.susp >= 3 && rest + 1 + 2 + 2 <= turnsLeft(S);
@@ -646,12 +656,13 @@ function planRoll(S, m, ctx) {
           if (odBlocked) continue;
           const odSusp = overdraws ? S.N.overdrawSuspicion : 0;
           // Expected Suspicion: one roll raises it once, by its biggest trigger.
-          const fixed = Math.max(c.loud && loudSusp ? 1 : 0, odSusp);
+          const fixed = P.overdrawStack === "stack" ? (c.loud && loudSusp ? 1 : 0) : Math.max(c.loud && loudSusp ? 1 : 0, odSusp);
+          const odExtra = P.overdrawStack === "stack" ? odSusp : 0;
           const showS = d.show.success, showC = d.show.cost, showT = d.show.trouble;
           const eSusp =
             (d.success - showS) * fixed + showS * Math.max(fixed, showVal) +
             (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
-            (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1);
+            (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1) + odExtra;
           // monsterRule "maskSafe" (S2 candidate): trouble on a Mask roll never gets you caught.
           const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon);
           let gain;
@@ -708,6 +719,7 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
     margin: t + s - plan.difficulty,
     entity: m.id,
   });
+  if (P.overdrawStack === "stack" && plan.overdraws) gain += S.N.overdrawSuspicion; // paid on top of the roll's rise
   return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind, overdrawn };
 }
 
@@ -797,6 +809,7 @@ function groupChase(S, group) {
 function capture(S, m) {
   m.status = "captured";
   S.captures++;
+  m.capturedTurn = S.turn; // the capture used this Turn: the first slip try is next Turn
   S.rec.count("captures");
   if (S.P.captiveItems === "lost") m.items = [];
   if (m.furniture) dropFurniture(S, "carrier captured");
@@ -812,6 +825,7 @@ function captivesAct(S) {
   for (const m of captives(S)) {
     if (S.phase !== "raid") return;
     if (m.loseTurn) { m.loseTurn = false; continue; }
+    if (m.capturedTurn === S.turn) continue;
     const ctx = {
       phase: "slip",
       options: [{ trait: "sly", loud: false }, { trait: "nimble", loud: false }, { trait: "brawn", loud: true }], // T8: like the way out

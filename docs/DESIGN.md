@@ -135,6 +135,11 @@ Rule questions the playtests found that the decisions don't answer. Wording-only
 - ~~**T9.**~~ A captive's loot (R3, provisional): gone, back at its location, or kept by the captive?
 - ~~**T10.**~~ How the Storyteller chooses a Cost, and whose item "drop an item" drops.
 
+### Raised by the verification playtest (2026-10-05; details in `sim/playtests/PT3-standard-3-verify.md`)
+53 of the 81 earlier ambiguity IDs are now clear; wording-only fixes went in as core rules 1.3 (`book/REVIEW.md` row 16). These need Richard's call:
+- **U1.** "Open an approach" on the way out and the lock-up: T5 says only the opener gets through, but the way out takes everyone and a rescue frees every captive.
+- **U2.** Can Entities hand loot to each other (free, an action, or not at all)?
+
 ## Rights note: classic monsters (not legal advice)
 - **Public-domain sources:** these literary characters are in the public domain:
   - Dracula (Bram Stoker, 1897)

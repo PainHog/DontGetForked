@@ -1,7 +1,7 @@
-Now: The author's ten playtest rulings are in the rulebook, and a check-up playtest is running. The balance simulator now splits the party up like real groups do.
+Now: The check-up playtest is done: most earlier problems are fixed, the wording is tidied, and two small rule questions wait for the author.
 Next: Writing the eight monsters with the author: their dice, powers, weaknesses and tells.
 Number: Design decisions made = 53
-Number: Open design questions = 1
+Number: Open design questions = 3
 Number: Simulated raids per balance check = 18000
 
 <!-- Screenshot: add one line when the rulebook has a cover (see AGENTS.md, Portal) -->

@@ -77,6 +77,12 @@ export const PARAMS = {
     doc: "two = a location's first obstacle comes in two versions (different traits, Difficulty, witnesses) and the party picks one (T2, decided 2026-10-05); one = a single first obstacle, as simulated before T2.",
     ref: "CORE-RULES The raid; PT1 A2, PT2 A23",
   },
+  overdrawStack: {
+    kind: "rule", default: "merge", values: ["merge", "stack"],
+    title: "Overdraw and \"one roll, one rise\"",
+    doc: "merge = overdraw's +2 is one of the roll's triggers (only the biggest counts), as in the Foundry logic; stack = overdraw is paid on top of the roll's own rise.",
+    ref: "CORE-RULES Suspicion; PT3 M5",
+  },
   partyPolicy: {
     kind: "policy", default: "pairs", values: ["pairs", "together", "singles"],
     title: "Does the party split up?",
