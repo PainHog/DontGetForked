@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (1.6)
+# Don't Get Forked — core rules (1.7)
 
-*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]); 1.4 (2026-10-05) adds rulings U1–U2 and the Entities' dice (C1); 1.5 adds their signature abilities (C2, C2b); 1.6 sets when Weaknesses bite (C3), the Tell chance (C4) and what a Perk is (C5). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
+*Approved by Richard on 2026-10-05. 1.1 (2026-10-05) adds wording clarifications from playtests PT1–PT2 [W]; 1.2 (2026-10-05) adds Richard's rulings T1–T10 on the questions those playtests raised; 1.3 (2026-10-05) adds wording clarifications from verification playtest PT3 (also marked [W]); 1.4 (2026-10-05) adds rulings U1–U2 and the Entities' dice (C1); 1.5 adds their signature abilities (C2, C2b); 1.6 sets when Weaknesses bite (C3), the Tell chance (C4) and what a Perk is (C5); 1.7 adds the Castle Duties (C10). It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end). **[W]** marks a playtest wording clarification (what the decisions and the simulator already did).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone: 3–5 players and a Storyteller, 2–3 hours, horror-comedy for about 12+.
@@ -23,7 +23,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 | Jekyll & Hyde: Hyde | d12 | d10 | d8 | d4 | d6 | |
 
 - **Fixed per Entity:** the dice arrangement, a signature ability, a **Weakness** (something the town can use against it) and a **Tell** (how it gives itself away).
-- **Three picks**, each with a marked default and a random-table entry: a **Gift** (one of three versions of its second ability), a **Perk** (one of three passive edges; each bends one rule in one situation, every time, with nothing to track [C5]) and a **Castle Duty** (one of about six shared household jobs, with a small edge tied to the shopping list; no two Entities in a party take the same one [R8]).
+- **Three picks**, each with a marked default and a random-table entry: a **Gift** (one of three versions of its second ability), a **Perk** (one of three passive edges; each bends one rule in one situation, every time, with nothing to track [C5]) and a **Castle Duty** (one of six shared household jobs, each matching one of the six kinds of list item: Cook, Gardener, Librarian, Butler, Handyman, Tailor; at a location whose list item is your Duty's kind, your trait die is one size larger on your own rolls there, counting as the roll's one raise [C10]; no two Entities in a party take the same one [R8]).
 - **Charges:** the same number for every Entity **[S9: 3]**, refilled once a year; unspent charges are lost. One charge = one use of an ability.
 
 ## Rolling
@@ -104,4 +104,4 @@ Every label: 3 charges; 12 Turns; overdraw +2 Suspicion; a local chase's Lead st
 | P8 | Win / Partial / Bust | Win = all essentials + at most one extra missing; Partial = at least half home; Bust = less | approved 2026-10-04 |
 | — | Critical rule | Doubles on a Success; +2 Lead in a chase, otherwise a charge back | decided (S8) |
 | — | Numbers | See Starting numbers above | decided (S9) |
-| — | Content | The eight Entities are done (C1–C9, rulebook Chapter 2). Still to write: Castle Duties; chase table; festival; shopping list and town tables; epilogue table; campaign upgrades | Richard |
+| — | Content | The eight Entities are done (C1–C9, rulebook Chapter 2). Still to write: chase table; festival; shopping list and town tables; epilogue table; campaign upgrades | Richard |
