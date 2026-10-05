@@ -188,6 +188,16 @@ DGF.duties = Object.freeze([
   { key: "tailor", name: "Tailor", kind: "cloth and costumes", where: "the draper, the tailor, the hatter", role: "keeps everyone’s disguises in one piece" },
 ].map((d) => Object.freeze(d)));
 
+/** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
+DGF.chaseTable = Object.freeze([
+  { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },
+  { key: "backAlleys", name: "Back alleys", text: "Duck, dodge, double back.", traits: ["nimble", "sly"] },
+  { key: "marketStalls", name: "The market stalls", text: "Overturn a cart, vault a stall.", traits: ["brawn", "nimble"] },
+  { key: "rooftops", name: "Over the rooftops", text: "Climb, jump, find a way down.", traits: ["nimble", "wits"] },
+  { key: "parade", name: "The festival parade", text: "Join in: you’re in costume, after all.", traits: ["charm", "sly"] },
+  { key: "deadEnd", name: "A dead end", text: "Break through, or think fast.", traits: ["brawn", "wits"] },
+].map((r) => Object.freeze(r)));
+
 /** C4: a Tell check is a d6; on this or higher a Tell goes off (whose: roll among the Entities arriving). */
 DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });
 

@@ -90,9 +90,9 @@ export const PARAMS = {
     ref: "CORE-RULES The raid (Carrying); PT3 M6",
   },
   chaseTable: {
-    kind: "content", default: "placeholder", values: ["placeholder", "A", "B", "C"],
-    title: "The d6 chase table (C12 candidates)",
-    doc: "placeholder = Nimble on four rows; A = two traits a row, each trait 2–3 times; B = three traits a row; C = Nimble on every row plus one other.",
+    kind: "content", default: "approved", values: ["approved", "placeholder", "B", "C"],
+    title: "The d6 chase table (C12)",
+    doc: "approved = the C12 table (two traits a row, each trait 2–3 times); placeholder = the old stand-in (Nimble on four rows); B = three traits a row; C = Nimble on every row plus one other.",
     ref: "CORE-RULES Chases (the ground); content C12",
   },
   partyPolicy: {
