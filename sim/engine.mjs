@@ -783,19 +783,43 @@ function applyCost(S, m, kind) {
 // ---------------------------------------------------------------- chases, capture
 
 function chaseGround(S) {
-  return CHASE_TABLE[S.rng.int(0, CHASE_TABLE.length - 1)].map((t) => ({ trait: t, loud: false }));
+  const row = S.rng.int(0, CHASE_TABLE.length - 1);
+  S.groundRow = row;
+  return CHASE_TABLE[row].map((t) => ({ trait: t, loud: false }));
+}
+
+/**
+ * weaknessRule (C3 candidates): when the mob brings a mob-type Weakness.
+ * "chance" = a placeholder chance at the start of each chase (weaknessLocal / weaknessFinal);
+ * "always" = from the first round of every chase; "soon" = from the third round;
+ * "table" = from the round the chase table shows a 6, for everyone in that chase.
+ * Sunlight-type Weaknesses only bite in a dawn flight, from its first round.
+ */
+function weakStart(S, m, final, trigger) {
+  if (m.ent.weakness !== "mob") return final && trigger === "dawn";
+  const r = S.P.weaknessRule;
+  if (r === "always") return true;
+  if (r === "soon" || r === "table") return false;
+  return S.rng.chance(final ? S.P.weaknessFinal : S.P.weaknessLocal);
+}
+function weakNow(S, m, was, round) {
+  if (was || m.ent.weakness !== "mob") return was;
+  const r = S.P.weaknessRule;
+  return (r === "soon" && round >= 2) || (r === "table" && S.groundRow === CHASE_TABLE.length - 1);
 }
 
 /** DESIGN Chase (Lead track) + Two kinds of chase: a local chase; cornered = captured. */
 function localChase(S, m) {
   const N = S.N;
   S.rec.count("local chases");
-  const weak = m.ent.weakness === "mob" && S.rng.chance(S.P.weaknessLocal);
+  let weak = weakStart(S, m, false);
   let lead = N.lead.localStart;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
-    const ctx = { phase: "local", options: chaseGround(S), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
+    const options = chaseGround(S);
+    weak = weakNow(S, m, weak, round);
+    const ctx = { phase: "local", options, difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
     const plan = planRoll(S, m, ctx);
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
@@ -811,12 +835,13 @@ function localChase(S, m) {
 function groupChase(S, group) {
   const N = S.N;
   S.rec.count("local chases (shared)");
-  const weak = new Map(group.map((m) => [m, m.ent.weakness === "mob" && S.rng.chance(S.P.weaknessLocal)]));
+  const weak = new Map(group.map((m) => [m, weakStart(S, m, false)]));
   let lead = N.lead.localStart;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
     const ground = chaseGround(S);
+    for (const m of group) weak.set(m, weakNow(S, m, weak.get(m), round));
     const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: ground, difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
     lead += majorityMove(results, critW);
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
@@ -876,7 +901,7 @@ function finalFlight(S, trigger) {
   const fleeing = active(S);
   for (const m of captives(S)) m.status = "left";
   if (fleeing.length === 0) { S.rec.count("final flight with nobody free"); return; }
-  const weak = new Map(fleeing.map((m) => [m, m.ent.weakness === "mob" ? S.rng.chance(S.P.weaknessFinal) : trigger === "dawn"]));
+  const weak = new Map(fleeing.map((m) => [m, weakStart(S, m, true, trigger)]));
   const baseMob = S.L.finalMob + (fleeing.length - 4) * N.finalMobPerExtraEntity;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
@@ -887,6 +912,7 @@ function finalFlight(S, trigger) {
     // Policy: carriers drop the furniture when the mob is about to corner them.
     if (lead <= 1 && S.furnitureCarried) dropFurniture(S, "final flight");
     const ground = chaseGround(S);
+    for (const m of fleeing) weak.set(m, weakNow(S, m, weak.get(m), round));
     const results = [];
     for (const m of fleeing) {
       const ctx = {

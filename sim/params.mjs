@@ -203,6 +203,12 @@ export const PARAMS = {
     doc: "Chance per Entity, each time the party arrives at a location with witnesses, that its Tell triggers (+1 Suspicion).",
     ref: "DESIGN Weakness and Tell (content not written)",
   },
+  weaknessRule: {
+    kind: "content", default: "chance", values: ["chance", "always", "soon", "table"],
+    title: "When the mob brings a Weakness (C3 candidates)",
+    doc: "chance = placeholder chances at the start of each chase (below); always = from round 1 of every chase; soon = from round 3; table = from the round the chase table shows a 6, for everyone in that chase. Sunlight-type Weaknesses only bite in a dawn flight.",
+    ref: "CORE-RULES Chases (Weakness); content C3",
+  },
   weaknessLocal: {
     kind: "content", default: 0.25, values: [0.25, 0, 0.5],
     title: "Placeholder: chance the mob brings your Weakness in a local chase",
