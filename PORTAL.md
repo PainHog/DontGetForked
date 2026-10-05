@@ -1,6 +1,6 @@
 Now: The castle's household jobs and the cover text are in. Finding old public-domain pictures of each monster to fill the portrait spaces.
-Next: The chase table and the festival, decided with the author.
-Number: Design decisions made = 64
+Next: The town's festival, decided with the author.
+Number: Design decisions made = 65
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -32,6 +32,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Write the eight monsters: second powers, perks, weaknesses and tells
 - [x] Stand-in art in the rulebook (free public-domain engravings)
 - [x] Castle Duties and the cover text
+- [x] The chase table
 - [ ] Monster portraits filled with stand-in pictures
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft

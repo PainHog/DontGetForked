@@ -13,6 +13,7 @@
  * obstacle comes in two versions (`alt`) and the party picks one.
  */
 import { TRAITS, DUTIES } from "./entities.mjs";
+import { DGF } from "../module/config.mjs";
 
 function weightedNum(rng, table) {
   return Number(rng.weighted(table));
@@ -90,6 +91,7 @@ export const CHASE_TABLE = Object.freeze([
  * row plus one other.
  */
 export const CHASE_TABLES = Object.freeze({
+  approved: DGF.chaseTable.map((r) => r.traits), // C12, approved 2026-10-05 (= candidate A)
   placeholder: CHASE_TABLE,
   A: [["sly", "charm"], ["nimble", "sly"], ["brawn", "nimble"], ["nimble", "wits"], ["charm", "sly"], ["brawn", "wits"]],
   B: [["sly", "charm", "nimble"], ["nimble", "sly", "wits"], ["brawn", "nimble", "charm"], ["nimble", "wits", "brawn"], ["charm", "sly", "brawn"], ["brawn", "wits", "sly"]],
