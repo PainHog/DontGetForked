@@ -19,7 +19,73 @@ function weightedNum(rng, table) {
   return Number(rng.weighted(table));
 }
 
-function makeObstacle(rng, L) {
+/**
+ * Candidate C18 obstacle table (not approved): d20 entries, the quiet trait first,
+ * the loud way second; `group` = everyone rolls for themselves.
+ */
+export const OBSTACLE_TABLES = {
+  // c18b: every trait is the quiet way 4 times; loud ways Brawn/Nimble 3, Charm/Sly/Wits 2; one group obstacle per trait.
+  c18b: [
+    { name: "A heavy cellar trapdoor", quiet: "brawn" },
+    { name: "A tug-of-war across the lane", quiet: "brawn", group: true },
+    { name: "A cart blocking the alley", quiet: "brawn", loud: "nimble" },
+    { name: "A bolted back gate", quiet: "brawn", loud: "charm" },
+    { name: "A high garden wall", quiet: "nimble", loud: "brawn" },
+    { name: "A shuttered window", quiet: "nimble", loud: "brawn" },
+    { name: "The rooftops", quiet: "nimble", group: true },
+    { name: "A rickety drainpipe", quiet: "nimble" },
+    { name: "A locked front door", quiet: "sly", loud: "brawn" },
+    { name: "A nosy neighbour at her window", quiet: "sly", loud: "wits" },
+    { name: "A crowded shop floor", quiet: "sly", group: true },
+    { name: "A muddy yard full of geese", quiet: "sly", loud: "nimble" },
+    { name: "The shopkeeper behind the counter", quiet: "charm", loud: "sly" },
+    { name: "A guard dog", quiet: "charm", loud: "nimble" },
+    { name: "A doorman checking invitations", quiet: "charm", loud: "wits" },
+    { name: "Children in costumes who want a closer look", quiet: "charm", group: true },
+    { name: "A locked strongbox", quiet: "wits", loud: "charm" },
+    { name: "A dark, cluttered back room", quiet: "wits", loud: "sly" },
+    { name: "The night watchman on his round", quiet: "wits" },
+    { name: "A maze of festival stalls", quiet: "wits", group: true },
+  ],
+  c18a: [
+    { name: "A locked front door", quiet: "sly", loud: "brawn" },
+    { name: "A high garden wall", quiet: "nimble", loud: "brawn" },
+    { name: "A shuttered window", quiet: "nimble", loud: "brawn" },
+    { name: "A guard dog", quiet: "charm", loud: "nimble" },
+    { name: "A nosy neighbour at her window", quiet: "sly", loud: "charm" },
+    { name: "A doorman checking everyone", quiet: "charm", loud: "brawn", group: true },
+    { name: "A locked strongbox", quiet: "wits", loud: "brawn" },
+    { name: "A cart blocking the alley", quiet: "brawn", loud: "nimble" },
+    { name: "A bolted back gate", quiet: "brawn", loud: "charm" },
+    { name: "A muddy yard full of geese", quiet: "sly", loud: "nimble", group: true },
+    { name: "A dark, cluttered back room", quiet: "wits", loud: "nimble" },
+    { name: "The night watchman on his round", quiet: "wits", loud: "charm" },
+    { name: "A heavy cellar trapdoor", quiet: "brawn" },
+    { name: "A tug-of-war across the lane", quiet: "brawn", group: true },
+    { name: "The rooftops", quiet: "nimble" },
+    { name: "A rickety drainpipe", quiet: "nimble" },
+    { name: "A crowded shop floor", quiet: "sly", group: true },
+    { name: "The shopkeeper behind the counter", quiet: "charm" },
+    { name: "Children in costumes who want a closer look", quiet: "charm", group: true },
+    { name: "A combination lock", quiet: "wits" },
+  ],
+};
+
+function makeObstacle(rng, L, numbers = null, avoidTrait = null) {
+  const table = numbers && OBSTACLE_TABLES[numbers.obstacleTable];
+  if (table) {
+    let e;
+    do e = rng.pick(table); while (avoidTrait && e.quiet === avoidTrait);
+    return {
+      name: e.name,
+      options: e.loud ? [{ trait: e.quiet, loud: false }, { trait: e.loud, loud: true }] : [{ trait: e.quiet, loud: false }],
+      difficulty: weightedNum(rng, L.difficulty),
+      witnessed: rng.chance(L.witnessed),
+      group: !!e.group,
+      cleared: false,
+      passed: new Set(),
+    };
+  }
   const traits = rng.shuffle(TRAITS);
   const two = rng.chance(L.twoTraits);
   return {
@@ -35,11 +101,11 @@ function makeObstacle(rng, L) {
   };
 }
 
-function makeLocation(rng, L, id, kind) {
+function makeLocation(rng, L, id, kind, numbers = null) {
   const n = weightedNum(rng, L.obstacles);
-  const obstacles = Array.from({ length: n }, () => makeObstacle(rng, L));
-  // T2: two ways in = the first obstacle comes in two versions; the party picks one.
-  obstacles[0].alt = makeObstacle(rng.fork("way2", id), L);
+  const obstacles = Array.from({ length: n }, () => makeObstacle(rng, L, numbers));
+  // T2: two ways in = the first obstacle comes in two versions (with a different quiet trait); the party picks one.
+  obstacles[0].alt = makeObstacle(rng.fork("way2", id), L, numbers, obstacles[0].options[0].trait);
   return { id, kind, obstacles, items: [], furniture: null, done: false };
 }
 
@@ -85,13 +151,13 @@ export function makeTown(rng, labelName, numbers) {
     id: `item${i + 1}`, essential: i < nEss, kind: rng.pick(DUTIES),
   }));
   const locations = items.map((it, i) => {
-    const loc = makeLocation(rng, L, `loc${i + 1}`, it.kind);
+    const loc = makeLocation(rng, L, `loc${i + 1}`, it.kind, numbers);
     loc.items.push(it);
     return loc;
   });
   // One furniture piece, at its own location with one extra obstacle.
-  const fl = makeLocation(rng, L, "furniture", rng.pick(DUTIES));
-  fl.obstacles.push(makeObstacle(rng, L));
+  const fl = makeLocation(rng, L, "furniture", rng.pick(DUTIES), numbers);
+  fl.obstacles.push(makeObstacle(rng, L, numbers));
   const piece = rng.pick(DGF.furniture); // C16: the d6 furniture table
   fl.furniture = { key: piece.key, size: piece.size };
   if (numbers.townBudget === "budget") applyBudget(rng.fork("budget"), L, [...locations, fl]);
