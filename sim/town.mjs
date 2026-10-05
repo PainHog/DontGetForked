@@ -43,6 +43,40 @@ function makeLocation(rng, L, id, kind) {
   return { id, kind, obstacles, items: [], furniture: null, done: false };
 }
 
+/**
+ * Candidate (C17 B): a difficulty budget. Instead of rolling each obstacle's
+ * Difficulty and whether it's watched, the town gets the label's shares as a
+ * fixed set (largest remainder over its obstacles, both ways in counted), dealt
+ * out at random.
+ */
+function quota(shares, n) {
+  const keys = Object.keys(shares);
+  const raw = keys.map((k) => shares[k] * n);
+  const out = raw.map(Math.floor);
+  let left = n - out.reduce((a, b) => a + b, 0);
+  const order = raw.map((r, i) => [r - Math.floor(r), i]).sort((a, b) => b[0] - a[0]);
+  for (let j = 0; left > 0; j++, left--) out[order[j % order.length][1]] += 1;
+  return keys.flatMap((k, i) => Array(out[i]).fill(k));
+}
+function applyBudget(rng, L, locs) {
+  const obs = locs.flatMap((l) => l.obstacles.flatMap((o) => (o.alt ? [o, o.alt] : [o])));
+  const diffs = rng.shuffle(quota(L.difficulty, obs.length));
+  obs.forEach((o, i) => { o.difficulty = Number(diffs[i]); });
+  const watched = rng.shuffle(quota({ yes: L.witnessed, no: 1 - L.witnessed }, obs.length));
+  obs.forEach((o, i) => { o.witnessed = watched[i] === "yes"; });
+}
+
+/** Candidate (C17 C): rolled, but at most `cap` Difficulty-12 obstacles in town; extras are rolled again until they aren't 12. */
+function applyCap(rng, L, locs, cap) {
+  const obs = locs.flatMap((l) => l.obstacles.flatMap((o) => (o.alt ? [o, o.alt] : [o])));
+  let n = 0;
+  for (const o of obs) {
+    if (o.difficulty !== 12) continue;
+    if (++n <= cap) continue;
+    do o.difficulty = Number(rng.weighted(L.difficulty)); while (o.difficulty === 12);
+  }
+}
+
 /** Build a town for a difficulty label. */
 export function makeTown(rng, labelName, numbers) {
   const L = numbers.labels[labelName];
@@ -60,6 +94,8 @@ export function makeTown(rng, labelName, numbers) {
   fl.obstacles.push(makeObstacle(rng, L));
   const piece = rng.pick(DGF.furniture); // C16: the d6 furniture table
   fl.furniture = { key: piece.key, size: piece.size };
+  if (numbers.townBudget === "budget") applyBudget(rng.fork("budget"), L, [...locations, fl]);
+  if (numbers.townBudget === "cap") applyCap(rng.fork("cap"), L, [...locations, fl], labelName === "hard" ? 2 : 1);
   // The lock-up where captives are held; its rescue obstacle is re-made per rescue.
   const lockup = { id: "lockup", difficulty: L.lockup };
   return { label: labelName, L, items, locations, furnitureLoc: fl, lockup };
