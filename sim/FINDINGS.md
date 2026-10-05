@@ -101,3 +101,21 @@ Win rates are above target under split play (95 / 85 / 69%); the retune waits fo
 | All four (+3 charges, +1 Turn, Lead 3, Limit +1) | 96.6% / 0.1% | 87.7% / 1.0% | 74.1% / 2.0% |
 
 An extra charge is worth about 0.2–0.7 win points; three (the cap) about +0.3 / +0.9 / +2.0 at Easy / Standard / Hard, with forked slightly down. An extra Turn is worth almost nothing under split play. Starting the final flight at Lead 3 halves the forked rate at Hard (the mob is the game's teeth), so it is the one effect to keep out of upgrades. Stacking all three charges on one Entity is a little weaker than spreading them, so the rule needn't forbid it. (Re-run after C16, with furniture rolled on the d6 table: four Bulky pieces in six, where the generator had 70%.) **Decided (C16):** each upgrade is one extra charge for one Entity of the players' choice, at most three.
+
+## Rolled towns: keeping them to their difficulty (2026-10-05, for C17)
+
+The town generator rolls each obstacle's Difficulty and whether it's watched from the label's shares (S9). Two candidates for the rulebook's "difficulty budget", as `numbers.townBudget`: **budget** deals the shares out as a fixed set over the town's obstacles (both ways in counted); **cap** keeps the rolls but allows at most one Difficulty-12 obstacle in an Easy or Standard town and two in a Hard town (extras rolled again). 1,500 raids per label and party size, the same raids for each:
+
+| Town | Easy win / forked | Standard win / forked | Hard win / forked |
+|---|---|---|---|
+| Rolled (now) | 95.8% / 0.2% | 85.1% / 2.5% | 69.9% / 4.9% |
+| Budget | 95.6% / 0.2% | 83.8% / 3.2% | 70.3% / 5.6% |
+| Cap on 12s | 95.8% / 0.2% | 85.6% / 2.4% | 71.6% / 4.8% |
+
+How uneven the towns are (4,000 four-item towns; the town's mean Difficulty, 5th–95th percentile, and how many have three or more Difficulty-12 obstacles):
+
+| Town | Standard | Hard |
+|---|---|---|
+| Rolled | 7.75–9.27; 1.5% | 8.80–10.18; 25.1% |
+| Budget | 8.00–9.00; 0% | 9.09–9.83; 11.7% |
+| Cap on 12s | 7.73–9.17; 0% | 8.77–9.85; 0% |
