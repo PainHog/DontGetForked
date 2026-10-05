@@ -594,6 +594,8 @@ function planRoll(S, m, ctx) {
   for (const ab of abilitiesOf(m)) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
+    // proposed C2 (Jekyll & Hyde): change form for this roll, rolling Hyde's die for the called trait.
+    if (ab.effect === "form" && m.ent.formDice) for (const o of ctx.options) cands.push({ trait: o.trait, loud: o.loud, quiet: false, die: m.ent.formDice[o.trait], via: { owner: m, ability: ab } });
     if (ab.effect === "open") {
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
@@ -628,7 +630,7 @@ function planRoll(S, m, ctx) {
 
   let best = null;
   for (const c of cands) {
-    const base = m.ent.dice[c.trait];
+    const base = c.die ?? m.ent.dice[c.trait];
     let up = 0;
     let down = m.nextStepDown;
     const duty = P.dutyEdge && phase === "raid" && ctx.locKind && ctx.locKind === m.duty;
