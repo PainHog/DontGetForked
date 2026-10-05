@@ -133,6 +133,25 @@ export function localMobDifficulty(suspicion) {
   return Math.min(M.max, M.base + Math.floor(suspicion * M.perSuspicion));
 }
 
+/**
+ * C14: roll the shopping list on the d66 table. `roll(n)` returns 1..n (one die);
+ * a repeat is rolled again; the first `essentials` items rolled are the essentials.
+ * Returns [{ roll: "13", duty, kind, name, essential }] in the order rolled.
+ */
+export function rollShoppingList({ size, essentials, roll }) {
+  const list = [];
+  const seen = new Set();
+  while (list.length < size) {
+    const k = roll(6), i = roll(6);
+    const id = `${k}${i}`;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const row = DGF.shoppingTable[k - 1];
+    list.push({ roll: id, duty: row.duty, kind: DGF.duties[k - 1].kind, name: row.items[i - 1], essential: list.length < essentials });
+  }
+  return list;
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;

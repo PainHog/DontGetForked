@@ -188,6 +188,16 @@ DGF.duties = Object.freeze([
   { key: "tailor", name: "Tailor", kind: "cloth and costumes", where: "the draper, the tailor, the hatter", role: "keeps everyone’s disguises in one piece" },
 ].map((d) => Object.freeze(d)));
 
+/** C14: the d66 shopping table: a d6 for the kind (in Castle Duty order), a d6 for the item. Only the kind matters to the rules. */
+DGF.shoppingTable = Object.freeze([
+  { duty: "cook", items: ["a wheel of strong cheese", "a side of bacon", "a cask of red wine (“for the guests”)", "a sack of flour", "a jar of honey", "the wedding cake in the baker’s window"] },
+  { duty: "gardener", items: ["seed potatoes", "a pot of nightshade (purely ornamental)", "rose bushes for the graveyard", "turnip seed for next year’s lanterns", "a crate of lilies", "mushroom spawn for the cellar"] },
+  { duty: "librarian", items: ["this week’s newspapers", "black-edged writing paper", "a cookbook “for the guests”", "ink and sealing wax", "an almanac with next year’s moons", "a book of etiquette"] },
+  { duty: "butler", items: ["the silver spoons", "a tea service", "bed linen", "a lace tablecloth", "a pair of candlesticks", "a gravy boat"] },
+  { duty: "handyman", items: ["a box of nails", "a new lock for the dungeon", "hinges that creak properly", "a lamp and a can of oil", "a coil of rope", "a length of good chain"] },
+  { duty: "tailor", items: ["a bolt of black velvet", "bandages, lots", "a top hat", "a new cape", "knitting wool", "boots in a very large size"] },
+].map((r) => Object.freeze({ duty: r.duty, items: Object.freeze(r.items) })));
+
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },
