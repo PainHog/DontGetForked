@@ -214,7 +214,10 @@ function lockupLocation(S) {
 
 /** Placeholder Tells: each Entity may give itself away on arriving where there are witnesses. */
 function arrive(S, loc) {
-  if (!loc.obstacles.some((o) => o.witnessed)) return;
+  // T3: one check the first time anyone reaches each watched location.
+  if (loc.tellChecked) return;
+  loc.tellChecked = true;
+  if (!loc.obstacles.some((o) => o.witnessed || (o.alt && S.P.waysIn === "two" && o.alt.witnessed))) return;
   // tellScope "party" (S5 candidate): one chance for the whole party, as likely as four Entities' together.
   const who = S.P.tellScope === "party" ? [null] : active(S);
   const chance = S.P.tellScope === "party" ? Math.min(1, 1 - (1 - S.P.tellChance) ** 4) : S.P.tellChance;
@@ -238,6 +241,7 @@ function workLocation(S, loc) {
     if (!ob) break;
     const avail = active(S).filter((m) => !acted.has(m));
     if (avail.length === 0) break;
+    if (ob.alt) pickWayIn(S, ob, loc, avail);
 
     if (ob.group) {
       // P6: everyone rolls and gets through on their own result; Suspicion rises once, by the worst.
@@ -287,7 +291,7 @@ function workLocation(S, loc) {
     if (best.plan.value <= 0) { S.rec.count("declined rolls"); break; }
     acted.add(best.m);
     tried.add(ob);
-    const r = executeRoll(S, best.m, best.plan, "raid");
+    const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
     addSusp(S, r.suspGain, "roll");
     if (r.band !== "trouble") ob.cleared = true;
     if (limitHit(S)) return finalFlight(S, "limit");
@@ -298,6 +302,18 @@ function workLocation(S, loc) {
   }
 
   if (S.phase === "raid" && active(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
+}
+
+/**
+ * T2: the first obstacle comes in two versions (front door or back window); the
+ * party picks one, the version its best-placed Entity likes better, and keeps it.
+ */
+function pickWayIn(S, ob, loc, avail) {
+  const alt = ob.alt;
+  delete ob.alt;
+  if (S.P.waysIn !== "two") return;
+  const bestValue = (o) => Math.max(...avail.map((m) => planRoll(S, m, ctxFor(S, m, o, loc, "raid")).value));
+  if (bestValue(alt) > bestValue(ob)) Object.assign(ob, { options: alt.options, difficulty: alt.difficulty, witnessed: alt.witnessed, group: alt.group });
 }
 
 function completeLocation(S, loc) {
@@ -431,12 +447,12 @@ function planRoll(S, m, ctx) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
     if (ab.effect === "open") {
-      // openTrait "unlisted" (PT2 A7): only an approach the obstacle doesn't already offer.
-      if (P.openTrait === "unlisted" && ctx.options.some((o) => o.trait === ab.trait)) continue;
+      // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
+      if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
       // "easier" = the ability's trait at Difficulty 2 lower, watched as usual.
       const quiet = phase === "raid" && P.openApproach === "quiet";
-      const easier = phase === "raid" && P.openApproach === "easier" ? 2 : 0;
+      const easier = (phase === "raid" || (phase === "slip" && P.openTrait === "unlisted")) && P.openApproach === "easier" ? 2 : 0; // T5: the lock-up is an obstacle too
       cands.push({ trait: ab.trait, loud: false, quiet, easier, via: { owner: m, ability: ab } });
     }
   }
@@ -456,7 +472,7 @@ function planRoll(S, m, ctx) {
   const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
   const mu = phase === "raid" ? P.caughtWeight : 0;
   const cc = chargeCost(S, phase);
-  const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (carriedItems(S).length ? 0.25 : 1 / 3) : 0;
+  const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (m.items.length ? 0.25 : 1 / 3) : 0;
   const loudSusp = P.loudRule === "suspicion" || P.loudRule === "both";
   const loudWitness = P.loudRule === "witness" || P.loudRule === "both";
   const critKey = P.critRule === "doubles" ? "critDoubles" : "critBeat4"; // value estimate only (beatN uses beat4's odds)
@@ -527,7 +543,7 @@ function planRoll(S, m, ctx) {
 }
 
 /** Make the roll a plan describes, spend what it spends, and read the result (P2, CORE-RULES Rolling). */
-function executeRoll(S, m, plan, phase) {
+function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   const P = S.P;
   const overdrawn = [];
   for (const u of plan.uses) {
@@ -553,8 +569,8 @@ function executeRoll(S, m, plan, phase) {
   if (b === "trouble") gain = Math.max(gain, 1); // a trouble result +1
   if (show) gain = Math.max(gain, P.monsterRule === "plus2" ? 2 : 1); // the Monster shows +1
   let costKind = null;
-  if (b === "cost" && phase !== "local" && phase !== "final") {
-    costKind = pickCost(S, m);
+  if (b === "cost" && phase !== "local" && phase !== "final" && !noCost) {
+    costKind = pickCost(S, m, gain);
     if (costKind === "suspicion") gain = Math.max(gain, 1);
   }
   S.rec.roll({
@@ -568,29 +584,31 @@ function executeRoll(S, m, plan, phase) {
 }
 
 /** P3: the Storyteller picks a Cost (costChoice). */
-function pickCost(S, m) {
+function pickCost(S, m, gain = 0) {
   const P = S.P;
-  const items = carriedItems(S);
+  const items = m.items; // T10: "drop an item" drops one of the roller's own items
   let kind;
   if (P.costChoice === "suspicion") kind = "suspicion";
   else if (P.costChoice === "lenient") kind = items.length === 0 ? "drop" : "stepdown";
-  else kind = S.rng.pick(items.length ? ["suspicion", "drop", "turn", "stepdown"] : ["suspicion", "turn", "stepdown"]);
+  else {
+    // T10: the Storyteller never picks a Cost that costs nothing (a Suspicion +1 the roll already raised).
+    const opts = ["turn", "stepdown"];
+    if (gain < 1) opts.push("suspicion");
+    if (items.length) opts.push("drop");
+    kind = S.rng.pick(opts);
+  }
   S.rec.count(`cost:${kind}`);
   if (kind === "drop") {
     if (items.length === 0) { S.rec.detect("\"drop an item\" Cost with nothing carried (costs nothing)"); return kind; }
     if (P.dropRule === "recover") { m.loseTurn = true; return kind; } // picking it up again takes the next action
     if (P.dropRule === "extrasOnly") {
       // Only an extra can be dropped (and is lost); with none carried the Storyteller picks another Cost.
-      const holders = S.party.filter((h) => h.status === "active" && h.items.some((i) => !i.essential));
-      if (holders.length === 0) { kind = S.rng.pick(["suspicion", "turn", "stepdown"]); S.rec.count(`cost:${kind} (instead of drop)`); return applyCost(S, m, kind); }
-      const h = S.rng.pick(holders);
-      const extras = h.items.filter((i) => !i.essential);
-      h.items.splice(h.items.indexOf(S.rng.pick(extras)), 1);
+      const extras = m.items.filter((i) => !i.essential);
+      if (extras.length === 0) { kind = S.rng.pick(["suspicion", "turn", "stepdown"]); S.rec.count(`cost:${kind} (instead of drop)`); return applyCost(S, m, kind); }
+      m.items.splice(m.items.indexOf(S.rng.pick(extras)), 1);
       return kind;
     }
-    const holders = S.party.filter((h) => h.status === "active" && h.items.length);
-    const h = S.rng.pick(holders);
-    h.items.splice(S.rng.int(0, h.items.length - 1), 1);
+    m.items.splice(S.rng.int(0, m.items.length - 1), 1);
   } else applyCost(S, m, kind);
   return kind;
 }
@@ -668,7 +686,7 @@ function captivesAct(S) {
     if (m.loseTurn) { m.loseTurn = false; continue; }
     const ctx = {
       phase: "slip",
-      options: [{ trait: "sly", loud: false }, { trait: "brawn", loud: false }, { trait: "nimble", loud: false }],
+      options: [{ trait: "sly", loud: false }, { trait: "nimble", loud: false }, { trait: "brawn", loud: true }], // T8: like the way out
       difficulty: S.town.lockup.difficulty, witnessed: false, helpers: [], locKind: null, weakness: false,
     };
     const plan = planRoll(S, m, ctx);

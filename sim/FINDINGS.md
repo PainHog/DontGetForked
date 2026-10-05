@@ -46,8 +46,15 @@ Along the way the simulated players were improved (they now weigh the cost of be
 - **Spending works.** A party that hoards its charges loses 11–14 points at Standard and Hard.
 - **Tells are a big lever.** The placeholder Tell chance moves Hard by ±9–10 points, so the real Tells need their frequency designed with them.
 
+## After the first playtests (T1–T10, 2026-10-05)
+Playtests PT1 and PT2 raised ten rule questions; Richard decided all ten as recommended (`docs/DESIGN.md`). In the simulator:
+- **Two ways in (T2) is worth about +5 win points** at Standard and Hard: the party picks the better of two first obstacles. Raising only the trait die (T6) changes nothing measurable; open on unlisted traits only (T5) costs about 1 point.
+- With the approved numbers the rules now win **91.5 / 78.1 / 61.8%** (Standard and Hard above target; forked 0.7 / 2.0 / 4.2%).
+- **Package N1** (proposed, not decided) puts all six win and forked rates on target: the final flight's Lead starts at 3 everywhere, the final mob is 11 / 12 / 12 and the Limits 12 / 12 / 14. Trouble rises to 22.5% of rolls (target 10–22%). A Lead of 3 also makes the final flight one step shorter, which PT2 found long.
+- **The playtests split the party; the simulator doesn't.** Both raids finished with Turns to spare. Modelling a split party comes before the balance pass.
+
 ## Still open
-Nothing the simulator found is open. The S11 rulings are provisional and get retested in playtests. The next balance work needs the real Entities, Tells and towns.
+The N1 retune awaits Richard. The next balance work needs the real Entities, Tells and towns.
 
 ## What the simulation can't tell yet
 - **Real content.** Entity balance, real Tells and Weaknesses, and Perks all need the actual Entities.

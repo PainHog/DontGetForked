@@ -8,9 +8,9 @@
  * The label's difficulty budget (params NUMBERS.labels) sets the Difficulty mix,
  * obstacle counts, witnesses and group obstacles. All of it is placeholder data.
  *
- * Abstractions: one list item per location; "two ways in" is modelled as the
- * obstacle offering two traits; the obstacles at a location are passed in order
- * (getting in, then the job).
+ * Abstractions: one list item per location; the obstacles at a location are
+ * passed in order (getting in, then the job); "two ways in" (T2) = the first
+ * obstacle comes in two versions (`alt`) and the party picks one.
  */
 import { TRAITS, DUTIES } from "./entities.mjs";
 
@@ -36,7 +36,10 @@ function makeObstacle(rng, L) {
 
 function makeLocation(rng, L, id, kind) {
   const n = weightedNum(rng, L.obstacles);
-  return { id, kind, obstacles: Array.from({ length: n }, () => makeObstacle(rng, L)), items: [], furniture: null, done: false };
+  const obstacles = Array.from({ length: n }, () => makeObstacle(rng, L));
+  // T2: two ways in = the first obstacle comes in two versions; the party picks one.
+  obstacles[0].alt = makeObstacle(rng.fork("way2", id), L);
+  return { id, kind, obstacles, items: [], furniture: null, done: false };
 }
 
 /** Build a town for a difficulty label. */
