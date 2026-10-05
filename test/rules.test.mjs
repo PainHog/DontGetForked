@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -167,4 +167,35 @@ test("C16: six pieces of furniture (four Bulky, two Huge); upgrades capped at th
   assert.deepEqual(addUpgrade(u, "clock", 1), ["armchair", "clock", "bear"]);
   assert.equal(startingCharges(0), 3);
   assert.equal(startingCharges(2), 5);
+});
+
+test("C17: the town dice read as the book's table, with the ceiling on 12s", () => {
+  assert.equal(obstacleCount("standard", 6), 1);
+  assert.equal(obstacleCount("standard", 7), 2);
+  assert.equal(obstacleCount("hard", 14), 3);
+  assert.equal(obstacleDifficulty("easy", 3), 6);
+  assert.equal(obstacleDifficulty("standard", 20), 12);
+  assert.equal(obstacleDifficulty("hard", 8), 8);
+  assert.equal(obstacleWatched("easy", 4), true);
+  assert.equal(obstacleWatched("easy", 5), false);
+  const faces = [20, 15, 14]; // the second 12 rerolls 20 (12 again), then 15; the third rolls 14
+  assert.deepEqual(capTwelves("standard", [12, 8, 12, 12], () => faces.shift()), [12, 8, 10, 10]);
+  assert.deepEqual(capTwelves("hard", [12, 12, 10], () => 1), [12, 12, 10]);
+});
+
+test("C17: the simulator's town shares are exactly the book's dice", async () => {
+  const { NUMBERS } = await import("../sim/params.mjs");
+  const share = (bands, die) => {
+    const out = {};
+    for (const [lo, hi, r] of bands) out[r] = (out[r] ?? 0) + (hi - lo + 1) / die;
+    return out;
+  };
+  for (const label of ["easy", "standard", "hard"]) {
+    const L = NUMBERS.labels[label];
+    const close = (a, b) => Object.keys({ ...a, ...b }).every((k) => Math.abs((a[k] ?? 0) - (b[k] ?? 0)) < 1e-9);
+    assert.ok(close(share(DGF.townDice.obstacles[label], 20), L.obstacles), `${label} obstacles`);
+    assert.ok(close(share(DGF.townDice.difficulty[label], 20), L.difficulty), `${label} difficulty`);
+    assert.equal(DGF.townDice.watchedOn[label] / 10, L.witnessed);
+  }
+  assert.equal(NUMBERS.townBudget, "cap");
 });
