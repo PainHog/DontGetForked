@@ -64,6 +64,10 @@ Both playtests split up, so the simulator now can too (`partyPolicy`: "pairs", t
 - **Capture timing:** a captive's first try to slip free is the Turn after its capture (the simulator let it try the same Turn).
 - **Overdraw** merging with the roll's other triggers or paid on top changes nothing measurable (overdraws during the raid are rare).
 
+## U1, U2 and the real dice (2026-10-05)
+- **U2 (handing loot over)** is worth about +0.6 / +1.5 / +1.2 win points: the simulated players hand their loot to someone else before a watched roll.
+- **The approved dice (C1)** are now the simulator's default roster (from `module/config.mjs`, shared with the Foundry system), still with placeholder abilities. Overall rates match the anonymous roster within a point.
+
 ## For the balance pass (from PT1–PT3 and the simulator)
 - **Win rates under split play are above target** (95 / 85 / 69% with the approved numbers); a shorter night alone punishes small parties.
 - **A local chase is far deadlier than the final flight.** From Lead 1 against 12 with a d12 trait: 51% escape with the Monster, 19% with the Mask; a three-Entity final flight escapes 84–96%. The local mob reaches its cap of 12 at Suspicion 4, so "rises with Suspicion" hardly matters, and near the Limit the final flight is safer than a local chase.

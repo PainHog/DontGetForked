@@ -14,6 +14,7 @@
  * Perks are not modelled (no placeholder could stand in for real ones).
  */
 import { makeRng } from "./rng.mjs";
+import { DGF } from "../module/config.mjs";
 import { DIE_STEPS } from "./rules.mjs";
 
 export const TRAITS = Object.freeze(["brawn", "nimble", "sly", "charm", "wits"]);
@@ -56,20 +57,13 @@ function buildRoster() {
 export const ROSTER = buildRoster();
 
 /**
- * CANDIDATE dice arrangements for the real roster (a proposal for Richard, not
- * decided content). Abilities, Gifts and Weakness types stay the placeholders of
- * the matching E1–E8 slot, so only the dice differ from ROSTER.
+ * The real roster's dice (C1, approved 2026-10-05), read from the Foundry config
+ * so the book, the system and the simulator share one table. Abilities, Gifts and
+ * Weakness types are still the placeholders of the matching E1–E8 slot (Dracula's
+ * Weakness is placeholder sunlight-type); Jekyll & Hyde plays as Jekyll until the
+ * change between forms is written.
  */
-const CANDIDATE_A = [
-  ["Dracula", { charm: 12, nimble: 10, brawn: 8, sly: 6, wits: 4 }, "sunlight"],
-  ["Frankenstein's creature", { brawn: 12, wits: 10, nimble: 8, sly: 6, charm: 4 }, "mob"],
-  ["The Mummy", { wits: 12, brawn: 10, charm: 8, sly: 6, nimble: 4 }, "mob"],
-  ["The Werewolf", { nimble: 12, brawn: 10, wits: 8, sly: 6, charm: 4 }, "mob"],
-  ["The Invisible Man", { sly: 12, wits: 10, nimble: 8, charm: 6, brawn: 4 }, "mob"],
-  ["A Ghost", { nimble: 12, sly: 10, charm: 8, wits: 6, brawn: 4 }, "mob"],
-  ["A Witch", { wits: 12, sly: 10, charm: 8, brawn: 6, nimble: 4 }, "mob"],
-  ["Jekyll & Hyde (Jekyll)", { charm: 12, wits: 10, sly: 8, nimble: 6, brawn: 4 }, "mob"],
-];
+const APPROVED = DGF.entities.map((e) => [e.name, e.dice, e.key === "dracula" ? "sunlight" : "mob"]);
 
 function buildCandidate(rows) {
   return Object.freeze(rows.map(([name, dice, weakness], i) => {
@@ -82,7 +76,7 @@ function buildCandidate(rows) {
   }));
 }
 
-export const ROSTERS = Object.freeze({ placeholder: ROSTER, candidateA: buildCandidate(CANDIDATE_A) });
+export const ROSTERS = Object.freeze({ placeholder: ROSTER, approved: buildCandidate(APPROVED) });
 
 /** Validator: rejects an Entity that breaks the decided structure. */
 export function validateEntity(e) {

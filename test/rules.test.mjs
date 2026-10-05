@@ -10,6 +10,7 @@ import {
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
+import { DGF } from "../module/config.mjs";
 
 test("P2 bands and S8 Criticals", () => {
   assert.equal(band(8, 8), "success");
@@ -101,5 +102,14 @@ test("the simulator reads the decided rules the same way as the Foundry logic", 
     assert.equal(simRules.band(t + s, D), band(t + s, D));
     assert.equal(simRules.isCritical(t, s, D, "doubles"), isCritical(t, s, D));
     assert.equal(simRules.monsterShows(t, s), monsterShows(t, s));
+  }
+});
+
+test("C1: every Entity (and Hyde) has one each of d12, d10, d8, d6 and d4", () => {
+  const ok = (dice) => assert.deepEqual(DGF.traits.map((t) => dice[t]).sort((a, b) => a - b), [...DGF.dieSteps]);
+  assert.equal(DGF.entities.length, 8);
+  for (const e of DGF.entities) {
+    ok(e.dice);
+    for (const f of Object.values(e.forms || {})) ok(f);
   }
 });
