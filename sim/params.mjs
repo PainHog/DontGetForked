@@ -149,6 +149,12 @@ export const PARAMS = {
     doc: "ifSafe = once every list location is done, with Turns and Suspicion to spare; never; always = as soon as the essentials are in hand.",
     ref: "player policy",
   },
+  roster: {
+    kind: "content", default: "placeholder", values: ["placeholder", "candidateA"],
+    title: "Which Entities",
+    doc: "placeholder = the anonymous E1–E8; candidateA = proposed dice arrangements for the real roster (abilities still placeholders).",
+    ref: "DESIGN Roster (arrangements are content for Richard to approve)",
+  },
   dutyEdge: {
     kind: "content", default: true, values: [true, false],
     title: "Placeholder Castle Duty edge",

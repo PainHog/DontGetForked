@@ -17,7 +17,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeRng } from "./rng.mjs";
 import { PARAMS, PRESETS, NUMBERS, TARGETS, PACKAGES, defaults } from "./params.mjs";
-import { makeParty, ROSTER, DUTIES } from "./entities.mjs";
+import { makeParty, ROSTER, ROSTERS, DUTIES } from "./entities.mjs";
 import { makeTown } from "./town.mjs";
 import { playRaid } from "./engine.mjs";
 import { Recorder } from "./recorder.mjs";
@@ -53,7 +53,7 @@ export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, si
     for (const size of sizes) {
       for (let i = 0; i < runs; i++) {
         const rng = makeRng(seed, label, size, i);
-        const party = makeParty(rng.fork("party"), size, numbers.charges);
+        const party = makeParty(rng.fork("party"), size, numbers.charges, ROSTERS[params.roster] || ROSTER);
         const town = makeTown(rng.fork("town"), label, numbers);
         const s = playRaid({ party, town, params, numbers, rng: rng.fork("dice"), rec });
         raids.push({ label, size, i, members: party.map((m) => ({ id: m.id, gift: m.gift, duty: m.duty })), ...s });
@@ -142,7 +142,8 @@ function outliers(raids) {
     return w ? sum / w : NaN;
   };
   const res = [];
-  for (const e of ROSTER) {
+  const ids = [...new Set(raids.flatMap((r) => r.members.map((m) => m.id)))];
+  for (const e of ids.map((id) => Object.values(ROSTERS).flat().find((x) => x.id === id))) {
     res.push({ what: `entity ${e.id}`, delta: deltas((r) => r.members.some((m) => m.id === e.id)) });
     for (const g of e.giftOptions) {
       res.push({ what: `gift ${e.id}:${g}`, delta: deltas((r) => r.members.some((m) => m.id === e.id && m.gift === g), (r) => r.members.some((m) => m.id === e.id)) });
