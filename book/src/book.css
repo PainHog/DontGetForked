@@ -323,6 +323,11 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
   shape-outside: circle(50%);
 }
 .entry .badge { width: 1.05in; }
+/* the Entity's two portraits, in festival costume and revealed, side by side under its name */
+.entry .portraits { display: flex; gap: 0.1in; margin: 0.03in 0 0.07in; break-inside: avoid; break-after: avoid; }
+.entry .portraits figure { flex: 1 1 0; margin: 0; }
+.entry .portraits figure svg { display: block; width: 100%; height: 1.95in; border: 1px solid var(--paper-edge); border-radius: 4px; background: var(--paper-2); }
+.entry .portraits figcaption { margin-top: 0.025in; text-align: center; font: 800 7.4pt var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 .entry .ability, .entry .signature {
   clear: both;
   break-inside: avoid;
