@@ -15,6 +15,9 @@ const effect = (v) => ({
   open: `open an approach with ${TRAIT[v.trait]}`,
 })[v.effect];
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
+/** House style after a colon: lower-case the first word, unless it's a name (Hyde, a trait, Suspicion …). */
+const NAMES = new Set(["Hyde", "Jekyll", "Brawn", "Nimble", "Sly", "Charm", "Wits", "Suspicion", "Turn"]);
+const lowerFirst = (t) => t.replace(/^([“"]?)(\p{Lu}[\p{Ll}’']*)/u, (m, q, w) => (NAMES.has(w) ? m : q + w[0].toLowerCase() + w.slice(1)));
 
 export function sheetHtml(e) {
   const out = [];
@@ -22,7 +25,7 @@ export function sheetHtml(e) {
     out.push(`<p class="pick"><strong>Gift: ${e.gift.name}.</strong> ${e.gift.versions.map((v) => `<em>${v.name}</em>${v.default ? " (default)" : ""}: ${effect(v)}. ${v.text}`).join(" · ")}</p>`);
   }
   if (e.perks) {
-    out.push(`<p class="pick"><strong>Perk.</strong> ${e.perks.map((k) => `<em>${k.name}</em>${k.default ? " (default)" : ""}: ${k.text.replace(/^([“"]?)(\p{Lu})/u, (_, q, c) => q + c.toLowerCase())}`).join(" · ")}</p>`);
+    out.push(`<p class="pick"><strong>Perk.</strong> ${e.perks.map((k) => `<em>${k.name}</em>${k.default ? " (default)" : ""}: ${lowerFirst(k.text)}`).join(" · ")}</p>`);
   }
   if (e.weakness) out.push(`<p class="sig"><strong>Weakness: ${e.weakness.name}</strong> (${cap(e.weakness.timing)}). ${e.weakness.text}</p>`);
   if (e.tell) out.push(`<p class="sig"><strong>Tell: ${e.tell.name}.</strong> ${e.tell.text}</p>`);

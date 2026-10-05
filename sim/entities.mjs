@@ -107,18 +107,7 @@ function buildApproved() {
  * see engine.mjs PERKS) and the Weakness timing. Entities not listed keep the
  * approved roster's placeholders.
  */
-const PROPOSED = {
-  witch: {
-    gifts: [{ name: "Broomstick", effect: "open", trait: "sly" }, { name: "Black Cat", effect: "hidden" }, { name: "A Potion for That", effect: "switch", trait: "wits" }],
-    perks: ["familiarsWarning", "flyByNight", "wiseWoman"],
-    weaknessTiming: "soon", // rowan
-  },
-  "jekyll-hyde": {
-    gifts: [{ name: "Doctor’s Bag", effect: "raise" }, { name: "Pillar of Society", effect: "hidden" }, { name: "Trample", effect: "open", trait: "brawn" }],
-    perks: ["practisedHand", "steadyNerves", "bruteStrength"],
-    weaknessTiming: "soon", // a familiar face
-  },
-};
+const PROPOSED = {};
 
 function buildProposed() {
   return Object.freeze(buildApproved().map((e) => {

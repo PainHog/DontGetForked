@@ -1,6 +1,6 @@
-Now: The monsters' dice and signature powers are set; free public-domain engravings are being gathered as stand-in art until the illustrator's work arrives.
-Next: Writing the eight monsters with the author: their powers, weaknesses and tells.
-Number: Design decisions made = 61
+Now: All eight monsters are fully written and balanced in the simulator. Next up are the castle's household jobs; stand-in pictures are being gathered.
+Next: The castle's household jobs, the chase table and the festival, decided with the author.
+Number: Design decisions made = 62
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -29,7 +29,7 @@ Number: Simulated raids per balance check = 18000
 - [x] Settle the playtest questions and re-test
 - [x] Set the eight monsters' dice
 - [x] Set the eight monsters' signature powers
-- [ ] Write the eight monsters: second powers, perks, weaknesses and tells
+- [x] Write the eight monsters: second powers, perks, weaknesses and tells
 - [ ] Stand-in art in the rulebook (free public-domain engravings)
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft

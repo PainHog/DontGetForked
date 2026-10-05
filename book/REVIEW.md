@@ -27,3 +27,4 @@ why, and the source (author / playtest / simulator). Rows 1–12 point at `docs/
 | 20 | 2026-10-05 | Chapter 2 | C6: Dracula's and Frankenstein's creature's Gifts, Perks, Weaknesses and Tells (rendered from the shared table by book/tools/entity-sheet.mjs) | Content interview | author |
 | 21 | 2026-10-05 | Chapter 2 | C7: the Mummy's and the Werewolf's Gifts, Perks, Weaknesses and Tells | Content interview | author |
 | 22 | 2026-10-05 | Chapter 2; CORE-RULES | C8: the Invisible Man's and the Ghost's Gifts, Perks, Weaknesses and Tells; Through the Wall opens with Sly and not while carrying | Simulated: the Ghost was over the ±2.5 target (+3.8) | author (simulator) |
+| 23 | 2026-10-05 | Chapter 2 | C9: the Witch's and Jekyll & Hyde's Gifts, Perks, Weaknesses and Tells; Perk texts keep names capitalised | Content interview | author |
