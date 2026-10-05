@@ -83,3 +83,20 @@ Win rates are above target under split play (95 / 85 / 69%); the retune waits fo
 - **Real content.** Entity balance, real Tells and Weaknesses, and Perks all need the actual Entities.
 - **Maps and entrances,** and premade raids (splitting is now modelled, simply).
 - **How real players choose** between Mask and Monster, when they go for furniture, and when they rescue a captive.
+
+## Campaign upgrades: what a capped bonus is worth (2026-10-05, for C16)
+
+`node sim/campaign-check.mjs 1000` (1,000 raids per label and party size, the approved roster, split-party play, the same raids for every variant). `numbers.bonusCharges` gives one extra charge to that many Entities (one each). The baseline is the current game, still above the win targets until the balance pass.
+
+| Variant | Easy win / forked | Standard win / forked | Hard win / forked |
+|---|---|---|---|
+| No upgrades | 95.6% / 0.3% | 85.1% / 2.5% | 69.3% / 4.8% |
+| +1 charge (one upgrade) | 95.8% / 0.2% | 85.4% / 2.3% | 69.9% / 4.7% |
+| +2 charges | 95.9% / 0.3% | 85.7% / 2.2% | 70.6% / 4.7% |
+| +3 charges (cap) | 95.9% / 0.2% | 86.0% / 2.2% | 71.3% / 4.3% |
+| +1 Turn | 95.6% / 0.3% | 85.4% / 2.8% | 69.4% / 5.1% |
+| Final flight starts at Lead 3 | 95.6% / 0.1% | 85.6% / 1.5% | 70.1% / 2.5% |
+| Limit +1 | 96.0% / 0.3% | 86.0% / 2.7% | 71.2% / 5.1% |
+| All four (+3 charges, +1 Turn, Lead 3, Limit +1) | 96.6% / 0.1% | 87.8% / 1.0% | 74.2% / 2.0% |
+
+An extra charge is worth about 0.2–0.7 win points; three (the cap) about +0.3 / +0.9 / +2.0 at Easy / Standard / Hard, with forked slightly down. An extra Turn is worth almost nothing under split play. Starting the final flight at Lead 3 halves the forked rate at Hard (the mob is the game's teeth), so it is the one effect to keep out of upgrades.
