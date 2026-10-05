@@ -431,6 +431,8 @@ function planRoll(S, m, ctx) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
     if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
     if (ab.effect === "open") {
+      // openTrait "unlisted" (PT2 A7): only an approach the obstacle doesn't already offer.
+      if (P.openTrait === "unlisted" && ctx.options.some((o) => o.trait === ab.trait)) continue;
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
       // "easier" = the ability's trait at Difficulty 2 lower, watched as usual.
       const quiet = phase === "raid" && P.openApproach === "quiet";
@@ -475,9 +477,9 @@ function planRoll(S, m, ctx) {
       const maxRaises = P.raiseCap === "perRoll" ? (traitRaised ? 0 : 1) : 2;
       if (raiseSrc.length >= 1 && maxRaises >= 1) {
         if (!traitRaised) raiseOpts.push({ t: 1, s: 0 });
-        raiseOpts.push({ t: 0, s: 1 });
+        if (P.raiseDie !== "trait") raiseOpts.push({ t: 0, s: 1 }); // raiseDie "trait": the Mask/Monster die stays its size
       }
-      if (raiseSrc.length >= 2 && maxRaises >= 2 && !traitRaised) raiseOpts.push({ t: 1, s: 1 });
+      if (raiseSrc.length >= 2 && maxRaises >= 2 && !traitRaised && P.raiseDie !== "trait") raiseOpts.push({ t: 1, s: 1 });
       const isMon = second !== MASK;
       const hidOpts = isMon && hiddenSrc.length ? [false, true] : [false];
       for (const ro of raiseOpts) {
