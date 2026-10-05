@@ -1,6 +1,6 @@
-# Don't Get Forked — core rules (draft 0.16)
+# Don't Get Forked — core rules (1.0)
 
-*Draft, 2026-10-05, for Richard's approval. It summarises the decisions in `docs/DESIGN.md`. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
+*Approved by Richard on 2026-10-05. It summarises the decisions in `docs/DESIGN.md`; the rulebook chapters are written from it. **[S9]** marks a number set in the Starting numbers table; **[sim]** marks one still to be set with the content. **[P1]**–**[P8]** mark the gap fills Richard approved on 2026-10-04 (listed at the end).*
 
 ## The game
 The players are classic monsters who share a castle in the woods. Once a year, on the town's festival night, when everyone is in costume, they go down to steal what the castle needs. They must get the shopping list home before dawn, and if the job goes wrong, outrun the mob before it corners them with pitchforks. Each session is one raid on a new town and stands alone: 3–5 players and a Storyteller, 2–3 hours, horror-comedy for about 12+.
