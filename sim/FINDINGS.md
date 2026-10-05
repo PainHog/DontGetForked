@@ -121,3 +121,12 @@ How uneven the towns are (4,000 four-item towns; the town's mean Difficulty, 5th
 | Cap on 12s | 7.73–9.17; 0% | 8.77–9.85; 0% |
 
 **Decided (C17):** the cap. It is now the simulator's default (`NUMBERS.townBudget = "cap"`), so baseline figures from here on include it (Hard about +1.7 win points). A test checks that the generator's shares equal the book's dice.
+
+## The obstacle table: which traits it favours (2026-10-05, for C18)
+
+The generator gave each obstacle random traits (60% with a loud way, 25% group). Two candidate d20 tables in `sim/town.mjs` (`numbers.obstacleTable`), each 12 of 20 with a loud way and 5 group, so the shares are unchanged:
+
+- **c18a** (written the "natural" way: Brawn the loud way 5 times, Charm and Nimble common, Sly and Wits only as quiet ways): Dracula +3.2, Jekyll & Hyde −2.7, two Perks at ±2.5 (1,500 raids per cell). Outside the ±2.5 target.
+- **c18b** (every trait the quiet way 4 times; loud ways Brawn and Nimble 3, Charm, Sly and Wits 2; one group obstacle per quiet trait): at 3,000 raids per cell, wins 95.9 / 85.5 / 71.6%, forked 0.3 / 3.2 / 5.0% (random traits: 95.6 / 85.4 / 71.3%, 0.2 / 2.8 / 5.0%); Entities −1.3 to +2.3, Gifts and Perks −2.2 to +2.3, Duties −0.4 to +0.3. Inside the target.
+
+The second way in is rolled again until its quiet trait differs from the first.
