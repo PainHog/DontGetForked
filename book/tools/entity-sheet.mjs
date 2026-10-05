@@ -22,7 +22,7 @@ export function sheetHtml(e) {
     out.push(`<p class="pick"><strong>Gift: ${e.gift.name}.</strong> ${e.gift.versions.map((v) => `<em>${v.name}</em>${v.default ? " (default)" : ""}: ${effect(v)}. ${v.text}`).join(" · ")}</p>`);
   }
   if (e.perks) {
-    out.push(`<p class="pick"><strong>Perk.</strong> ${e.perks.map((k) => `<em>${k.name}</em>${k.default ? " (default)" : ""}: ${k.text[0].toLowerCase()}${k.text.slice(1)}`).join(" · ")}</p>`);
+    out.push(`<p class="pick"><strong>Perk.</strong> ${e.perks.map((k) => `<em>${k.name}</em>${k.default ? " (default)" : ""}: ${k.text.replace(/^([“"]?)(\p{Lu})/u, (_, q, c) => q + c.toLowerCase())}`).join(" · ")}</p>`);
   }
   if (e.weakness) out.push(`<p class="sig"><strong>Weakness: ${e.weakness.name}</strong> (${cap(e.weakness.timing)}). ${e.weakness.text}</p>`);
   if (e.tell) out.push(`<p class="sig"><strong>Tell: ${e.tell.name}.</strong> ${e.tell.text}</p>`);

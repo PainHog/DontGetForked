@@ -108,15 +108,16 @@ function buildApproved() {
  * approved roster's placeholders.
  */
 const PROPOSED = {
-  mummy: {
-    gifts: [{ name: "Royal Bearing", effect: "open", trait: "charm" }, { name: "Just a Costume", effect: "hidden" }, { name: "Old Curse", effect: "raise" }],
-    perks: ["patienceOfAges", "keeperOfTreasures", "fearTheCurse"],
-    weaknessTiming: "soon", // a loose thread
+  invisible: {
+    gifts: [{ name: "Through the Gap", effect: "open", trait: "nimble" }, { name: "Poltergeist", effect: "raise" }, { name: "Work It Out", effect: "switch", trait: "wits" }],
+    perks: ["outOfSight", "hiddenPockets", "lightStep"],
+    weaknessTiming: "soon", // flour
   },
-  werewolf: {
-    gifts: [{ name: "Keen Nose", effect: "switch", trait: "wits" }, { name: "Through the Hedge", effect: "open", trait: "brawn" }, { name: "Howl", effect: "raise" }],
-    perks: ["nightRunner", "shortcut", "fetch"],
-    weaknessTiming: "soon", // hounds
+  ghost: {
+    gifts: [{ name: "Chill", effect: "raise" }, { name: "Whisper", effect: "switch", trait: "charm" }, { name: "Fade", effect: "hidden" }],
+    perks: ["spectral", "rattle", "alreadyDead"],
+    weaknessTiming: "always", // cold iron
+    signature: { trait: "sly", noLoot: true }, // proposed change to Through the Wall (C8)
   },
 };
 
@@ -126,6 +127,7 @@ function buildProposed() {
     if (!c) return e;
     return Object.freeze({
       ...e,
+      ...(c.signature ? { signature: Object.freeze({ ...e.signature, ...c.signature }) } : {}),
       giftOptions: Object.freeze(c.gifts.map((g) => Object.freeze({ ...g }))),
       perkOptions: Object.freeze([...c.perks]),
       weakness: c.weaknessTiming === "dawn" ? "sunlight" : "mob",
@@ -172,7 +174,7 @@ export function makeParty(rng, n, chargesEach, roster = ROSTER) {
 /** The Entity's abilities as {effect, trait, source}. */
 export function abilitiesOf(m) {
   return [
-    { effect: m.ent.signature.effect, trait: m.ent.signature.trait, source: "signature" },
+    { effect: m.ent.signature.effect, trait: m.ent.signature.trait, source: "signature", noLoot: !!m.ent.signature.noLoot },
     typeof m.gift === "object"
       ? { effect: m.gift.effect, trait: m.gift.trait ?? m.ent.giftTrait, source: "gift" }
       : { effect: m.gift, trait: m.ent.giftTrait, source: "gift" },
