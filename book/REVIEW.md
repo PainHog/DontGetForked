@@ -25,3 +25,4 @@ why, and the source (author / playtest / simulator). Rows 1–12 point at `docs/
 | 18 | 2026-10-05 | Chapter 2; CORE-RULES 1.5 | C2: the eight signature abilities in each Entity's entry (Mesmerise, Brute Force, Ancient Lore, Good Dog, Unseen, Through the Wall, Hedge Spell, The Draught); C2b: Jekyll & Hyde's change of form | Content interview | author |
 | 19 | 2026-10-05 | Chapters 2, 5, 6; CORE-RULES 1.6 | C3: the three Weakness timings (Always, Soon, Dawn); C4: a Tell check goes off on 4–6 on a d6, and a roll picks whose; C5: what a Perk is | Content interview | author |
 | 20 | 2026-10-05 | Chapter 2 | C6: Dracula's and Frankenstein's creature's Gifts, Perks, Weaknesses and Tells (rendered from the shared table by book/tools/entity-sheet.mjs) | Content interview | author |
+| 21 | 2026-10-05 | Chapter 2 | C7: the Mummy's and the Werewolf's Gifts, Perks, Weaknesses and Tells | Content interview | author |

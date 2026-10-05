@@ -243,7 +243,14 @@ const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : ac
  *  nightRunner   your local chase starts at Lead 2
  *  shortcut      the way out is 2 easier when you roll it
  *  fetch         picking up a dropped item doesn't cost your action
+ *  outOfSight    Trouble gets you caught only while you carry loot or furniture
+ *  hiddenPockets captured, you keep what you carry
+ *  lightStep     the loud way costs you no Suspicion
+ *  spectral      you get past group obstacles without rolling
+ *  rattle        the Monster showing on your roll is +1 Suspicion, not +2
+ *  alreadyDead   cornered in a local chase, you lose your next Turn instead of being captured
  */
+const unseen = (m) => hasPerk(m, "outOfSight") && !m.items.length && !m.furniture;
 const hasPerk = (m, k) => m.perk === k;
 
 /** An Entity's dice now (Jekyll & Hyde: the form it's in). */
@@ -403,6 +410,7 @@ function workLocation(S, loc) {
       const cap = S.P.groupRule === "best3" ? 3 : S.P.groupRule === "best4" ? 4 : Infinity;
       const need = Math.min(cap, past().length);
       const passedNow = () => past().filter((m) => ob.passed.has(m.id)).length;
+      for (const m of avail) if (hasPerk(m, "spectral")) ob.passed.add(m.id); // drifts past without rolling
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id)).map((m) => ({ m, plan: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")) }));
       if (cap < Infinity) rollers = rollers.sort((a, b) => b.plan.value - a.plan.value).slice(0, need - passedNow());
@@ -622,6 +630,7 @@ function planRoll(S, m, ctx) {
       for (const o of ctx.options) cands.push({ trait: o.trait, loud: o.loud, quiet: false, die: other[o.trait], formChange: true, via: { owner: m, ability: ab } });
     }
     if (ab.effect === "open") {
+      if (ab.noLoot && (m.items.length || m.furniture)) continue; // what you carry doesn't pass through walls
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
@@ -641,7 +650,7 @@ function planRoll(S, m, ctx) {
   else if (P.monsterPolicy === "monster") seconds = [MON];
   else seconds = [MASK, MON];
   const tie = P.monsterRule === "tie";
-  const showVal = P.monsterRule === "plus2" ? 2 : 1;
+  const showVal = P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1;
 
   const headroom = S.limit - S.susp;
   const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
@@ -693,7 +702,8 @@ function planRoll(S, m, ctx) {
           if (odBlocked) continue;
           const odSusp = overdraws ? S.N.overdrawSuspicion : 0;
           // Expected Suspicion: one roll raises it once, by its biggest trigger.
-          const fixed = P.overdrawStack === "stack" ? (c.loud && loudSusp ? 1 : 0) : Math.max(c.loud && loudSusp ? 1 : 0, odSusp);
+          const loudS = c.loud && loudSusp && !hasPerk(m, "lightStep") ? 1 : 0;
+          const fixed = P.overdrawStack === "stack" ? loudS : Math.max(loudS, odSusp);
           const odExtra = P.overdrawStack === "stack" ? odSusp : 0;
           const showS = d.show.success, showC = d.show.cost, showT = d.show.trouble;
           const eSusp =
@@ -701,7 +711,7 @@ function planRoll(S, m, ctx) {
             (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
             (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1) + odExtra;
           // monsterRule "maskSafe" (S2 candidate): trouble on a Mask roll never gets you caught.
-          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon);
+          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon) && !unseen(m);
           let gain;
           if (phase === "local" || phase === "final") gain = d.success - d.trouble + (critExtra ? d[critKey] : 0);
           else if (phase === "slip") gain = d.success + 0.8 * d.cost;
@@ -747,7 +757,7 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   }
   let gain = plan.fixedSusp;
   if (b === "trouble") gain = Math.max(gain, 1); // a trouble result +1
-  if (show) gain = Math.max(gain, P.monsterRule === "plus2" ? 2 : 1); // the Monster shows +1
+  if (show) gain = Math.max(gain, P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1); // the Monster shows +2 (rattle: +1)
   let costKind = null;
   if (b === "cost" && phase !== "local" && phase !== "final" && !noCost) {
     costKind = pickCost(S, m, hasPerk(m, "oldMoney") && plan.cand.trait === "charm" ? 9 : gain);
@@ -852,7 +862,10 @@ function localChase(S, m) {
     if (S.P.chaseSusp === "yes") addSusp(S, r.suspGain, "chase"); // chaseSusp "no" (S6 candidate): chase rolls don't raise Suspicion
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
     if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
-    if (lead <= 0) return capture(S, m);
+    if (lead <= 0) {
+      if (hasPerk(m, "alreadyDead")) { m.loseTurn = true; S.rec.count("already dead: drifted off"); return; }
+      return capture(S, m);
+    }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
 }
@@ -873,7 +886,7 @@ function groupChase(S, group) {
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
     if (limitHit(S)) return finalFlight(S, "limit");
     if (lead >= N.lead.localEscape) return;
-    if (lead <= 0) { for (const m of group) capture(S, m); return; }
+    if (lead <= 0) { for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = true; else capture(S, m); } return; }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
 }
@@ -883,7 +896,7 @@ function capture(S, m) {
   S.captures++;
   m.capturedTurn = S.turn; // the capture used this Turn: the first slip try is next Turn
   S.rec.count("captures");
-  if (S.P.captiveItems === "lost") m.items = [];
+  if (S.P.captiveItems === "lost" && !hasPerk(m, "hiddenPockets")) m.items = [];
   if (m.furniture) dropFurniture(S, "carrier captured");
 }
 
