@@ -90,13 +90,14 @@ Win rates are above target under split play (95 / 85 / 69%); the retune waits fo
 
 | Variant | Easy win / forked | Standard win / forked | Hard win / forked |
 |---|---|---|---|
-| No upgrades | 95.6% / 0.3% | 85.1% / 2.5% | 69.3% / 4.8% |
-| +1 charge (one upgrade) | 95.8% / 0.2% | 85.4% / 2.3% | 69.9% / 4.7% |
-| +2 charges | 95.9% / 0.3% | 85.7% / 2.2% | 70.6% / 4.7% |
-| +3 charges (cap) | 95.9% / 0.2% | 86.0% / 2.2% | 71.3% / 4.3% |
-| +1 Turn | 95.6% / 0.3% | 85.4% / 2.8% | 69.4% / 5.1% |
-| Final flight starts at Lead 3 | 95.6% / 0.1% | 85.6% / 1.5% | 70.1% / 2.5% |
-| Limit +1 | 96.0% / 0.3% | 86.0% / 2.7% | 71.2% / 5.1% |
-| All four (+3 charges, +1 Turn, Lead 3, Limit +1) | 96.6% / 0.1% | 87.8% / 1.0% | 74.2% / 2.0% |
+| No upgrades | 95.6% / 0.3% | 85.0% / 2.6% | 69.2% / 4.8% |
+| +1 charge (one upgrade) | 95.8% / 0.2% | 85.3% / 2.4% | 69.8% / 4.7% |
+| +2 charges | 95.9% / 0.3% | 85.6% / 2.3% | 70.6% / 4.7% |
+| +3 charges (cap) | 95.9% / 0.2% | 85.9% / 2.2% | 71.3% / 4.3% |
+| +3 charges, all on one Entity | 95.9% / 0.3% | 86.0% / 2.3% | 70.8% / 4.3% |
+| +1 Turn | 95.6% / 0.3% | 85.3% / 2.8% | 69.3% / 5.0% |
+| Final flight starts at Lead 3 | 95.6% / 0.1% | 85.5% / 1.5% | 70.0% / 2.5% |
+| Limit +1 | 96.0% / 0.3% | 85.9% / 2.7% | 71.2% / 5.1% |
+| All four (+3 charges, +1 Turn, Lead 3, Limit +1) | 96.6% / 0.1% | 87.7% / 1.0% | 74.1% / 2.0% |
 
-An extra charge is worth about 0.2–0.7 win points; three (the cap) about +0.3 / +0.9 / +2.0 at Easy / Standard / Hard, with forked slightly down. An extra Turn is worth almost nothing under split play. Starting the final flight at Lead 3 halves the forked rate at Hard (the mob is the game's teeth), so it is the one effect to keep out of upgrades.
+An extra charge is worth about 0.2–0.7 win points; three (the cap) about +0.3 / +0.9 / +2.0 at Easy / Standard / Hard, with forked slightly down. An extra Turn is worth almost nothing under split play. Starting the final flight at Lead 3 halves the forked rate at Hard (the mob is the game's teeth), so it is the one effect to keep out of upgrades. Stacking all three charges on one Entity is a little weaker than spreading them, so the rule needn't forbid it. (Re-run after C16, with furniture rolled on the d6 table: four Bulky pieces in six, where the generator had 70%.) **Decided (C16):** each upgrade is one extra charge for one Entity of the players' choice, at most three.

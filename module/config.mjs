@@ -198,6 +198,19 @@ DGF.shoppingTable = Object.freeze([
   { duty: "tailor", items: ["a bolt of black velvet", "bandages, lots", "a top hat", "a new cape", "knitting wool", "boots in a very large size"] },
 ].map((r) => Object.freeze({ duty: r.duty, items: Object.freeze(r.items) })));
 
+/** C16: the d6 furniture table (the piece standing at one of the list's locations, and its size). */
+DGF.furniture = Object.freeze([
+  { key: "armchair", name: "A wingback armchair", size: "bulky" },
+  { key: "mirror", name: "A gilt mirror", size: "bulky" },
+  { key: "armour", name: "A suit of armour", size: "bulky" },
+  { key: "bear", name: "A stuffed bear", size: "bulky" },
+  { key: "clock", name: "A grandfather clock", size: "huge" },
+  { key: "bed", name: "A four-poster bed", size: "huge" },
+].map((f) => Object.freeze(f)));
+
+/** C16 (optional campaign rules): each piece brought home is an upgrade worth one extra charge to one Entity per raid; the castle holds three. */
+DGF.campaign = Object.freeze({ chargesPerUpgrade: 1, maxUpgrades: 3 });
+
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },

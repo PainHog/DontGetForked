@@ -13,6 +13,7 @@ const variants = [
   ["+1 charge (one upgrade)", { bonusCharges: 1 }],
   ["+2 charges", { bonusCharges: 2 }],
   ["+3 charges (cap)", { bonusCharges: 3 }],
+  ["+3 charges, all on one Entity", { bonusCharges: 3, bonusStack: true }],
   ["+1 Turn", { labels: { easy: { turns: 13 }, standard: { turns: 13 }, hard: { turns: 13 } } }],
   ["final flight starts at Lead 3", { lead: { finalStart: 3 } }],
   ["Limit +1", { labels: { easy: { limit: 13 }, standard: { limit: 14 }, hard: { limit: 16 } } }],
