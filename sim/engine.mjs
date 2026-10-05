@@ -6,8 +6,8 @@
  * policy (also in PARAMS, kind "policy").
  *
  * Abstractions (stated up front, sim/README.md §1):
- *  - the party moves together (splitting is not modelled); a freed captive
- *    rejoins it at once;
+ *  - the party moves together (partyPolicy "together"; a freed captive rejoins it
+ *    at once), or splits into groups of two or one ("pairs"/"singles", playSplit);
  *  - one list item per location; a location's obstacles are passed in order;
  *  - no map, distances or entrances (so "Huge pieces don't fit small entrances"
  *    is not modelled);
@@ -58,6 +58,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     m.charges = m.chargesStart;
   }
 
+  if (P.partyPolicy !== "together") playSplit(S);
   while (S.phase === "raid") {
     // P5: at dawn, anyone still in town starts the final flight.
     if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
@@ -89,6 +90,131 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
   return summarise(S);
 }
 
+// ---------------------------------------------------------------- split play (partyPolicy)
+
+/**
+ * partyPolicy "pairs"/"singles" (PT1–PT2: real players split up): the party splits
+ * into groups of two (or one), each taking its own location. Abilities help only
+ * within a group (P7, same location); Tells are checked once per watched location
+ * (T3); the party leaves together, so every group regroups at the way out before
+ * the exit roll (T4). A carrying group's moves take two Turns (S7).
+ */
+function playSplit(S) {
+  const size = S.P.partyPolicy === "singles" ? 1 : 2;
+  const order = S.rng.fork("split").shuffle([...S.party]);
+  S.groups = [];
+  for (let i = 0; i < order.length; i += size) S.groups.push({ id: S.groups.length, members: order.slice(i, i + size), at: null, busy: 0 });
+  const exit = exitLocation(S);
+  const live = (g) => g.members.some((m) => m.status === "active");
+
+  while (S.phase === "raid") {
+    if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
+    S.turn++;
+    regroup(S);
+    const groups = S.groups.filter(live);
+    if (groups.length === 0) { captivesAct(S); continue; }
+    // T4: once every group waits at the way out with nothing left to do, one Entity rolls for all.
+    if (groups.every((g) => g.at === exit && g.busy === 0 && chooseTargetSplit(S, g) === "exit")) {
+      S.here = null;
+      workLocation(S, exit);
+      if (S.phase !== "raid") break;
+    } else {
+      for (const g of groups) {
+        if (S.phase !== "raid") break;
+        if (!live(g)) continue;
+        if (g.busy > 0) { g.busy--; continue; } // the second Turn of a move while carrying furniture
+        const target = chooseTargetSplit(S, g);
+        const dest = target === "exit" ? exit : target;
+        if (g.at !== dest) {
+          g.at = dest;
+          if (g.members.some((m) => m.status === "active" && m.furniture)) g.busy = 1;
+          arrive(S, dest);
+          continue;
+        }
+        if (dest === exit) continue; // waiting for the others
+        S.here = g.members;
+        workLocation(S, dest);
+        S.here = null;
+        if (dest.done || dest.id === "lockup") releaseClaim(S, g, dest);
+      }
+      if (S.phase !== "raid") break;
+    }
+    captivesAct(S);
+    if (S.phase !== "raid") break;
+    noisyFurniture(S);
+  }
+}
+
+/** Freed captives join the group at the lock-up, or start a group of their own there. */
+function regroup(S) {
+  const inGroup = new Set(S.groups.flatMap((g) => g.members));
+  for (const m of S.party) {
+    if (m.status !== "active" || inGroup.has(m)) continue;
+    const there = S.groups.find((g) => g.at === S.lockupLoc && g.members.some((x) => x.status === "active"));
+    if (there) there.members.push(m);
+    else S.groups.push({ id: S.groups.length, members: [m], at: S.lockupLoc, busy: 0 });
+  }
+  // a captured Entity leaves its group; it rejoins through the lock-up
+  for (const g of S.groups) g.members = g.members.filter((m) => m.status === "active");
+  for (const g of S.groups) if (!g.members.length) for (const l of S.town.locations) if (l.claimedBy === g) l.claimedBy = null;
+}
+
+function releaseClaim(S, g, loc) {
+  if (loc.claimedBy === g) loc.claimedBy = null;
+  if (S.rescuer === g) S.rescuer = null;
+}
+
+function needFor(S, g, loc) {
+  const carrying = g.members.some((m) => m.status === "active" && m.furniture);
+  return (g.at === loc ? 0 : carrying ? 2 : 1) + loc.obstacles.filter((o) => !o.cleared).length;
+}
+
+/** How well the group's best Entity likes a location's next obstacle (either way in). */
+function fitFor(S, g, loc) {
+  const ob = loc.obstacles.find((o) => !o.cleared);
+  if (!ob) return 0;
+  const here = g.members.filter((m) => m.status === "active");
+  const prev = S.here;
+  S.here = here;
+  let best = -Infinity;
+  for (const o of ob.alt && S.P.waysIn === "two" ? [ob, ob.alt] : [ob]) for (const m of here) best = Math.max(best, planRoll(S, m, ctxFor(S, m, o, loc, "raid")).value);
+  S.here = prev;
+  return best;
+}
+
+/**
+ * Split-play policy for one group: keep working its location; otherwise claim the
+ * best-fitting essential no other group holds, then rescue a captive (one group),
+ * then the best extra; else head for the way out. Leave early when Suspicion is
+ * one step from the Limit and the essentials are in hand.
+ */
+function chooseTargetSplit(S, g) {
+  const left = turnsLeft(S);
+  const exitNeed = 2;
+  const haveEssentials = S.town.items.filter((i) => i.essential).every((i) => carriedItems(S).includes(i));
+  if (haveEssentials && S.limit - S.susp <= 1 && captives(S).length === 0) return "exit";
+  const alive = (h) => h && h.members.some((m) => m.status === "active");
+  const mine = (l) => l.claimedBy === g;
+  if (g.at && mine(g.at) && !g.at.done && needFor(S, g, g.at) + exitNeed <= left) return g.at;
+  const free = (l) => !l.done && !S.skipped.has(l) && (!l.claimedBy || mine(l) || !alive(l.claimedBy));
+  const pick = (ls) => {
+    const ok = ls.filter((l) => free(l) && needFor(S, g, l) + exitNeed <= left);
+    if (!ok.length) return null;
+    const best = ok.reduce((a, b) => (fitFor(S, g, b) > fitFor(S, g, a) ? b : a));
+    best.claimedBy = g;
+    return best;
+  };
+  const ess = pick(S.town.locations.filter((l) => l.items.some((i) => i.essential)));
+  if (ess) return ess;
+  if (captives(S).length && (!alive(S.rescuer) || S.rescuer === g)) {
+    const lock = lockupLocation(S);
+    if ((g.at === lock ? 0 : 1) + 2 + exitNeed <= left) { S.rescuer = g; return lock; }
+  }
+  const ext = pick(S.town.locations.filter((l) => !l.items.some((i) => i.essential)));
+  if (ext) return ext;
+  return "exit";
+}
+
 /** furnitureRule "noisy"/"both" (S7 candidate): +1 Suspicion at the end of each Turn a piece is carried in town. */
 function noisyFurniture(S) {
   if (!S.furnitureCarried || !["noisy", "both", "noisySlow"].includes(S.P.furnitureRule)) return;
@@ -100,6 +226,8 @@ function noisyFurniture(S) {
 
 const active = (S) => S.party.filter((m) => m.status === "active");
 const captives = (S) => S.party.filter((m) => m.status === "captured");
+/** The Entities working the current location: the whole party, or (split play) one group. */
+const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : active(S));
 const carriedItems = (S) => S.party.flatMap((m) => (m.status === "active" ? m.items : []));
 
 /** Raise Suspicion. DESIGN: one town-wide track to a Limit; at the Limit the whole town hunts. */
@@ -234,12 +362,12 @@ function arrive(S, loc) {
 function workLocation(S, loc) {
   const acted = new Set();
   const tried = new Set();
-  for (const m of active(S)) if (m.loseTurn) { m.loseTurn = false; acted.add(m); S.rec.count("lost turns"); }
+  for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = false; acted.add(m); S.rec.count("lost turns"); }
 
   while (S.phase === "raid") {
     const ob = loc.obstacles.find((o) => !o.cleared);
     if (!ob) break;
-    const avail = active(S).filter((m) => !acted.has(m));
+    const avail = hereOf(S).filter((m) => !acted.has(m));
     if (avail.length === 0) break;
     if (ob.alt) pickWayIn(S, ob, loc, avail);
 
@@ -247,8 +375,8 @@ function workLocation(S, loc) {
       // P6: everyone rolls and gets through on their own result; Suspicion rises once, by the worst.
       // groupRule "best3" (S5 candidate): at most three roll, and the rest get through with them.
       const cap = S.P.groupRule === "best3" ? 3 : S.P.groupRule === "best4" ? 4 : Infinity;
-      const need = Math.min(cap, active(S).length);
-      const passedNow = () => active(S).filter((m) => ob.passed.has(m.id)).length;
+      const need = Math.min(cap, hereOf(S).length);
+      const passedNow = () => hereOf(S).filter((m) => ob.passed.has(m.id)).length;
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id)).map((m) => ({ m, plan: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")) }));
       if (cap < Infinity) rollers = rollers.sort((a, b) => b.plan.value - a.plan.value).slice(0, need - passedNow());
@@ -275,8 +403,8 @@ function workLocation(S, loc) {
           if (S.phase !== "raid") return;
         }
       }
-      if (active(S).length === 0) break;
-      if (passedNow() >= Math.min(cap, active(S).length)) ob.cleared = true;
+      if (hereOf(S).length === 0) break;
+      if (passedNow() >= Math.min(cap, hereOf(S).length)) ob.cleared = true;
       continue;
     }
 
@@ -301,7 +429,7 @@ function workLocation(S, loc) {
     }
   }
 
-  if (S.phase === "raid" && active(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
+  if (S.phase === "raid" && hereOf(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
 }
 
 /**
@@ -324,7 +452,7 @@ function completeLocation(S, loc) {
     loc.done = false; // a later capture needs a new rescue
     return;
   }
-  const act = active(S);
+  const act = hereOf(S);
   if (act.length === 0) return; // everyone was caught: nobody is here to take the loot
   loc.done = true;
   if (!loc.itemsTaken) {
@@ -363,7 +491,7 @@ function completeLocation(S, loc) {
 function wantsFurnitureHere(S, loc) {
   const pol = S.P.furniturePolicy;
   if (pol === "never") return false;
-  if (active(S).length < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
+  if (hereOf(S).length < (loc.furniturePending.size === "huge" ? 2 : 1)) return false;
   if (pol === "always") return true;
   const rest = S.town.locations.filter((l) => !l.done && l !== loc).reduce((a, l) => a + locationNeed(S, l), 0);
   return S.limit - S.susp >= 3 && rest + 1 + 2 + 2 <= turnsLeft(S);
@@ -387,7 +515,7 @@ function leaveTown(S) {
 // ---------------------------------------------------------------- rolls
 
 function ctxFor(S, m, ob, loc, phase) {
-  const helpers = active(S).filter((h) => h !== m);
+  const helpers = hereOf(S).filter((h) => h !== m); // P7: only Entities at the same location
   return {
     phase, options: ob.options, difficulty: ob.difficulty, witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false,

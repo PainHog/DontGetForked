@@ -77,6 +77,12 @@ export const PARAMS = {
     doc: "two = a location's first obstacle comes in two versions (different traits, Difficulty, witnesses) and the party picks one (T2, decided 2026-10-05); one = a single first obstacle, as simulated before T2.",
     ref: "CORE-RULES The raid; PT1 A2, PT2 A23",
   },
+  partyPolicy: {
+    kind: "policy", default: "pairs", values: ["pairs", "together", "singles"],
+    title: "Does the party split up?",
+    doc: "together = the whole party moves and works as one; pairs = it splits into groups of two (one single with an odd number), each taking its own location and regrouping at the way out; singles = every Entity works alone. Abilities only help within a group (P7).",
+    ref: "CORE-RULES Time (\"the party may split\"); PT1, PT2",
+  },
   captiveItems: {
     kind: "rule", default: "lost", values: ["lost", "kept"],
     title: "What a captured Entity's loot does",
@@ -269,8 +275,13 @@ export const TARGETS = {
 export const PACKAGES = {
   P0: { title: "Decided rules (S1–S11, T1–T10) with the approved numbers (S9, S10)", params: {}, numbers: {} },
   N1: {
-    title: "Proposed retune after T1–T10: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
+    title: "Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
     params: {},
     numbers: { lead: { finalStart: 3 }, labels: { easy: { finalMob: 11 }, standard: { limit: 12, finalMob: 12 }, hard: { limit: 14, finalMob: 12 } } },
+  },
+  N2: {
+    title: "Tried for a party that splits up: the night lasts 8 Turns; final mob 10 / 12 / 12 (on target overall, but Hard wins 42% with 3 Entities and 72% with 5)",
+    params: {},
+    numbers: { labels: { easy: { turns: 8 }, standard: { turns: 8, finalMob: 12 }, hard: { turns: 8, finalMob: 12 } } },
   },
 };
