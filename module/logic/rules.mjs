@@ -164,6 +164,21 @@ export function epilogueLines({ result, missingDuties = [] }) {
   return lines;
 }
 
+/**
+ * C16 (campaign): the castle's upgrades after bringing `piece` home. At most three;
+ * when full, `replace` (an index) names the upgrade the new piece replaces.
+ */
+export function addUpgrade(upgrades, piece, replace = null) {
+  if (upgrades.length < DGF.campaign.maxUpgrades) return [...upgrades, piece];
+  if (replace === null || replace < 0 || replace >= upgrades.length) throw new Error("the castle holds three upgrades: say which one the new piece replaces");
+  return upgrades.map((u, i) => (i === replace ? piece : u));
+}
+
+/** C16 (campaign): an Entity's charges at the start of a raid, given how many upgrades the players gave it. */
+export function startingCharges(upgradesGiven = 0) {
+  return DGF.charges + upgradesGiven * DGF.campaign.chargesPerUpgrade;
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;

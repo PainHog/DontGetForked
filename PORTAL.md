@@ -1,6 +1,6 @@
-Now: The ending is in: how the castle's year goes, and what it went without, from turnip soup to dinner on old coffin lids.
-Next: The castle upgrades for groups who play several raids, decided with the author.
-Number: Design decisions made = 69
+Now: The furniture is in (from a wingback armchair to a stuffed bear), and groups who play several raids can turn it into castle upgrades.
+Next: The random tables for building a town, decided with the author.
+Number: Design decisions made = 70
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -37,6 +37,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] The town's festival: Lantern Night
 - [x] The shopping list table
 - [x] The ending: how the year went
+- [x] The furniture and castle upgrades
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator

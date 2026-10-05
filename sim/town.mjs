@@ -58,7 +58,8 @@ export function makeTown(rng, labelName, numbers) {
   // One furniture piece, at its own location with one extra obstacle.
   const fl = makeLocation(rng, L, "furniture", rng.pick(DUTIES));
   fl.obstacles.push(makeObstacle(rng, L));
-  fl.furniture = { size: rng.chance(0.7) ? "bulky" : "huge" };
+  const piece = rng.pick(DGF.furniture); // C16: the d6 furniture table
+  fl.furniture = { key: piece.key, size: piece.size };
   // The lock-up where captives are held; its rescue obstacle is re-made per rescue.
   const lockup = { id: "lockup", difficulty: L.lockup };
   return { label: labelName, L, items, locations, furnitureLoc: fl, lockup };

@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -155,4 +155,16 @@ test("C15: the epilogue: the result's line, then each missing kind once, in tabl
   const lines = epilogueLines({ result: "partial", missingDuties: ["tailor", "cook", "tailor"] });
   assert.deepEqual(lines, [DGF.epilogue.year.partial, DGF.epilogue.missing.cook, DGF.epilogue.missing.tailor]);
   assert.throws(() => epilogueLines({ result: "great" }));
+});
+
+test("C16: six pieces of furniture (four Bulky, two Huge); upgrades capped at three, each one extra charge", () => {
+  assert.equal(DGF.furniture.length, 6);
+  assert.equal(DGF.furniture.filter((f) => f.size === "huge").length, 2);
+  let u = [];
+  for (const p of ["armchair", "mirror", "bear"]) u = addUpgrade(u, p);
+  assert.deepEqual(u, ["armchair", "mirror", "bear"]);
+  assert.throws(() => addUpgrade(u, "clock"));
+  assert.deepEqual(addUpgrade(u, "clock", 1), ["armchair", "clock", "bear"]);
+  assert.equal(startingCharges(0), 3);
+  assert.equal(startingCharges(2), 5);
 });

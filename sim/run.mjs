@@ -55,7 +55,8 @@ export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, si
         const rng = makeRng(seed, label, size, i);
         const party = makeParty(rng.fork("party"), size, numbers.charges, ROSTERS[params.roster] || ROSTER);
         // campaign upgrades (optional rules): each bonus charge goes to the next Entity in the party
-        for (let k = 0; k < (numbers.bonusCharges ?? 0); k++) { const m = party[k % party.length]; m.charges += 1; m.chargesStart += 1; }
+        // (bonusStack: all of them on one Entity instead)
+        for (let k = 0; k < (numbers.bonusCharges ?? 0); k++) { const m = party[numbers.bonusStack ? 0 : k % party.length]; m.charges += 1; m.chargesStart += 1; }
         const town = makeTown(rng.fork("town"), label, numbers);
         const s = playRaid({ party, town, params, numbers, rng: rng.fork("dice"), rec });
         raids.push({ label, size, i, members: party.map((m) => ({ id: m.id, ent: m.ent, gift: m.gift, perk: m.perk, duty: m.duty })), ...s });
