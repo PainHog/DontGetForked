@@ -1,6 +1,8 @@
 # Don’t Get Forked — the rulebook
 
-The game is not written yet: every chapter, the cover and the art are clearly
+The rules chapters (Parts One and Two) are written from the approved core rules
+(`docs/CORE-RULES.md` 1.0). Content still to be written — the eight Entities, the
+festival, the chase table, the town tables, the cover — and all the art are clearly
 marked PLACEHOLDERs (dashed red outline on the proofs) so nothing ships by accident.
 
 | Path | What |

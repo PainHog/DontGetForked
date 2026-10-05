@@ -1,7 +1,7 @@
 # Don’t Get Forked — rulings and text changes
 
 Every ruling and every change to the rules text gets a row here: what changed, where,
-why, and the source (author / playtest / simulator). Until the chapters exist, rows point at `docs/CORE-RULES.md`.
+why, and the source (author / playtest / simulator). Rows 1–12 point at `docs/CORE-RULES.md`; from row 13 the chapters are the rules text.
 
 | # | Date | Where | What changed | Why | Source |
 |---|---|---|---|---|---|
@@ -17,3 +17,4 @@ why, and the source (author / playtest / simulator). Until the chapters exist, r
 | 10 | 2026-10-04 | CORE-RULES Abilities; Starting numbers | "Open an approach": roll the ability's trait at 2 lower Difficulty, watched as usual; Suspicion Limits 12 / 13 / 15 | The effect was described only in fiction and its reading was worth 9–13 win points; read as unwatched it made its Gifts the strongest options (S10, gap G3) | simulator → author |
 | 11 | 2026-10-04 | CORE-RULES Rolling, The raid, Suspicion, Chases | Rulings R1–R11 (loud way, raise cap, captive's loot, shared Lead for several caught, chase timing, d4 floor, tries per Turn, unique Duties, lock-up, drop-an-item, Limit cap) — provisional | Gaps the simulator had to fill (S11; gaps G2, G5–G14) | simulator → author (to retest) |
 | 12 | 2026-10-04 | CORE-RULES How the year went | Optional campaign sidebar: furniture becomes capped, positive-only castle upgrades; nothing negative carries over | Q9: continuity for groups who want it, without a death spiral | author |
+| 13 | 2026-10-05 | Chapters 1–8, Parts One and Two | First text of the rules chapters, written from CORE-RULES 1.0 with no rule changes; unwritten content (the eight Entities, festival, chase table, Tell chance, when the mob brings a Weakness, epilogue table, castle upgrades, town tables, Storyteller advice) marked PLACEHOLDER | Core rules approved (2026-10-05) | author (approved rules) |
