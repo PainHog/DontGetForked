@@ -152,6 +152,18 @@ export function rollShoppingList({ size, essentials, roll }) {
   return list;
 }
 
+/**
+ * C15: the epilogue's lines: the result's line, then one line for each kind of
+ * item (Castle Duty key) on the list that didn't come home, once per kind, in table order.
+ */
+export function epilogueLines({ result, missingDuties = [] }) {
+  const lines = [DGF.epilogue.year[result]];
+  if (!lines[0]) throw new Error(`unknown result: ${result}`);
+  const missing = new Set(missingDuties);
+  for (const d of DGF.duties) if (missing.has(d.key)) lines.push(DGF.epilogue.missing[d.key]);
+  return lines;
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;
