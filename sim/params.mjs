@@ -89,6 +89,12 @@ export const PARAMS = {
     doc: "free = Entities at the same place hand loot over at any time, free (U2, decided 2026-10-05); the simulated players hand theirs over before a watched roll; none = no handing over.",
     ref: "CORE-RULES The raid (Carrying); PT3 M6",
   },
+  chaseTable: {
+    kind: "content", default: "placeholder", values: ["placeholder", "A", "B", "C"],
+    title: "The d6 chase table (C12 candidates)",
+    doc: "placeholder = Nimble on four rows; A = two traits a row, each trait 2–3 times; B = three traits a row; C = Nimble on every row plus one other.",
+    ref: "CORE-RULES Chases (the ground); content C12",
+  },
   partyPolicy: {
     kind: "policy", default: "pairs", values: ["pairs", "together", "singles"],
     title: "Does the party split up?",
