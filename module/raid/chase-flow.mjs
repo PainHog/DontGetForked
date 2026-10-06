@@ -123,10 +123,15 @@ async function announceChase(before, state) {
 
 const pendingGround = new Set();
 
-/** Roll the ground for this chase's round (one d6 on the chase table, for everyone) and check the mob. */
-export async function rollGround({ id, round } = {}) {
+/**
+ * Roll the ground for this chase's round (one d6 on the chase table, for everyone) and check the mob.
+ * Once per round; `force` (the Storyteller's button) rolls it again while nobody has rolled yet.
+ */
+export async function rollGround({ id, round, force = false } = {}) {
   const now = getRaid().chase;
-  const key = `${id ?? now?.id}:${round ?? now?.round}`;
+  if (!C.isRunning(now)) return { ok: false, reason: "noChase" };
+  if (now.ground && !force) return { ok: false, reason: "groundRolled" };
+  const key = `${id ?? now.id}:${round ?? now.round}`;
   if (pendingGround.has(key)) return { ok: false, reason: "pending" };
   pendingGround.add(key);
   try {
@@ -135,6 +140,7 @@ export async function rollGround({ id, round } = {}) {
       const c = s.chase;
       if (!C.isRunning(c) || (id && c.id !== id) || (round && c.round !== round)) return { state: s, result: { ok: false, reason: "noChase" } };
       if (Object.keys(c.rolls).length) return { state: s, result: { ok: false, reason: "alreadyRolling" } };
+      if (c.ground && !force) return { state: s, result: { ok: false, reason: "groundRolled" } };
       return { state: R.setChase(s, C.startRound(c, { face: roll.total, suspicion: R.suspicionOf(s).value, label: s.difficulty })), result: { ok: true } };
     });
     if (!result.ok) return result;
@@ -357,7 +363,7 @@ export function registerChaseOps() {
     apply: async () => {
       const c = getRaid().chase;
       if (!C.isRunning(c)) return { ok: false, reason: "noChase" };
-      return rollGround({ id: c.id, round: c.round });
+      return rollGround({ id: c.id, round: c.round, force: true });
     },
   });
 
