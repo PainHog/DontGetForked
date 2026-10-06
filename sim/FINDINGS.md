@@ -349,3 +349,9 @@ Premade Thistlewick after B7, three seeds: won 73.1–74.0%, forked 7.2–7.6% (
 
 **Decided (V19–V20, under Richard's advance approval).**
 
+## The rules as they stand (2026-10-06, after V20)
+
+Full report (seed 1, 2,000 raids per cell): every win and forked target met (wins 91.9 / 73.0 / 56.2%, forked 0.8 / 5.4 / 9.5%); Hard captures 0.36 (accepted, V1/V14); the furniture gamble on target for a party that always goes for it (Grand Year 53.8% when tried, a Win lost 17.7%); the Mask on 26% of all rolls. Premade towns: Puddlecombe 88.8% won / 0.8% forked, Thistlewick 76.7 / 6.4%, Gallowsmere 57.7 / 9.9%, all on target.
+
+**On option outliers:** a single seed's largest outlier moves from option to option (this run: the Creature's Book-Learned −3.3, which isn't among the sixteen largest three-seed averages). Averaged over seeds 1, 7 and 11, every Entity, Gift and Perk is inside ±2.5 except the Werewolf's two Gift versions at the line (Keen Nose −2.6, Through the Hedge +2.5), a spread inherent in a switch against an open approach. Further single-seed chasing would be tuning to noise; real tables decide from here.
+
