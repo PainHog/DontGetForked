@@ -3,7 +3,7 @@ Next: Richard's first playtest with real people, and his two-player try of the o
 Number: Design decisions made = 97
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 247
+Number: Automated checks passing = 254
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -56,6 +56,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Three more computer playtests until nothing major was left
 - [x] A kit for the first playtest with real people
 - [x] Full audits of the rulebook, the online version and the simulator, with every confirmed problem fixed
+- [x] Online version keeps track of the optional campaign (castle upgrades) and of who is in each raid
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
