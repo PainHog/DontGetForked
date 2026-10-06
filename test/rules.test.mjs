@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves, obstacleOn, secondWayIn,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -198,4 +198,19 @@ test("C17: the simulator's town shares are exactly the book's dice", async () =>
     assert.equal(DGF.townDice.watchedOn[label] / 10, L.witnessed);
   }
   assert.equal(NUMBERS.townBudget, "cap");
+});
+
+test("C18: the obstacle table: each trait the quiet way four times, 12 loud ways, 5 group; second way in differs", async () => {
+  assert.equal(DGF.obstacleTable.length, 20);
+  for (const t of DGF.traits ?? ["brawn", "nimble", "sly", "charm", "wits"]) assert.equal(DGF.obstacleTable.filter((o) => o.quiet === t).length, 4, t);
+  assert.equal(DGF.obstacleTable.filter((o) => o.loud).length, 12);
+  assert.equal(DGF.obstacleTable.filter((o) => o.group).length, 5);
+  for (const o of DGF.obstacleTable) assert.notEqual(o.quiet, o.loud);
+  assert.equal(obstacleOn(9).key, "frontDoor");
+  const faces = [10, 12, 13];
+  assert.equal(secondWayIn(obstacleOn(9), () => faces.shift()).key, "shopkeeper"); // 10 and 12 are Sly too
+  const { OBSTACLE_TABLES } = await import("../sim/town.mjs");
+  const { NUMBERS } = await import("../sim/params.mjs");
+  assert.equal(NUMBERS.obstacleTable, "approved");
+  assert.deepEqual(OBSTACLE_TABLES.approved.map((o) => [o.quiet, o.loud ?? null, !!o.group]), DGF.obstacleTable.map((o) => [o.quiet, o.loud ?? null, !!o.group]));
 });

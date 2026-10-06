@@ -205,6 +205,20 @@ export function capTwelves(label, difficulties, rollD20) {
   });
 }
 
+/** C18: the obstacle on a d20 face. */
+export function obstacleOn(d20) {
+  const o = DGF.obstacleTable[d20 - 1];
+  if (!o) throw new Error(`no obstacle for ${d20}`);
+  return o;
+}
+
+/** C18: a location's second way in: roll again (`rollD20` gives faces) until its quiet trait differs from the first's. */
+export function secondWayIn(first, rollD20) {
+  let o;
+  do o = obstacleOn(rollD20()); while (o.quiet === first.quiet);
+  return o;
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;

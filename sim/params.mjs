@@ -255,7 +255,8 @@ export const PRESETS = {
  */
 export const NUMBERS = {
   charges: 3,
-  townBudget: "cap", // C17: rolled towns, at most one Difficulty-12 obstacle (two at Hard); "rolled" and "budget" were the other candidates
+  townBudget: "cap",
+  obstacleTable: "approved", // C18: the d20 obstacle table; "random" was the placeholder generator // C17: rolled towns, at most one Difficulty-12 obstacle (two at Hard); "rolled" and "budget" were the other candidates
   overdrawSuspicion: 2,
   lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6/S9
   localMob: { base: 10, perSuspicion: 0.5, max: 12 }, // S9

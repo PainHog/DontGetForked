@@ -130,3 +130,5 @@ The generator gave each obstacle random traits (60% with a loud way, 25% group).
 - **c18b** (every trait the quiet way 4 times; loud ways Brawn and Nimble 3, Charm, Sly and Wits 2; one group obstacle per quiet trait): at 3,000 raids per cell, wins 95.9 / 85.5 / 71.6%, forked 0.3 / 3.2 / 5.0% (random traits: 95.6 / 85.4 / 71.3%, 0.2 / 2.8 / 5.0%); Entities −1.3 to +2.3, Gifts and Perks −2.2 to +2.3, Duties −0.4 to +0.3. Inside the target.
 
 The second way in is rolled again until its quiet trait differs from the first.
+
+**Decided (C18):** c18b, now `DGF.obstacleTable` and the simulator's default (`NUMBERS.obstacleTable = "approved"`).

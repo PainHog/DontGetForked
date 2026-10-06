@@ -231,6 +231,34 @@ DGF.townDice = Object.freeze({
   twelves: Object.freeze({ easy: 1, standard: 1, hard: 2 }),
 });
 
+/**
+ * C18: the d20 obstacle table. `quiet` is the trait that gets past it without a fuss; `loud`, if any, is the loud
+ * way (Suspicion +1 whatever the result); `group`: everyone there rolls for themselves. Every trait is the quiet
+ * way four times. A location's second way in is rolled again until its quiet trait differs.
+ */
+DGF.obstacleTable = Object.freeze([
+  { key: "trapdoor", name: "A heavy cellar trapdoor", quiet: "brawn" },
+  { key: "tugOfWar", name: "A tug-of-war across the lane", quiet: "brawn", group: true },
+  { key: "cart", name: "A cart blocking the alley", quiet: "brawn", loud: "nimble", loudText: "scramble over the load" },
+  { key: "backGate", name: "A bolted back gate", quiet: "brawn", quietText: "lift it off its hinges", loud: "charm", loudText: "shout “Delivery!” until someone opens it" },
+  { key: "gardenWall", name: "A high garden wall", quiet: "nimble", loud: "brawn", loudText: "through the gate, lock and all" },
+  { key: "window", name: "A shuttered window", quiet: "nimble", loud: "brawn", loudText: "force the shutters" },
+  { key: "rooftops", name: "The rooftops", quiet: "nimble", group: true },
+  { key: "drainpipe", name: "A rickety drainpipe", quiet: "nimble" },
+  { key: "frontDoor", name: "A locked front door", quiet: "sly", quietText: "pick the lock", loud: "brawn", loudText: "kick it in" },
+  { key: "neighbour", name: "A nosy neighbour at her window", quiet: "sly", loud: "wits", loudText: "a false alarm: “Your cat’s on the roof!”" },
+  { key: "shopFloor", name: "A crowded shop floor", quiet: "sly", group: true },
+  { key: "geese", name: "A muddy yard full of geese", quiet: "sly", loud: "nimble", loudText: "run for it, honking" },
+  { key: "shopkeeper", name: "The shopkeeper behind the counter", quiet: "charm", loud: "sly", loudText: "snatch it from under her nose" },
+  { key: "dog", name: "A guard dog", quiet: "charm", quietText: "good dog", loud: "nimble", loudText: "outrun it, barking" },
+  { key: "doorman", name: "A doorman checking invitations", quiet: "charm", loud: "wits", loudText: "a forged invitation that fools nobody for long" },
+  { key: "children", name: "Children in costumes who want a closer look", quiet: "charm", group: true },
+  { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "work out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it" },
+  { key: "backRoom", name: "A dark, cluttered back room", quiet: "wits", loud: "sly", loudText: "rummage through everything" },
+  { key: "watchman", name: "The night watchman on his round", quiet: "wits", quietText: "time his round" },
+  { key: "stalls", name: "A maze of festival stalls", quiet: "wits", group: true },
+].map((o) => Object.freeze(o)));
+
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },

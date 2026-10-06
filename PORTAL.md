@@ -1,6 +1,6 @@
-Now: The Storyteller can roll up a town with dice: how many obstacles, how hard, and who's watching, with a ceiling so no town is unfairly brutal.
-Next: The obstacle table (locked doors, guard dogs, nosy neighbours), decided with the author.
-Number: Design decisions made = 71
+Now: The obstacle table is in: twenty things in the monsters' way, from a guard dog to a muddy yard full of geese, balanced so every monster gets its moments.
+Next: The villager table (who the monsters meet in town), decided with the author.
+Number: Design decisions made = 72
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -39,6 +39,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] The ending: how the year went
 - [x] The furniture and castle upgrades
 - [x] How a rolled town is built
+- [x] The obstacle table
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
