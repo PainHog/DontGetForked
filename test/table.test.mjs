@@ -96,7 +96,7 @@ test("the Storyteller creates an Entity from the eight (sidebar button, book def
   assert.ok(witch, "the Witch exists");
   assert.equal(witch.type, "entity");
   assert.deepEqual({ ...witch.system.traits }, { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 });
-  assert.deepEqual({ ...witch.system.charges }, { value: 3, start: 3 });
+  assert.deepEqual({ ...witch.system.charges }, { value: 3, start: 3, extra: 0 }); // extra: castle upgrades this raid (campaign play)
   assert.equal(witch.system.gift, "broomstick");
   assert.equal(witch.system.perk, "familiarsWarning");
   assert.equal(witch.system.duty, "cook");

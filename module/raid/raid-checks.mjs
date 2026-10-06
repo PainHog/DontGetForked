@@ -15,17 +15,17 @@
  *    party is forked it posts itself (autoYear); when the party gets out, a card
  *    asks the Storyteller to confirm what came home.
  */
-import { SETTINGS, OPS, CARD, HOOKS, ACTOR_TYPES } from "../contracts.mjs";
+import { SYSTEM_ID, SETTINGS, OPS, CARD, HOOKS, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
-import { rollShoppingList, epilogueLines, tellGoesOff } from "../logic/rules.mjs";
+import { rollShoppingList, epilogueLines, tellGoesOff, addUpgrade } from "../logic/rules.mjs";
 import { newGroup, closeGroup, needsSecondDie, readTellCheck, placeChecked, spectralPasses } from "../logic/checks.mjs";
 import { yearFromList, homeFromCarried, listShape, listItem, essentialsFor } from "../logic/year.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { registerOp, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
-import { getRaid, mutateRaid } from "./store.mjs";
-import { postCard } from "../chat/cards.mjs";
+import { getRaid, mutateRaid, castleUpgrades } from "./store.mjs";
+import { postCard, cardOf, updateCard } from "../chat/cards.mjs";
 import { entities, inRaid } from "./chase-flow.mjs";
 
 const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
@@ -99,6 +99,29 @@ async function rollList(size, essentials) {
 }
 
 export function registerCheckOps() {
+  // GM (campaign play, Chapter 7): a piece of furniture or decor brought home becomes a castle upgrade, from that
+  // year's card, once. The castle holds three: a fourth replaces the one the Storyteller names (`replace`, an index).
+  registerOp(OPS.castleUpgrade, {
+    gmOnly: true,
+    apply: async ({ messageId, name = "", replace = null } = {}) => {
+      if (!setting(SETTINGS.campaign)) return { ok: false, reason: "campaignOff" };
+      const message = game.messages.get(messageId);
+      const card = cardOf(message);
+      if (card?.kind !== CARD.year || !card.furnitureHome) return { ok: false, reason: "noPiece" };
+      if (card.raidId !== getRaid().raidId) return { ok: false, reason: "otherRaid" }; // before the next raid starts
+      if (card.upgradeAdded) return { ok: false, reason: "already" };
+      const piece = String(name ?? "").trim() || game.i18n.localize("DGF.Castle.defaultPiece");
+      const at = replace === null || replace === "" || replace === undefined ? null : Math.trunc(Number(replace));
+      let upgrades;
+      try { upgrades = addUpgrade(castleUpgrades(), piece, Number.isInteger(at) ? at : null); } catch (err) { return { ok: false, reason: "full" }; }
+      await game.settings.set(SYSTEM_ID, SETTINGS.castleUpgrades, upgrades);
+      await updateCard(message, { upgradeAdded: true });
+      const raid = getRaid();
+      await postCard({ kind: CARD.raid, event: "castle", raidId: raid.raidId, difficulty: raid.difficulty, limit: raid.limit, turns: raid.turns, upgrades, extras: [] });
+      return { ok: true, upgrades };
+    },
+  });
+
   // GM: open a group check for the Entities rolling a group obstacle together, or close it.
   registerOp(OPS.raidGroup, {
     gmOnly: true,

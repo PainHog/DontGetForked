@@ -185,6 +185,23 @@ export function addUpgrade(upgrades, piece, replace = null) {
   return upgrades.map((u, i) => (i === replace ? piece : u));
 }
 
+/**
+ * C16 (campaign): the extra charges at a new raid: "each upgrade gives one Entity of the players' choice one
+ * extra charge". `wanted` = { actorId: n } (the players' choice), `upgrades` = how many the castle has,
+ * `members` = the ids of the Entities in the raid. Returns { ok, reason?, extra: { actorId: n } }.
+ */
+export function assignExtraCharges({ wanted = {}, upgrades = 0, members = [] }) {
+  const extra = {};
+  for (const [id, n] of Object.entries(wanted ?? {})) {
+    const k = Math.max(0, Math.trunc(Number(n)) || 0);
+    if (k) extra[id] = k * DGF.campaign.chargesPerUpgrade;
+  }
+  const total = Object.values(extra).reduce((a, n) => a + n, 0);
+  if (total > upgrades * DGF.campaign.chargesPerUpgrade) return { ok: false, reason: "tooManyExtra", extra: {} };
+  if (Object.keys(extra).some((id) => !members.includes(id))) return { ok: false, reason: "extraNotInRaid", extra: {} };
+  return { ok: true, extra };
+}
+
 /** C16 (campaign): an Entity's charges at the start of a raid, given how many upgrades the players gave it. */
 export function startingCharges(upgradesGiven = 0) {
   return DGF.charges + upgradesGiven * DGF.campaign.chargesPerUpgrade;

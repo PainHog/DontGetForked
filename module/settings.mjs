@@ -15,7 +15,7 @@ export function setting(key) {
  * Register every setting. `onRaidChange` runs on every client when the raid
  * state changes; `onHudChange` when the HUD switch changes.
  */
-export function registerSettings({ onRaidChange = () => {}, onHudChange = () => {} } = {}) {
+export function registerSettings({ onRaidChange = () => {}, onHudChange = () => {}, onCastleChange = () => {} } = {}) {
   const reg = (key, data) => game.settings.register(SYSTEM_ID, key, data);
   const toggle = (key, def, extra = {}) => reg(key, {
     name: `DGF.Settings.${key}.Name`, hint: `DGF.Settings.${key}.Hint`,
@@ -40,6 +40,9 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.autoFurniture, true);
   toggle(SETTINGS.resetOnNewRaid, true);
   toggle(SETTINGS.chaseTracker, true);
+  // The optional campaign rules (Chapter 7): castle upgrades, kept from raid to raid (off: a raid stands alone).
+  toggle(SETTINGS.campaign, false, { onChange: () => onCastleChange() });
+  reg(SETTINGS.castleUpgrades, { scope: "world", config: false, type: Array, default: [], onChange: () => onCastleChange() });
 
   // Per player.
   reg(SETTINGS.showOdds, {

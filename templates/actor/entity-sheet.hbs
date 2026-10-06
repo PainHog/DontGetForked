@@ -11,6 +11,7 @@
     <div class="dgf-charges">
       <span class="dgf-charges-label">{{localize "DGF.Charges"}}</span>
       <span class="dgf-charges-value"><input type="number" name="system.charges.value" value="{{charges.value}}" min="0" step="1"> / <input type="number" name="system.charges.start" value="{{charges.start}}" min="0" step="1"></span>
+      {{#if charges.extra}}<span class="dgf-hint">{{localize "DGF.Sheet.castleExtra" n=charges.extra}}</span>{{/if}}
       {{#if hasEntity}}<button type="button" data-action="spendCharge">{{localize "DGF.Sheet.spendCharge"}}</button>{{/if}}
     </div>
   </header>
@@ -56,9 +57,9 @@
 
   <section class="dgf-play">
     <div class="dgf-row">
-      <label>{{localize "DGF.Sheet.status"}}
+      {{#if isGM}}<label>{{localize "DGF.Sheet.status"}}
         <select name="system.status">{{#each statuses}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
-      </label>
+      </label>{{else}}<span>{{localize "DGF.Sheet.status"}}: <strong>{{statusLabel}}</strong></span>{{/if}}
       <label class="dgf-check"><input type="checkbox" name="system.carryingFurniture"{{#if system.carryingFurniture}} checked{{/if}}> {{localize "DGF.Sheet.carryingFurniture"}}</label>
       {{#if isGM}}<label class="dgf-check"><input type="checkbox" name="system.inRaid"{{#if inRaid}} checked{{/if}}> {{localize "DGF.Sheet.inRaid"}}</label>{{else}}{{#unless inRaid}}<span class="dgf-hint">{{localize "DGF.Sheet.notInRaid"}}</span>{{/unless}}{{/if}}
     </div>

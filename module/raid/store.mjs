@@ -21,6 +21,13 @@ import { setting } from "../settings.mjs";
 import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, postedByOwner } from "../chat/cards.mjs";
 import { newRaidUpdate } from "../logic/lockup.mjs";
 import { rollAbilities, isInRaid } from "../logic/entity.mjs";
+import { assignExtraCharges } from "../logic/rules.mjs";
+
+/** The castle's upgrades (campaign play): the pieces brought home, three at most. */
+export function castleUpgrades() {
+  const v = game.settings.get(SYSTEM_ID, SETTINGS.castleUpgrades);
+  return Array.isArray(v) ? v.map(String) : [];
+}
 
 /** The raid as every client sees it now. */
 export function getRaid() {
@@ -283,18 +290,27 @@ export function registerRaidOps() {
 
   registerOp(OPS.raidReset, {
     gmOnly: true,
-    apply: async ({ difficulty = "standard" }) => {
+    apply: async ({ difficulty = "standard", extra = {} }) => {
       if (!R.LABELS.includes(difficulty)) return { ok: false, reason: "badDifficulty" };
       // F26: who is in this raid: every Entity with a player owner (the Storyteller can change it on the Raid window
       // or the sheet). A new raid is a new year for them: free, charges refilled, the last raid's marks gone (resetOnNewRaid).
       const reset = setting(SETTINGS.resetOnNewRaid);
       const members = allEntities().filter((a) => a.hasPlayerOwner);
+      // campaign play (Chapter 7): each castle upgrade gives one Entity of the players' choice one extra charge this raid
+      const upgrades = setting(SETTINGS.campaign) ? castleUpgrades().length : 0;
+      const given = assignExtraCharges({ wanted: extra, upgrades, members: members.map((a) => a.id) });
+      if (!given.ok) return { ok: false, reason: given.reason };
       const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty, readied: reset ? members.map((a) => a.id) : [] }));
       for (const actor of allEntities()) {
         const inRaid = members.includes(actor);
-        await actor.update({ "system.inRaid": inRaid, ...(inRaid && reset ? prefixed(newRaidUpdate(actor.system)) : {}) });
+        const plus = given.extra[actor.id] ?? 0;
+        const update = { "system.inRaid": inRaid, "system.charges.extra": plus, ...(inRaid && reset ? prefixed(newRaidUpdate(actor.system)) : {}) };
+        if (plus) update["system.charges.value"] = (inRaid && reset ? actor.system.charges.start : actor.system.charges.value) + plus;
+        await actor.update(update);
       }
-      return { ok: true, raidId: state.raidId, members: members.map((a) => a.id) };
+      const extras = Object.entries(given.extra).map(([id, n]) => ({ name: game.actors.get(id)?.name ?? "", n }));
+      if (upgrades) await announce("castle", state, { upgrades: castleUpgrades(), extras });
+      return { ok: true, raidId: state.raidId, members: members.map((a) => a.id), extra: given.extra };
     },
   });
 

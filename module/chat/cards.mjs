@@ -7,9 +7,10 @@
  * never edited by hand. Buttons are added per viewer on renderChatMessageHTML:
  * only the Storyteller sees the Cost choices and the Suspicion controls.
  */
-import { SYSTEM_ID, FLAG, CARD, OPS } from "../contracts.mjs";
+import { SYSTEM_ID, FLAG, CARD, OPS, SETTINGS } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import { runOp } from "../net/gm-ops.mjs";
+import { setting } from "../settings.mjs";
 import { t, traitLabel, dieLabel, traitList } from "../helpers/i18n.mjs";
 
 const TEMPLATES = {
@@ -52,6 +53,9 @@ export function setEventAmountReader(fn) { eventAmountReader = fn; }
 /** Opens the end-of-raid form (set by the apps layer; avoids an import cycle). */
 let yearOpener = async () => null;
 export function setYearOpener(fn) { yearOpener = fn; }
+/** Opens the castle-upgrade form for a year card (set by the apps layer; campaign play). */
+let upgradeOpener = async () => null;
+export function setUpgradeOpener(fn) { upgradeOpener = fn; }
 
 /* ------------------------------------------------------------ contexts -- */
 
@@ -158,6 +162,9 @@ function raidContext(card) {
     piece: card.event === "backInTown" && card.pieceBack ? t("DGF.RaidCard.backInTown.piece") : "",
     // V19: who Spectral gets past a group obstacle, and who carries and so rolls
     passed: card.passed?.length ? t("DGF.RaidCard.group.passed", { names: card.passed.join(", ") }) : "",
+    // campaign play: the castle's upgrades, and who has their extra charges this raid
+    castle: card.event === "castle" ? t("DGF.RaidCard.castle.list", { n: card.upgrades?.length ?? 0, max: DGF.campaign.maxUpgrades, names: (card.upgrades ?? []).join(", ") }) : "",
+    extras: card.event === "castle" && card.extras?.length ? t("DGF.RaidCard.castle.extras", { list: card.extras.map((x) => `${x.name} +${x.n}`).join(", ") }) : "",
     spectralRolls: card.spectralRolls?.length ? t("DGF.RaidCard.group.spectralRolls", { names: card.spectralRolls.join(", ") }) : "",
   };
 }
@@ -279,8 +286,8 @@ function button(label, dataset, onClick) {
   return b;
 }
 
-/** Which Storyteller buttons a card shows (pure: for the hook and for tests). */
-export function gmButtons(card, currentRaidId, eventAmount = 0) {
+/** Which Storyteller buttons a card shows (pure: for the hook and for tests). `campaign`: the campaign switch. */
+export function gmButtons(card, currentRaidId, eventAmount = 0, { campaign = false } = {}) {
   const out = [];
   if (!card) return out;
   // a Cost belongs to its raid: an old card's Cost would mark the Entity in the new one
@@ -300,6 +307,8 @@ export function gmButtons(card, currentRaidId, eventAmount = 0) {
   if (card.kind === CARD.roll && card.caught && !card.chaseStarted && card.raidId === currentRaidId) out.push({ action: "chase", label: "DGF.Card.chaseButton" });
   // the party got out: how did the year go?
   if (card.kind === CARD.raid && card.event === "home" && card.raidId === currentRaidId) out.push({ action: "year", label: "DGF.Card.yearButton" });
+  // campaign play: a piece brought home becomes a castle upgrade (once, before the next raid)
+  if (campaign && card.kind === CARD.year && card.furnitureHome && !card.upgradeAdded && card.raidId === currentRaidId) out.push({ action: "upgrade", label: "DGF.Card.upgradeButton" });
   return out;
 }
 
@@ -326,7 +335,7 @@ export function onRenderChatMessage(message, html) {
   const card = cardOf(message);
   if (!card || !html?.querySelector) return;
   if (!game.user?.isGM) return;
-  const buttons = gmButtons(card, raidIdReader(), card.groupId ? eventAmountReader(card.eventId) : 0);
+  const buttons = gmButtons(card, raidIdReader(), card.groupId ? eventAmountReader(card.eventId) : 0, { campaign: setting(SETTINGS.campaign) });
   if (!buttons.length) return;
   let bar = html.querySelector(".dgf-card-actions");
   if (!bar) { bar = document.createElement("div"); bar.className = "dgf-card-actions"; html.appendChild(bar); }
@@ -340,6 +349,7 @@ export function onRenderChatMessage(message, html) {
       if (b.action === "apply") return runOp(OPS.raidApplyCard, { messageId: message.id });
       if (b.action === "chase") return runOp(OPS.chaseStart, { messageId: message.id });
       if (b.action === "year") return yearOpener();
+      if (b.action === "upgrade") return upgradeOpener(message.id);
       if (b.action === "cancel") return runOp(OPS.raidCancel, { eventId: card.eventId });
       if (b.action === "restore") return runOp(OPS.raidCancel, { eventId: card.eventId, restore: true });
     }));

@@ -34,6 +34,8 @@ export const SETTINGS = Object.freeze({
   autoFurniture: "autoFurniture",             // world: carried furniture raises Suspicion at the end of each Turn
   resetOnNewRaid: "resetOnNewRaid",           // world: a new raid frees the Entities, refills charges, clears marks
   chaseTracker: "chaseTracker",               // world: open the chase tracker for everyone when a chase starts
+  campaign: "campaign",                       // world: the optional campaign rules: castle upgrades (default off)
+  castleUpgrades: "castleUpgrades",           // world, hidden: the castle's upgrades (the pieces brought home, three at most)
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
 });
 
@@ -66,6 +68,7 @@ export const OPS = Object.freeze({
   raidFurniture: "raid.furniture",       // GM: the furniture's piece in play, out of town or lost, by hand
   raidBackInTown: "raid.backInTown",     // GM: take back a mistaken leaving of town (before the year is read)
   raidMember: "raid.member",             // GM: tick an Entity into this raid or out of it (F26)
+  castleUpgrade: "castle.upgrade",       // GM: a piece brought home becomes a castle upgrade (campaign play)
   chaseStart: "chase.start",             // GM: start a local chase from a caught card, or the final flight, by hand
   chaseGround: "chase.ground",           // GM: roll the ground for the round
   chaseResolve: "chase.resolve",         // GM: move the Lead by the round's rolls

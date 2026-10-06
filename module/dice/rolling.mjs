@@ -280,7 +280,8 @@ export async function performRoll(actor, values) {
   const before = sys.charges.value;
   let after = before;
   if (autoCharges) {
-    after = chargesAfter({ value: before, start: sys.charges.start, spent: own?.spend ?? 0, chargeBack: res.chargeBack });
+    // a Critical gives a spent charge back up to the raid's starting number: the Entity's own, plus any castle upgrades (campaign)
+    after = chargesAfter({ value: before, start: sys.charges.start + (sys.charges.extra ?? 0), spent: own?.spend ?? 0, chargeBack: res.chargeBack });
     if (after !== before) update["system.charges.value"] = after;
   }
   if (own?.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight

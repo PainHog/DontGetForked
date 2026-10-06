@@ -23,14 +23,14 @@ import { EntitySheet } from "./sheets/entity-sheet.mjs";
 import { registerSettings } from "./settings.mjs";
 import { registerGmOps, listenSocket, runOp, isActiveGM } from "./net/gm-ops.mjs";
 import { registerRaidOps, onRaidChange, primeRaid, seedRaid, reconcile, getRaid, raidView, mutateRaid } from "./raid/store.mjs";
-import { onRenderChatMessage, setYearOpener } from "./chat/cards.mjs";
+import { onRenderChatMessage, setYearOpener, setUpgradeOpener } from "./chat/cards.mjs";
 import { rollEntity, performRoll, spendCharge, drinkDraught } from "./dice/rolling.mjs";
 import { createEntity, newEntityFlow, onRenderActorDirectory } from "./entities/create.mjs";
 import { RaidHud, openHud, refreshHud, onHudSetting, currentHud } from "./apps/raid-hud.mjs";
 import { registerChaseOps, driveChase } from "./raid/chase-flow.mjs";
 import { registerCheckOps } from "./raid/raid-checks.mjs";
 import { ChaseTracker, openChaseTracker, refreshChaseTracker, currentChaseTracker } from "./apps/chase-tracker.mjs";
-import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog } from "./apps/raid-dialogs.mjs";
+import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog, castleUpgradeDialog } from "./apps/raid-dialogs.mjs";
 
 /* -------------------------------------------- */
 /*  Init                                        */
@@ -51,13 +51,15 @@ Hooks.once("init", function () {
   // Settings (every automation switchable), then GM-authoritative operations.
   registerSettings({
     onRaidChange: (value) => onRaidChange(value, { refresh: (state, prev) => { refreshHud(); refreshChaseTracker(state, prev); } }),
-    onHudChange: (on) => onHudSetting(on)
+    onHudChange: (on) => onHudSetting(on),
+    onCastleChange: () => refreshHud()
   });
   registerGmOps();
   registerRaidOps();
   registerChaseOps();
   registerCheckOps();
   setYearOpener(() => yearDialog());
+  setUpgradeOpener((messageId) => castleUpgradeDialog(messageId));
 
   // The HUD lists who is held at the lock-up and the tracker shows whose Weakness is in play: they follow the
   // Entities as well as the raid. Only a change that shows there re-renders them (not every actor update).

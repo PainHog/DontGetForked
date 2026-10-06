@@ -77,6 +77,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       weaknessTiming: view ? t(`DGF.Timing.${view.weakness.timing}`) : "",
       tell: view?.tell ?? null,
       statuses: DGF.statuses.map((s) => ({ key: s, label: t(`DGF.Status.${s}`), selected: s === sys.status })),
+      statusLabel: t(`DGF.Status.${sys.status}`), // FA-R11: a player sees its status; the Storyteller changes it
       carried: (sys.carried ?? []).map((c, i) => ({ index: i, name: c.name })),
       marks: [
         ...(sys.nextRollSmaller > 0 ? [{ key: "nextRollSmaller", label: t("DGF.Sheet.mark.smaller", { n: sys.nextRollSmaller }) }] : []),

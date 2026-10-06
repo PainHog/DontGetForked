@@ -2,15 +2,15 @@
 
 The whole Foundry VTT system, not one diff: `system.json`, `module/` (rules logic, apps, sheet, chat cards, raid store, chases and the lock-up, GM operations, dice, settings), `templates/`, `lang/en.json`, `styles/`, `packs/`, `tools/`, `test/`, `.github/workflows/` and `TESTING.md`, read against the rulebook (`book/src/chapters/*.html`, the source of truth) and `docs/LESSONS.md` (Foundry). There is no live Foundry here: every finding is proved by a test on the fake Foundry (`tools/fake-foundry.mjs`) or by the exact code path.
 
-**Result:** 18 findings fixed in the audit, each with a test written to fail first (`test/audit.test.mjs`, 19 tests); then, on Richard's decisions F26 and V16 (DESIGN.md, 2026-10-06), six of the open ones (`test/party.test.mjs`, 14 tests). 8 remain open (a book question, a security floor, and notes). `npm run check` with these changes on `main`: 240 tests (the other audits' included), 238 pass, 0 fail, 2 todo (the book audit's known mismatches BA-03 and BA-21).
+**Result:** 18 findings fixed in the audit, each with a test written to fail first (`test/audit.test.mjs`, 19 tests); then, on Richard's decisions F26 and V16 (DESIGN.md, 2026-10-06), six of the open ones (`test/party.test.mjs`, 14 tests). Then FA-R6, R9 and R11 were fixed too, FA-R7 was resolved in the book, and the rest are accepted: nothing is left open. `npm run check` on `main` after the last round: 254 tests (the other audits' included), 254 pass, 0 fail.
 
-| Severity | Fixed | Open | Total |
-|---|---|---|---|
-| High | 1 | 0 | 1 |
-| Medium | 7 | 0 | 7 |
-| Low | 14 | 2 | 16 |
-| Info | 2 | 6 | 8 |
-| **Total** | **24** | **8** | **32** |
+| Severity | Fixed | Resolved in the book | Accepted | Total |
+|---|---|---|---|---|
+| High | 1 | 0 | 0 | 1 |
+| Medium | 7 | 0 | 0 | 7 |
+| Low | 14 | 1 | 1 | 16 |
+| Info | 5 | 0 | 3 | 8 |
+| **Total** | **27** | **1** | **4** | **32** |
 
 Severity: **High** anyone can do something only the Storyteller should; **Medium** a rule applied wrongly, or a player can change what isn't theirs; **Low** a wrong or stale screen, a lost charge, a corner case; **Info** a note or a gap the book leaves to the table.
 
@@ -99,7 +99,7 @@ Tests in `test/party.test.mjs`; the human steps are `TESTING.md` section 21.
 **FA-R1 → F26 · Medium · The system had no notion of "the party": every Entity in the world counted.**
 Proof (before): with an unplayed Werewolf set to Fetch in the world, Ann's way out was Difficulty 7 (*1 easier (Fetch)*), and the final flight's members were the Witch, Dracula **and the Werewolf**, so the flight waited for a roll nobody would make. Left behind, the helpers, the Tell and group pickers and the sheet's Duty clashes counted every Entity too.
 *Fix:* each Entity has an *In this raid* mark (`system.inRaid`; missing, as in an older world, counts as in). **New raid** sets it for every Entity with a player owner and clears it for the rest; the Storyteller changes it on the Raid window (**In this raid** list: **add** / **take out**, a GM operation `raid.member`) or on the sheet (the tick shows only to a GM). Every raid rule now reads only the Entities in the raid (`entities()` in module/raid/chase-flow.mjs; `allEntities()` is the whole world): Fetch's way-out ease, the final flight at the Limit or at dawn, a caught Entity's chase, group and Tell checks (pickers and operations), helpers, carried furniture's noise, the lock-up list, rescue, left behind and the year, the sheet's party clashes. A new raid's reset (*A new raid resets the Entities*) applies to the Entities in it; one ticked in later is made ready then, once per raid (the raid keeps `readied`; an older raid without it makes nobody ready twice). An Entity outside the raid can still roll; its roll dialog says it isn't in the raid. *Tests:* "F26: a new raid puts every Entity with a player owner in the raid, and only those", "… without the mark … counts as in the raid", "… Fetch that isn't in the raid doesn't ease the way out; ticked in on the Raid window, it does", "… the final flight takes only the Entities in the raid; helpers come only from the raid", "… group and Tell checks pick from the Entities in the raid only", "… the lock-up and the year count only the Entities in the raid", "… a new raid resets only the Entities in it; one ticked in later is made ready then", "… the sheet shows the Storyteller the tick; a player can't change it there".
-*Follow-up:* the compendium guide still says a new raid frees "every Entity"; reword it ("every Entity in the raid") at the next pack rebuild (`npm run build:packs`), which the V15 places change also needs.
+The compendium guide says who the raid holds and that a new raid frees every Entity in the raid.
 
 **FA-R3 · Low · Storyteller handover.** `reconcile` and `driveChase` ran only on a client's `ready`, so a GM who became the active one when the other dropped didn't catch up on rolls the other never saw.
 *Fix (module/dont-get-forked.mjs):* on `userConnected`, a client that has just become the active GM runs the same catch-up as `ready` (a raid to play, the rolls nobody saw, a chase where it stopped). *Test:* "a Storyteller who takes over (the active one drops) catches up on the rolls the other never saw" (the fake Foundry now fires `userConnected`).
@@ -120,23 +120,25 @@ Proof (before): with an unplayed Werewolf set to Fetch in the world, Ann's way o
 
 **FA-R10 · Low · `compatibility.verified` was "14", untested.** Now "13" (minimum 13) until Richard tests on 14; TESTING.md says Foundry 13. In 14, check `ChatMessage.applyRollMode` and the core `rollMode` setting first: they are the v13 calls most likely to move. Everything else is v13's namespaced API (ApplicationV2, DialogV2, ActorSheetV2, TypeDataModel, `foundry.applications.handlebars.renderTemplate`, `renderChatMessageHTML`, `User#query`), with no v1 Application, no deprecated global and no `renderChatMessage`. *Test:* "the manifest claims the Foundry version it was tested on (13) until Richard tests on 14".
 
-## Open: questions and recommendations
+## Fixed in the last round (Richard: "all recommended, keep going")
 
-**FA-R2 · Low · What a request can still claim.** After FA-04 a console request can still claim to be another *connected* Storyteller (a second GM or Assistant), and the card operations (FA-05, FA-06) trust only what the server records (the card's author). Foundry v13 gives a query handler no sender, so this is the floor without server-side identity. Accept.
+**FA-R11 · Info · Only the Storyteller changes an Entity's status.** A player could free its own captive from the sheet. Now the data model's `_preUpdate` (module/data/entity-data.mjs) drops a player's change to `status`, `capturedTurn`, `slipTurn` or `inRaid` (the rest of the update saves) and tells them; the sheet shows a player its status as words. Charges, notes and marks stay the player's, as on paper. Foundry runs a system's data model on the clients only, so this stops the sheet and the ordinary API, not a hand-made socket message (FA-R2's floor). *Test:* "FA-R11: only the Storyteller changes an Entity's status; players keep their own charges and notes" (the fake Foundry now runs `_preUpdate`).
 
-**FA-R6 · Info · Undo is Suspicion only.** It cancels an event's Suspicion; a chase or capture that event caused stays (the tracker's buttons and the lock-up's free undo those). Worth a line in the guide.
+**FA-R9 · Info · Campaign play: castle upgrades.** Chapter 7's optional box: "each piece of furniture or decor brought home becomes a castle upgrade. In every later raid, each upgrade gives one Entity of the players' choice one extra charge. The castle holds three upgrades at most; bringing home a fourth replaces one of them." A new switch, *Campaign play: castle upgrades (optional)*, off by default. The castle's upgrades are a world setting (three at most; `addUpgrade`). A year card that brings a piece home gives the Storyteller **Add a castle upgrade** (once per card, before the next raid; a fourth asks which one it replaces). The rule says any piece brought home, so the button shows on any year card that brought one home (usually a Grand Year). At **New raid**, a second form asks which Entities in the raid get the extra charges (one per upgrade; `assignExtraCharges` refuses more than the castle has, or an Entity outside the raid); each starts the raid with them (`charges.extra`, shown on the sheet as "+n from castle upgrades"), and a Critical gives a charge back up to that raid's starting number. Upgrades and extra charges are announced on a card; the Raid window shows *The castle: n of 3 upgrades*. *Tests:* test/campaign.test.mjs (5).
 
-**FA-R7 · Low · Book question: the Witch's Hedge Spell.** `module/config.mjs` says "…hers or a friend's (in a local chase, only hers)", which REVIEW row 43 lists among PT4's wording fixes, but Chapter 2 doesn't have the bracket (the book audit marks it BA-03). The book is the source of truth: either the bracket goes into Chapter 2, or out of the config. Richard's call.
+**FA-R6 · Info · The guide now says what Undo does.** A line in the compendium guide (tools/gen-pack-source.mjs, packs rebuilt): Undo (or Cancel Suspicion on a card) cancels an event's Suspicion only; a chase or a capture it caused is undone with the chase tracker's buttons and the lock-up's free. *Test:* "FA-R6: the compendium guide says Undo cancels Suspicion only".
 
-**FA-R9 · Info · What the system leaves to the table.** The campaign upgrades (three at most; one extra charge to an Entity of the players' choice each raid) aren't tracked: the Storyteller sets an Entity's starting charges on its sheet and a new raid refills to it. Also by hand: how many carry a Huge piece and small entrances, a carried move taking two Turns, Spectral outside a group check, handing loot over, a lost Turn being skipped, one action per Turn.
+**FA-R7 · Low · Resolved in the book:** the book audit (BA-03) put "(in a local chase, only hers)" into Chapter 2's Hedge Spell, so the book and the config agree.
 
-**FA-R11 · Info · A player can edit their own Entity's status and charges on the sheet** (as on paper), so a captive could free itself. Accept, or let only the Storyteller change status in the data model's `_preUpdate`.
+## Accepted
 
-**FA-R12 · Info · Leaving town isn't behind a switch.** Beating the way out or escaping the flight marks the party out of town whatever the switches (no hunt starts after); **back in town** undoes it.
+**FA-R2 · Low · What a request can still claim.** After FA-04 a console request can still claim to be another *connected* Storyteller (a second GM or Assistant), and the card operations (FA-05, FA-06) trust only what the server records (the card's author). Foundry v13 gives a query handler no sender, so this is the floor without server-side identity. Accept. *Accepted (Richard, 2026-10-06).*
 
-**FA-R13 · Info · One chase at a time.** A second Entity caught elsewhere while a local chase runs isn't chased: its card keeps **Start the local chase** and the Storyteller is told. The book doesn't rule out two at once; with one tracker this is the honest limit.
+**FA-R12 · Info · Leaving town isn't behind a switch.** Beating the way out or escaping the flight marks the party out of town whatever the switches (no hunt starts after); **back in town** undoes it. *Accepted.*
 
-**FA-R14 · Info · A Cost chosen as Suspicion +1 raises Suspicion even with *Raise Suspicion automatically* off** (it follows *Apply the Storyteller's Cost*). Consistent with each switch's wording.
+**FA-R13 · Info · One chase at a time.** A second Entity caught elsewhere while a local chase runs isn't chased: its card keeps **Start the local chase** and the Storyteller is told. The book doesn't rule out two at once; with one tracker this is the honest limit. *Accepted.*
+
+**FA-R14 · Info · A Cost chosen as Suspicion +1 raises Suspicion even with *Raise Suspicion automatically* off** (it follows *Apply the Storyteller's Cost*). Consistent with each switch's wording. *Accepted.*
 
 ## Checked and sound
 

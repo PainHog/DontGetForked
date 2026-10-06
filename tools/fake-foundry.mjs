@@ -588,6 +588,9 @@ export class Actor extends BaseDocument {
   async update(changes, options = {}) {
     touch();
     if (!this.isOwner) throw new Error(`${game.user.name} lacks permission to update Actor ${this.name}`);
+    // the system's data model may veto or trim the change first (TypeDataModel#_preUpdate), as Foundry does
+    changes = expandObject(changes);
+    if ((await this.system?._preUpdate?.(changes, options, game.user)) === false) return undefined;
     const candidate = this.toObject();
     applyUpdate(candidate, changes);
     validateSystem("Actor", this.type, candidate.system, this.name);

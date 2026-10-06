@@ -13,13 +13,13 @@ import { SYSTEM_ID, SETTINGS, OPS } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import { runOp } from "../net/gm-ops.mjs";
-import { getRaid } from "../raid/store.mjs";
+import { getRaid, castleUpgrades } from "../raid/store.mjs";
 import { setting } from "../settings.mjs";
 import { t } from "../helpers/i18n.mjs";
 import { entities, allEntities, inRaid } from "../raid/chase-flow.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { groupWaiting } from "../logic/checks.mjs";
-import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog } from "./raid-dialogs.mjs";
+import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog, castleExtraDialog, refusalText } from "./raid-dialogs.mjs";
 import { openChaseTracker } from "./chase-tracker.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -95,6 +95,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       // F26: who is in this raid (the Storyteller's list: tick an Entity in or out)
       party: isGM ? allEntities().map((a) => ({ actorId: a.id, name: a.name, inRaid: inRaid(a) })) : [],
       partyCount: entities().length,
+      castle: setting(SETTINGS.campaign) ? t("DGF.Raid.castle", { n: castleUpgrades().length, max: DGF.campaign.maxUpgrades, names: castleUpgrades().length ? `: ${castleUpgrades().join(", ")}` : "" }) : "",
       captives: entities().filter((a) => isCaptive(a.system)).map((a) => ({
         actorId: a.id, name: a.name,
         since: a.system.capturedTurn ? t("DGF.Raid.heldSince", { turn: a.system.capturedTurn }) : "",
@@ -157,7 +158,18 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       rejectClose: false,
     });
     if (!difficulty || !R.LABELS.includes(difficulty)) return null;
-    return runOp(OPS.raidReset, { difficulty });
+    // campaign play: each castle upgrade gives one Entity of the players' choice an extra charge this raid
+    let extra = {};
+    const upgrades = setting(SETTINGS.campaign) ? castleUpgrades().length : 0;
+    if (upgrades) {
+      const chosen = await castleExtraDialog(allEntities().filter((a) => a.hasPlayerOwner), upgrades);
+      if (!chosen) return null;
+      extra = chosen;
+    }
+    const result = await runOp(OPS.raidReset, { difficulty, extra });
+    const why = result?.ok === false ? refusalText("DGF.Castle.refused", result.reason) : "";
+    if (why) ui.notifications.warn(why);
+    return result;
   }
 }
 

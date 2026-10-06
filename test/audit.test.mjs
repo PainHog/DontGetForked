@@ -431,6 +431,44 @@ test("V19 at the table: a group check lets an empty-handed Spectral Ghost past; 
   await settle();
 });
 
+test("FA-R11: only the Storyteller changes an Entity's status; players keep their own charges and notes", async () => {
+  await op(GM, OPS.lockupSet, { actorId: witch.id, captured: true });
+  await settle();
+  assert.equal(witch.system.status, "captured");
+  const before = log.warnings.length;
+  // Ann frees her own captive from the sheet: refused (the rest of the same update still saves)
+  await asUser(ANN, () => witch.update({ "system.status": "active", "system.capturedTurn": 0, "system.notes": "Out by the back window" }));
+  await settle();
+  assert.equal(witch.system.status, "captured");
+  assert.notEqual(witch.system.capturedTurn, 0);
+  assert.equal(witch.system.notes, "Out by the back window");
+  assert.ok(log.warnings.slice(before).some((w) => w.startsWith("Ann:") && /Storyteller/.test(w)));
+  // nor can she take herself out of the raid
+  await asUser(ANN, () => witch.update({ "system.inRaid": false }));
+  assert.equal(witch.system.inRaid, true);
+  // her charges are hers, as on paper
+  await asUser(ANN, () => witch.update({ "system.charges.value": 1 }));
+  assert.equal(witch.system.charges.value, 1);
+  // the sheet shows her the status as words, not a control
+  const { EntitySheet } = await import("../module/sheets/entity-sheet.mjs");
+  const sheet = new EntitySheet({ document: witch });
+  await asUser(ANN, () => sheet.render());
+  assert.doesNotMatch(sheet.renderedParts.sheet, /name="system.status"/);
+  assert.match(sheet.renderedParts.sheet, /Captured/);
+  // the Storyteller can
+  await asUser(GM, () => witch.update({ "system.status": "active", "system.capturedTurn": 0, "system.charges.value": 3, "system.notes": "" }));
+  await settle();
+  assert.equal(witch.system.status, "active");
+});
+
+test("FA-R6: the compendium guide says Undo cancels Suspicion only", async () => {
+  const { journalDocs } = await import("../tools/gen-pack-source.mjs");
+  const guide = journalDocs()[0];
+  const during = guide.pages.find((p) => p.key === "during").text.content;
+  assert.match(during, /cancels an event’s Suspicion only/);
+  assert.match(during, /chase tracker/);
+});
+
 test("the roll dialog's furniture tick and the furniture switch say what they do", () => {
   const lang = JSON.parse(readFileSync(join(ROOT, "lang/en.json"), "utf8"));
   // a premade town prints the furniture's obstacle already 2 harder (Chapter 9): the tick must not add it twice

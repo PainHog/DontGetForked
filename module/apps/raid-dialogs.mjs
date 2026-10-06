@@ -6,12 +6,12 @@
  * raid. Each form only collects choices and sends one GM operation; the rules
  * are in module/logic/ (checks.mjs, year.mjs) and module/raid/raid-checks.mjs.
  */
-import { SYSTEM_ID, OPS } from "../contracts.mjs";
+import { SYSTEM_ID, OPS, SETTINGS } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { listShape } from "../logic/year.mjs";
 import { runOp } from "../net/gm-ops.mjs";
-import { getRaid } from "../raid/store.mjs";
+import { getRaid, castleUpgrades } from "../raid/store.mjs";
 import { entities } from "../raid/chase-flow.mjs";
 import { yearDefaults } from "../raid/raid-checks.mjs";
 import { t } from "../helpers/i18n.mjs";
@@ -106,6 +106,40 @@ export async function shoppingListDialog() {
   });
   if (!answer || typeof answer !== "object") return null;
   return runOp(OPS.raidList, answer);
+}
+
+/** Campaign play: the piece brought home becomes a castle upgrade (a fourth replaces the one the Storyteller names). */
+export async function castleUpgradeDialog(messageId) {
+  if (!game.user?.isGM) return null;
+  const now = castleUpgrades();
+  const esc = foundry.utils.escapeHTML;
+  const full = now.length >= DGF.campaign.maxUpgrades;
+  const replace = full
+    ? `<label>${t("DGF.Castle.replace")} <select name="replace">${now.map((u, i) => `<option value="${i}">${esc(u)}</option>`).join("")}</select></label>`
+    : "";
+  const answer = await ask({
+    title: t("DGF.Castle.title"), okLabel: t("DGF.Castle.add"),
+    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Castle.intro", { n: now.length, max: DGF.campaign.maxUpgrades })}</p>`
+      + `<label>${t("DGF.Castle.name")} <input type="text" name="name" placeholder="${esc(t("DGF.Castle.defaultPiece"))}"></label>${replace}</div>`,
+    read: (form) => ({ name: String(field(form, "name")?.value ?? "").trim(), replace: full ? String(field(form, "replace")?.value ?? "0") : null }),
+  });
+  if (!answer) return null;
+  return sayRefused("DGF.Castle.refused", await runOp(OPS.castleUpgrade, { messageId, ...answer }));
+}
+
+/**
+ * Campaign play, at a new raid: the players choose which Entities get the castle upgrades' extra charges (one
+ * per upgrade). `candidates`: the Entities the new raid will hold. Resolves to { actorId: n }, or null if cancelled.
+ */
+export async function castleExtraDialog(candidates, upgrades) {
+  const esc = foundry.utils.escapeHTML;
+  const rows = candidates.map((a) => `<label>${esc(a.name)} <input type="number" name="extra.${a.id}" value="0" min="0" max="${upgrades}" step="1"></label>`).join("");
+  const answer = await ask({
+    title: t("DGF.Castle.extraTitle"), okLabel: t("DGF.Castle.assign"),
+    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Castle.extraIntro", { n: upgrades })}</p>${rows}</div>`,
+    read: (form) => ({ extra: Object.fromEntries(candidates.map((a) => [a.id, Number(field(form, `extra.${a.id}`)?.value ?? 0) || 0])) }),
+  });
+  return answer ? answer.extra : null;
 }
 
 /** How the year went: the Storyteller confirms what came home (pre-filled from the list and what the Entities carry). */

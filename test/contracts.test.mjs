@@ -82,7 +82,7 @@ test("lang/en.json has the words for every key the code builds from game data", 
     ...["newRaid", "hunt", "dawn", "limit", "home", "backInTown"].flatMap((k) => [`DGF.RaidCard.${k}.title`, `DGF.RaidCard.${k}.text`]),
     ...["cost", "carrying", "weakness"].map((k) => `DGF.Card.smaller.${k}`),
     ...["shortcut", "fetch", "open"].map((k) => `DGF.Card.diff.${k}`),
-    ...Object.values(C.SETTINGS).filter((k) => !["systemMigrationVersion", "raidState"].includes(k)).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Hint`]),
+    ...Object.values(C.SETTINGS).filter((k) => !["systemMigrationVersion", "raidState", "castleUpgrades"].includes(k)).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Hint`]), // hidden settings have no words
   ];
   // every error or warning code the roll plan can produce
   const plan = readFileSync(join(ROOT, "module/logic/roll-plan.mjs"), "utf8");
