@@ -57,7 +57,7 @@ export const OPS = Object.freeze({
   raidTurn: "raid.turn",                 // GM: next / previous Turn (dawn after the last)
   raidHunt: "raid.hunt",                 // GM: start or stop the hunt by hand
   raidReset: "raid.reset",               // GM: a new raid at a difficulty
-  actorSpendCharges: "actor.spendCharges", // anyone: a helper's charges for an ability on someone else's roll
+  actorSpendCharges: "actor.spendCharges", // anyone: a roll card's helpers pay for the abilities they lent (once, as the card says)
   raidRoll: "raid.roll",                 // anyone: a roll card's Suspicion, group check, chase, capture and lock-up effects
   raidGroup: "raid.group",               // GM: open or close a group check
   raidTell: "raid.tell",                 // GM: a Tell check for the Entities arriving at a watched location

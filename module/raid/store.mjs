@@ -20,6 +20,7 @@ import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, postedByOwner } from "../chat/cards.mjs";
 import { newRaidUpdate } from "../logic/lockup.mjs";
+import { rollAbilities } from "../logic/entity.mjs";
 
 /** The raid as every client sees it now. */
 export function getRaid() {
@@ -293,18 +294,32 @@ export function registerRaidOps() {
     },
   });
 
-  // Anyone: spend a helper's charges for an ability on someone else's roll (Chapter 3: helping costs the charge).
+  // Anyone: the helpers on a roll card pay for the abilities they lent (Chapter 3: helping costs the helper's charge),
+  // once, as the card says. Read from a card its roller's owner posted, never from the request, so no player can
+  // spend another Entity's charges (or bring its Weakness) at will.
   registerOp(OPS.actorSpendCharges, {
-    apply: async ({ actorId, count = 0, weakness = false }) => {
-      const actor = game.actors.get(actorId);
-      if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
-      const value = actor.system.charges?.value ?? 0;
-      const spent = setting(SETTINGS.autoCharges) ? Math.min(value, Math.max(0, Math.trunc(Number(count)) || 0)) : 0;
-      const update = {};
-      if (spent) update["system.charges.value"] = value - spent;
-      if (weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
-      if (Object.keys(update).length) await actor.update(update);
-      return { ok: true, spent };
+    apply: async ({ messageId } = {}) => {
+      const message = game.messages.get(messageId);
+      const card = cardOf(message);
+      if (card?.kind !== CARD.roll) return { ok: false, reason: "notARoll" };
+      if (!postedByOwner(message)) return { ok: false, reason: "notTheirs" };
+      if (card.raidId !== getRaid().raidId) return { ok: false, reason: "otherRaid" }; // a new raid has refilled them
+      if (card.helpersPaid !== false) return { ok: true, reason: "noop" };
+      const paid = [];
+      for (const p of (card.payments ?? []).filter((x) => !x.own && x.payerId !== card.actorId)) {
+        const actor = game.actors.get(p.payerId);
+        if (!isEntity(actor)) continue;
+        const value = actor.system.charges?.value ?? 0;
+        const most = rollAbilities(actor.system).length; // it can't lend more abilities than it has
+        const spent = card.autoCharges && setting(SETTINGS.autoCharges) ? Math.min(value, most, Math.max(0, Math.trunc(Number(p.spend)) || 0)) : 0;
+        const update = {};
+        if (spent) update["system.charges.value"] = value - spent;
+        if (p.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
+        if (Object.keys(update).length) await actor.update(update);
+        paid.push({ actorId: actor.id, spent, weakness: !!p.weakness });
+      }
+      await updateCard(message, { helpersPaid: true });
+      return { ok: true, paid };
     },
   });
 }
@@ -318,8 +333,9 @@ export async function seedRaid() {
 }
 
 /**
- * GM, on ready: apply any roll this raid made while no Storyteller was connected
- * (its card has Suspicion, isn't applied or cancelled, and its event isn't in the ledger).
+ * GM, on ready: catch up on any roll this raid made while no Storyteller was connected: a helped roll's
+ * helpers pay; a roll the raid follows goes through raid.roll; any other roll's Suspicion is applied (its
+ * card has Suspicion, isn't applied or cancelled, and its event isn't in the ledger; with autoSuspicion on).
  */
 export async function reconcile() {
   if (!isActiveGM()) return 0;
@@ -337,7 +353,10 @@ export async function reconcile() {
     return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId && !unseen.includes(m)
       && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);
   });
+  // a helped roll whose helpers haven't paid yet (whatever the switches: the op reads them)
+  const unpaid = recent.filter((m) => { const c = cardOf(m); return c?.kind === CARD.roll && c.raidId === raid.raidId && c.helpersPaid === false; });
+  for (const m of unpaid) await runOp(OPS.actorSpendCharges, { messageId: m.id });
   for (const m of unseen) await runOp(OPS.raidRoll, { messageId: m.id });
   for (const m of todo) await runOp(OPS.raidApplyCard, { messageId: m.id });
-  return todo.length + unseen.length;
+  return todo.length + unseen.length + unpaid.length;
 }

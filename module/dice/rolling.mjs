@@ -240,11 +240,8 @@ export async function performRoll(actor, values) {
   const plan = buildRollPlan(buildInput(actor, values, raid));
   if (!plan.ok) return { ok: false, plan };
   const autoCharges = setting(SETTINGS.autoCharges);
-
-  // Helpers' charges are spent by the GM (the roller doesn't own their Entities).
-  for (const p of plan.payments.filter((x) => !x.own)) {
-    if ((autoCharges && p.spend > 0) || p.weakness) await runOp(OPS.actorSpendCharges, { actorId: p.payerId, count: autoCharges ? p.spend : 0, weakness: p.weakness });
-  }
+  // Helpers' charges are spent by the GM from the posted card (the roller doesn't own their Entities): see below.
+  const helpersOwe = plan.payments.some((p) => !p.own && ((autoCharges && p.spend > 0) || p.weakness));
 
   const traitRoll = await new Roll(`1d${plan.traitDie}`).evaluate();
   const secondRoll = await new Roll(`1d${plan.secondDie}`).evaluate();
@@ -297,10 +294,12 @@ export async function performRoll(actor, values) {
     showed: res.showed, show: res.show, hiddenShow: res.hiddenShow, triggers: res.triggers, suspicion: res.suspicion,
     suspicionLabel: top.join(","), caught: res.caught, troubleUnwatched: res.troubleUnwatched, unseen: res.unseen,
     formShift: res.formShift, formTo, chargeBack: res.chargeBack, costs: res.costs,
-    autoCharges, chargesBefore: before, chargesAfter: after,
+    autoCharges, chargesBefore: before, chargesAfter: after, helpersPaid: !helpersOwe,
     applied: false, cancelled: false, cost: "", skipTurn: 0, dropped: "",
   };
   const message = await postCard(card, { speaker: ChatMessage.getSpeaker({ actor }), rolls: [traitRoll, secondRoll] });
+  // the helpers pay what the card says, once (if no Storyteller is connected, when one returns: reconcile)
+  if (helpersOwe) await runOp(OPS.actorSpendCharges, { messageId: message.id });
   // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) goes to the GM whole;
   // any other roll only for its Suspicion
   const tracked = card.groupId || card.chaseId || card.lockup || card.caught || card.wayOutBeaten;

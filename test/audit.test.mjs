@@ -285,6 +285,44 @@ test("a chase roll made while no Storyteller was connected is picked up when one
   await settle();
 });
 
+test("a helper's charges are spent only as a roll card says, once: no player spends another's charges at will", async () => {
+  // Ann asks the GM to spend Ben's Dracula's charges (and mark his Weakness) with no roll at all
+  const r = await op(ANN, OPS.actorSpendCharges, { actorId: dracula.id, count: 3, weakness: true });
+  await settle();
+  assert.equal(r.ok, false);
+  assert.equal(dracula.system.charges.value, 3);
+  assert.equal(dracula.system.weaknessInPlay, false);
+  // a real helped roll: Dracula's Bat on Ann's roll costs Dracula one charge, once
+  const bat = `ability:${dracula.id}:gift`;
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, [bat]: true }, [5, 4]);
+  const msg = lastMessage();
+  assert.equal(cardOf(msg).payments.find((p) => !p.own).spend, 1);
+  assert.equal(dracula.system.charges.value, 2);
+  assert.equal(cardOf(msg).helpersPaid, true);
+  await op(ANN, OPS.actorSpendCharges, { messageId: msg.id }); // asked again: nothing more
+  await settle();
+  assert.equal(dracula.system.charges.value, 2);
+  await asUser(GM, () => dracula.update({ "system.charges.value": 3 }));
+  await settle();
+});
+
+test("a helped roll made while no Storyteller was connected charges the helper when one returns", async () => {
+  GM.active = false;
+  const bat = `ability:${dracula.id}:gift`;
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, [bat]: true }, [5, 4]);
+  const msg = lastMessage();
+  assert.equal(dracula.system.charges.value, 3, "nobody could charge Dracula yet");
+  assert.equal(cardOf(msg).helpersPaid, false);
+  GM.active = true;
+  await asUser(GM, () => api.raid.reconcile());
+  await settle();
+  assert.equal(dracula.system.charges.value, 2, "the card's charge is spent once the Storyteller is back");
+  assert.equal(cardOf(msg).helpersPaid, true);
+  assert.equal(await asUser(GM, () => api.raid.reconcile()), 0, "and only once");
+  await asUser(GM, () => dracula.update({ "system.charges.value": 3 }));
+  await settle();
+});
+
 test("the roll dialog's furniture tick and the furniture switch say what they do", () => {
   const lang = JSON.parse(readFileSync(join(ROOT, "lang/en.json"), "utf8"));
   // a premade town prints the furniture's obstacle already 2 harder (Chapter 9): the tick must not add it twice
