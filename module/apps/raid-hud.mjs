@@ -50,6 +50,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       freeCaptive: RaidHud.#onFree,
       furnitureLost: () => runOp(OPS.raidFurniture, { state: "lost" }),
       furnitureOut: () => runOp(OPS.raidFurniture, { state: "out" }),
+      backInTown: () => runOp(OPS.raidBackInTown, {}),
     },
   };
 

@@ -237,7 +237,7 @@ async function consequences(chase, state) {
   // out of town: a carried piece goes with the party, one set down stays put (V4); no hunt or chase starts any more
   if (chase.kind === "final" && chase.outcome === "escaped") {
     const carried = pieceCarried();
-    await mutateRaid((s) => R.leaveTown(R.furnitureLeaves(s, { carried }), "flight"));
+    await mutateRaid((s) => R.leaveTown(s, "flight", { carried }));
   }
   if (chase.kind === "final" && setting(SETTINGS.autoYear)) {
     const { finishForked, promptHome } = await import("./raid-checks.mjs");
@@ -328,7 +328,7 @@ export function registerChaseOps() {
         }
         // the way out beaten: the party is out of town (no hunt or chase starts, dawn included); a carried piece
         // goes with it, one set down stays put, abandoned (V4): no more furniture noise either way
-        if (card.wayOutBeaten) s = R.leaveTown(R.furnitureLeaves(s, { carried }), "wayOut");
+        if (card.wayOutBeaten) s = R.leaveTown(s, "wayOut", { carried });
         // its round in the chase (the Limit may have just ended a local chase: then it no longer counts)
         if (card.chaseId && s.chase?.id === card.chaseId) {
           const r = C.recordRoll(s.chase, card.actorId, { messageId, round: card.chaseRound, band: card.band, critical: card.critical });

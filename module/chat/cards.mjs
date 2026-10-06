@@ -137,6 +137,7 @@ function raidContext(card) {
       ? (card.essentialsFace ? t("DGF.List.essentialsRolled", { face: card.essentialsFace, n: card.essentials }) : t("DGF.List.essentialsFixed", { n: card.essentials }))
       : "",
     left: card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
+    piece: card.event === "backInTown" && card.pieceBack ? t("DGF.RaidCard.backInTown.piece") : "",
   };
 }
 

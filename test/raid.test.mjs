@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { DGF } from "../module/config.mjs";
 import {
-  newRaid, normalizeRaid, suspicionOf, raidView, recordEvent, cancel, restore, lastLiveEvent, adjust, advanceTurn, setHunt, huntDue, eventsOf, leaveTown,
+  newRaid, normalizeRaid, suspicionOf, raidView, recordEvent, cancel, restore, lastLiveEvent, adjust, advanceTurn, setHunt, huntDue, eventsOf, leaveTown, backInTown, takeFurniture, setFurniture,
 } from "../module/logic/raid.mjs";
 import { foldSuspicion } from "../module/logic/suspicion.mjs";
 
@@ -102,9 +102,9 @@ test("the hunt starts at the moment of the Limit or dawn, so the Storyteller can
 
 test("once the party is out of town, neither dawn nor the Limit starts a hunt", () => {
   let s = leaveTown(newRaid({ id: "r", difficulty: "easy" }), "wayOut");
-  assert.deepEqual(s.partyOut, { how: "wayOut", turn: 1 });
+  assert.deepEqual(s.partyOut, { how: "wayOut", turn: 1, piece: "" });
   assert.equal(leaveTown(s, "flight"), s, "once");
-  assert.deepEqual(raidView(s).partyOut, { how: "wayOut", turn: 1 });
+  assert.deepEqual(raidView(s).partyOut, { how: "wayOut", turn: 1, piece: "" });
   assert.deepEqual(normalizeRaid(JSON.parse(JSON.stringify(s))).partyOut, s.partyOut, "it is kept");
   assert.equal(newRaid({ id: "n" }).partyOut, null);
   for (let i = 0; i < 11; i++) s = advanceTurn(s, 1);
@@ -114,6 +114,27 @@ test("once the party is out of town, neither dawn nor the Limit starts a hunt", 
   assert.equal(huntDue(s, beforeDawn), "", "dawn hunts only those still in town");
   const at = recordEvent(s, { eventId: "a", amount: 11, source: "storyteller" });
   assert.equal(huntDue(at, s), "");
+});
+
+test("back in town: the Storyteller takes back a mistaken leaving; a piece that leaving moved is in play again, nothing else", () => {
+  const taken = takeFurniture(newRaid({ id: "r" }));
+  // carried out of town, then taken back
+  const out = leaveTown(taken, "wayOut", { carried: true });
+  assert.deepEqual([out.furniture, out.partyOut.piece], ["out", "out"]);
+  const back = backInTown(out);
+  assert.equal(back.partyOut, null);
+  assert.deepEqual([back.furniture, back.furnitureLost], ["inPlay", false]);
+  assert.deepEqual({ ...back, partyOut: undefined, furniture: undefined }, { ...taken, partyOut: undefined, furniture: undefined }, "nothing else changes");
+  // set down, left behind (lost), then taken back
+  const left = leaveTown(taken, "flight", { carried: false });
+  assert.deepEqual([left.furniture, left.furnitureLost, left.partyOut.piece], ["lost", true, "lost"]);
+  assert.deepEqual([backInTown(left).furniture, backInTown(left).furnitureLost], ["inPlay", false]);
+  // the Storyteller changed the piece since: that stays; a piece never taken stays untaken
+  assert.equal(backInTown(setFurniture(out, "lost")).furniture, "lost");
+  const none = leaveTown(newRaid({ id: "n" }), "wayOut");
+  assert.equal(none.partyOut.piece, "");
+  assert.equal(backInTown(none).furniture, "");
+  assert.equal(backInTown(taken), taken, "in town already: nothing to take back");
 });
 
 test("the Storyteller's adjust, cancel, restore and undo", () => {

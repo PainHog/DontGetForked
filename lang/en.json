@@ -289,6 +289,9 @@
   "DGF.RaidCard.home.wayOut": "The party is out of town.",
   "DGF.RaidCard.home.nobody": "The whole town hunts, but nobody is free to flee.",
   "DGF.RaidCard.home.left": "Left behind at the lock-up: {names}.",
+  "DGF.RaidCard.backInTown.title": "Back in town",
+  "DGF.RaidCard.backInTown.text": "The Storyteller takes back the party's leaving: they are still in town, and the raid goes on. The hunt and chases can start again.",
+  "DGF.RaidCard.backInTown.piece": "The furniture is in play again (it was taken): Suspicion +1 at the end of each Turn until it really leaves town, is lost or abandoned.",
   "DGF.Chase.title": "The Chase",
   "DGF.Chase.kind.local": "A local chase",
   "DGF.Chase.kind.final": "The final flight",
@@ -419,5 +422,7 @@
   "DGF.Raid.furnitureOut": "The furniture has left town.",
   "DGF.Raid.furnitureOutButton": "out of town",
   "DGF.Raid.furnitureLostButton": "lost or abandoned",
-  "DGF.Raid.partyOut": "The party is out of town: no hunt or chase starts now, not even at dawn."
+  "DGF.Raid.partyOut": "The party is out of town: no hunt or chase starts now, not even at dawn.",
+  "DGF.Raid.backInTown": "back in town",
+  "DGF.Raid.backInTownHint": "A mistake: the party never left. The raid goes on as before."
 }

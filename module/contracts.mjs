@@ -64,6 +64,7 @@ export const OPS = Object.freeze({
   raidList: "raid.list",                 // GM: roll, set or clear the shopping list
   raidEnd: "raid.end",                   // GM: how the year went (the end of the raid)
   raidFurniture: "raid.furniture",       // GM: the furniture's piece in play, out of town or lost, by hand
+  raidBackInTown: "raid.backInTown",     // GM: take back a mistaken leaving of town (before the year is read)
   chaseStart: "chase.start",             // GM: start a local chase from a caught card, or the final flight, by hand
   chaseGround: "chase.ground",           // GM: roll the ground for the round
   chaseResolve: "chase.resolve",         // GM: move the Lead by the round's rolls

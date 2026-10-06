@@ -759,7 +759,7 @@ test("leaving town: a carried piece goes with the party, one set down stays put 
   await rollAs(ANN, witch, { trait: "sly", second: "mask", wayOut: true }, [6, 4]);
   assert.equal(cardOf(lastMessage()).event, "home");
   assert.equal(raid().furniture, "lost", "only a carried piece leaves town");
-  assert.deepEqual(raid().partyOut, { how: "wayOut", turn: 1 });
+  assert.deepEqual(raid().partyOut, { how: "wayOut", turn: 1, piece: "lost" });
   const hud = await asUser(BEN, () => openHud());
   assert.match(hud.renderedParts.body, /The furniture is lost or abandoned for the night/);
   assert.match(hud.renderedParts.body, /The party is out of town/);
@@ -853,6 +853,46 @@ test("F25: dawn, or the Storyteller starting the hunt by hand, during a local ch
   await op(GM, OPS.chaseEnd, { outcome: "dropped" });
   await asUser(GM, () => currentHud().runAction("toggleHunt"));
   await setSetting(SETTINGS.autoChase, true);
+  await settle();
+});
+
+test("back in town: the Storyteller takes back a mistaken leaving (until the year is read); the piece is in play again; players can't", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  await settle();
+  await rollAs(ANN, witch, { trait: "sly", second: "monster", wayOut: true }, [6, 4]); // carriers roll the Monster: 10 against 8
+  assert.equal(raid().furniture, "out");
+  assert.equal(raid().partyOut.how, "wayOut");
+  assert.match((await asUser(GM, () => openHud())).renderedParts.body, /data-action="backInTown"/);
+  assert.doesNotMatch((await asUser(ANN, () => openHud())).renderedParts.body, /data-action="backInTown"/, "the Storyteller's only");
+  assert.equal((await op(ANN, OPS.raidBackInTown)).reason, "gmOnly");
+  assert.ok(raid().partyOut, "a player can't take it back");
+  const [value, turn, ledger] = [view().value, view().turn, raid().ledger.length];
+  await asUser(GM, () => currentHud().runAction("backInTown"));
+  await settle();
+  assert.equal(raid().partyOut, null);
+  assert.equal(raid().furniture, "inPlay", "it was taken: in play again");
+  assert.deepEqual([view().value, view().turn, view().hunt, raid().ledger.length, witch.system.carryingFurniture], [value, turn, false, ledger, true], "nothing else changes");
+  const note = lastMessage();
+  assert.equal(cardOf(note).event, "backInTown");
+  assert.match(note.content, /Back in town/);
+  assert.match(note.content, /The furniture is in play again/);
+  assert.doesNotMatch((await asUser(GM, () => openHud())).renderedParts.body, /data-action="backInTown"/);
+  assert.equal((await op(GM, OPS.raidBackInTown)).reason, "notOut");
+  // in town again: the piece is noisy at the Turn's end
+  await asUser(GM, () => currentHud().runAction("nextTurn"));
+  await settle();
+  assert.equal(view().value, value + 1);
+  // out again, and the year read: no going back
+  await rollAs(ANN, witch, { trait: "sly", second: "monster", wayOut: true }, [6, 4]);
+  assert.ok(raid().partyOut);
+  await op(GM, OPS.raidEnd, { list: [{ name: "a coil of rope", duty: "handyman", essential: true, home: true }], furnitureHome: true });
+  await settle();
+  assert.ok(view().over);
+  assert.doesNotMatch((await asUser(GM, () => openHud())).renderedParts.body, /data-action="backInTown"/);
+  assert.equal((await op(GM, OPS.raidBackInTown)).reason, "raidOver");
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
   await settle();
 });
 

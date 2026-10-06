@@ -245,6 +245,21 @@ export function registerRaidOps() {
     },
   });
 
+  // GM: take back a mistaken leaving of town (the way out, or the flight escaped), until the year is read. The party is
+  // in town again; a piece that leaving took out of town or left behind is in play again. Nothing else changes.
+  registerOp(OPS.raidBackInTown, {
+    gmOnly: true,
+    apply: async () => {
+      const raid = getRaid();
+      if (raid.over) return { ok: false, reason: "raidOver" };
+      if (!raid.partyOut) return { ok: false, reason: "notOut" };
+      const { state, before, unchanged } = await mutateRaid((s) => (s.over ? s : R.backInTown(s)));
+      if (unchanged || state.partyOut) return { ok: false, reason: "notOut" };
+      await announce("backInTown", state, { how: before.partyOut.how, pieceBack: state.furniture !== before.furniture });
+      return { ok: true, furniture: state.furniture };
+    },
+  });
+
   // V4: the moment an Entity first takes the piece, it is in play (and noisy) until it leaves town or is lost.
   Hooks.on("updateActor", (actor, diff) => {
     if (!isActiveGM() || !isEntity(actor) || diff?.system?.carryingFurniture !== true || !setting(SETTINGS.autoFurniture)) return;

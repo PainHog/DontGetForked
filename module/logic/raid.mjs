@@ -16,7 +16,8 @@
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
  *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
  *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
- *             partyOut, // null, or { how: "wayOut" | "flight", turn } once the party has left town (no hunt or chase starts)
+ *             partyOut, // null, or { how: "wayOut" | "flight", turn, piece } once the party has left town (no hunt or chase starts);
+ *                       //   piece: what that leaving made of the furniture ("out" | "lost"), or "" if it moved nothing
  *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
@@ -295,7 +296,23 @@ export function furnitureLeaves(state, { carried = true } = {}) {
   return state.furniture === "inPlay" ? setFurniture(state, carried ? "out" : "lost") : state;
 }
 
-/** The party has left town ("wayOut" | "flight"): from now on no hunt or chase starts, dawn included. */
-export function leaveTown(state, how) {
-  return state.partyOut ? state : { ...state, partyOut: { how, turn: state.turn } };
+/**
+ * The party has left town ("wayOut" | "flight"): from now on no hunt or chase starts, dawn included.
+ * The piece goes with it if carried, or stays put, abandoned (furnitureLeaves); partyOut.piece remembers which.
+ */
+export function leaveTown(state, how, { carried = true } = {}) {
+  if (state.partyOut) return state;
+  const s = furnitureLeaves(state, { carried });
+  return { ...s, partyOut: { how, turn: state.turn, piece: s.furniture !== state.furniture ? s.furniture : "" } };
+}
+
+/**
+ * The Storyteller takes back a mistaken leaving of town: the party is in town again. A piece that leaving
+ * took out of town or left behind (and nobody has changed since) is in play again: it was taken. Nothing else changes.
+ */
+export function backInTown(state) {
+  if (!state.partyOut) return state;
+  const s = { ...state, partyOut: null };
+  const piece = state.partyOut.piece;
+  return piece && state.furniture === piece ? setFurniture(s, "inPlay") : s;
 }
