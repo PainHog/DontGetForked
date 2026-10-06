@@ -294,3 +294,36 @@ Seeds 7 and 11 after: 92.2 / 75.6 / 56.1 and 92.0 / 75.4 / 56.0% won, 1.0 / 4.4 
 `node sim/premade-check.mjs 2000`: Puddlecombe 89.6% won / 0.8% forked (was 89.5 / 0.7), Thistlewick 74.4 / 6.8 (was 73.9 / 7.0, a hair over the top of its forked target; now inside), Gallowsmere 58.0 / 9.4 (was 57.6 / 9.3).
 
 Still missing a target: **Hard captures 0.34** (target 0.2–0.3; 0.35 before, hidden by the old check). **Option outliers:** Out of Sight is now +2.5 to +3.4 (seeds 1, 7, 11; it was +0.6, when the hand-over came after the plan), Dracula +2.1 to +3.1 as before; seed 1 also shows Jekyll & Hyde −3.4 and Rattle −3.2, but seeds 7 and 11 put them inside ±2.5 (run-to-run noise of about ±0.5–1). For Richard to decide; no game number was changed.
+
+## After the audit: Out of Sight, and a party that stays together (2026-10-06)
+
+### Out of Sight (the Invisible Man's default Perk)
+Since the audit the Invisible Man hands his loot to a partner before a watched roll (free, U2) and so can't be caught; the Perk measures +2.5 to +3.4. Four candidate texts, as `outOfSightRule` (the default stays the book's), 2,000 raids per label and party size:
+
+| Text | Out of Sight (seeds 1 · 7 · 11) | The Invisible Man | Win E / S / H (seed 1; 7; 11) | Forked Hard (1; 7; 11) |
+|---|---|---|---|---|
+| (a) as now: "only while you carry loot or furniture" | +2.5 · +3.4 · +3.0 | +1.5 · +1.6 · +2.0 | 92.3/74.9/57.0; 92.2/75.6/56.1; 92.0/75.4/56.0 | 9.0; 9.9; 10.1 |
+| (b) "…, or someone at your place does" | **+0.2 · +0.7 · +0.3** | +0.7 · +0.6 · +1.0 | 92.2/74.4/56.4; 92.1/75.2/55.3; 91.9/75.0/55.1 | 9.1; 10.2; 10.4 |
+| (c) "on Trouble at a watched obstacle you're caught only on a 1–3 on a d6" | +1.3 · +2.0 · +0.8 | +1.1 · +1.0 · +1.3 | 92.3/74.3/57.0; 92.1/75.4/55.7; 91.8/75.2/55.3 | 8.9; 10.1; 10.0 |
+| (d) "…, or you were handed loot or handed it over this Turn" | +1.0 · +2.0 · +1.3 | +0.9 · +1.0 · +1.3 | 92.2/74.6/56.6; 92.1/75.4/55.7; 92.0/75.1/55.5 | 9.1; 10.1; 10.3 |
+| (d), played by a party that keeps the loot out of his hands | +2.7 · +4.0 · +2.6 | +1.5 · +1.7 · +1.8 | 92.4/74.8/57.0; 92.2/75.8/56.3; 91.9/75.3/56.0 | 9.0; 10.0; 10.1 |
+
+**Recommendation: (b).** It is the only text inside ±2.5 with room on every seed, it adds six words and nothing to roll or remember (you look at who's beside you), it keeps the Perk's joke (they can't see you, but they can see the candlestick your friend is carrying), and play can't get round it except by going alone, which costs the help of the others. (c) is inside too but closer to the line (+2.0 on seed 7) and adds a die roll on every Trouble; (d) needs a note of who handed what this Turn and is beaten by handing the loot over a Turn earlier, which the rules allow at any time (the last row). With (b) the Invisible Man's other Perks sit close together (Hidden Pockets −0.4 to +0.6, Light Step −0.8 to +0.2). Hard wins drop 0.6–0.9 points (55.1–56.4%, still inside 55–60%, at the edge on seed 11). Possible wording: "Out of Sight: Trouble gets you caught only while you, or anyone at your place, carry loot or furniture: they can't see you, but they can see a floating candlestick."
+
+### A party that stays together
+The report's `partyPolicy: "together"` lost about 40 points at Standard and Hard (seed 1, 2,000 raids per cell: 89.2 / 35.1 / 16.9% won against pairs' 92.3 / 74.9 / 57.0%). Most of that was the simulated players, not the rules:
+- **Opening an approach shut the whole party out.** Only the opener gets through, so it then crossed the location's other obstacles alone, one a Turn, while three or four Entities stood idle (1.6 times a raid). Not opening where it would shut the others out (`openPolicy: "last"`): 52.9 / 33.8% at Standard / Hard.
+- **Everyone rolled every group obstacle,** spending every action on it and risking a shared chase. Sending the best two (`groupPolicy: "best2"`) with the above: 57.8 / 37.3%.
+- **Counting a Turn per obstacle** when the whole party can share them out (`planTime: "perTurn"`): with both above, 58.4 / 39.9%.
+- Letting the others follow an opened obstacle their own way (`openedRule: "othersMayFollow"`, the book's literal reading) changes nothing for a party that waits for the opener (the simulated players' choice), and costs 1–2 points if they try where they can be seen, so the old shortcut stays the default.
+
+These three are now the default for a party that stays together (`"auto"`; pairs and singles play exactly as before). What is left is the clock: a whole party pays a move for every location plus about 1.5 Turns of work there, so 12 Turns cover about four of five locations. Given 14 Turns, the same party wins 70.1 / 51.3% (Easy falls to 78%: with time to spare the players go for furniture and its noise takes them to the Limit).
+
+| Seed 1 (seed 7), 2,000 raids per cell | Easy | Standard | Hard |
+|---|---|---|---|
+| Pairs (the default) | 92.3% (92.2) | 74.9% (75.6) | 57.0% (56.1) |
+| Singles | 90.8% (91.8) | 75.1% (75.7) | 55.2% (55.3) |
+| Together, as simulated before | 89.2% (90.0) | 35.1% (33.8) | 16.9% (18.1) |
+| Together, played as a whole party (now) | 91.9% (92.6) | 58.4% (58.8) | 39.9% (40.0) |
+
+**Judgement:** a real party that stays together and plays sensibly should expect about what the last row shows: Easy unaffected, Standard and Hard about 15–20 points below a party that splits (roughly 55–60% and 35–40%), and forked about the same. Real players will find a few more Turns than the simulated ones (better routes, skipping the hardest extra early), so perhaps 5 points more, not 15. **Recommendation:** the book should advise splitting up on Standard and Hard ("the night is short: a party that splits into twos covers the town in time; one that stays together rarely finishes the list"), since every target was tuned on a party that splits, and every agent playtest split up anyway.
