@@ -237,6 +237,10 @@ export function registerRaidOps() {
     apply: async ({ state: furniture }) => {
       if (!R.FURNITURE_STATES.includes(furniture)) return { ok: false, reason: "badState" };
       const { state } = await mutateRaid((s) => R.setFurniture(s, furniture));
+      // lost or abandoned (V11): it stays put, so nobody carries it any more (as when a carrier is captured, F15)
+      if (furniture === "lost") {
+        for (const a of game.actors.filter((x) => isEntity(x) && x.system.carryingFurniture)) await a.update({ "system.carryingFurniture": false });
+      }
       return { ok: true, furniture: state.furniture };
     },
   });

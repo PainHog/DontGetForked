@@ -327,7 +327,11 @@ test("furniture (B2, V4): its extra obstacle is 2 harder; once taken it is noisy
   await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
   await settle();
   assert.equal(raid().furniture, "inPlay", "picked up: in play at once");
-  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  // abandoned while carried (V11): it stays put, so nobody carries it any more (the Mask and Nimble come back)
+  await asUser(GM, () => currentHud().runAction("furnitureLost"));
+  await settle();
+  assert.equal(raid().furniture, "lost");
+  assert.equal(witch.system.carryingFurniture, false, "abandoned: it stays put");
   await op(GM, OPS.raidFurniture, { state: "out" });
   await settle();
 });
@@ -706,6 +710,17 @@ test("V5: a Ghost that is Already Dead, cornered as the Limit comes, isn't captu
   assert.ok(!cards(CARD.chase).some((m) => cardOf(m).chaseId === local.id && cardOf(m).event === "captured"));
   await asUser(GM, () => currentHud().runAction("toggleHunt"));
   await settle();
+});
+
+test("a new raid: nobody carries last year's piece into the new town, so the first Turn's end doesn't take it (V4)", async () => {
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true })); // home with the piece last year
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  assert.equal(witch.system.carryingFurniture, false);
+  await asUser(GM, () => currentHud().runAction("nextTurn"));
+  await settle();
+  assert.equal(raid().furniture, "", "not taken");
+  assert.equal(view().value, 0, "and quiet");
 });
 
 test("the night left no errors, no missing words and no unanswered dialogs", () => {

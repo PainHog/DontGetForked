@@ -81,11 +81,12 @@ export function captivesOf(entities) {
 /**
  * A new raid (a new year): the Entity is free, its charges refill (Chapter 2:
  * charges refill once a year, at the castle) and the marks the last raid left go.
- * M3: Jekyll & Hyde starts each raid as Jekyll (the first form).
+ * M3: Jekyll & Hyde starts each raid as Jekyll (the first form). Nobody carries furniture
+ * into a new town (else the next Turn's end would take a piece and keep it noisy, V4).
  */
 export function newRaidUpdate(system) {
   const update = {
-    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false,
+    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false, carryingFurniture: false,
     "charges.value": system?.charges?.start ?? DGF.charges,
   };
   const forms = formsOf(system?.entityKey);
