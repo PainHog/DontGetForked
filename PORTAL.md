@@ -1,5 +1,5 @@
-Now: Fixing what the latest computer playtest of the full draft found: final flights are now much shorter, and two dozen unclear passages are clearer.
-Next: Another computer playtest to check the fixes, then Richard's first two-player try of the online version.
+Now: The rules have settled: the last two computer playtests found nothing major. A kit for the first real playtest with people is ready.
+Next: Richard's first playtest with real people, and his two-player try of the online version.
 Number: Design decisions made = 88
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
@@ -53,6 +53,8 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Online version, part 2: chases and the lock-up
 - [x] Online version: ready-made monsters, tables and towns to drag in
 - [x] Computer playtest of the full draft, and its fixes (shorter final flights)
+- [x] Three more computer playtests until nothing major was left
+- [x] A kit for the first playtest with real people
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
