@@ -4,7 +4,7 @@ Does the balance simulator (`sim/`) play the game the rulebook describes? Checke
 
 **Method.** Read `sim/engine.mjs` (and `params.mjs`, `entities.mjs`, `town.mjs`, `premade.mjs`, `run.mjs`) against each passage; for every suspected deviation, counted how often it fires in default play with an instrumented copy of the engine (4,500 raids: 500 per label and party size); fixed the real ones, each with a test where practical (`test/sim.test.mjs`, scripted dice); measured each fix on its own (1,000 raids per label and party size, the same raids each time); then re-ran the full report (`node sim/run.mjs`, 2,000 raids per cell, rewrites `sim/REPORT.md`) and the premade towns (`node sim/premade-check.mjs 2000`). The committed `sim/REPORT.md` was first reproduced exactly from `972be06`, so the before numbers below are the code as it stood.
 
-**Findings: 0 major, 11 minor, 5 nits (16), all fixed; 11 simplifications left as they are (§4), each defensible.** Severity: *major* = a rule missing or played differently enough to move a target; *minor* = a real deviation that fires in a measurable share of raids (or a report that checks a target wrongly), worth under a point; *nit* = rare or negligible. **No win or forked rate left its target** (§5); Thistlewick's forked rate, at the top edge before, is now inside.
+**Findings: 0 major, 11 minor, 5 nits (16), all fixed; 11 simplifications left as they are (§6), each defensible.** Severity: *major* = a rule missing or played differently enough to move a target; *minor* = a real deviation that fires in a measurable share of raids (or a report that checks a target wrongly), worth under a point; *nit* = rare or negligible. **No win or forked rate left its target** (§7); Thistlewick's forked rate, at the top edge before, is now inside.
 
 **Status keys** in the tables: ✓ modelled as the book says · ≈ modelled differently (see the note) · — left out · **fixed** = was a deviation, fixed in this audit (SA-nn).
 
@@ -20,9 +20,9 @@ Does the balance simulator (`sim/`) play the game the rulebook describes? Checke
 | SA-06 | minor | A captive's slip roll that came up a Cost got a Storyteller Cost (Suspicion +1, lose a Turn, or a smaller die); with Built to Last it freed *and* cost. | Ch6: "Only a Success frees you; a Cost does nothing." | 0.019 (Suspicion +1: 0.005) | `captivesAct`: no Cost on a slip roll; the planner no longer values a Cost there unless it frees (Built to Last). | "slipping free: a Cost does nothing…" |
 | SA-07 | minor | "Lose a Turn" (and picking up a dropped item) when the Entity's group moved next: it moved with the others and skipped its next roll at the new place instead, where it could still help with its charges. | Ch3: "lose a Turn (you skip your next action)"; Ch4: a move is an action. | 0.27 | `followsBehind`: the lost Turn is the move; the Entity follows a Turn behind and isn't there to roll or help until the Turn after next. | "a lost Turn skips a move" |
 | SA-08 | minor | The planner weighed the Weakness an overdraw brings in the final flight only under the old `overdrawAtLimit: "weakness"`; under `"once"` (the rule since B3) it overdrew almost for free. | S1, B3: the Weakness is in play from your own next roll to the end of the flight. | 0.25 final-flight overdraws | `planRoll`: the same weight under "once". Final-flight overdraws 0.25 → 0.05 per raid; wins and forked unchanged. | policy (report counts) |
-| SA-09 | minor | The report checked Hard captures as "≥ 0.2", so 0.35 showed ✓. | DESIGN S9: captures 0.2–0.3 per Hard raid. | report | `TARGETS.hardCaptures = [0.2, 0.3]`; `run.mjs`, `tune.mjs`. Now shows ✗ (§5). | — |
+| SA-09 | minor | The report checked Hard captures as "≥ 0.2", so 0.35 showed ✓. | DESIGN S9: captures 0.2–0.3 per Hard raid. | report | `TARGETS.hardCaptures = [0.2, 0.3]`; `run.mjs`, `tune.mjs`. Now shows ✗ (§7). | — |
 | SA-10 | minor | The report checked the furniture targets on the default players, who go for furniture only when it's safe (18% of raids, a Grand Year 81% of the time), so both showed ✗. | DESIGN 2026-10-04 and B2: the targets are for "a party going for furniture", tuned on `furniturePolicy: "always"`. | report | `run.mjs`: checked with "always"; the default players' figures shown beside them. | — |
-| SA-11 | minor | The way out could be rolled again the same Turn by another Entity after Trouble. | Ch4, Getting Out: "one rolls for all … On Trouble … try again next Turn." (Ch4, Turns allows several tries at an obstacle in general.) | 0.023 | New rule switch `exitTries`: "one" (default, this reading) / "each" (as before). Worth 0.1 points either way. **A wording question for Richard** (§6). | "the way out: one rolls for all…" |
+| SA-11 | minor | The way out could be rolled again the same Turn by another Entity after Trouble. | Ch4, Getting Out: "one rolls for all … On Trouble … try again next Turn." (Ch4, Turns allows several tries at an obstacle in general.) | 0.023 | New rule switch `exitTries`: "one" (default, this reading) / "each" (as before). Worth 0.1 points either way. **A wording question for Richard** (§8). | "the way out: one rolls for all…" |
 | SA-12 | nit | Fetch's old effect (B2 replaced it: "picking up a dropped item doesn't cost your action") still applied alongside B5's. | Ch2 Fetch (B5): the way out 1 easier; a final flight starts at Lead 3. | 0.003 | `pickCost`: only under `fetchRule: "pickup"`. | "B5's Fetch no longer waives…" |
 | SA-13 | nit | In a group check each roller's Cost was picked right after its own roll, so it could be a Suspicion +1 the group was already taking (costing nothing). | F23; Ch3: "never … a Cost that costs nothing right then". | 0.015 | `groupCheck`: Costs picked after all the rolls. | "F23: a group check's Costs…" |
 | SA-14 | nit | The Difficulty-12 ceiling of a rolled town counted the generated furniture location's unused obstacles before the furniture's extra obstacle, so they could take its 12. | Ch8: the ceiling counts the town's obstacles, "the furniture's obstacle … by its roll". | rare | `town.mjs` `applyCap`: list locations, then the extra obstacle, then the unused ones. | — |
@@ -153,7 +153,29 @@ Every decision that affects play, with where it lives. ✓ unless marked.
 | B1–B6 | ✓ | B1 numbers; B2 `furnitureRule` "noisySlowHard"; B3 all seven parts (local mob 8, escape 5, Limits 11, overdraw once, captured first, no Dawn timing, no small entrances); B4 Broomstick with Nimble; B5 `fetchRule` "flightExit" (**fixed** SA-12); B6 `finalMove` "margin2" in flights and shared chases. |
 | V1–V16 | ✓ | V1 `chaseSusp` "yes"; V2 switches in chases (helpers' in the flight, SA-04); V3 overdraw; V4 every Turn from taking (`furnitureNoise` "carried"; never set down); V5 Already Dead joins the flight; V6 hand-over; V7 Broomstick; V8 once a round; V9 the hunt brings home what's carried (the players never seek it); V10 B6 kept; V11 abandon (— never chosen); V12 any order (≈ fixed order); V13, V14 no change; V15 flavour; V16 Hidden Pockets keeps loot, not furniture. |
 
-## 4. Left as they are (defensible simplifications)
+## 4. Defaults: every rule switch is on the decided rule
+
+All 32 rule switches in `sim/params.mjs` (and the content switches the book fixes: the chase table, the roster, the Duty edge, the Weakness timing) default to the decided rule; none needed changing. The new test "every rule switch defaults to the decided rule" lists each with its decision, so a switch that drifts, or a new one added without a decided default, fails `npm test`. In brief: `critRule` doubles, `critEffect` both (S8); `costChoice` mixed, `dropRule` recover (P3, S3, T10); `loudRule` suspicion (R1); `openApproach` easier, `openEase` 2, `openTrait` unlisted (S10, T5); `overdrawAtLimit` once (S1, B3); `overdrawStack` merge; `furnitureRule` noisySlowHard, `furniturePlace` onList, `furnitureNoise` carried (S7, B2, V4); `finalMove` margin2 (B6); `raiseCap` perRoll, `raiseDie` trait (R2, T6); `waysIn` two (T2); `lootHandover` free (U2); `captiveItems` lost (R3, T9); `multiCaught` shared (R4); `monsterRule` plus2 (S2); `chaseSusp` yes (S6, V1); `slipRule` success (S6); `corneredAtLimit` captured (B3); `fetchRule` flightExit (B5); `alreadyDeadTurns` 1 (C8); `exitRule` gateSingle (S4) and the new `exitTries` one (SA-11); `groupRule` all (P6); `tellScope` party, `tellPartyChance` 0.5 (S5, C4); `triesPerTurn` each (R7); `chaseTable` approved (C12); `roster` approved; `dutyEdge` on (C10); `weaknessRule` timing (C3). The numbers (`NUMBERS`) match Chapter 8's table (pinned by test).
+
+Left over from before the content existed and unused by the defaults: `tellChance`, `weaknessLocal` and `weaknessFinal` (placeholder chances, read only by the non-default `tellScope: "entity"` and `weaknessRule: "chance"`), and `fetchRule`'s and `furnitureRule`'s rejected candidates. They only feed the sweeps. One clean-up: `furnitureRule` listed its default twice (removed).
+
+## 5. Policies: how the simulated players choose
+
+The players are simple and documented (`sim/params.mjs`, kind "policy"). Each choice below is legal; what matters is whether it makes a target look met or missed. Figures are from the new `sim/REPORT.md` (sweeps at 500 raids per cell, points against the baseline at that size).
+
+| Choice | The policy | Reasonable? | What it does to the targets |
+|---|---|---|---|
+| Splitting up | **Pairs** (`partyPolicy`): each pair takes its own location; everyone regroups at the way out. Singles play about the same (−2.2 / −0.5 / −1.5). | Yes: every agent playtest split up. | **The win targets are met only by a party that splits.** Staying together loses 2 / 40 / 40 points (Easy / Standard / Hard): it runs out of Turns. The balance is tuned for split play; Chapter 4 says the party may split but doesn't say it should. |
+| Mask or Monster | **Smart** (`monsterPolicy`): weighs the better odds against the Suspicion, harder near the Limit. | Yes. | Mask on 36% of the rolls with a choice and 28% of all rolls (the final flight forces the Monster): the "at least a quarter" target is met on all rolls by 3 points. Always the Mask costs 2 / 4 / 14 points, always the Monster 4 / 16 / 4, so both dice matter. |
+| Fear of being caught | `caughtWeight` 1.2. | Yes. | Hard captures move with it (0.40 at 0.4, 0.31 at 2.0): the 0.2–0.3 target isn't met by any of the three. |
+| Spending charges | **Spendy** (`chargePolicy`): spend whenever it clearly helps; charges are lost at dawn. | Yes: what the book tells players. | 74% of Entities spend at least half (target ≥ 50%). Hoarding costs 7 / 15 / 14 points. |
+| Furniture | **Only when safe** (`furniturePolicy` "ifSafe"): with Suspicion 3 below the Limit and Turns to spare for the rest of the list. | Cautious: tried in 18% of raids. Its check ignores the +1 a Turn the piece adds once taken; it is safe mostly because it goes late. | **The furniture targets are met only with "always"** (the policy the target was set and tuned on, B2): Grand Year 54.8% when tried (target about half), a Win lost 17.4% (about 1 in 5). With the default players the gamble isn't one (80% and 5%), which the report used to mark as missed (SA-10). Neither policy ever abandons a piece. |
+| Loot | Handed to a partner before a watched roll (U2); the roller plans its roll with empty hands (SA-05). | Yes. | +0.7 / +0.9 / +1.7 points against no hand-over; Out of Sight now counts. |
+| Who rolls | The best-placed Entity at each obstacle and the way out; a group check takes everyone there. | Yes. | — |
+| Rescues | One pair goes, once the essentials are claimed and if the Turns allow. | Reasonable; rescues stay rare (0.02 a raid against 0.05 slipping free). | Hard: 0.23 Entities left behind a raid. |
+| Leaving | Leave early when Suspicion is one from the Limit and the essentials are in hand; in a final flight, carriers drop the piece when the Lead is 1. | Yes. | — |
+
+## 6. Left as they are (defensible simplifications)
 1. **Order of rolls in a flight round (V12):** fixed, legal; the small edge isn't taken.
 2. **Setting furniture down, abandoning it (V4, V11):** never chosen. A party that always goes for furniture never abandons it near the Limit, so the "always" figures are slightly pessimistic for the gamble.
 3. **A carried move's arrival** (Tell check) in its first Turn rather than the second: negligible.
@@ -166,9 +188,46 @@ Every decision that affects play, with where it lives. ✓ unless marked.
 10. **The Storyteller's Costs:** random among those that cost something, not "the one that hurts most"; a lost Turn that nothing waits for isn't screened out (0.03 a raid).
 11. **No maps:** every move one Turn, no small entrances (none in rolled towns by B3, none marked in the premade towns).
 
-## 5. Before and after
-(filled in below)
+## 7. Before and after
 
-## 6. For Richard
+`node sim/run.mjs` (2,000 raids per label and party size, seed 1; before = main `972be06`, which reproduces the committed report exactly):
+
+| Measure | Target | Before | After |
+|---|---|---|---|
+| Win, Easy / Standard / Hard | 87–93 / 72–78 / 55–60% | 92.2 / 74.2 / 56.1% | **92.3 / 74.9 / 57.0%** ✓ |
+| Forked, Easy / Standard / Hard | ≤2 / 3–7 / 8–12% | 0.8 / 5.0 / 9.1% | **0.7 / 5.2 / 9.0%** ✓ |
+| Hard win with 3 · 4 · 5 Entities | close together | 52.3 · 57.1 · 59.0% | 53.1 · 57.4 · 60.5% |
+| Hard captures per raid | 0.2–0.3 | 0.35 (shown ✓) | **0.34 ✗** (now checked as a band) |
+| Grand Year when tried / a Win lost (always goes for it) | ~50% / ~20% | 55.2% / 17.0% (not checked) | **54.8% / 17.4%** ✓ |
+| Trouble; Criticals | 10–22%; 3–7% | 18.2%; 5.3% | 18.0%; 5.3% ✓ |
+| Spend at least half | ≥ 50% | 73.4% | 73.8% ✓ |
+| Mask: rolls with a choice (all rolls) | ≥ 25% | 35.1% (27.0%) | 35.6% (27.6%) ✓ |
+| Overdraws per raid: raid / local chase / final flight | — | 0.14 / 0.13 / 0.25 | 0.06 / 0.13 / 0.05 |
+| Largest option outliers (±2.5) | within ±2.5 | Dracula +2.7, Book-Learned −2.7 | Jekyll & Hyde −3.4, Rattle −3.2, Dracula +3.1, Book-Learned −3.1 (seed 1; see below) |
+
+Each fix on its own (1,000 raids per cell, seed 1, applied in this order; win E / S / H, forked E / S / H):
+
+| Step | Win | Forked | Note |
+|---|---|---|---|
+| Before | 92.4 / 74.5 / 55.2 | 0.8 / 4.9 / 9.2 | |
+| SA-12 Fetch, SA-06 slip Cost | 92.4 / 74.6 / 54.9 | 0.8 / 4.8 / 9.2 | |
+| SA-03 a switch never dodges the loud way | 92.4 / 74.4 / 54.8 | 0.8 / 4.9 / 9.1 | |
+| SA-04 a helper's switch | 92.5 / 74.8 / 55.4 | 0.8 / 5.0 / 9.6 | |
+| SA-08 the planner weighs a flight overdraw's Weakness | 92.5 / 74.6 / 55.4 | 0.8 / 5.2 / 9.5 | flight overdraws 0.27 → 0.05 a raid |
+| SA-01, SA-02, SA-13 group checks | 92.2 / 74.3 / 55.3 | 0.8 / 5.4 / 9.4 | raid overdraws 0.15 → 0.06 a raid |
+| SA-05 plan after the hand-over, SA-11 one way-out roll a Turn | 92.2 / 75.0 / 56.1 | 0.8 / 5.2 / 9.1 | the hand-over: +0.1 / +0.3 / +0.8 on seed 2; one way-out roll: ±0.1 |
+| SA-14 the ceiling | 92.2 / 75.1 / 56.1 | 0.8 / 5.1 / 9.1 | |
+| SA-07 a lost Turn skips a move | 92.2 / 75.2 / 56.1 | 0.8 / 5.2 / 9.1 | |
+
+**The premade towns** (`node sim/premade-check.mjs 2000`): Puddlecombe 89.5 → 89.6% won, 0.7 → 0.8% forked (targets 87–93, ≤2); Thistlewick 73.9 → 74.4%, 7.0 → 6.8% (72–78, 3–7; its forked rate was a hair over the top and is now inside); Gallowsmere 57.6 → 58.0%, 9.3 → 9.4% (55–60, 8–12). All inside their targets.
+
+**Option outliers** move between runs by about ±0.5–1 point (more for a Perk, compared within one Entity's parties). On seeds 7 and 11 (2,000 raids per cell) the same code puts Jekyll & Hyde at −1.9 and −1.2 and Rattle inside ±2.5, so seed 1's −3.4 and −3.2 are noise around a spread that was already at the edge. **One change is real: Out of Sight** is +2.5 / +3.4 / +3.0 on seeds 1 / 7 / 11 (it was +0.6 before): with SA-05 the Invisible Man who hands his loot over can no longer be caught, as the Perk says, and the simulated players use that before every watched roll. Dracula stays +2.1 to +3.1, as before the audit.
+
+## 8. Still missing a target, and for Richard
+- **No win or forked rate left its target**, on seed 1 or on seeds 7 and 11 (92.0–92.3 / 74.9–75.6 / 56.0–57.0% won; 0.7–1.0 / 4.4–5.2 / 9.0–10.1% forked).
+- **Hard captures, 0.34 per raid against 0.2–0.3** (S9). Missed before the audit too (0.35); the report hid it by checking only "≥ 0.2" (SA-09). No game number changed here; it is Richard's call whether to revisit the target or the numbers (B3 already brought it from 0.41).
+- **Option outliers past ±2.5:** Out of Sight (+2.5 to +3.4, now that the Perk is played as written) and Dracula (+2.1 to +3.1, unchanged). The others past the line on seed 1 are within run-to-run noise.
 - **SA-11, a wording question:** Chapter 4's way out says "one rolls for all … On Trouble … try again next Turn", while Chapter 4's Turns lets several Entities try one obstacle in a Turn. The simulator now reads the way out as one roll a Turn (`exitTries: "one"`); either reading moves wins by 0.1 points. A clause such as "(the way out is rolled once a Turn)" would settle it.
-- **Hard captures** sit at 0.35 per raid against the 0.2–0.3 target (S9); the report showed ✓ only because it checked "≥ 0.2" (SA-09). Nothing in this audit moved them. A more cautious party (`caughtWeight` 2.0) is at 0.31.
+- **Policy dependence:** the win targets hold for a party that splits up, and the furniture targets for a party that always goes for the piece (§5).
+
+`npm test` is green; `test/sim.test.mjs` has 24 tests (13 before; 11 new for this audit).

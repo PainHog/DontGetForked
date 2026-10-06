@@ -271,3 +271,26 @@ Thistlewick's forked rate sits at the top of its target (was 6.5% before B6); on
 ## PT7's Hard Grand Years (2026-10-06)
 
 PT7 got a Grand Year in both Hard raids (Gallowsmere by Turn 8, a rolled Hard town by Turn 7). Gallowsmere, 2,000 raids per party size: the default players (furniture only when safe) almost never try for the armour (0.1%): wins 57.6%, forked 9.3%. A party that always goes for it tries 81.7% of the time and gets a Grand Year 50.1% of the times it tries (target about half), with wins 54.0% and forked 14.9%. Two Grand Years in two raids are within those odds; no change (V13).
+
+## Conformance audit (2026-10-06)
+
+The simulator checked rule by rule against the rulebook and every decision through V16 (`docs/audits/SIM-AUDIT.md`, with the full conformance table). Every rule switch was already on the decided rule and every Gift and Perk is played with its book effect; 16 places where the engine or the report drifted were fixed, none of them changing a game number:
+- **Group obstacles:** whoever hasn't got past stays behind (it used to be carried along by the others); a group check plans its rolls in turn, so two rollers no longer count on the same last charge (half the overdraws during the raid were that); its Costs are picked after the rolls (F23).
+- **Abilities:** a switch never dodges a loud way (Chapter 5); a helper's switch helps anyone's roll at the same place (Chapter 3); the roller plans again after handing its loot over, so Out of Sight and Through the Wall work as written.
+- **Captives:** a slip roll's Cost does nothing (no Storyteller Cost).
+- **Time:** a lost Turn before a move is the move: the Entity follows a Turn behind; the way out is rolled once a Turn (new switch `exitTries`, a wording question for Richard).
+- **Perks and the planner:** B5's Fetch no longer also waives picking up a dropped item (the pre-B2 Fetch); the players weigh the Weakness of a final-flight overdraw under "once" (flight overdraws 0.25 → 0.05 a raid).
+- **The report:** Hard captures checked against 0.2–0.3 (it checked ≥ 0.2); the furniture targets checked with a party that always goes for it, as they were set; notes brought up to date. **Tests** now pin the roster, numbers, chase table and every rule switch's default to the book, so a change to `module/config.mjs` can't move the baseline unnoticed.
+
+`node sim/run.mjs` (2,000 raids per label and party size, seed 1):
+
+| | Win E / S / H | Forked E / S / H | Hard captures | Grand Year / a Win lost (always goes for it) | Overdraws a raid: raid · flight |
+|---|---|---|---|---|---|
+| Before (main `972be06`) | 92.2 / 74.2 / 56.1 | 0.8 / 5.0 / 9.1 | 0.35 | 55.2% / 17.0% | 0.14 · 0.25 |
+| After | **92.3 / 74.9 / 57.0** | **0.7 / 5.2 / 9.0** | 0.34 | 54.8% / 17.4% | 0.06 · 0.05 |
+
+Seeds 7 and 11 after: 92.2 / 75.6 / 56.1 and 92.0 / 75.4 / 56.0% won, 1.0 / 4.4 / 9.9 and 0.9 / 4.7 / 10.1% forked. The largest single step was planning after the hand-over (Hard +0.8 on two seeds); the rest moved wins by 0.3 points or less. Every win and forked target is still met.
+
+`node sim/premade-check.mjs 2000`: Puddlecombe 89.6% won / 0.8% forked (was 89.5 / 0.7), Thistlewick 74.4 / 6.8 (was 73.9 / 7.0, a hair over the top of its forked target; now inside), Gallowsmere 58.0 / 9.4 (was 57.6 / 9.3).
+
+Still missing a target: **Hard captures 0.34** (target 0.2–0.3; 0.35 before, hidden by the old check). **Option outliers:** Out of Sight is now +2.5 to +3.4 (seeds 1, 7, 11; it was +0.6, when the hand-over came after the plan), Dracula +2.1 to +3.1 as before; seed 1 also shows Jekyll & Hyde −3.4 and Rattle −3.2, but seeds 7 and 11 put them inside ±2.5 (run-to-run noise of about ±0.5–1). For Richard to decide; no game number was changed.
