@@ -235,3 +235,23 @@ Fetch ("a final flight you're in starts at Lead 3") stayed at −2.9 to −3.3 a
 Full report (2,000 raids per label and party size): every win and forked target met (92.4 / 74.1 / 56.3%, forked 0.4 / 4.6 / 8.8%); Fetch −2.1. Just past ±2.5: the Werewolf's Through the Hedge +2.9, Dracula +2.8, Jekyll & Hyde −2.6, the Creature's Book-Learned −2.8. At 1,500 raids on the same seed, a different set is past the line (Dracula +3.1, Jekyll & Hyde's Brute Strength +2.7 and Steady Nerves −2.7), so the edge cases are run-to-run noise (about ±0.5) around a spread of roughly −2.7 to +3.0.
 
 Tried: an opened approach 1 lower instead of 2 (`openEase: 1`, 1,500 raids): wins fall to 90.2 / 70.9 / 50.7% (Standard and Hard below target), forked rises to 0.5 / 5.8 / 10.2%, and the spread stays −2.6 to +3.1. Not adopted; the rule stays at 2. Recommendation for Richard: no further change until real playtests show an option that feels too strong or too weak at the table.
+
+## PT5's questions: long flights, runaway local chases, furniture noise (2026-10-06, for B6 and V1–V8)
+
+New: chase-length histograms (`hist local rounds`, `hist local susp`, `hist final` in the recorder) and switches `finalMove`, `chaseSusp: capN`, `furnitureNoise`.
+
+**Final flights** (1,000 raids per label and party size, then 2,000 to confirm):
+
+| How the shared Lead moves | Wins E / S / H | Forked E / S / H | Flight rounds, median · 90% · share of 15+ (S / H) |
+|---|---|---|---|
+| Majority, ±1 (before B6) | 92.4 / 74.1 / 56.3 | 0.4 / 4.6 / 8.8 | 5 · 14 · 9% / 8 · 23 · 23% |
+| **±2 when one side leads by two or more (B6)** | **92.2 / 74.2 / 56.1** | **0.8 / 5.0 / 9.1** | **3 · 8 · 1% / 3 · 10 · 3%** |
+| By the whole difference | 92.6 / 74.5 / 55.6 | 0.7 / 4.5 / 9.5 | 2 · 6 · 1% / 3 · 8 · 2% |
+| Hard escapes at 5, mob 12 | 92.8 / 74.3 / 51.7 | 0.4 / 4.3 / 24.9 | — / 6 · 16 · 12% |
+| The mob closes in from round 10 | 92.6 / 73.6 / 53.8 | 0.7 / 6.8 / 17.1 | 5 · 15 · 11% / 8 · 22 · 24% |
+
+With B6, Hard wins by party size 52.3 · 57.1 · 59.0% and forked 10.8 · 9.3 · 7.2% (as before); option outliers −2.7 to +2.7.
+
+**Local chases** (with B6): a local chase lasts 3 rounds (median), 6 at the 90th percentile; 1.5% of Hard local chases last 10 or more. One chase in five raises Suspicion by 6 or more, and 1.5% of Hard raids are forked by Turn 4. Capping what one local chase can raise: at 4, wins 93.6 / 76.5 / 57.6%, Hard captures 0.42; at 3, 94.2 / 77.8 / 58.9%, 0.44; at 2, 95.0 / 79.7 / 60.7%, 0.46 (Hard forked by Turn 4: 0.7 / 0.4 / 0.2%). Not adopted (V1): S6 chose the snowball, and the caps move every win rate.
+
+**Furniture noise** (with B6; "always" = the party always goes for it, paired with the same raids played without it): as written (every Turn carried), Grand Year when tried 55.6%, a Win lost 16.6%, wins with always 88.6 / 63.0 / 45.7%; only on Turns it moves, 60.5% and 13.2% (too safe). Kept as written, with "even while set down" (V4). The simulator's together-play counted one noise per two-Turn move and none while waiting; it now counts every Turn (pairs and singles, the default, already did).
