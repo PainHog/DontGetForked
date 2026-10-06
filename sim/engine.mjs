@@ -479,7 +479,9 @@ function workLocation(S, loc) {
     for (const m of [...loc.behind]) if (m.status !== "active") loc.behind.delete(m);
     const alone = pastHere(S, loc).length === 0; // nobody here is past it: they must roll to get anywhere
     if (loc.behindOpened) {
-      const worth = alone || loc.obstacles.some((o) => !o.cleared); // past it there's still work to share
+      // Policy: while the opener is at work past it, the others follow only where nobody is watching (no capture risk)
+      // and there's still work past it to share; once nobody here is past it, they must.
+      const worth = alone || (!ob.witnessed && loc.obstacles.some((o) => !o.cleared));
       while (S.phase === "raid" && loc.behind.size && worth) {
         let best = null;
         for (const m of hereOf(S)) {
@@ -740,6 +742,8 @@ function ctxFor(S, m, ob, loc, phase) {
     phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && ["lockup", "flightLockup"].includes(S.P.fetchRule) && hasPerk(m, "fetch") ? 2 : 0)
       - (loc && loc.id === "exit" && S.P.fetchRule === "flightExit" && [m, ...helpers].some((o) => hasPerk(o, "fetch")) ? 1 : 0), witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false, noCost: !!loc && loc.id === "exit", // T4: an exit Cost costs nothing more
+    // opening this obstacle would leave the others here behind it with work still past it (openPolicy "last")
+    leavesOthers: !!loc && loc.id !== "exit" && loc.id !== "lockup" && !ob.group && helpers.length > 0 && loc.obstacles.some((o) => !o.cleared && o !== ob),
   };
 }
 
@@ -813,6 +817,7 @@ function rollCandidates(S, m, ctx) {
     }
     if (ab.effect === "open") {
       if (ab.noLoot && (m.items.length || m.furniture)) continue; // what you carry doesn't pass through walls
+      if (P.openPolicy === "last" && phase === "raid" && ctx.leavesOthers) continue; // policy: don't shut the others out
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
