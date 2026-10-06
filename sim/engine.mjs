@@ -651,7 +651,7 @@ function planRoll(S, m, ctx) {
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
       // "easier" = the ability's trait at Difficulty 2 lower, watched as usual.
       const quiet = phase === "raid" && P.openApproach === "quiet";
-      const easier = (phase === "raid" || (phase === "slip" && P.openTrait === "unlisted")) && P.openApproach === "easier" ? 2 : 0; // T5: the lock-up is an obstacle too
+      const easier = (phase === "raid" || (phase === "slip" && P.openTrait === "unlisted")) && P.openApproach === "easier" ? (P.openEase ?? 2) : 0; // T5: the lock-up is an obstacle too; openEase: how much lower
       cands.push({ trait: ab.trait, loud: false, quiet, easier, via: { owner: m, ability: ab } });
     }
   }

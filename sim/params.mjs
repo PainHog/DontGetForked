@@ -53,6 +53,12 @@ export const PARAMS = {
     doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap); once = as weakness, and each Entity may overdraw at most once per flight (PT4 M1 candidate).",
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
+  openEase: {
+    kind: "rule", default: 2, values: [2, 1],
+    title: "How much lower an opened approach's Difficulty is (S10: 2)",
+    doc: "2 = as decided (Chapter 3); 1 = a candidate for the option outliers after B5 (the open-an-approach Gifts run strong, the raise Gifts weak).",
+    ref: "CORE-RULES Abilities (S10); sim/FINDINGS.md after B5",
+  },
   raiseCap: {
     kind: "rule", default: "perRoll", values: ["perRoll", "perDie"],
     title: "How many raises one roll can take",

@@ -229,3 +229,9 @@ Fetch ("a final flight you're in starts at Lead 3") stayed at −2.9 to −3.3 a
 | flightLockup: also the lock-up 2 easier when it rolls the rescue | −2.8 | — | — |
 
 **Decided (B5, under Richard's advance approval):** `fetchRule: "flightExit"` is the default. The party leaves together, so "while you're there" means "unless you've been captured".
+
+## Option outliers after B5 (2026-10-06)
+
+Full report (2,000 raids per label and party size): every win and forked target met (92.4 / 74.1 / 56.3%, forked 0.4 / 4.6 / 8.8%); Fetch −2.1. Just past ±2.5: the Werewolf's Through the Hedge +2.9, Dracula +2.8, Jekyll & Hyde −2.6, the Creature's Book-Learned −2.8. At 1,500 raids on the same seed, a different set is past the line (Dracula +3.1, Jekyll & Hyde's Brute Strength +2.7 and Steady Nerves −2.7), so the edge cases are run-to-run noise (about ±0.5) around a spread of roughly −2.7 to +3.0.
+
+Tried: an opened approach 1 lower instead of 2 (`openEase: 1`, 1,500 raids): wins fall to 90.2 / 70.9 / 50.7% (Standard and Hard below target), forked rises to 0.5 / 5.8 / 10.2%, and the spread stays −2.6 to +3.1. Not adopted; the rule stays at 2. Recommendation for Richard: no further change until real playtests show an option that feels too strong or too weak at the table.
