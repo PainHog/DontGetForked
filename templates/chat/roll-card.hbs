@@ -1,0 +1,24 @@
+<div class="dont-get-forked dgf-card dgf-card-roll dgf-band-{{band}}">
+  <header class="dgf-card-head">
+    <h3>{{headline}}</h3>
+    {{#if instead}}<p class="dgf-card-sub">{{instead}}</p>{{/if}}
+  </header>
+  <div class="dgf-card-dice">
+    {{#each dice}}<div class="dgf-die dgf-die-{{cls}}"><span class="dgf-die-face">{{face}}</span><span class="dgf-die-label">{{label}}</span></div>{{/each}}
+    <div class="dgf-card-total"><span class="dgf-total">{{total}}</span><span class="dgf-vs">{{localize "DGF.Card.vs" difficulty=difficulty}}</span></div>
+  </div>
+  {{#if stepNote}}<p class="dgf-card-note">{{stepNote}}</p>{{/if}}
+  {{#if diffNote}}<p class="dgf-card-note">{{diffNote}}</p>{{/if}}
+  <p class="dgf-card-band" data-band="{{band}}">{{bandLabel}}{{#if critical}} <span class="dgf-critical">— {{criticalNote}}</span>{{/if}}</p>
+  {{#if monsterNote}}<p class="dgf-card-monster">{{monsterNote}}</p>{{/if}}
+  {{#if formNote}}<p class="dgf-card-form">{{formNote}}</p>{{/if}}
+  {{#if suspicionLine}}<p class="dgf-card-suspicion" data-suspicion="{{suspicion}}">{{suspicionLine}} <span class="dgf-card-status">{{suspicionStatus}}</span></p>{{/if}}
+  {{#if caughtNote}}<p class="dgf-card-caught">{{caughtNote}}</p>{{/if}}
+  {{#if costChosen}}<p class="dgf-card-cost">{{localize "DGF.Card.costLabel"}} <strong>{{costChosen}}</strong>{{#if costDetail}} ({{costDetail}}){{/if}}</p>{{/if}}
+  {{#if costPending}}<p class="dgf-card-cost dgf-pending">{{localize "DGF.Card.costPending"}} {{costList}}</p>{{/if}}
+  {{#if costNone}}<p class="dgf-card-cost">{{localize "DGF.Card.noCost"}}</p>{{/if}}
+  {{#if abilities}}<p class="dgf-card-meta">{{localize "DGF.Card.abilitiesLabel"}} {{abilities}}{{#if payments}} — {{payments}}{{/if}}</p>{{/if}}
+  {{#if charges}}<p class="dgf-card-meta">{{charges}}</p>{{/if}}
+  {{#if flags}}<p class="dgf-card-meta">{{flags}}</p>{{/if}}
+  <div class="dgf-card-actions"></div>
+</div>

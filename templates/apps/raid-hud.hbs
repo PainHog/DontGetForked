@@ -1,0 +1,34 @@
+<div class="dgf-hud-body{{#if hunt}} dgf-hunting{{/if}}">
+  <div class="dgf-hud-row dgf-hud-suspicion">
+    <span class="dgf-hud-label">{{localize "DGF.Suspicion"}}</span>
+    <span class="dgf-hud-value" data-value="{{value}}" data-limit="{{limit}}">{{value}} / {{limit}}</span>
+  </div>
+  <div class="dgf-pips">{{#each pips}}<span class="dgf-pip{{#if filled}} dgf-filled{{/if}}"></span>{{/each}}</div>
+  <div class="dgf-hud-row"><span class="dgf-hud-turn">{{turnLine}}</span><span class="dgf-hud-diff">{{label}}</span></div>
+  {{#if atLimit}}{{#unless hunt}}<p class="dgf-hud-alert">{{localize "DGF.Raid.atLimit"}}</p>{{/unless}}{{/if}}
+  {{#if hunt}}<p class="dgf-hud-alert dgf-hud-hunt">{{huntLine}}</p>{{/if}}
+  {{#if isGM}}
+  <div class="dgf-hud-controls">
+    <button type="button" data-action="suspicionUp" data-tooltip="{{localize "DGF.Raid.up"}}">+1</button>
+    <button type="button" data-action="suspicionDown" data-tooltip="{{localize "DGF.Raid.down"}}">−1</button>
+    <button type="button" data-action="undo">{{localize "DGF.Raid.undo"}}</button>
+  </div>
+  <div class="dgf-hud-controls">
+    <button type="button" data-action="prevTurn">◀ {{localize "DGF.Raid.turnShort"}}</button>
+    <button type="button" data-action="nextTurn">{{localize "DGF.Raid.nextTurn"}} ▶</button>
+    <button type="button" data-action="toggleHunt">{{#if hunt}}{{localize "DGF.Raid.stopHunt"}}{{else}}{{localize "DGF.Raid.startHunt"}}{{/if}}</button>
+  </div>
+  {{#if hasEvents}}
+  <ol class="dgf-hud-events">
+    {{#each events}}
+    <li class="dgf-ev{{#if cancelled}} dgf-cancelled{{/if}}" data-event-id="{{eventId}}">
+      <span class="dgf-ev-amount">{{amount}}</span>
+      <span class="dgf-ev-text">{{localize "DGF.Raid.turnOf" turn=turn}} · {{text}}</span>
+      {{#if cancelled}}<button type="button" data-action="restoreEvent" data-event-id="{{eventId}}">{{localize "DGF.Raid.restore"}}</button>{{else}}<button type="button" data-action="cancelEvent" data-event-id="{{eventId}}">{{localize "DGF.Raid.cancel"}}</button>{{/if}}
+    </li>
+    {{/each}}
+  </ol>
+  {{/if}}
+  <div class="dgf-hud-controls"><button type="button" data-action="newRaid">{{localize "DGF.Raid.newRaid"}}</button></div>
+  {{/if}}
+</div>

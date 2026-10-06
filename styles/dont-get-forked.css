@@ -1,12 +1,14 @@
 /* ==========================================================================
-   DON'T GET FORKED — System Theme (skeleton)
-   EVERY selector must be scoped to one of the system's own roots (e.g. the
-   .dont-get-forked class on our applications and sheets): in v14, system styles
-   sit in a cascade layer that outranks all of core, so an unscoped `.panel` or
-   `.field` would restyle Foundry's own windows.
+   DON'T GET FORKED — System Theme
+   EVERY selector must be scoped to one of the system's own roots (the
+   .dont-get-forked class on our applications, sheets, dialogs and chat cards):
+   in v14, system styles sit in a cascade layer that outranks all of core, so an
+   unscoped `.panel` or `.field` would restyle Foundry's own windows.
 
    ART DIRECTION IS UNDECIDED: the palette below is a neutral PLACEHOLDER that
    mirrors the rulebook's tokens (book/src/book.css). Change both together.
+   Book-like: warm paper, dark ink, a serif face from the reader's own system
+   (no web fonts, no images: nothing external is loaded).
    ========================================================================== */
 
 .dont-get-forked {
@@ -21,4 +23,116 @@
   --dgf-accent: #7a7f88;
   --dgf-alarm: #7c2a2a;
   --dgf-good: #3f6f52;
+  --dgf-warn: #8a6a1f;
+  --dgf-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
 }
+
+/* ---------------------------------------------------------------- shared -- */
+
+.dont-get-forked .dgf-hint { color: var(--dgf-ink-soft); font-size: 0.85em; font-style: italic; margin: 0.2em 0; }
+.dont-get-forked .dgf-center { text-align: center; }
+.dont-get-forked .dgf-notice { background: var(--dgf-paper-2); border-left: 3px solid var(--dgf-warn); padding: 0.3em 0.6em; margin: 0.3em 0; color: var(--dgf-ink); }
+.dont-get-forked .dgf-notice.dgf-problem { border-left-color: var(--dgf-alarm); }
+.dont-get-forked .dgf-link { background: none; border: none; color: var(--dgf-accent); text-decoration: underline; padding: 0 0.2em; width: auto; min-height: 0; line-height: inherit; cursor: pointer; font: inherit; font-size: 0.9em; }
+.dont-get-forked .dgf-row { display: flex; flex-wrap: wrap; gap: 0.6em 1em; align-items: flex-end; }
+.dont-get-forked .dgf-check { display: block; margin: 0.25em 0; line-height: 1.35; }
+.dont-get-forked .dgf-check input { margin: 0 0.3em 0 0; vertical-align: middle; }
+
+/* ------------------------------------------------------------- the sheet -- */
+
+.dont-get-forked.dgf-sheet .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); padding: 0.8em 1em; }
+.dont-get-forked .dgf-sheet-body h3 { font-variant: small-caps; letter-spacing: 0.04em; border-bottom: 1px solid var(--dgf-paper-edge); margin: 0.9em 0 0.4em; color: var(--dgf-dark-deep); font-size: 1.1em; }
+.dont-get-forked .dgf-sheet-header { display: grid; grid-template-columns: 84px 1fr auto; gap: 0.8em; align-items: center; border-bottom: 2px solid var(--dgf-dark); padding-bottom: 0.6em; }
+.dont-get-forked .dgf-portrait { width: 84px; height: 84px; object-fit: cover; border: 1px solid var(--dgf-paper-edge); background: var(--dgf-paper-2); }
+.dont-get-forked .dgf-name { font-family: var(--dgf-serif); font-size: 1.6em; border: none; border-bottom: 1px dotted var(--dgf-paper-edge); background: transparent; color: var(--dgf-ink); width: 100%; height: auto; }
+.dont-get-forked .dgf-subtitle { margin: 0.2em 0 0; color: var(--dgf-ink-soft); font-style: italic; }
+.dont-get-forked .dgf-form { font-style: normal; font-weight: bold; color: var(--dgf-alarm); }
+.dont-get-forked .dgf-charges { text-align: center; }
+.dont-get-forked .dgf-charges-label { display: block; font-variant: small-caps; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-charges-value { display: flex; gap: 0.3em; align-items: center; justify-content: center; font-size: 1.3em; }
+.dont-get-forked .dgf-charges-value input { width: 2.6em; text-align: center; font-size: 1em; }
+.dont-get-forked .dgf-empty { text-align: center; font-style: italic; padding: 2em 0; color: var(--dgf-ink-soft); }
+
+.dont-get-forked .dgf-dice { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5em; margin: 0.9em 0 0.2em; }
+.dont-get-forked .dgf-trait { display: flex; flex-direction: column; align-items: center; padding: 0.5em 0.2em; height: auto; background: var(--dgf-paper-2); border: 1px solid var(--dgf-paper-edge); border-radius: 4px; color: var(--dgf-ink); font-family: var(--dgf-serif); cursor: pointer; }
+.dont-get-forked .dgf-trait:hover { border-color: var(--dgf-dark); background: #fff; }
+.dont-get-forked .dgf-trait-name { font-variant: small-caps; font-size: 1em; }
+.dont-get-forked .dgf-trait-die { font-size: 1.7em; font-weight: bold; line-height: 1.1; }
+.dont-get-forked .dgf-draught { text-align: center; }
+
+.dont-get-forked .dgf-abilities p, .dont-get-forked .dgf-weakness p { margin: 0.3em 0; line-height: 1.4; }
+.dont-get-forked .dgf-pick { margin: 0.5em 0; }
+.dont-get-forked .dgf-pick label { font-weight: bold; display: flex; gap: 0.5em; align-items: center; }
+.dont-get-forked .dgf-pick select { flex: 0 1 auto; width: auto; }
+.dont-get-forked .dgf-weakness { border-top: 1px solid var(--dgf-paper-edge); margin-top: 0.6em; padding-top: 0.3em; }
+.dont-get-forked .dgf-marks { list-style: none; padding: 0; margin: 0.5em 0; }
+.dont-get-forked .dgf-mark { color: var(--dgf-warn); }
+.dont-get-forked .dgf-mark.dgf-now { color: var(--dgf-alarm); font-weight: bold; }
+.dont-get-forked .dgf-carried { margin: 0.2em 0; padding-left: 1.2em; }
+.dont-get-forked .dgf-play textarea { width: 100%; font-family: var(--dgf-serif); background: #fff; color: var(--dgf-ink); }
+
+/* ------------------------------------------------------------ dialogs -- */
+
+.dont-get-forked.dgf-roll-dialog .window-content, .dont-get-forked.dgf-choose-entity .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); }
+.dont-get-forked .dgf-dialog fieldset { border: 1px solid var(--dgf-paper-edge); margin: 0.5em 0; padding: 0.3em 0.6em; }
+.dont-get-forked .dgf-dialog legend { font-variant: small-caps; padding: 0 0.3em; }
+.dont-get-forked .dgf-dialog .dgf-row label { display: flex; flex-direction: column; flex: 1 1 8em; font-variant: small-caps; }
+.dont-get-forked .dgf-odds { font-size: 0.95em; text-align: center; border-top: 1px dotted var(--dgf-paper-edge); padding-top: 0.4em; margin-top: 0.5em; }
+
+/* -------------------------------------------------------- chat cards -- */
+
+.dont-get-forked.dgf-card { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); border: 1px solid var(--dgf-paper-edge); border-top: 4px solid var(--dgf-accent); padding: 0.4em 0.6em; }
+.dont-get-forked.dgf-card p { margin: 0.25em 0; line-height: 1.35; }
+.dont-get-forked.dgf-card h3 { margin: 0; font-size: 1.1em; border: none; color: var(--dgf-dark-deep); }
+.dont-get-forked .dgf-card-sub { font-style: italic; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-card-dice { display: flex; gap: 0.5em; align-items: stretch; margin: 0.4em 0; }
+.dont-get-forked .dgf-die { flex: 1; display: flex; flex-direction: column; align-items: center; background: var(--dgf-paper-2); border: 1px solid var(--dgf-paper-edge); border-radius: 4px; padding: 0.2em; }
+.dont-get-forked .dgf-die-face { font-size: 1.6em; font-weight: bold; line-height: 1.1; }
+.dont-get-forked .dgf-die-label { font-size: 0.8em; font-variant: small-caps; color: var(--dgf-ink-soft); text-align: center; }
+.dont-get-forked .dgf-die-monster { border-color: var(--dgf-alarm); }
+.dont-get-forked .dgf-card-total { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.dont-get-forked .dgf-total { font-size: 1.8em; font-weight: bold; line-height: 1; }
+.dont-get-forked .dgf-vs { font-size: 0.85em; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-card-band { font-size: 1.25em; font-weight: bold; font-variant: small-caps; text-align: center; letter-spacing: 0.05em; }
+.dont-get-forked.dgf-band-success { border-top-color: var(--dgf-good); }
+.dont-get-forked.dgf-band-success .dgf-card-band { color: var(--dgf-good); }
+.dont-get-forked.dgf-band-cost { border-top-color: var(--dgf-warn); }
+.dont-get-forked.dgf-band-cost .dgf-card-band { color: var(--dgf-warn); }
+.dont-get-forked.dgf-band-trouble { border-top-color: var(--dgf-alarm); }
+.dont-get-forked.dgf-band-trouble .dgf-card-band { color: var(--dgf-alarm); }
+.dont-get-forked .dgf-critical { font-size: 0.8em; }
+.dont-get-forked .dgf-card-monster, .dont-get-forked .dgf-card-form { color: var(--dgf-alarm); font-style: italic; text-align: center; }
+.dont-get-forked .dgf-card-suspicion { font-weight: bold; }
+.dont-get-forked .dgf-card-status { font-weight: normal; font-style: italic; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-card-caught { color: var(--dgf-alarm); font-weight: bold; }
+.dont-get-forked .dgf-card-cost.dgf-pending { color: var(--dgf-warn); }
+.dont-get-forked .dgf-card-note, .dont-get-forked .dgf-card-meta { font-size: 0.85em; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-card-actions { display: flex; flex-wrap: wrap; gap: 0.3em; margin-top: 0.3em; }
+.dont-get-forked .dgf-card-actions:empty { display: none; }
+.dont-get-forked .dgf-card-button { flex: 1 1 45%; font-family: var(--dgf-serif); font-size: 0.9em; line-height: 1.6; }
+.dont-get-forked.dgf-card-raid { border-top-color: var(--dgf-dark); text-align: center; }
+.dont-get-forked.dgf-card-hunt { border-top-color: var(--dgf-alarm); background: #f3e6e4; }
+
+/* ------------------------------------------------------------- the HUD -- */
+
+.dont-get-forked.dgf-hud .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); padding: 0.5em 0.7em; }
+.dont-get-forked .dgf-hud-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5em; }
+.dont-get-forked .dgf-hud-label { font-variant: small-caps; font-size: 1.05em; }
+.dont-get-forked .dgf-hud-value { font-size: 1.6em; font-weight: bold; }
+.dont-get-forked .dgf-hud-diff { font-variant: small-caps; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-pips { display: flex; flex-wrap: wrap; gap: 2px; margin: 0.2em 0 0.4em; }
+.dont-get-forked .dgf-pip { flex: 1 0 12px; height: 10px; border: 1px solid var(--dgf-paper-edge); background: #fff; }
+.dont-get-forked .dgf-pip.dgf-filled { background: var(--dgf-alarm); border-color: var(--dgf-alarm); }
+.dont-get-forked .dgf-hud-alert { text-align: center; font-weight: bold; color: var(--dgf-alarm); margin: 0.3em 0; }
+.dont-get-forked .dgf-hunting { box-shadow: inset 0 0 0 2px var(--dgf-alarm); padding: 0.2em; }
+.dont-get-forked .dgf-hud-controls { display: flex; gap: 0.3em; margin-top: 0.4em; }
+.dont-get-forked .dgf-hud-controls button { flex: 1; font-size: 0.85em; line-height: 1.6; min-height: 0; padding: 0 0.3em; }
+.dont-get-forked .dgf-hud-events { list-style: none; padding: 0; margin: 0.5em 0 0; font-size: 0.85em; max-height: 12em; overflow-y: auto; border-top: 1px dotted var(--dgf-paper-edge); }
+.dont-get-forked .dgf-ev { display: flex; gap: 0.4em; align-items: center; padding: 0.15em 0; }
+.dont-get-forked .dgf-ev-amount { font-weight: bold; min-width: 2em; }
+.dont-get-forked .dgf-ev-text { flex: 1; }
+.dont-get-forked .dgf-ev button { flex: 0 0 auto; width: auto; font-size: 0.85em; line-height: 1.4; min-height: 0; padding: 0 0.4em; }
+.dont-get-forked .dgf-ev.dgf-cancelled .dgf-ev-amount, .dont-get-forked .dgf-ev.dgf-cancelled .dgf-ev-text { text-decoration: line-through; color: var(--dgf-ink-soft); }
+
+/* The Actors sidebar button (inside core's directory, so scoped by its own class). */
+.dgf-new-entity { flex: 1 1 100%; }

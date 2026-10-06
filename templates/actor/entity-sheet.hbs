@@ -1,0 +1,76 @@
+<div class="dgf-sheet-body">
+  <header class="dgf-sheet-header">
+    <img class="dgf-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="">
+    <div class="dgf-title">
+      <input class="dgf-name" type="text" name="name" value="{{actor.name}}">
+      <p class="dgf-subtitle">
+        {{entityName}}{{#if formLabel}} · <span class="dgf-form">{{formLabel}}</span>{{/if}}
+        {{#if editable}}<button type="button" class="dgf-link" data-action="chooseEntity">{{#if hasEntity}}{{localize "DGF.Sheet.changeEntity"}}{{else}}{{localize "DGF.Sheet.chooseEntity"}}{{/if}}</button>{{/if}}
+      </p>
+    </div>
+    <div class="dgf-charges">
+      <span class="dgf-charges-label">{{localize "DGF.Charges"}}</span>
+      <span class="dgf-charges-value"><input type="number" name="system.charges.value" value="{{charges.value}}" min="0" step="1"> / <input type="number" name="system.charges.start" value="{{charges.start}}" min="0" step="1"></span>
+      {{#if hasEntity}}<button type="button" data-action="spendCharge">{{localize "DGF.Sheet.spendCharge"}}</button>{{/if}}
+    </div>
+  </header>
+
+  {{#each warnings}}<p class="dgf-notice">{{this}}</p>{{/each}}
+  {{#unless hasEntity}}<p class="dgf-empty">{{localize "DGF.Sheet.noEntity"}}</p>{{/unless}}
+
+  {{#if hasEntity}}
+  <section class="dgf-dice">
+    {{#each dice}}<button type="button" class="dgf-trait" data-action="rollTrait" data-trait="{{key}}"><span class="dgf-trait-name">{{label}}</span><span class="dgf-trait-die">{{dieLabel}}</span></button>{{/each}}
+  </section>
+  <p class="dgf-hint dgf-center">{{localize "DGF.Sheet.rollHint"}}</p>
+  {{#if hasForms}}<p class="dgf-draught"><button type="button" data-action="drinkDraught">{{draughtLabel}}</button> <span class="dgf-hint">{{localize "DGF.Sheet.draughtHint"}}</span></p>{{/if}}
+
+  <section class="dgf-abilities">
+    <h3>{{localize "DGF.Sheet.abilities"}}</h3>
+    <p><strong>{{view.signature.name}}</strong> <em>({{localize "DGF.Sheet.signature"}})</em>: {{signatureText}}</p>
+    <div class="dgf-pick">
+      <label>{{localize "DGF.Sheet.gift"}}: {{giftName}}
+        <select name="system.gift">{{#each gifts}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}</option>{{/each}}</select>
+      </label>
+      <p>{{giftRule}}. <em>{{giftText}}</em></p>
+    </div>
+    <div class="dgf-pick">
+      <label>{{localize "DGF.Sheet.perk"}}
+        <select name="system.perk">{{#each perks}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}</option>{{/each}}</select>
+      </label>
+      <p>{{perkText}}</p>
+    </div>
+    <div class="dgf-pick">
+      <label>{{localize "DGF.Sheet.duty"}}
+        <select name="system.duty">{{#each duties}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}</option>{{/each}}</select>
+      </label>
+      <p>{{dutyText}}</p>
+    </div>
+  </section>
+
+  <section class="dgf-weakness">
+    <p><strong>{{localize "DGF.Sheet.weakness"}}: {{weakness.name}}</strong> ({{weaknessTiming}}). {{weakness.text}}</p>
+    <p><strong>{{localize "DGF.Sheet.tell"}}: {{tell.name}}.</strong> {{tell.text}}</p>
+  </section>
+  {{/if}}
+
+  <section class="dgf-play">
+    <div class="dgf-row">
+      <label>{{localize "DGF.Sheet.status"}}
+        <select name="system.status">{{#each statuses}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="dgf-check"><input type="checkbox" name="system.carryingFurniture"{{#if system.carryingFurniture}} checked{{/if}}> {{localize "DGF.Sheet.carryingFurniture"}}</label>
+    </div>
+    {{#if marks.length}}
+    <ul class="dgf-marks">
+      {{#each marks}}<li class="dgf-mark{{#if now}} dgf-now{{/if}}">{{label}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="clearMark" data-mark="{{key}}">{{localize "DGF.Sheet.clear"}}</button>{{/if}}</li>{{/each}}
+    </ul>
+    {{/if}}
+    <h3>{{localize "DGF.Sheet.carried"}}{{#if editable}} <button type="button" class="dgf-link" data-action="addItem">+ {{localize "DGF.Sheet.addItem"}}</button>{{/if}}</h3>
+    <ul class="dgf-carried">
+      {{#each carried}}<li>{{name}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="removeItem" data-index="{{index}}" aria-label="{{localize "DGF.Sheet.removeItem"}}">×</button>{{/if}}</li>{{else}}<li class="dgf-hint">{{localize "DGF.Sheet.nothingCarried"}}</li>{{/each}}
+    </ul>
+    <h3>{{localize "DGF.Sheet.notes"}}</h3>
+    <textarea name="system.notes" rows="4">{{system.notes}}</textarea>
+  </section>
+</div>

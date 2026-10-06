@@ -1,0 +1,36 @@
+<div class="dont-get-forked dgf-dialog dgf-roll">
+  {{#each notices}}<p class="dgf-notice">{{this}}</p>{{/each}}
+  <div class="dgf-row">
+    <label>{{localize "DGF.Roll.trait"}}
+      <select name="trait">{{#each traits}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}} ({{die}})</option>{{/each}}</select>
+    </label>
+    <label>{{localize "DGF.Roll.second"}}
+      <select name="second">{{#each seconds}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
+    </label>
+    <label>{{localize "DGF.Roll.difficulty"}}
+      <select name="difficulty">{{#each difficulties}}<option value="{{value}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
+    </label>
+  </div>
+  <fieldset>
+    <legend>{{localize "DGF.Roll.abilities"}}</legend>
+    {{#each own}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{/each}}
+    {{#unless own.length}}<p class="dgf-hint">{{localize "DGF.Roll.noAbilities"}}</p>{{/unless}}
+    <p class="dgf-hint">{{localize "DGF.Roll.abilityHint"}}</p>
+  </fieldset>
+  {{#if hasHelpers}}
+  <fieldset>
+    <legend>{{localize "DGF.Roll.helpers"}}</legend>
+    {{#each helpers}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}> <strong>{{name}}</strong> ({{helper}}, {{localize "DGF.Roll.chargesLeft" n=charges}}): {{effectText}}</label>{{/each}}
+  </fieldset>
+  {{/if}}
+  <fieldset>
+    <legend>{{localize "DGF.Roll.situation"}}</legend>
+    {{#if duty}}<label class="dgf-check"><input type="checkbox" name="duty"{{#if duty.checked}} checked{{/if}}> {{duty.label}}</label>{{/if}}
+    <label class="dgf-check"><input type="checkbox" name="loud"{{#if loud}} checked{{/if}}> {{localize "DGF.Roll.loud"}}</label>
+    <label class="dgf-check"><input type="checkbox" name="watched"{{#if watched}} checked{{/if}}> {{localize "DGF.Roll.watched"}}</label>
+    <label class="dgf-check"><input type="checkbox" name="wayOut"{{#if wayOut}} checked{{/if}}> {{wayOutLabel}}</label>
+    <label class="dgf-check"><input type="checkbox" name="chase"{{#if chase}} checked{{/if}}> {{localize "DGF.Roll.chase"}}</label>
+  </fieldset>
+  {{#each problems}}<p class="dgf-notice dgf-problem">{{this}}</p>{{/each}}
+  {{#if showOdds}}<p class="dgf-odds">{{odds}}</p>{{/if}}
+</div>

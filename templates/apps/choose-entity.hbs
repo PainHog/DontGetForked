@@ -1,0 +1,11 @@
+<div class="dont-get-forked dgf-dialog dgf-choose">
+  <label>{{localize "DGF.Create.entity"}}
+    <select name="entity">{{#each entities}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if taken}} — {{localize "DGF.Create.taken"}}{{/if}}</option>{{/each}}</select>
+  </label>
+  {{#if withOwner}}
+  <label>{{localize "DGF.Create.owner"}}
+    <select name="owner"><option value="">{{localize "DGF.Create.noOwner"}}</option>{{#each players}}<option value="{{id}}">{{name}}</option>{{/each}}</select>
+  </label>
+  {{/if}}
+  <p class="dgf-hint">{{localize "DGF.Create.hint"}}</p>
+</div>
