@@ -26,7 +26,7 @@ Author and designer: **Richard Moore**. This project reuses the tools and the le
 ## Housekeeping
 - Commit and push work-in-progress often; sessions and agents can stop at any time (usage limits). Resume stopped agents rather than restarting the work.
 - Keep model names out of commits, code and docs (except the required commit trailer).
-- Credits: "Game design & writing: Richard Moore".
+- Credits: "Game design & writing: Richard Moore". **Never name the assistant or its maker, or credit AI assistance, anywhere in the book, the Foundry system or the repository** (Richard, 2026-10-06).
 - Releases of the Foundry system go out through the release workflow (workflow_dispatch with a version) only when Richard says so.
 
 ## Portal

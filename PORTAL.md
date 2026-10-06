@@ -1,6 +1,6 @@
-Now: The villagers are in: who the monsters bump into, from the vicar tipsy on cider to old Granny Mott, who has seen it all before.
-Next: Advice for the Storyteller on running the villagers, the mob and the lock-up, decided with the author.
-Number: Design decisions made = 73
+Now: The Storyteller's advice is in: how to run the villagers, the mob and the lock-up.
+Next: The premade raids and town maps, decided with the author.
+Number: Design decisions made = 75
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -41,6 +41,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] How a rolled town is built
 - [x] The obstacle table
 - [x] The villager table
+- [x] Advice for the Storyteller
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
