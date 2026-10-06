@@ -8,20 +8,22 @@
  *
  *   state = { v, raidId, difficulty, limit, turn, turns, dawn, hunt, huntCause,
  *             ledger: [{ id, eventId, amount, source, label, actorName, messageId,
- *                        turn, cancelled, hunt }], seq }
+ *                        turn, cancelled, hunt }], seq,
+ *             chase,   // the chase running (or the last one), module/logic/chase.mjs; null
+ *             group,   // the group check open (or the last one), module/logic/checks.mjs; null
+ *             tells,   // the Tell checks made: [{ id, place, turn, goesOff, actorId, name }]
+ *             list,    // the shopping list: [{ name, duty, essential }]
+ *             over }   // how the raid ended: null, or { result, at } once the year is decided
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
  * 12th Turn ends), Chapter 5 (the Limit by difficulty; one roll, one rise; at the
  * Limit, or at dawn, the whole town hunts; from then on Suspicion stops; the track
- * never goes past the Limit).
- *
- * TODO(slice 2): the final flight and local chases (Lead track, chase table,
- * majority rule), the lock-up, group checks sharing one event, Tell checks.
+ * never goes past the Limit), Chapter 6 (chases, the lock-up) and Chapter 7 (the year).
  */
 import { DGF } from "../config.mjs";
 import { foldSuspicion, addEntry, cancelEvent, restoreEvent } from "./suspicion.mjs";
 
-export const RAID_VERSION = 1;
+export const RAID_VERSION = 2;
 export const LABELS = Object.freeze(Object.keys(DGF.labels));
 
 /** A fresh raid at this difficulty ("easy" | "standard" | "hard"). */
@@ -39,6 +41,11 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     huntCause: "",
     ledger: [],
     seq: 0,
+    chase: null,
+    group: null,
+    tells: [],
+    list: [],
+    over: null,
   };
 }
 
@@ -58,6 +65,11 @@ export function normalizeRaid(stored) {
     huntCause: typeof s.huntCause === "string" ? s.huntCause : "",
     ledger: Array.isArray(s.ledger) ? s.ledger.map((e) => ({ cancelled: false, hunt: false, ...e })) : [],
     seq: num(s.seq, 0),
+    chase: s.chase && typeof s.chase === "object" && Array.isArray(s.chase.members) ? s.chase : null,
+    group: s.group && typeof s.group === "object" && Array.isArray(s.group.members) ? s.group : null,
+    tells: Array.isArray(s.tells) ? s.tells : [],
+    list: Array.isArray(s.list) ? s.list : [],
+    over: s.over && typeof s.over === "object" ? s.over : null,
   };
 }
 
@@ -97,12 +109,15 @@ export function raidView(state) {
     hunt: state.hunt,
     huntCause: state.huntCause,
     exit: DGF.labels[state.difficulty]?.exit ?? null,
+    lockup: DGF.labels[state.difficulty]?.lockup ?? null,
+    over: state.over ? { ...state.over } : null,
   };
 }
 
 /**
  * Record (part of) an event. Entries sharing an eventId apply only their largest
- * amount (one roll, one rise); the same eventId + source again replaces that
+ * amount (one roll, one rise; a group check's rolls share one event, so it rises
+ * once, by the worst); the same eventId + source + message again replaces that
  * entry, so a retried request never counts twice. While the hunt is on the entry
  * is kept but ignored (Suspicion stops).
  */
@@ -110,8 +125,9 @@ export function recordEvent(state, { eventId, amount, source, label = "", actorN
   if (!eventId) throw new Error("an event needs an eventId");
   if (!Number.isFinite(amount)) throw new Error(`event ${eventId}: amount must be a number`);
   const seq = state.seq + 1;
-  const entry = { id: `${eventId}:${source}`, eventId, amount, source, label, actorName, messageId, turn: state.turn, seq, cancelled: false, hunt: state.hunt };
-  const i = state.ledger.findIndex((e) => e.eventId === eventId && e.source === source);
+  const id = messageId ? `${eventId}:${source}:${messageId}` : `${eventId}:${source}`;
+  const entry = { id, eventId, amount, source, label, actorName, messageId, turn: state.turn, seq, cancelled: false, hunt: state.hunt };
+  const i = state.ledger.findIndex((e) => e.eventId === eventId && e.source === source && (e.messageId ?? "") === messageId);
   let ledger;
   if (i >= 0) {
     ledger = state.ledger.slice();
@@ -171,8 +187,40 @@ export function setHunt(state, on, cause = "manual") {
  * dawn counts, so a Storyteller who stops the hunt by hand isn't overruled.
  */
 export function huntDue(state, before = null) {
-  if (state.hunt) return "";
+  if (state.hunt || state.over) return "";
   if (suspicionOf(state).atLimit && !(before && suspicionOf(before).atLimit)) return "limit";
   if (state.dawn && !(before && before.dawn)) return "dawn";
   return "";
+}
+
+/** The amount an event raises now (its biggest live entry), or 0. */
+export function eventAmount(state, eventId) {
+  let best = 0;
+  for (const e of state.ledger) if (e.eventId === eventId && !e.cancelled && !e.hunt && e.amount > best) best = e.amount;
+  return best;
+}
+
+/** The raid with this chase (module/logic/chase.mjs) as its current one (null: none). */
+export function setChase(state, chase) {
+  return { ...state, chase: chase ?? null };
+}
+
+/** The raid with this group check (module/logic/checks.mjs) as its current one (null: none). */
+export function setGroup(state, group) {
+  return { ...state, group: group ?? null };
+}
+
+/** Record a Tell check (for "once per watched location"). */
+export function addTell(state, tell) {
+  return { ...state, tells: [...state.tells, { ...tell, turn: state.turn }] };
+}
+
+/** The raid's shopping list (Chapter 4): [{ name, duty, essential }]. */
+export function setList(state, list) {
+  return { ...state, list: (list ?? []).map((it) => ({ name: String(it.name ?? ""), duty: it.duty, essential: !!it.essential })) };
+}
+
+/** The raid is over: the year is decided (no more hunts or chases start). */
+export function endRaid(state, { result }) {
+  return { ...state, over: { result, turn: state.turn }, chase: state.chase && !state.chase.outcome ? { ...state.chase, outcome: "dropped" } : state.chase, group: state.group ? { ...state.group, open: false } : null };
 }

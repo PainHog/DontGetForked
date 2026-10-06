@@ -26,12 +26,17 @@
  *   wayOut,    // this is the way out of town (always watched; Shortcut)
  *   chase,     // a chase roll (a local chase; every roll once the hunt is on)
  *   hunt,      // the whole town hunts (Suspicion stops, the Mask is off)
+ *   chaseTraits, // in a chase the tracker runs: the traits this member may roll this round (module/logic/chase.mjs)
+ *   weakness,  // the chase brings this Entity's Weakness now (its timing, C3)
+ *   lockup,    // "slip" (a captive slipping free) | "rescue" (beating the lock-up) | ""
+ *   turn,      // the raid's Turn (slipping free: once per Turn, from the Turn after the capture)
  * }
  * Errors and warnings are codes (with data) for the UI to word.
  */
 import { DGF } from "../config.mjs";
-import { stepUp, stepDown, resolveRoll } from "./rules.mjs";
+import { stepUp, stepDown, resolveRoll, leadMove } from "./rules.mjs";
 import { formsOf, payFor, TRAITS } from "./entity.mjs";
+import { slipProblems, slipFrees, rescueFrees } from "./lockup.mjs";
 
 const perkRule = (perk) => DGF.perkRules[perk] ?? {};
 
@@ -68,6 +73,23 @@ export function buildRollPlan(input) {
   }
   const trait = changers[0]?.trait ?? called;
 
+  // Where the roll is: the way out (Chapter 4) or the lock-up (Chapter 6) list their own traits.
+  const mode = input.wayOut ? "wayOut" : input.lockup === "slip" ? "slip" : input.lockup === "rescue" ? "rescue" : "";
+  const listed = mode === "wayOut" ? DGF.wayOut : mode ? DGF.lockup[mode] : null;
+  const captive = sys.status === "captured";
+  if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free
+  if (mode === "slip") for (const code of slipProblems(sys, { turn: Number(input.turn) || 0 })) errors.push({ code });
+  if ((mode === "slip" || mode === "rescue") && hunt) errors.push({ code: "lockupInHunt" }); // everyone not captured is in the final flight
+  if (listed) {
+    const all = [...listed.quiet, ...listed.loud];
+    if (opener && all.includes(opener.trait)) errors.push({ code: "openListed", name: opener.name }); // T5: only with a trait the obstacle doesn't list
+    else if (!opener && !all.includes(called)) errors.push({ code: `notListed.${mode}` });
+  }
+  // A chase the tracker runs: the ground (plus Wall-Crawler's or Fly by Night's trait) says what works this round.
+  const chaseTraits = Array.isArray(input.chaseTraits) ? input.chaseTraits : null;
+  if (chase && chaseTraits && !opener && !chaseTraits.includes(called)) errors.push({ code: "notOnGround", traits: chaseTraits });
+  const loud = listed ? !opener && listed.loud.includes(called) : !!input.loud;
+
   // The second die. Once the hunt is on the Mask is off; carriers can't use the Mask.
   let second = input.second === "monster" ? "monster" : "mask";
   if (second === "mask" && hunt) { second = "monster"; warnings.push({ code: "maskOffHunt" }); }
@@ -83,7 +105,8 @@ export function buildRollPlan(input) {
   if ((sys.nextRollSmaller ?? 0) > 0) downParts.push({ key: "cost", n: sys.nextRollSmaller });
   const carryExempt = P.carryNimble === false && (!P.form || P.form === sys.form);
   if (carryingFurniture && trait === "nimble" && !carryExempt) downParts.push({ key: "carrying", n: 1 });
-  if (sys.weaknessInPlay && chase) downParts.push({ key: "weakness", n: 1 });
+  const weakness = !!sys.weaknessInPlay || !!input.weakness;
+  if (weakness && chase) downParts.push({ key: "weakness", n: 1 });
   const downs = downParts.reduce((n, p) => n + p.n, 0);
 
   // Raises and steps down cancel out; then the die moves (d12 top, d4 floor: extra steps are lost).
@@ -109,7 +132,7 @@ export function buildRollPlan(input) {
   // Charges: one per ability, before the roll; at zero, overdraw (Suspicion +2, or the Weakness once the hunt is on).
   const byPayer = new Map();
   for (const a of abilities) {
-    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, weaknessInPlay: !!a.payer?.weaknessInPlay };
+    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, weaknessInPlay: !!a.payer?.weaknessInPlay || (isOwn(a) && weakness && chase) };
     p.uses += 1;
     byPayer.set(a.payerId, p);
   }
@@ -140,10 +163,14 @@ export function buildRollPlan(input) {
     diffParts,
     open: !!opener,
     hidden,
-    loud: !!input.loud,
+    loud,
     loudAmount: P.loud === 0 ? 0 : DGF.suspicion.loud,
-    watched: !!input.watched || !!input.wayOut, // the way out is always watched
-    wayOut: !!input.wayOut,
+    // the way out and the lock-up are always watched; slipping free starts no chase
+    watched: mode === "slip" ? false : !!input.watched || mode === "wayOut" || mode === "rescue",
+    wayOut: mode === "wayOut",
+    lockup: mode === "slip" || mode === "rescue" ? mode : "",
+    tracked: !!chaseTraits,
+    weakness: weakness && chase,
     duty: !!input.duty,
     chase,
     hunt,
@@ -195,11 +222,16 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
     triggers,
     suspicion,
     caught,
-    troubleUnwatched: base.band === "trouble" && !plan.watched && !plan.chase,
+    troubleUnwatched: base.band === "trouble" && !plan.watched && !plan.chase && plan.lockup !== "slip",
     unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but carrying nothing
     formShift: plan.formMargin !== null && monster && margin >= plan.formMargin,
     chargeBack: base.critical && !plan.chase, // in a chase a Critical moves the Lead instead
-    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt }),
+    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip" }),
+    leadMove: plan.chase ? leadMove(base) : 0, // one Entity's move; a shared Lead moves by the majority rule (module/logic/chase.mjs)
+    freed: plan.lockup === "slip" && slipFrees(base.band, plan.perk), // only a Success frees you (Built to Last: a Cost too)
+    slipTrouble: plan.lockup === "slip" && base.band === "trouble", // Suspicion rises, but no chase starts
+    rescued: plan.lockup === "rescue" && rescueFrees(base.band), // every captive there is free
+    wayOutBeaten: plan.wayOut && !plan.chase && (base.band === "success" || base.band === "cost"), // everyone gets out
   };
 }
 
@@ -207,11 +239,11 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
  * P3 + T10: the Costs the Storyteller may pick on a Cost result. Never one that
  * costs nothing right then: no Suspicion +1 the roll already raised (or once the
  * hunt is on); "drop an item" only if the roller carries loot; in a chase a Cost
- * costs nothing more. Perks remove options (Old Money, Patience of Ages, Keeper
+ * costs nothing more; slipping free from the lock-up, a Cost does nothing. Perks remove options (Old Money, Patience of Ages, Keeper
  * of Treasures, Wise Woman). "A lost Turn when nothing waits" is the Storyteller's call.
  */
-export function costOptions({ band, trait, perk = "", suspicion = 0, carriesLoot = false, chase = false, hunt = false }) {
-  if (band !== "cost" || chase) return [];
+export function costOptions({ band, trait, perk = "", suspicion = 0, carriesLoot = false, chase = false, hunt = false, slip = false }) {
+  if (band !== "cost" || chase || slip) return []; // slipping free: a Cost does nothing
   const P = perkRule(perk);
   const ruledOut = (c) => P.noCost === c && (!P.trait || P.trait === trait);
   return DGF.costs.filter((c) => {

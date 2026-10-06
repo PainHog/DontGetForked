@@ -19,8 +19,14 @@ export function dieLabel(n) {
   return `d${n}`;
 }
 
-/** A plan/notice code as words: DGF.Plan.<code>, formatted with its data. */
+/** A list of traits as words: "Brawn or Nimble". */
+export function traitList(traits) {
+  return (traits ?? []).map(traitLabel).join(` ${t("DGF.Or")} `);
+}
+
+/** A plan/notice code as words: DGF.Plan.<code>, formatted with its data (a list of traits as words). */
 export function planText(entry) {
   const { code, ...data } = entry;
+  if (Array.isArray(data.traits)) data.traits = traitList(data.traits);
   return t(`DGF.Plan.${code}`, data);
 }
