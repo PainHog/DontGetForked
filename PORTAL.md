@@ -1,6 +1,6 @@
 Now: Fixing what the latest computer playtest of the full draft found: final flights are now much shorter, and two dozen unclear passages are clearer.
 Next: Another computer playtest to check the fixes, then Richard's first two-player try of the online version.
-Number: Design decisions made = 87
+Number: Design decisions made = 88
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 155

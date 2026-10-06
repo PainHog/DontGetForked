@@ -267,3 +267,7 @@ With B6, Hard wins by party size 52.3 · 57.1 · 59.0% and forked 10.8 · 9.3 ·
 | Gallowsmere, Hard | 57.6% (55–60%) | 9.3% (8–12%) | 54.0 · 59.8 · 59.1 | 11.6 · 9.0 · 7.2 | 0.38 | 0.1% |
 
 Thistlewick's forked rate sits at the top of its target (was 6.5% before B6); on seeds 2 and 3 (3,000 raids per party size) it is 6.9% and 6.4%, with wins 74.8% and 75.2%. Left as printed; worth watching if a later change raises Standard forked rates.
+
+## PT7's Hard Grand Years (2026-10-06)
+
+PT7 got a Grand Year in both Hard raids (Gallowsmere by Turn 8, a rolled Hard town by Turn 7). Gallowsmere, 2,000 raids per party size: the default players (furniture only when safe) almost never try for the armour (0.1%): wins 57.6%, forked 9.3%. A party that always goes for it tries 81.7% of the time and gets a Grand Year 50.1% of the times it tries (target about half), with wins 54.0% and forked 14.9%. Two Grand Years in two raids are within those odds; no change (V13).
