@@ -1,9 +1,9 @@
-Now: The rules have settled: the last two computer playtests found nothing major. A kit for the first real playtest with people is ready.
+Now: Full checks of the rulebook, the online version and the balance simulator: about 50 problems found and fixed, from security holes in the online version to pictures without descriptions.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
 Number: Design decisions made = 92
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 162
+Number: Automated checks passing = 241
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -55,6 +55,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Computer playtest of the full draft, and its fixes (shorter final flights)
 - [x] Three more computer playtests until nothing major was left
 - [x] A kit for the first playtest with real people
+- [x] Full audits of the rulebook, the online version and the simulator, with every confirmed problem fixed
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
