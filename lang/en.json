@@ -343,6 +343,7 @@
   "DGF.Chase.refused.chaseRunning": "A chase is already running: finish it first (the chase tracker), then start this one.",
   "DGF.Chase.refused.huntOn": "The whole town hunts: everyone who isn't captured is in the final flight.",
   "DGF.Chase.refused.raidOver": "The raid is over.",
+  "DGF.Chase.refused.partyOut": "The party is out of town: no chase starts now.",
   "DGF.Tell.title": "A Tell check",
   "DGF.Tell.titleAt": "A Tell check: {place}",
   "DGF.Tell.intro": "The first time anyone reaches a watched location (the way out and the lock-up included), check once, however the party has split. Who is arriving?",
@@ -359,6 +360,7 @@
   "DGF.Tell.refused.nobodyArriving": "Tick the Entities arriving.",
   "DGF.Trigger.tell": "a Tell",
   "DGF.Trigger.furniture": "carrying furniture",
+  "DGF.Trigger.furnitureDown": "the furniture (set down)",
   "DGF.Group.title": "A group check",
   "DGF.Group.intro": "Several Entities roll the same group obstacle this Turn: they declare their dice and abilities, then roll together. Who is rolling?",
   "DGF.Group.what": "The obstacle",
@@ -416,5 +418,6 @@
   "DGF.Raid.furnitureInPlay": "The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down.",
   "DGF.Raid.furnitureOut": "The furniture has left town.",
   "DGF.Raid.furnitureOutButton": "out of town",
-  "DGF.Raid.furnitureLostButton": "lost or abandoned"
+  "DGF.Raid.furnitureLostButton": "lost or abandoned",
+  "DGF.Raid.partyOut": "The party is out of town: no hunt or chase starts now, not even at dawn."
 }

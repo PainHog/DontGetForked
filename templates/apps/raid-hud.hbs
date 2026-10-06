@@ -8,6 +8,7 @@
   {{#if atLimit}}{{#unless hunt}}<p class="dgf-hud-alert">{{localize "DGF.Raid.atLimit"}}</p>{{/unless}}{{/if}}
   {{#if hunt}}<p class="dgf-hud-alert dgf-hud-hunt">{{huntLine}}</p>{{/if}}
   {{#if over}}<p class="dgf-hud-alert dgf-hud-over">{{over}}</p>{{/if}}
+  {{#if partyOut}}<p class="dgf-hud-alert dgf-hud-over">{{localize "DGF.Raid.partyOut"}}</p>{{/if}}
   {{#if chase}}<p class="dgf-hud-chase"><button type="button" class="dgf-link" data-action="openChase">{{chase}}</button></p>{{/if}}
   {{#if group}}<p class="dgf-hud-group">{{localize "DGF.Raid.groupOpen" label=group.label}}{{#if group.waiting}} — {{localize "DGF.Raid.groupWaiting" names=group.waiting}}{{/if}}{{#if isGM}} <button type="button" class="dgf-link" data-action="closeGroup">{{localize "DGF.Raid.closeGroup"}}</button>{{/if}}</p>{{/if}}
   {{#if captives.length}}

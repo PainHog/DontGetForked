@@ -16,6 +16,7 @@
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
  *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
  *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
+ *             partyOut, // null, or { how: "wayOut" | "flight", turn } once the party has left town (no hunt or chase starts)
  *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
@@ -53,6 +54,7 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     over: null,
     furniture: "",
     furnitureLost: false,
+    partyOut: null,
     endedChase: null,
   };
 }
@@ -80,6 +82,7 @@ export function normalizeRaid(stored) {
     over: s.over && typeof s.over === "object" ? s.over : null,
     furniture: FURNITURE_STATES.includes(s.furniture) ? s.furniture : s.furnitureLost ? "lost" : "",
     furnitureLost: s.furniture === "lost" || (!FURNITURE_STATES.includes(s.furniture) && !!s.furnitureLost),
+    partyOut: s.partyOut && typeof s.partyOut === "object" ? s.partyOut : null,
     endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
 }
@@ -124,6 +127,7 @@ export function raidView(state) {
     over: state.over ? { ...state.over } : null,
     furniture: state.furniture ?? "",
     furnitureLost: !!state.furnitureLost,
+    partyOut: state.partyOut ? { ...state.partyOut } : null,
   };
 }
 
@@ -200,7 +204,7 @@ export function setHunt(state, on, cause = "manual") {
  * dawn counts, so a Storyteller who stops the hunt by hand isn't overruled.
  */
 export function huntDue(state, before = null) {
-  if (state.hunt || state.over) return "";
+  if (state.hunt || state.over || state.partyOut) return ""; // dawn hunts only those still in town
   if (suspicionOf(state).atLimit && !(before && suspicionOf(before).atLimit)) return "limit";
   if (state.dawn && !(before && before.dawn)) return "dawn";
   return "";
@@ -251,12 +255,13 @@ export function furnitureEventId(turn) {
  * counts its event again, never twice.
  */
 export function endOfTurnFurniture(state, carriers = []) {
-  if (state.dawn || state.over) return state;
+  if (state.dawn || state.over || state.partyOut) return state;
   let s = carriers.length ? takeFurniture(state) : state;
   if (s.furniture !== "inPlay") return s;
   const eventId = furnitureEventId(s.turn);
   if (s.ledger.some((e) => e.eventId === eventId)) return restore(s, eventId);
-  return recordEvent(s, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: "furniture", actorName: carriers.join(", ") });
+  // set down, nobody's name goes with it: the event says so ("the furniture (set down)")
+  return recordEvent(s, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: carriers.length ? "furniture" : "furnitureDown", actorName: carriers.join(", ") });
 }
 
 /** The Storyteller steps a Turn back: the Turn that ended didn't end after all, so its furniture event stops counting. */
@@ -282,7 +287,15 @@ export function takeFurniture(state) {
   return state.furniture === "" ? setFurniture(state, "inPlay") : state;
 }
 
-/** V4: the piece leaves town with the party (the way out beaten): no more noise. */
-export function furnitureLeaves(state) {
-  return state.furniture === "inPlay" ? setFurniture(state, "out") : state;
+/**
+ * V4: the party leaves town (the way out beaten, or the final flight escaped). Only a carried piece
+ * leaves town ("out"); one set down stays put, abandoned ("lost"). Either way it makes no more noise.
+ */
+export function furnitureLeaves(state, { carried = true } = {}) {
+  return state.furniture === "inPlay" ? setFurniture(state, carried ? "out" : "lost") : state;
+}
+
+/** The party has left town ("wayOut" | "flight"): from now on no hunt or chase starts, dawn included. */
+export function leaveTown(state, how) {
+  return state.partyOut ? state : { ...state, partyOut: { how, turn: state.turn } };
 }

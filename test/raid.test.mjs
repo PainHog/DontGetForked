@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { DGF } from "../module/config.mjs";
 import {
-  newRaid, normalizeRaid, suspicionOf, raidView, recordEvent, cancel, restore, lastLiveEvent, adjust, advanceTurn, setHunt, huntDue, eventsOf,
+  newRaid, normalizeRaid, suspicionOf, raidView, recordEvent, cancel, restore, lastLiveEvent, adjust, advanceTurn, setHunt, huntDue, eventsOf, leaveTown,
 } from "../module/logic/raid.mjs";
 import { foldSuspicion } from "../module/logic/suspicion.mjs";
 
@@ -98,6 +98,22 @@ test("the hunt starts at the moment of the Limit or dawn, so the Storyteller can
   const at = recordEvent(t, { eventId: "b", amount: 2, source: "roll" });
   assert.equal(huntDue(at, t), "limit");
   assert.equal(huntDue(recordEvent(at, { eventId: "c", amount: 1, source: "roll" }), at), "", "already at the Limit before this change");
+});
+
+test("once the party is out of town, neither dawn nor the Limit starts a hunt", () => {
+  let s = leaveTown(newRaid({ id: "r", difficulty: "easy" }), "wayOut");
+  assert.deepEqual(s.partyOut, { how: "wayOut", turn: 1 });
+  assert.equal(leaveTown(s, "flight"), s, "once");
+  assert.deepEqual(raidView(s).partyOut, { how: "wayOut", turn: 1 });
+  assert.deepEqual(normalizeRaid(JSON.parse(JSON.stringify(s))).partyOut, s.partyOut, "it is kept");
+  assert.equal(newRaid({ id: "n" }).partyOut, null);
+  for (let i = 0; i < 11; i++) s = advanceTurn(s, 1);
+  const beforeDawn = s;
+  s = advanceTurn(s, 1);
+  assert.equal(s.dawn, true);
+  assert.equal(huntDue(s, beforeDawn), "", "dawn hunts only those still in town");
+  const at = recordEvent(s, { eventId: "a", amount: 11, source: "storyteller" });
+  assert.equal(huntDue(at, s), "");
 });
 
 test("the Storyteller's adjust, cancel, restore and undo", () => {

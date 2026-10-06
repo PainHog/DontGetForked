@@ -143,8 +143,8 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 ## 14. Furniture
 
 1. **Ann:** roll Sly with *The furniture's extra obstacle* ticked at Difficulty 10: the card says *against 12* and *2 harder (the furniture's extra obstacle)*. At 12 it stays 12.
-2. **Ann:** tick *Carrying furniture* on the Witch's sheet: both Raid windows say *The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down*. **GM:** **Next Turn**: Suspicion +1, and the event list says *carrying furniture*. Untick it (she sets it down), Next Turn: **still +1** (the piece is in town). **◀ Turn** back over a Turn that raised it: the rise is taken back.
-3. **GM:** on the furniture line press **out of town**: the line says *The furniture has left town*; Next Turn: nothing. (Press **lost or abandoned** instead and the line says it is lost or abandoned for the night; nothing either.) The way out beaten or the final flight escaped also takes it out of town by itself; a carrier captured loses it (section 12).
+2. **Ann:** tick *Carrying furniture* on the Witch's sheet: both Raid windows say *The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down*. **GM:** **Next Turn**: Suspicion +1, and the event list says *carrying furniture*. Untick it (she sets it down), Next Turn: **still +1** (the piece is in town), and the event list says *the furniture (set down)*. **◀ Turn** back over a Turn that raised it: the rise is taken back.
+3. **GM:** on the furniture line press **out of town**: the line says *The furniture has left town*; Next Turn: nothing. (Press **lost or abandoned** instead and the line says it is lost or abandoned for the night; nothing either.) The way out beaten or the final flight escaped also takes a carried piece out of town by itself (one set down stays put: lost or abandoned, section 16); a carrier captured loses it (section 12).
 
 ## 15. The final flight and the year
 
@@ -157,8 +157,11 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 
 ## 16. A forked raid
 
-1. **GM:** New raid → *Standard*: everyone Active, charges back to 3. **Shopping list** → roll it (note how the essentials die fell). **Start the hunt**: **The final flight!** (*The Storyteller started it*).
+1. **GM:** New raid → *Standard*: everyone Active, charges back to 3, and last year's loot stays home: the Witch's sheet says *Carrying: Nothing yet* and nobody has *Carrying furniture* ticked. **Shopping list** → roll it (note how the essentials die fell). **Start the hunt**: **The final flight!** (*The Storyteller started it*).
 2. Roll Trouble for both: two Trouble and no Success move the Lead **−2**, from 2 to 0 in one round: **Cornered by the mob!** *Forked: the monsters are killed and the raid is lost.* — and, by itself, **How the year went: Forked**, with only the Forked line.
+3. **Leaving town with the piece set down.** **GM:** New raid → *Standard*. **Ann:** tick *Carrying furniture* on the Witch, then untick it (she sets it down). Roll the way out and beat it (Sly, *The way out of town* ticked): both Raid windows say *The furniture is lost or abandoned for the night* (only a carried piece leaves town) and *The party is out of town: no hunt or chase starts now, not even at dawn*; the year form (**How the year went**) can't count the furniture as home.
+4. **Leaving town with the piece carried.** **GM:** New raid → *Standard*; tick *Carrying furniture* on Dracula and leave it ticked. Ann beats the way out: the Raid windows say *The furniture has left town*, and the year form starts with the furniture ticked *Home*. Untick Dracula's furniture afterwards.
+5. **Out of town with the year form off.** **GM:** switch *Offer how the year went* off. New raid → *Standard*; Ann beats the way out: no *Out of town* card, and the Raid windows say *The party is out of town…*. Press **Next Turn** until *Dawn*: **no hunt starts and no final flight** (Suspicion stays where it was). **End the raid** still reads the year. Switch *Offer how the year went* back on.
 
 ## 17. Running it by hand (switches)
 
@@ -167,7 +170,7 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 | Run chases automatically | Trouble at a watched obstacle: the GM's card has **Start the local chase**; clicking it opens the chase with no ground. The GM presses **Roll the ground**; the player's roll waits; **Move the Lead** applies the round. The hunt starts no flight (the tracker offers **Start the final flight**). |
 | Run the lock-up automatically | Cornered in a local chase: *Cornered!* but the Entity stays Active; slip and rescue rolls say what happened but change no status |
 | Group checks | No **Group check** button; each roll stands alone |
-| Offer how the year went | No *Out of town* card and no automatic Forked year; use **End the raid** |
+| Offer how the year went | No *Out of town* card and no automatic Forked year; use **End the raid**. The way out beaten still puts the party out of town: dawn starts no hunt (section 16, step 5) |
 | Carried furniture raises Suspicion each Turn | Next Turn while carrying: no rise |
 | A new raid resets the Entities | A new raid keeps charges and statuses as they were |
 | Open the chase tracker when a chase starts | Close Ann's tracker; a new chase doesn't reopen it (the Raid window's chase line or **Chase** opens it) |

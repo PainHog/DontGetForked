@@ -48,11 +48,17 @@ export function partyForFlight() {
   return entities().filter((a) => !isCaptive(a.system)).map(memberFor);
 }
 
+/** Does anyone free carry the furniture's piece (so it leaves town with the party)? */
+function pieceCarried() {
+  return entities().some((a) => a.system.carryingFurniture && !isCaptive(a.system));
+}
+
 /* ------------------------------------------------------------ starting -- */
 
 /** A local chase for these caught Entities (one, or several caught in one group check, on a shared Lead). */
 export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (state.over) return { state, started: false, reason: "raidOver" };
+  if (state.partyOut) return { state, started: false, reason: "partyOut" };
   if (state.hunt) return { state, started: false, reason: "huntOn" };
   if (C.isRunning(state.chase)) return { state, started: false, reason: "chaseRunning" };
   const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter(isEntity).map(memberFor);
@@ -68,6 +74,7 @@ export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
  */
 export function startFinal(state, cause = "manual") {
   if (state.over) return { state, started: false, reason: "raidOver" };
+  if (state.partyOut) return { state, started: false, reason: "partyOut" };
   if (C.isRunning(state.chase) && state.chase.kind === "final") return { state, started: false, reason: "chaseRunning" };
   let s = state;
   let behind = [];
@@ -126,7 +133,7 @@ async function announceChase(before, state) {
     if (ended.history.length > b.history.length) await postCard(roundFacts(ended, state));
     else await postCard(chaseFacts(ended, state, { event: "end" }));
   } else if (b && C.isRunning(b) && (!c || c.id !== b.id)) await postCard(chaseFacts({ ...b, outcome: "ended" }, state, { event: "end" }));
-  if (!c) return;
+  if (!c || c.id === ended?.id) return; // nobody left to flee: the ended chase is still the raid's, and was just announced
   if (!b || b.id !== c.id) {
     await postCard(chaseFacts(c, state, { event: "start" }));
     return;
@@ -227,7 +234,11 @@ async function consequences(chase, state) {
       if (isEntity(actor) && (actor.system.weaknessInPlay || actor.system.overdrewInFlight)) await actor.update({ "system.weaknessInPlay": false, "system.overdrewInFlight": false });
     }
   }
-  if (chase.kind === "final" && chase.outcome === "escaped") await mutateRaid((s) => R.furnitureLeaves(s)); // out of town (V4)
+  // out of town: a carried piece goes with the party, one set down stays put (V4); no hunt or chase starts any more
+  if (chase.kind === "final" && chase.outcome === "escaped") {
+    const carried = pieceCarried();
+    await mutateRaid((s) => R.leaveTown(R.furnitureLeaves(s, { carried }), "flight"));
+  }
   if (chase.kind === "final" && setting(SETTINGS.autoYear)) {
     const { finishForked, promptHome } = await import("./raid-checks.mjs");
     if (chase.outcome === "cornered") await finishForked();
@@ -239,9 +250,10 @@ async function consequences(chase, state) {
 async function chaseFollowUp(state, before) {
   const c = state.chase, b = before.chase;
   // B3: a local chase the Limit ended in a round that cornered them: they are captured first
-  const ended = state.endedChase;
-  if (ended && ended.id !== before.endedChase?.id && ended.outcome === "cornered") await consequences(ended, state);
-  if (c?.outcome && !(b && b.id === c.id && b.outcome)) await consequences(c, state);
+  const ended = state.endedChase && state.endedChase.id !== before.endedChase?.id ? state.endedChase : null;
+  if (ended?.outcome === "cornered") await consequences(ended, state);
+  // nobody left to flee: the ended chase is still the raid's chase; its consequences came once, above
+  if (c?.outcome && c.id !== ended?.id && !(b && b.id === c.id && b.outcome)) await consequences(c, state);
   // the whole town hunts, but everyone is held at the lock-up: nobody flees, the raid is over
   if (isActiveGM() && state.hunt && !before.hunt && !state.over && setting(SETTINGS.autoChase) && setting(SETTINGS.autoYear)
     && !(C.isRunning(c) && c.kind === "final") && !partyForFlight().length && entities().length) {
@@ -306,6 +318,7 @@ export function registerChaseOps() {
       const autoSusp = setting(SETTINGS.autoSuspicion) && card.suspicion > 0 && !card.hunt && !card.cancelled;
       const autoChase = setting(SETTINGS.autoChase);
       const autoGroup = setting(SETTINGS.autoGroupChecks);
+      const carried = card.wayOutBeaten && pieceCarried();
       const { state, result } = await mutateRaid((s0) => {
         let s = s0;
         const res = { suspicion: false, chase: "", group: "", started: "" };
@@ -313,8 +326,9 @@ export function registerChaseOps() {
           s = R.recordEvent(s, { eventId: card.eventId, amount: card.suspicion, source: card.kind, label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId });
           res.suspicion = true;
         }
-        // the way out beaten: the party (and any piece it carries) is out of town: no more furniture noise (V4)
-        if (card.wayOutBeaten) s = R.furnitureLeaves(s);
+        // the way out beaten: the party is out of town (no hunt or chase starts, dawn included); a carried piece
+        // goes with it, one set down stays put, abandoned (V4): no more furniture noise either way
+        if (card.wayOutBeaten) s = R.leaveTown(R.furnitureLeaves(s, { carried }), "wayOut");
         // its round in the chase (the Limit may have just ended a local chase: then it no longer counts)
         if (card.chaseId && s.chase?.id === card.chaseId) {
           const r = C.recordRoll(s.chase, card.actorId, { messageId, round: card.chaseRound, band: card.band, critical: card.critical });

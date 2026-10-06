@@ -313,6 +313,8 @@ test("furniture (B2, V4): its extra obstacle is 2 harder; once taken it is noisy
   await asUser(GM, () => currentHud().runAction("nextTurn"));
   await settle();
   assert.equal(view().value, v + 2, "set down, still noisy");
+  assert.match(currentHud().renderedParts.body, /T4 · the furniture \(set down\)/, "nobody's name: the reason alone");
+  assert.doesNotMatch(currentHud().renderedParts.body, /\?: /);
   // the Storyteller marks it out of town: quiet
   await asUser(GM, () => currentHud().runAction("furnitureOut"));
   await settle();
@@ -412,11 +414,13 @@ test("the final flight at the Limit: everyone free flees together; the majority 
 });
 
 test("a new raid resets the Entities; the final flight cornered: forked, and the year card posts itself", async () => {
+  assert.equal(witch.system.carried.length, 2, "she brought the cheese and the rope home");
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
   assert.equal(raid().chase, null);
   assert.deepEqual(raid().list, []);
   assert.equal(witch.system.charges.value, 3, "a new year: charges refill");
+  assert.deepEqual(witch.system.carried, [], "last year's loot stays home: she starts the new town empty-handed");
   diceQueue.push(4, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6); // the essentials d6: 4, even: two
   const listed = await op(GM, OPS.raidList, { action: "roll" });
   await settle();
@@ -721,6 +725,135 @@ test("a new raid: nobody carries last year's piece into the new town, so the fir
   await settle();
   assert.equal(raid().furniture, "", "not taken");
   assert.equal(view().value, 0, "and quiet");
+});
+
+test("B3: cornered in the Limit's round with nobody else free: its last round and the capture are announced once, and nobody flees", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  const ghost = game.actors.find((a) => a.name === "A Ghost");
+  for (const a of [dracula, ghost]) await op(GM, OPS.lockupSet, { actorId: a.id, captured: true });
+  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  await settle();
+  // caught (+1 → 10): alone at Lead 1; the ground: the crowded square
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
+  const local = chase();
+  const from = game.messages.length;
+  // Trouble (+1 → 11, the Limit) corners her: captured first, and everyone else is held already
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1]);
+  assert.equal(view().hunt, true);
+  assert.equal(witch.system.status, "captured");
+  assert.equal(chase().id, local.id, "no final flight");
+  const after = game.messages.slice(from).map(cardOf).filter((c) => c?.kind === CARD.chase);
+  assert.deepEqual(after.map((c) => c.event), ["round", "captured"], "each card once");
+  assert.equal(cardOf(lastMessage()).how, "nobody");
+});
+
+test("leaving town: a carried piece goes with the party, one set down stays put (abandoned); once out, dawn starts no hunt, even with the year form off", async () => {
+  // the way out beaten while the piece is set down: it stays in town, abandoned
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false })); // set down
+  await settle();
+  assert.equal(raid().furniture, "inPlay");
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", wayOut: true }, [6, 4]);
+  assert.equal(cardOf(lastMessage()).event, "home");
+  assert.equal(raid().furniture, "lost", "only a carried piece leaves town");
+  assert.deepEqual(raid().partyOut, { how: "wayOut", turn: 1 });
+  const hud = await asUser(BEN, () => openHud());
+  assert.match(hud.renderedParts.body, /The furniture is lost or abandoned for the night/);
+  assert.match(hud.renderedParts.body, /The party is out of town/);
+  // the year form off: beaten with Dracula carrying the piece, it leaves town; Next Turn up to dawn starts no hunt and no flight
+  await setSetting(SETTINGS.autoYear, false);
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": true }));
+  await settle();
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", wayOut: true }, [6, 4]);
+  assert.equal(cardOf(lastMessage()).kind, CARD.roll, "no Out of town card by itself");
+  assert.equal(raid().furniture, "out", "carried, it left town with the party");
+  assert.equal(raid().partyOut.how, "wayOut");
+  assert.equal(view().over, null, "the year is still the Storyteller's to read");
+  for (let i = 0; i < 12; i++) await asUser(GM, () => currentHud().runAction("nextTurn"));
+  await settle();
+  assert.equal(view().dawn, true);
+  assert.equal(view().hunt, false, "dawn hunts only those still in town");
+  assert.equal(chase(), null, "no final flight");
+  assert.equal(view().value, 0, "and the piece is quiet");
+  assert.equal((await op(GM, OPS.chaseStart, { final: true })).reason, "partyOut");
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": false }));
+  await setSetting(SETTINGS.autoYear, true);
+  // the final flight escaped while the piece is set down: it stays put too
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  diceQueue.push(1); // the flight's ground
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  assert.equal(chase().kind, "final");
+  await op(GM, OPS.chaseEnd, { outcome: "escaped" });
+  await settle();
+  assert.equal(raid().furniture, "lost");
+  assert.equal(raid().partyOut.how, "flight");
+  assert.equal(cardOf(lastMessage()).how, "flight");
+});
+
+test("F25: dawn, or the Storyteller starting the hunt by hand, during a local chase counts as the Limit coming", async () => {
+  // the hunt by hand while the Witch's local chase waits for her roll: the chase ends at once and she joins the flight
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]); // caught; the ground: the crowded square
+  let local = chase();
+  assert.equal(local.kind, "local");
+  diceQueue.push(2); // the flight's ground
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  assert.deepEqual([raid().endedChase.id, raid().endedChase.outcome], [local.id, "ended"]);
+  assert.deepEqual([chase().kind, chase().cause], ["final", "manual"]);
+  assert.deepEqual(chase().members.map((m) => m.name), ["A Witch", "Dracula", "A Ghost"]);
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  // dawn while her local chase runs: the same
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  for (let i = 0; i < 11; i++) await asUser(GM, () => currentHud().runAction("nextTurn"));
+  await settle();
+  assert.equal(view().turn, 12);
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
+  local = chase();
+  assert.equal(local.kind, "local");
+  diceQueue.push(2);
+  await asUser(GM, () => currentHud().runAction("nextTurn"));
+  await settle();
+  assert.equal(view().dawn, true);
+  assert.deepEqual([raid().endedChase.id, raid().endedChase.outcome], [local.id, "ended"]);
+  assert.deepEqual([chase().kind, chase().cause], ["final", "dawn"]);
+  assert.deepEqual(chase().members.map((m) => m.name), ["A Witch", "Dracula", "A Ghost"]);
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  // cornered in that round (the chase run by hand, the hunt and the flight started by hand): captured first, as at the Limit
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await setSetting(SETTINGS.autoChase, false);
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1]);
+  await op(GM, OPS.chaseStart, { messageId: lastMessage().id });
+  diceQueue.push(1); // the crowded square
+  await op(GM, OPS.chaseGround);
+  await settle();
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1]); // Trouble at Lead 1: the round would corner her
+  local = chase();
+  assert.equal(local.lead, 1, "the Lead waits for the Storyteller");
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await op(GM, OPS.chaseStart, { final: true });
+  await settle();
+  assert.deepEqual([raid().endedChase.id, raid().endedChase.outcome], [local.id, "cornered"]);
+  assert.equal(witch.system.status, "captured", "captured first");
+  assert.deepEqual(chase().members.map((m) => m.name), ["Dracula", "A Ghost"], "the flight starts without her");
+  await op(GM, OPS.chaseEnd, { outcome: "dropped" });
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await setSetting(SETTINGS.autoChase, true);
+  await settle();
 });
 
 test("the night left no errors, no missing words and no unanswered dialogs", () => {

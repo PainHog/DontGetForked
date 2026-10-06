@@ -62,10 +62,12 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
     const state = getRaid();
     const v = R.raidView(state);
     const isGM = !!game.user?.isGM;
+    const why = (e) => (e.label || "").split(",").filter(Boolean).map((k) => t(`DGF.Trigger.${k}`)).join(", ");
     const events = isGM ? R.eventsOf(state).slice(0, 8).map((e) => ({
       eventId: e.eventId,
       amount: e.amount > 0 ? `+${e.amount}` : `${e.amount}`,
-      text: e.source === "storyteller" ? t("DGF.Raid.byStoryteller") : t("DGF.Raid.eventBy", { name: e.actorName || "?", why: (e.label || "").split(",").filter(Boolean).map((k) => t(`DGF.Trigger.${k}`)).join(", ") }),
+      // nobody's name (the furniture set down): the reason alone
+      text: e.source === "storyteller" ? t("DGF.Raid.byStoryteller") : e.actorName ? t("DGF.Raid.eventBy", { name: e.actorName, why: why(e) }) : why(e) || "?",
       turn: e.turn,
       cancelled: !!e.cancelled,
       hunt: !!e.hunt,
@@ -96,6 +98,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       list: state.list.map((it) => ({ name: it.name, essential: it.essential })),
       chase: state.chase && !state.chase.outcome ? t("DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape }) : "",
       over: v.over ? t("DGF.Raid.over", { result: t(`DGF.Result.${v.over.result}`) }) : "",
+      partyOut: !!v.partyOut && !v.over,
       furnitureLost: v.furnitureLost,
       furnitureInPlay: v.furniture === "inPlay" && setting(SETTINGS.autoFurniture),
       furnitureOut: v.furniture === "out",
