@@ -1,17 +1,17 @@
 /**
- * PLACEHOLDER Entities for the rough simulation. None of this is game content.
+ * The Entities the simulator plays. The default roster ("approved", params.roster) is the
+ * book's (Chapter 2), read from module/config.mjs: the eight Entities' dice (C1),
+ * signatures (C2), Gifts, Perks and Weakness timings (C6–C9, B4, B5); the engine plays each
+ * Perk by its key (sim/engine.mjs). test/sim.test.mjs pins what the simulator reads to the
+ * book, so a change to the config can't move the baseline unnoticed.
  *
- * The roster is decided (Dracula, Frankenstein's creature, the Mummy, the
- * Werewolf, the Invisible Man, a Ghost, a Witch, Jekyll & Hyde), but each
- * Entity's dice arrangement, abilities, Gifts, Perks, Weakness and Tell are
- * Richard's to write. Until then the simulator uses eight anonymous stand-ins,
- * E1–E8, built only from the decided structure:
+ * Also kept: the anonymous stand-ins E1–E8 ("placeholder"), built only from the decided
+ * structure, which the first simulations ran on before the content was written:
  *  - one each of d12, d10, d8, d6, d4 over the five traits (guardrail 1);
  *  - a signature ability and a Gift (one of three versions of the second
  *    ability), each doing one of the four standard effects;
  *  - a Weakness (mob-type, or sunlight-type that only bites at dawn) and a Tell;
- *  - a Castle Duty from a shared list of six (placeholder kinds K1–K6).
- * Perks are not modelled (no placeholder could stand in for real ones).
+ *  - a Castle Duty from a shared list of six.
  */
 import { makeRng } from "./rng.mjs";
 import { DGF } from "../module/config.mjs";

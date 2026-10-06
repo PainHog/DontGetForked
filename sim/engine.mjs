@@ -1,18 +1,20 @@
 /**
- * Plays one raid strictly by docs/CORE-RULES.md draft 0.2 (and the DESIGN
- * Decisions log it summarises). Comments cite the passage each step follows.
- * Where the rules leave something open, the choice is a named parameter
- * (params.mjs PARAMS); where the players choose, the choice is a documented
- * policy (also in PARAMS, kind "policy").
+ * Plays one raid strictly by the rulebook (book/src/chapters/*.html; docs/CORE-RULES.md
+ * summarises it, docs/DESIGN.md logs each decision). Comments cite the passage or
+ * decision each step follows. Where the rules leave something open, the choice is a
+ * named parameter (params.mjs PARAMS); where the players choose, the choice is a
+ * documented policy (also in PARAMS, kind "policy"). docs/audits/SIM-AUDIT.md checks
+ * it rule by rule against the book.
  *
  * Abstractions (stated up front, sim/README.md §1):
- *  - the party moves together (partyPolicy "together"; a freed captive rejoins it
- *    at once), or splits into groups of two or one ("pairs"/"singles", playSplit);
+ *  - the party splits into pairs (partyPolicy "pairs", the default; "singles"), each
+ *    taking its own location, or moves together ("together"); everyone regroups at
+ *    the way out;
  *  - one list item per location; a location's obstacles are passed in order;
- *  - no map, distances or entrances (so "Huge pieces don't fit small entrances"
- *    is not modelled);
- *  - Perks are not modelled; Gifts, Duties, Weaknesses and Tells are placeholders
- *    (entities.mjs).
+ *  - no map or distances (any move is one Turn) and no small entrances (a rolled town
+ *    has none, B3);
+ *  - the Entities are the approved roster (entities.mjs, read from module/config.mjs):
+ *    dice, signatures, Gifts, Perks (the list above hasPerk), Weakness timings; a Tell is +1.
  */
 import { MASK, MONSTER, stepUp, stepDown, band, isCritical, outcomeDist, majorityMove, leadMove, monsterShows } from "./rules.mjs";
 import { abilitiesOf } from "./entities.mjs";
@@ -21,7 +23,45 @@ import { rescueObstacle, CHASE_TABLE, CHASE_TABLES } from "./town.mjs";
 const LADDER = ["bust", "partial", "win", "grand"];
 
 /** Play one raid. Returns a summary; detailed counts go to `rec`. */
-export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
+export function playRaid({ party, town, params, numbers, rng, rec }) {
+  const S = makeState({ party, town, params, numbers, rng, rec });
+  if (S.P.partyPolicy !== "together") playSplit(S);
+  while (S.phase === "raid") {
+    // P5: at dawn, anyone still in town starts the final flight.
+    if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
+    let target = chooseTarget(S);
+    if (target === "leave") {
+      if (S.P.exitRule === "free" || (S.P.exitRule === "gateCarriers" && !S.furnitureCarried)) { S.turn++; leaveTown(S); break; }
+      target = exitLocation(S); // exitRule "gate": getting out is a group check like any other
+    }
+    if (target === "wait") { S.turn++; captivesAct(S); if (S.phase !== "raid") break; noisyFurniture(S, "wait"); continue; }
+    if (S.at !== target) {
+      // P4: each Turn, every Entity either rolls once or moves.
+      S.turn++;
+      // furnitureRule "slow"/"noisySlow" (S7 candidate): carrying furniture, a move takes two Turns.
+      if (S.furnitureCarried && ["slow", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"].includes(S.P.furnitureRule) && !(S.P.fetchRule === "carry" && S.party.some((c) => c.furniture === S.furnitureCarried && hasPerk(c, "fetch")))) { S.turn++; noisyFurniture(S, "move"); if (S.phase !== "raid") break; }
+      const moving = !!S.furnitureCarried;
+      followsBehind(S, active(S));
+      S.at = target;
+      arrive(S, target);
+      if (S.phase !== "raid") break;
+      captivesAct(S);
+      if (S.phase !== "raid") break;
+      if (moving) noisyFurniture(S, "move"); // the end of the move's last Turn
+      continue;
+    }
+    S.turn++;
+    workLocation(S, target);
+    if (S.phase !== "raid") break;
+    captivesAct(S);
+    if (S.phase !== "raid") break;
+    noisyFurniture(S, "work");
+  }
+  return summarise(S);
+}
+
+/** The state of one raid at its start (the furniture placed, the party reset). */
+function makeState({ party, town, params: P, numbers: N, rng, rec }) {
   const S = {
     party, town, P, N, rng, rec,
     L: town.L,
@@ -59,39 +99,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     m.charges = m.chargesStart;
     m.form = "jekyll"; // Jekyll & Hyde starts each raid as Jekyll
   }
-
-  if (P.partyPolicy !== "together") playSplit(S);
-  while (S.phase === "raid") {
-    // P5: at dawn, anyone still in town starts the final flight.
-    if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
-    let target = chooseTarget(S);
-    if (target === "leave") {
-      if (S.P.exitRule === "free" || (S.P.exitRule === "gateCarriers" && !S.furnitureCarried)) { S.turn++; leaveTown(S); break; }
-      target = exitLocation(S); // exitRule "gate": getting out is a group check like any other
-    }
-    if (target === "wait") { S.turn++; captivesAct(S); if (S.phase !== "raid") break; noisyFurniture(S, "wait"); continue; }
-    if (S.at !== target) {
-      // P4: each Turn, every Entity either rolls once or moves.
-      S.turn++;
-      // furnitureRule "slow"/"noisySlow" (S7 candidate): carrying furniture, a move takes two Turns.
-      if (S.furnitureCarried && ["slow", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"].includes(S.P.furnitureRule) && !(S.P.fetchRule === "carry" && S.party.some((c) => c.furniture === S.furnitureCarried && hasPerk(c, "fetch")))) { S.turn++; noisyFurniture(S, "move"); if (S.phase !== "raid") break; }
-      const moving = !!S.furnitureCarried;
-      S.at = target;
-      arrive(S, target);
-      if (S.phase !== "raid") break;
-      captivesAct(S);
-      if (S.phase !== "raid") break;
-      if (moving) noisyFurniture(S, "move"); // the end of the move's last Turn
-      continue;
-    }
-    S.turn++;
-    workLocation(S, target);
-    if (S.phase !== "raid") break;
-    captivesAct(S);
-    if (S.phase !== "raid") break;
-    noisyFurniture(S, "work");
-  }
-  return summarise(S);
+  return S;
 }
 
 // ---------------------------------------------------------------- split play (partyPolicy)
@@ -119,7 +127,7 @@ function playSplit(S) {
     const groups = S.groups.filter(live);
     if (groups.length === 0) { captivesAct(S); continue; }
     // T4: once every group waits at the way out with nothing left to do, one Entity rolls for all.
-    if (groups.every((g) => g.at === exit && g.busy === 0 && chooseTargetSplit(S, g) === "exit")) {
+    if (groups.every((g) => g.at === exit && g.busy === 0 && g.members.every((m) => arrived(S, m)) && chooseTargetSplit(S, g) === "exit")) {
       S.here = null;
       workLocation(S, exit);
       if (S.phase !== "raid") break;
@@ -133,7 +141,8 @@ function playSplit(S) {
         if (g.at !== dest) {
           g.at = dest;
           if (g.members.some((m) => m.status === "active" && m.furniture)) { g.busy = 1; carriedMoved = true; }
-          S.arrivers = g.members;
+          followsBehind(S, g.members);
+          S.arrivers = g.members.filter((m) => arrived(S, m));
           arrive(S, dest);
           S.arrivers = null;
           continue;
@@ -238,9 +247,26 @@ function noisyFurniture(S, kind = "work") {
 const active = (S) => S.party.filter((m) => m.status === "active");
 const captives = (S) => S.party.filter((m) => m.status === "captured");
 /** The Entities working the current location: the whole party, or (split play) one group. */
-const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : active(S));
+const arrived = (S, m) => !(m.arrivesAfter >= S.turn); // see followsBehind()
+const hereOf = (S) => (S.here ?? active(S)).filter((m) => m.status === "active" && arrived(S, m));
+
 /**
- * Perks (C5: narrow, always on). The engine knows these proposed ones:
+ * "Lose a Turn (you skip your next action)" (Chapter 3), and picking up a dropped item, which costs your next action:
+ * when that next action would have been a move with the others, the Entity skips it and follows a Turn behind, so it
+ * isn't there to roll or help until the Turn after next (a move is an action: Chapter 4). Before the audit it moved with
+ * the others and skipped its next roll at the new place instead, where it could still help with its charges meanwhile.
+ */
+function followsBehind(S, members) {
+  for (const m of members) {
+    if (m.status !== "active" || !m.loseTurn) continue;
+    m.loseTurn = typeof m.loseTurn === "number" && m.loseTurn > 1 ? m.loseTurn - 1 : false;
+    m.arrivesAfter = S.turn + 1;
+    S.rec.count("lost turns");
+    S.rec.count("lost turns: followed a Turn behind");
+  }
+}
+/**
+ * Perks (C5: narrow, always on). The engine plays all 24 of the book's (C6–C9; Fetch as B5), by key:
  *  oldMoney      a Cost on a Charm roll is never Suspicion +1
  *  hypnoticEyes  on Charm rolls the Monster shows only if it beats the trait die by 2+
  *  wallCrawler   in a chase you can always roll Nimble
@@ -258,7 +284,7 @@ const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : ac
  *  lightStep     the loud way costs you no Suspicion
  *  spectral      you get past group obstacles without rolling
  *  rattle        the Monster showing on your roll is +1 Suspicion, not +2
- *  alreadyDead   cornered in a local chase, you lose your next Turn instead of being captured
+ *  alreadyDead   cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight)
  *  familiarsWarning  a Tell check where you arrive goes off only if a second d6 also does
  *  flyByNight    in a chase you can always roll Wits
  *  wiseWoman     a Cost on your Wits roll is never "lose a Turn"
@@ -392,7 +418,7 @@ function arrive(S, loc) {
   // tellScope "party" (S5 candidate): one chance for the whole party, as likely as four Entities' together.
   const who = S.P.tellScope === "party" ? [null] : active(S);
   let chance = S.P.tellScope === "party" ? S.P.tellPartyChance : S.P.tellChance; // C4: 4–6 on a d6 for the party
-  if ((S.arrivers || active(S)).some((m) => m.status === "active" && hasPerk(m, "familiarsWarning"))) chance *= chance; // the cat warns: roll again
+  if ((S.arrivers || hereOf({ ...S, here: null })).some((m) => m.status === "active" && hasPerk(m, "familiarsWarning"))) chance *= chance; // the cat warns: roll again
   for (const m of who) {
     if (S.rng.chance(chance)) {
       addSusp(S, 1, "tell"); // DESIGN Suspicion package: a Tell +1 when triggered (its own event)
@@ -694,11 +720,10 @@ function applySteps(base, net) {
 }
 
 /**
- * Choose how to make one roll (player policy, monsterPolicy / chargePolicy):
- * which listed trait (or an ability's trait), Mask or Monster, and which
- * abilities to spend. Evaluates every combination exactly.
+ * What a roll can be made with (Chapter 3): each listed trait (the loud way marked), a switch to a trait the obstacle
+ * doesn't list (its owner's or a helper's), the Draught's other form, and opening an approach (your own roll only).
  */
-function planRoll(S, m, ctx) {
+function rollCandidates(S, m, ctx) {
   const P = S.P;
   const phase = ctx.phase;
   const cands = ctx.options.map((o) => ({ trait: o.trait, loud: o.loud, quiet: false, via: null }));
@@ -732,6 +757,18 @@ function planRoll(S, m, ctx) {
       cands.push({ trait: ab.trait, loud: false, quiet, easier, via: { owner: m, ability: ab } });
     }
   }
+  return cands;
+}
+
+/**
+ * Choose how to make one roll (player policy, monsterPolicy / chargePolicy):
+ * which listed trait (or an ability's trait), Mask or Monster, and which
+ * abilities to spend. Evaluates every combination exactly.
+ */
+function planRoll(S, m, ctx) {
+  const P = S.P;
+  const phase = ctx.phase;
+  const cands = rollCandidates(S, m, ctx);
   const raiseSrc = sources(S, m, ctx, "raise");
   const hiddenSrc = sources(S, m, ctx, "hidden");
   const carrying = !!m.furniture;
@@ -1158,3 +1195,6 @@ function summarise(S) {
     spend: S.party.map((m) => ({ id: m.id, gift: m.gift, duty: m.duty, frac: m.chargesStart ? (m.chargesStart - Math.max(0, m.charges)) / m.chargesStart : 0 })),
   };
 }
+
+/** Internals for test/sim.test.mjs (not part of the simulator's interface). */
+export const internals = { makeState, rollCandidates, planRoll, executeRoll, pickCost, workLocation, groupCheck, exitLocation, captivesAct, ctxFor, followsBehind, hereOf };

@@ -332,7 +332,7 @@ export const NUMBERS = {
 export const TARGETS = {
   win: { easy: [0.87, 0.93], standard: [0.72, 0.78], hard: [0.55, 0.60] },
   forked: { easy: [0, 0.02], standard: [0.03, 0.07], hard: [0.08, 0.12] },
-  hardCaptures: 0.2, // S9: 0.2–0.3 (was ≥ 0.3)
+  hardCaptures: [0.2, 0.3], // S9: 0.2–0.3 (was ≥ 0.3; the report checked only ≥ 0.2 until the audit)
   grandYear: { reach: 0.5, dropBelowWin: 0.2 },
   trouble: [0.10, 0.22], // S9: at most 22% (was 20%)
   critical: [0.03, 0.07], // S8: about 5% (was 10–20%)

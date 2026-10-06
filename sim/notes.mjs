@@ -39,20 +39,23 @@ export const GAPS = [
     note: "RESOLVED by S4 (CORE-RULES 0.6): the way out is one watched obstacle, rolled by one Entity for the party." },
 ];
 
+// Brought up to date by the conformance audit (docs/audits/SIM-AUDIT.md, 2026-10-06); the rule-by-rule table is there.
 export const MODELLED = [
-  "Rolling: trait die + Mask d6 / Monster d10, P1 Difficulties, P2 bands, both Critical rules counted.",
-  "The Monster shows when the Monster die is higher than the trait die (+1 Suspicion).",
-  "Abilities: the four standard effects, one charge each, overdraw (+2 Suspicion), P7 teammates at the same location.",
-  "Suspicion: trouble, the Monster showing, Tells, overdraw, loud options and Costs; one roll raises it once by its biggest trigger; never lowered.",
-  "Turns (P4), dawn (P5), group checks (P6), Costs (P3), results (P8) including Grand Year and the left-behind step.",
-  "Local chases (Lead track), capture, rescue at the lock-up, slipping free; the final flight (shared Lead, majority rule, mob Difficulty by party size).",
-  "Carrying: Bulky/Huge carriers, no Mask while carrying, Nimble one size smaller, dropping in the final flight.",
-  "Placeholder content: eight anonymous Entities, Gifts as standard effects, a Castle Duty edge, mob/sunlight Weaknesses, Tells on arrival.",
+  "Rolling (Chapter 3): trait die + Mask d6 / Monster d10 against 6 · 8 · 10 · 12; Success, Cost, Trouble; a Critical (doubles on a Success) gives a charge back, or counts as two Successes in a chase.",
+  "The Monster shows when it rolls higher than the trait die: Suspicion +2; one roll raises Suspicion once, by its biggest trigger (loud way, Trouble, the Monster, a Cost, overdraw).",
+  "Abilities: the four standard effects and the Draught, one charge each, helping anyone at the same place (only an opened approach is your own roll's), one raise per roll (Castle Duty included), overdraw (+2 Suspicion; once the hunt is on, once per flight, the Weakness).",
+  "The approved roster (module/config.mjs): the eight Entities' dice, signatures, all 24 Gifts and 24 Perks with their book effects, Weakness timings (Always / Soon); random picks; unique Castle Duties with their raise.",
+  "Rolled towns from Chapter 8's tables (obstacle table, counts, Difficulties, watched, the ceiling on 12s, two ways in) and the three premade towns of Chapter 9 (sim/premade.mjs).",
+  "Turns, dawn, group checks (Costs picked after the rolls, F23), beaten obstacles, the way out (one roll a Turn for the party), Tells (once per watched location, 4–6), loot handed over, the lock-up (rescue, slipping free on a Success), left behind, results and the epilogue's ladder.",
+  "Local chases (Lead 1 to 4 against 8 + half the Suspicion), shared local chases and the final flight (the majority rule moving 1 or 2, B6), the chase table, Weaknesses, the Limit coming during a chase, Already Dead.",
+  "Furniture: on the list's locations behind one extra obstacle 2 harder, Bulky / Huge carriers, no Mask, Nimble smaller, moves of two Turns, +1 Suspicion every Turn from taking it until it leaves town or is lost.",
+  "The party splits into pairs by default (or singles, or stays together); players follow the documented policies in sim/params.mjs.",
 ];
 
 export const NOT_MODELLED = [
-  "Splitting the party; maps, distances and entrances (Huge pieces and small entrances).",
-  "Perks (no placeholder could stand in for real ones).",
-  "Premade raids and hand-built maps (only the random-table generator).",
-  "Storyteller judgement beyond the parameters (what counts as a witness, improvised approaches).",
+  "Maps and distances (any move is one Turn) and small entrances (a rolled town has none, B3; no premade town marks one).",
+  "Setting a piece of furniture down or abandoning it (V4, V11): the simulated players carry it until they leave or lose it; dropping it in the final flight when about to be cornered is a policy.",
+  "Choosing the order of rolls in a final-flight round (V12): the simulated party rolls in a fixed order, which the rules allow.",
+  "Storyteller judgement beyond the parameters (what counts as a witness, improvised approaches, which Cost hurts most: the simulator picks one that costs something at random).",
+  "Story-only content: the shopping table's items, Lantern Night customs, villagers, the epilogue lines, the campaign upgrades (sim/campaign-check.mjs measures them separately).",
 ];

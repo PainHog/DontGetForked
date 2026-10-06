@@ -167,14 +167,19 @@ const num = (x, d = 2) => (Number.isFinite(x) ? x.toFixed(d) : "—");
 const inBand = (x, [lo, hi]) => x >= lo && x <= hi;
 const mark = (ok) => (ok ? "✓" : "✗");
 
-function targetRows(M) {
+function targetRows(M, always = null) {
   const T = TARGETS;
   const rows = [];
   for (const L of LABELS) rows.push([`Win, ${L}`, `${pct(T.win[L][0], 0)}–${pct(T.win[L][1], 0)}`, pct(M.byLabel[L].win), mark(inBand(M.byLabel[L].win, T.win[L]))]);
   for (const L of LABELS) rows.push([`Forked, ${L}`, `${pct(T.forked[L][0], 0)}–${pct(T.forked[L][1], 0)}`, pct(M.byLabel[L].forked), mark(inBand(M.byLabel[L].forked, T.forked[L]))]);
-  rows.push(["Captures per Hard raid", `≥ ${T.hardCaptures}`, num(M.byLabel.hard.captures), mark(M.byLabel.hard.captures >= T.hardCaptures)]);
-  rows.push(["Grand Year when the party goes for furniture", `~${pct(T.grandYear.reach, 0)}`, pct(M.furniture.grandGivenWent), mark(Math.abs(M.furniture.grandGivenWent - T.grandYear.reach) <= 0.1)]);
-  rows.push(["Going for furniture costs the Win", `~${pct(T.grandYear.dropBelowWin, 0)}`, pct(M.furniture.dropBelowWin), mark(Math.abs(M.furniture.dropBelowWin - T.grandYear.dropBelowWin) <= 0.07)]);
+  rows.push(["Captures per Hard raid", `${T.hardCaptures[0]}–${T.hardCaptures[1]}`, num(M.byLabel.hard.captures), mark(inBand(M.byLabel.hard.captures, T.hardCaptures))]);
+  // The furniture targets (DESIGN 2026-10-04; B2) are for a party that goes for it: measured with furniturePolicy "always".
+  // The default players go only when it's safe, which is no gamble at all (shown for reference, not checked).
+  const F = always ?? M;
+  const tag = always ? " (a party that always goes for it)" : "";
+  rows.push([`Grand Year when the party goes for furniture${tag}`, `~${pct(T.grandYear.reach, 0)}`, pct(F.furniture.grandGivenWent), mark(Math.abs(F.furniture.grandGivenWent - T.grandYear.reach) <= 0.1)]);
+  rows.push([`Going for furniture costs the Win${tag}`, `~${pct(T.grandYear.dropBelowWin, 0)}`, pct(F.furniture.dropBelowWin), mark(Math.abs(F.furniture.dropBelowWin - T.grandYear.dropBelowWin) <= 0.07)]);
+  if (always) rows.push(["The same, the default players (only when safe)", "—", `${pct(M.furniture.grandGivenWent)} · ${pct(M.furniture.dropBelowWin)} (tried in ${pct(M.furniture.went)} of raids)`, ""]);
   rows.push(["Trouble, share of rolls", `${pct(T.trouble[0], 0)}–${pct(T.trouble[1], 0)}`, pct(M.rolls.trouble), mark(inBand(M.rolls.trouble, T.trouble))]);
   rows.push(["Critical (doubles on a Success, S8), share of rolls", `${pct(T.critical[0], 0)}–${pct(T.critical[1], 0)}`, pct(M.rolls.critDoubles), mark(inBand(M.rolls.critDoubles, T.critical))]);
   rows.push(["Entities spending ≥ half their charges", `≥ ${pct(T.spendHalf, 0)}`, pct(M.spendHalf), mark(M.spendHalf >= T.spendHalf)]);
@@ -210,7 +215,7 @@ export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, r
     lines.push(Object.entries(PACKAGES).map(([k, p]) => `- **${k}**: ${p.title}.`).join("\n"), "");
     const T = TARGETS;
     const head = ["Package", "Easy win", "Standard win", "Hard win", "Forked E · S · H", "Hard captures", "Grand Year when tried", "Trouble", "Mask (raid rolls)", "Spend ≥ ½", "Hard win, 3 · 4 · 5 Entities"];
-    const trow = ["**target**", "87–93%", "72–78%", "55–60%", "≤2 · 3–7 · 8–12%", `≥ ${T.hardCaptures}`, "~50%", "10–20%", "≥ 25%", "≥ 50%", "close together"];
+    const trow = ["**target**", "87–93%", "72–78%", "55–60%", "≤2 · 3–7 · 8–12%", `${T.hardCaptures[0]}–${T.hardCaptures[1]}`, "~50% (furniturePolicy always)", "10–22%", "≥ 25%", "≥ 50%", "close together"];
     const prow = Object.entries(packages).map(([k, M]) => [k, pct(M.byLabel.easy.win), pct(M.byLabel.standard.win), pct(M.byLabel.hard.win),
       `${pct(M.byLabel.easy.forked)} · ${pct(M.byLabel.standard.forked)} · ${pct(M.byLabel.hard.forked)}`, num(M.byLabel.hard.captures),
       pct(M.furniture.grandGivenWent), pct(M.rolls.trouble), pct(M.rolls.maskRaid), pct(M.spendHalf),
@@ -219,7 +224,7 @@ export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, r
   }
 
   lines.push(`## ${pkg} against the targets`, "");
-  lines.push(table(["Measure", "Target", "Simulated", ""], targetRows(baseM)), "");
+  lines.push(table(["Measure", "Target", "Simulated", ""], targetRows(baseM, furniture?.always)), "");
 
   lines.push("## Results by label and party size", "");
   const rows = [];
@@ -234,7 +239,7 @@ export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, r
   lines.push(table(["Rolls per raid", "Success", "Cost", "Trouble", "Crit (doubles)", "Crit (beat 4)", "Mask", "Monster", "Monster shows (per Monster roll)", "Charges spent (mean)"],
     [[num(R.perRaid, 1), pct(R.success), pct(R.cost), pct(R.trouble), pct(R.critDoubles), pct(R.critBeat4), pct(R.mask), pct(R.monster), pct(R.showPerMonster), pct(baseM.spendMean)]]), "");
 
-  lines.push("**Critical candidates** (share of all rolls; the Critical rule is open and has no effect yet):", "");
+  lines.push("**Critical candidates** (share of all rolls; S8 decided doubles on a Success, the other columns are the rejected margins):", "");
   const mg = base.rec.rollTotals();
   const beat = (k) => Object.entries(mg.margin).filter(([m]) => Number(m) >= k).reduce((a, [, v]) => a + v, 0) / mg.n;
   lines.push(table(["Doubles on a Success", "Beat by 4", "Beat by 5", "Beat by 6", "Beat by 7", "Beat by 8"], [[pct(mg.critDoubles / mg.n), pct(beat(4)), pct(beat(5)), pct(beat(6)), pct(beat(7)), pct(beat(8))]]), "");
@@ -333,7 +338,7 @@ async function main() {
   const cmd = `node sim/run.mjs ${process.argv.slice(2).join(" ")}`.trim();
   const out = a.out || (a.pkg === "P0" ? "sim/REPORT.md" : `sim/REPORT-${a.pkg}.md`);
   writeReport({ cmd, pkg: `${a.pkg} — ${pk.title}`, base, baseM, presets, sweeps, numbers, runs: a.runs, sweepRuns: a.sweepRuns, out, packages: a.noPackages ? null : packages, furniture });
-  for (const r of targetRows(baseM)) console.log(r.join("  "));
+  for (const r of targetRows(baseM, furniture.always)) console.log(r.join("  "));
   console.log(`wrote ${out}`);
 }
 

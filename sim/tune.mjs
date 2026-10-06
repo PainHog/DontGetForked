@@ -31,7 +31,7 @@ function score(M, label) {
   const c = M.byLabel[label];
   let s = ((c.win - mid(TARGETS.win[label])) / 0.03) ** 2;
   s += 0.5 * ((c.forked - mid(TARGETS.forked[label])) / 0.03) ** 2;
-  if (label === "hard") s += 0.5 * (Math.max(0, TARGETS.hardCaptures - c.captures) / 0.1) ** 2;
+  if (label === "hard") s += 0.5 * (Math.max(0, TARGETS.hardCaptures[0] - c.captures, c.captures - TARGETS.hardCaptures[1]) / 0.1) ** 2;
   return s;
 }
 
