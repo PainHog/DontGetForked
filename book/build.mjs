@@ -341,7 +341,9 @@ async function printPdf(browser, html, out) {
 /** Halve Chromium's doubled bookmarks and fill in the author (book/tools/pdf-finish.py; skipped with a warning without Python and PyMuPDF). */
 function finishPdf(pdfPath) {
   const r = spawnSync("python3", [join(ROOT, "book/tools/pdf-finish.py"), pdfPath], { encoding: "utf8" });
-  if (r.status !== 0) console.warn(`pdf-finish skipped: ${(r.stderr || r.error?.message || "").trim().split("\n").pop()}`);
+  const warnings = (r.stdout ?? "").split("\n").filter((l) => l.startsWith("WARNING"));
+  if (warnings.length) console.warn(warnings.join("\n"));
+  else if (r.status !== 0) console.warn(`pdf-finish skipped: ${(r.stderr || r.error?.message || "").trim().split("\n").pop()}`);
 }
 
 async function pageMap(pdfPath) {

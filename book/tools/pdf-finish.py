@@ -29,3 +29,17 @@ meta.update(author=AUTHOR, subject=SUBJECT, creator="Don't Get Forked book build
 doc.set_metadata(meta)
 doc.saveIncr()
 print(f"finished {path}: {changed} doubled bookmark(s) halved; author and subject set")
+
+# A character the book's typefaces lack is drawn in a fallback font (it happened with "→"): name each one.
+BOOK_FONTS = ("Fraunces", "Alegreya")
+fallback = {}
+for i, page in enumerate(doc):
+    for block in page.get_text("dict")["blocks"]:
+        for line in block.get("lines", []):
+            for span in line["spans"]:
+                if span["text"].strip() and not any(f in span["font"] for f in BOOK_FONTS):
+                    for ch in set(span["text"].strip()):
+                        fallback.setdefault((ch, span["font"].split("+")[-1]), set()).add(i + 1)
+for (ch, font), pages in sorted(fallback.items()):
+    print(f"WARNING: {ch!r} (U+{ord(ch):04X}) is drawn in the fallback font {font} on page(s) {sorted(pages)}: the book's typefaces lack it")
+sys.exit(1 if fallback else 0)
