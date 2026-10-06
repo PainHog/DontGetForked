@@ -216,21 +216,21 @@ export const PARAMS = {
     ref: "CORE-RULES P4 (gap G12)",
   },
   planTime: {
-    kind: "policy", default: "perObstacle", values: ["perObstacle", "perTurn"],
+    kind: "policy", default: "auto", values: ["auto", "perObstacle", "perTurn"],
     title: "How the players count the Turns a location will take",
-    doc: "perObstacle = a Turn for each obstacle left (as if one Entity rolled a Turn; cautious near dawn); perTurn = the obstacles left shared among the Entities there, at least one Turn (each can take on the next obstacle the same Turn, Chapter 4).",
+    doc: "auto = perTurn for a party that stays together, perObstacle for pairs and singles; perObstacle = a Turn for each obstacle left (as if one Entity rolled a Turn; cautious near dawn); perTurn = the obstacles left shared among the Entities there, at least one Turn (each can take on the next obstacle the same Turn, Chapter 4).",
     ref: "player policy (the audit follow-up: how crude is together-play?)",
   },
   openPolicy: {
-    kind: "policy", default: "greedy", values: ["greedy", "last"],
+    kind: "policy", default: "auto", values: ["auto", "greedy", "last"],
     title: "When the players open an approach",
-    doc: "greedy = whenever it's the best roll; last = not where it would shut the others there out of the obstacles past it (only the opener gets through), so only at a location's last obstacle, a group obstacle, or alone.",
+    doc: "auto = last for a party that stays together, greedy for pairs and singles (where it shuts out one partner at most, and opening pays); greedy = whenever it's the best roll; last = not where it would shut the others there out of the obstacles past it (only the opener gets through), so only at a location's last obstacle, a group obstacle, or alone.",
     ref: "player policy (the audit follow-up: how crude is together-play?)",
   },
   groupPolicy: {
-    kind: "policy", default: "all", values: ["all", "best2"],
+    kind: "policy", default: "auto", values: ["auto", "all", "best2"],
     title: "Who goes through a group obstacle",
-    doc: "all = everyone there rolls it; best2 = only the two best placed do, and the rest wait outside it (they can still help with abilities), unless nobody got through.",
+    doc: "auto = best2 for a party that stays together (all for pairs and singles, where it makes no difference); all = everyone there rolls it; best2 = only the two best placed do, and the rest wait outside it (they can still help with abilities), unless nobody got through.",
     ref: "player policy (the audit follow-up: how crude is together-play?)",
   },
   monsterPolicy: {

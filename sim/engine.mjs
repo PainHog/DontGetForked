@@ -293,6 +293,17 @@ function followsBehind(S, members) {
  *  bruteStrength as Hyde, carrying doesn't make your Nimble smaller
  */
 const hasPerk = (m, k) => m.perk === k;
+
+/**
+ * The players' choices that depend on how the party plays (params planTime, openPolicy, groupPolicy): "auto" plays a
+ * party that stays together as a whole party would (share a location's obstacles out, don't open an approach that shuts
+ * the others out, send the best two through a group obstacle) and leaves pairs and singles as they were.
+ */
+const AUTO = { together: { planTime: "perTurn", openPolicy: "last", groupPolicy: "best2" }, split: { planTime: "perObstacle", openPolicy: "greedy", groupPolicy: "all" } };
+function policy(S, key) {
+  const v = S.P[key] ?? "auto";
+  return v === "auto" ? AUTO[S.P.partyPolicy === "together" ? "together" : "split"][key] : v;
+}
 const carrying = (m) => m.items.length > 0 || !!m.furniture;
 
 /**
@@ -348,7 +359,7 @@ function locationNeed(S, loc) {
  */
 function workTurns(S, loc, n) {
   const left = loc.obstacles.filter((o) => !o.cleared).length;
-  if (S.P.planTime !== "perTurn" || left === 0) return left;
+  if (policy(S, "planTime") !== "perTurn" || left === 0) return left;
   return Math.max(1, Math.ceil(left / Math.max(1, n)));
 }
 
@@ -525,7 +536,7 @@ function workLocation(S, loc) {
       let rollers = avail.filter((m) => !ob.passed.has(m.id));
       if (cap < Infinity) rollers = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).slice(0, need - passedNow()).map((x) => x.m);
       // groupPolicy "best2" (policy): only the two best placed go through; the rest wait outside it (they can still help).
-      if (S.P.groupPolicy === "best2" && passedNow() === 0 && rollers.length > 2) {
+      if (policy(S, "groupPolicy") === "best2" && passedNow() === 0 && rollers.length > 2) {
         const ranked = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).map((x) => x.m);
         rollers = ranked.slice(0, 2);
         loc.behind = new Set(ranked.slice(2));
@@ -825,7 +836,7 @@ function rollCandidates(S, m, ctx) {
     }
     if (ab.effect === "open") {
       if (ab.noLoot && (m.items.length || m.furniture)) continue; // what you carry doesn't pass through walls
-      if (P.openPolicy === "last" && phase === "raid" && ctx.leavesOthers) continue; // policy: don't shut the others out
+      if (policy(S, "openPolicy") === "last" && phase === "raid" && ctx.leavesOthers) continue; // policy: don't shut the others out
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
       // openApproach (gap G3, S10): "quiet" = unwatched; "switch" = just the ability's trait;
