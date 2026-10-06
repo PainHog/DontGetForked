@@ -30,6 +30,7 @@ These are the points the computer playtests couldn't settle. A tick or a word pe
 - [ ] **A local chase:** when someone got caught, was the chase exciting, or did it feel like the raid was already lost? (On Hard it can snowball; that's by design, but it has to feel fair.)
 - [ ] **The Mask or the Monster:** did players actually weigh the choice, or always pick the same die?
 - [ ] **Charges:** did players spend them, or hoard them? (Computer players often finished with most of their charges unspent.)
+- [ ] **Splitting up:** did the party split into pairs or stay together? (On Standard and Hard a party that stays together wins about 15–20 points less in the simulator; the book now advises splitting.)
 - [ ] **The furniture:** did the party argue about going for it? That argument is the point.
 - [ ] **Castle Duties and Perks:** did anyone remember to use theirs?
 - [ ] **At the Table:** what did players still have to find in a chapter? (Two computer playtests needed 7–12 lookups; this decides whether it becomes two pages.)

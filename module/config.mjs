@@ -112,7 +112,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you carry loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
+      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you or anyone with you carries loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
       { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep the loot you carry (not furniture)." },
       { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
     ],
