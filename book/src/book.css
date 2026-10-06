@@ -559,3 +559,21 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .town-key .watched { font: italic 600 7.6pt var(--sans); color: var(--alarm); white-space: nowrap; }
 .town-key tr.furn td { font-style: italic; }
 .town-key tr.furn td:first-child .step { font-style: normal; }
+
+/* Chapter 8's shopping table: where each kind is found, under the kind */
+.tbl .where { font-size: 0.86em; color: var(--ink-soft); font-style: italic; }
+
+/* Entity sheet and the one-page reference (back of the book) */
+.sheet-line { margin: -0.1in 0 0.18in; font-size: 9pt; color: var(--ink-soft); text-align: center; }
+.sheet-small { font-size: 8.4pt; color: var(--ink-soft); }
+.sheet .pip.dashed { border-style: dashed; border-color: var(--ink-soft); }
+.sheet-status { padding: 0.06in 0.1in; font-size: 9.4pt; line-height: 1.7; vertical-align: top; }
+.sheet-status .box-check { margin-left: 0; margin-right: 0.06in; }
+.sheet.ref { font-size: 9.6pt; line-height: 1.32; }
+.ref-cols { columns: 2; column-gap: 0.28in; }
+.ref-block { break-inside: avoid; margin: 0 0 0.1in; }
+.ref-block h4 { margin: 0 0 0.03in; font: 800 9pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--alarm); }
+.ref-block p, .ref-block ul { margin: 0 0 0.04in; }
+.ref-block ul { padding-left: 0.16in; }
+.ref-block li { margin: 0 0 0.02in; }
+.ref-numbers { margin-top: 0.1in; }

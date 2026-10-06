@@ -1,6 +1,6 @@
-Now: Rules tuned after the latest playtest: final flights are shorter, getting caught locally is less of a death sentence, and the three towns are being re-checked.
+Now: The first full draft of the rulebook is complete: every chapter written, three ready-to-play towns, a printable monster sheet and a one-page rules reference.
 Next: A few rules questions from the latest playtest, then Richard's first two-player try of the online version.
-Number: Design decisions made = 82
+Number: Design decisions made = 83
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 140
@@ -44,8 +44,9 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] The villager table
 - [x] Advice for the Storyteller
 - [x] Three ready-to-play towns with maps, and an example of play
+- [x] A printable monster sheet and a one-page rules reference
 - [x] Rules chapters drafted
-- [ ] First full rulebook draft
+- [x] First full rulebook draft (with stand-in pictures)
 - [x] Balance pass: win and getting-forked rates on target
 - [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
 - [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
