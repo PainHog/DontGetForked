@@ -1,6 +1,6 @@
 # Testing the Foundry system in real Foundry — slices 1 and 2, and the compendiums
 
-The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15. Dice are random, so some steps say "roll until…".
+The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15; section 20 (the audit's fixes) about 15. Dice are random, so some steps say "roll until…".
 
 **What slice 1 covers:** the Entity sheets, the roll dialog and roll cards, charges and abilities, Costs, Jekyll & Hyde's change of form, and the Raid HUD (Suspicion, the Limit, the Turns, dawn and the hunt).
 **What slice 2 covers:** chases (the local chase and the final flight, with the chase tracker: the Lead, the ground, the mob, Weaknesses, the majority rule), the lock-up (capture, slipping free, rescue, left behind), group checks (one Suspicion rise), Tell checks, carried furniture's Suspicion, the shopping list and how the year went.
@@ -196,6 +196,22 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
    Glance at **Thistlewick (Standard)** and **Gallowsmere (Hard)** the same way.
 7. **GM:** Raid HUD → **New raid** → *Easy*. Copy the code from Puddlecombe's page into a new macro of type **script** and run it: both Raid windows get a **The shopping list (4)** line with the four items, the cheese marked essential. **End the raid** lists them in the year form (cancel it).
 8. **GM:** open **How to Run a Raid in Foundry**: three short pages (before, during and after the raid). Every button it names is where it says, and its list of switches matches Configure Settings.
+
+## 20. The audit's fixes (about 15 minutes)
+
+These check the fixes from the system audit (`docs/audits/FOUNDRY-AUDIT.md`). Start a **New raid** → *Standard*, all switches on.
+
+1. **The loud way, however you roll it.** **GM:** New Entity → **Frankenstein's Creature** for Ann. **Ann** rolls it with *Trait called* **Sly**, **Brute Force** ticked and *The way out of town* ticked: the card says it rolls **Brawn** *instead of Sly*, lists *the loud way*, and Suspicion rises by at least 1. Then **GM:** **back in town** on the Raid window if it got out.
+2. **A Cost at the way out is free.** **Ann** rolls the way out (Witch, Sly, Mask) until a **Cost**: the card says *nothing here would cost anything right now*, the GM gets no Cost buttons, and everyone is out of town. **GM:** **back in town**.
+3. **No Castle Duty in a chase.** With *Run chases automatically* **off**, **Ann** rolls the Witch with *A chase roll* and *Castle Duty* both ticked: the card shows her plain die (no *Raised one size (Castle Duty)*). Switch chases back on.
+4. **The lock-up on the Raid window follows the sheet.** **GM:** on Ann's Witch's sheet set *Status* to **Captured**: both Raid windows list her at the lock-up at once (before, they waited for the next Suspicion change). **GM:** press **free** next to her name: she disappears from both windows at once.
+5. **A group check that can't open says why.** **GM:** **Group check**, tick only one Entity → *Open the group check*: a yellow note says to tick at least two.
+6. **An old raid's Cost.** **Ann** rolls until a **Cost**; before the GM picks one, **GM:** **New raid**. The old card has no Cost buttons any more.
+7. **The Storyteller's roll mode.** **GM:** set the chat's roll mode (bottom of the chat) to *Private GM Roll*, then press **Next Turn** with someone carrying furniture, or **New raid**: **Ann** still sees the cards (a new raid, the hunt, a chase's ground). A roll Ann makes in *Private GM Roll* mode is still private. Set the GM's roll mode back to *Public Roll*.
+8. **Names are text, not HTML.** **Ann:** rename the Witch to `Witch <b>bold</b>` and give her two items. Roll until a **Cost**; **GM:** **Drop an item**: the question shows the name with the `<b>` tags as plain text (not in bold). Rename her back.
+9. **Helping costs the helper, once.** **Ann** rolls with **Bat (Dracula)** ticked: Dracula (GM's sheet) goes down 1 charge, once. *(Optional, Ann's console:)* `game.dontGetForked.runOp("actor.spendCharges", { actorId: "<Dracula's id>", count: 3 })` → `{ ok: false, … }`, Dracula's charges unchanged.
+10. **No pretending to be the Storyteller.** *(Optional, Ann's console:)* `game.users.activeGM.query("dont-get-forked.op", { op: "raid.adjust", args: { delta: 3 }, userId: game.users.activeGM.id, requestId: "test-1" })` → `{ ok: false, reason: "spoofed" }`; Suspicion doesn't move.
+11. **The furniture tick.** In the roll dialog, *The furniture's extra obstacle* says it adds the 2 harder to the Difficulty rolled for it, and to leave it off in a premade town (whose furniture obstacle is printed 2 harder already).
 
 ## What to send back
 
