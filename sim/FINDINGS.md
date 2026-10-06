@@ -132,3 +132,20 @@ The generator gave each obstacle random traits (60% with a loud way, 25% group).
 The second way in is rolled again until its quiet trait differs from the first.
 
 **Decided (C18):** c18b, now `DGF.obstacleTable` and the simulator's default (`NUMBERS.obstacleTable = "approved"`).
+
+## Balance pass: candidate number packages (2026-10-06, for B1)
+
+`node sim/balance-pass.mjs [runs] [packages…]`: content and rules as decided (C1–C19), split-party play, the same raids for every package. Targets: win 87–93 / 72–78 / 55–60%, forked ≤2 / 3–7 / 8–12% (Easy / Standard / Hard).
+
+| Package (3,000 raids per label and party size unless noted) | Win E / S / H | Forked E / S / H | Hard win, 3 / 4 / 5 Entities |
+|---|---|---|---|
+| Now | 95.9 / 85.3 / 71.4 (2,000) | 0.2 / 3.2 / 5.0 | 68.4 / 71.8 / 74.0 |
+| Final mob +1 alone (800) | 95.6 / 83.4 / 67.4 | 1.0 / 9.0 / 16.2 | 65.5 / 66.3 / 70.5 |
+| List 4 / 5 / 5 items alone (2,000) | 92.7 / 78.7 / 60.4 | 0.1 / 3.9 / 6.7 | 56.9 / 60.5 / 63.7 |
+| A: list 4 / 5 / 5 + final flight from Lead 1 (2,000) | 92.3 / 77.3 / 58.8 | 1.1 / 8.1 / 12.8 | 55.6 / 59.1 / 61.7 |
+| J: list 4 / 5 / 5 + Limits 12 / 12 / 13 | 92.8 / 77.4 / 55.6 | 0.2 / 4.5 / 7.7 | 51.2 / 56.5 / 59.0 |
+| **M: list 4 / 5 / 5 + Standard Limit 12 + Hard way out 10** | **92.8 / 77.4 / 58.2** | **0.2 / 4.5 / 8.1** | 53.6 / 59.1 / 61.9 |
+
+Lower Limits, fewer charges, more watched obstacles or a shorter night each take only 2–4 win points; the final mob's Difficulty is very strong on forked (+1 nearly triples Hard's forked rate); a longer list is what brings wins down evenly. Package M meets every win and forked target. At 2,000 raids: Entities −1.9 to +2.8 (A Ghost +2.8), Gifts and Perks −3.3 to +2.3 (the Werewolf's Fetch −3.3), Duties within ±0.8; Hard captures 0.35 (target 0.2–0.3), Trouble 21.7%.
+
+Targets still missed now and with M (design questions, not numbers): the Mask is chosen on only 22–23% of rolls (target at least a quarter), and a party that goes for furniture reaches a Grand Year about 89% of the time (target about half).
