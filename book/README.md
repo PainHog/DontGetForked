@@ -14,6 +14,7 @@ marked PLACEHOLDERs (dashed red outline on the proofs) so nothing ships by accid
 | `tools/preview-art.mjs` | Renders art to PNGs plus a labelled contact sheet, and checks every SVG is well-formed |
 | `tools/contact-sheet.py` | Renders a PDF's pages into one contact-sheet image for layout review |
 | `tools/text-diff.py` | Word-level diff of two builds' text (to prove only intended text changed) |
+| `tools/pdf-finish.py` | Run by the build after every PDF: halves the bookmarks Chromium doubles and sets the author and subject (needs Python with PyMuPDF; skipped with a warning otherwise) |
 | `REVIEW.md` | The log of every ruling and text change (what, where, why, source) |
 | `dist/Dont_Get_Forked_v0.1.pdf` | The typeset edition (digital) |
 | `dist/Dont_Get_Forked_v0.1_print-*.pdf` | Print-on-demand files: interior (8.75×11.25in incl. 0.125in bleed, even page count) and separate front/back covers |

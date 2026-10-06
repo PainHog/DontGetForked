@@ -23,6 +23,7 @@ import { chromium } from "playwright-core";
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { spawnSync } from "node:child_process";
 
 const BOOK = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(BOOK, "..");
@@ -337,6 +338,12 @@ async function printPdf(browser, html, out) {
   await p.close();
 }
 
+/** Halve Chromium's doubled bookmarks and fill in the author (book/tools/pdf-finish.py; skipped with a warning without Python and PyMuPDF). */
+function finishPdf(pdfPath) {
+  const r = spawnSync("python3", [join(ROOT, "book/tools/pdf-finish.py"), pdfPath], { encoding: "utf8" });
+  if (r.status !== 0) console.warn(`pdf-finish skipped: ${(r.stderr || r.error?.message || "").trim().split("\n").pop()}`);
+}
+
 async function pageMap(pdfPath) {
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
   const doc = await pdfjs.getDocument({ data: new Uint8Array(readFileSync(pdfPath)), verbosity: 0 }).promise;
@@ -395,6 +402,7 @@ try {
     ({ pages } = await pageMap(out));
   }
   console.log(`Built ${relative(ROOT, out)} — ${pages} pages (pass 1: ${p1.pages}).`);
+  finishPdf(out);
   if (PRINT) {
     for (const [cls, name] of [["cover", "front"], ["back-cover", "back"]]) {
       if (!sectionOf(body, cls)) continue;
