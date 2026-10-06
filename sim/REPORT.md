@@ -1,4 +1,4 @@
-# Don't Get Forked — simulator report: P0 — The rules as decided (through B6, 2026-10-06) with the current numbers (core rules 1.23)
+# Don't Get Forked — simulator report: P0 — The rules as decided (through V20, 2026-10-06) with the current numbers (core rules 1.26)
 
 Command: `node sim/run.mjs`
 
@@ -8,7 +8,7 @@ Command: `node sim/run.mjs`
 
 ## Packages
 
-- **P0**: The rules as decided (through B6, 2026-10-06) with the current numbers.
+- **P0**: The rules as decided (through V20, 2026-10-06) with the current numbers.
 - **N1**: Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14.
 - **N2**: Tried for a party that splits up: the night lasts 8 Turns; final mob 10 / 12 / 12 (on target overall, but Hard wins 42% with 3 Entities and 72% with 5).
 
@@ -19,7 +19,7 @@ Command: `node sim/run.mjs`
 | N1 | 91.5% | 75.2% | 52.0% | 1.2% · 6.7% · 19.4% | 0.34 | 79.4% | 20.4% | 37.4% | 73.1% | 48% · 51% · 56% |
 | N2 | 87.1% | 36.1% | 18.7% | 0.3% · 4.7% · 9.2% | 0.23 | — | 16.7% | 33.7% | 58.4% | 6% · 11% · 40% |
 
-## P0 — The rules as decided (through B6, 2026-10-06) with the current numbers against the targets
+## P0 — The rules as decided (through V20, 2026-10-06) with the current numbers against the targets
 
 | Measure | Target | Simulated |  |
 |---|---|---|---|
