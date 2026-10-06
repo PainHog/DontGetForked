@@ -227,6 +227,12 @@ export const PARAMS = {
     doc: "greedy = whenever it's the best roll; last = not where it would shut the others there out of the obstacles past it (only the opener gets through), so only at a location's last obstacle, a group obstacle, or alone.",
     ref: "player policy (the audit follow-up: how crude is together-play?)",
   },
+  groupPolicy: {
+    kind: "policy", default: "all", values: ["all", "best2"],
+    title: "Who goes through a group obstacle",
+    doc: "all = everyone there rolls it; best2 = only the two best placed do, and the rest wait outside it (they can still help with abilities), unless nobody got through.",
+    ref: "player policy (the audit follow-up: how crude is together-play?)",
+  },
   monsterPolicy: {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
     title: "When players choose the Monster die",

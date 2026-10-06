@@ -501,11 +501,11 @@ function workLocation(S, loc) {
         if (r.caught) { localChase(S, best.m); if (S.phase !== "raid") return; }
       }
     } else {
-      const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0));
+      const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || (!loc.behindWaits && planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0)));
       if (rollers.length && !groupCheck(S, loc, ob, rollers, acted)) return;
       for (const m of [...loc.behind]) if (ob.passed.has(m.id)) loc.behind.delete(m);
     }
-    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; loc.behindOpened = false; }
+    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; loc.behindOpened = false; loc.behindWaits = false; }
   }
   while (S.phase === "raid") {
     const ob = loc.obstacles.find((o) => !o.cleared);
@@ -524,11 +524,19 @@ function workLocation(S, loc) {
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id));
       if (cap < Infinity) rollers = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).slice(0, need - passedNow()).map((x) => x.m);
+      // groupPolicy "best2" (policy): only the two best placed go through; the rest wait outside it (they can still help).
+      if (S.P.groupPolicy === "best2" && passedNow() === 0 && rollers.length > 2) {
+        const ranked = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).map((x) => x.m);
+        rollers = ranked.slice(0, 2);
+        loc.behind = new Set(ranked.slice(2));
+        loc.behindOb = ob;
+        loc.behindWaits = true;
+      }
       if (rollers.length === 0) {
         // Everyone free to act is past it, and someone here isn't (it got Trouble). Those past go on; the others stay
         // behind it and try again for themselves (above). Before the audit the obstacle was cleared for everyone here,
         // so one who never got past went on with the rest.
-        loc.behind = new Set(past().filter((m) => !ob.passed.has(m.id)));
+        loc.behind = new Set([...(loc.behind ?? []), ...past().filter((m) => !ob.passed.has(m.id))]);
         loc.behindOb = ob;
         S.rec.count("group: left behind a group obstacle");
         ob.cleared = true;
