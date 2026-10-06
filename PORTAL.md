@@ -1,9 +1,9 @@
-Now: Fine-tuning done: stealing furniture is a real gamble now (it's slow and noisy to carry), and the Werewolf's weakest perk was replaced.
-Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere), and chases and the lock-up in the online version.
+Now: The online version now runs a whole night: chases with the mob on your heels, the lock-up and rescues, group and tell checks, and how the year went at the end.
+Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere), and Richard's first two-player try of the online version.
 Number: Design decisions made = 79
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 93
+Number: Automated checks passing = 133
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -48,7 +48,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Balance pass: win and getting-forked rates on target
 - [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
 - [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
-- [ ] Online version, part 2: chases and the lock-up
+- [x] Online version, part 2: chases and the lock-up
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
