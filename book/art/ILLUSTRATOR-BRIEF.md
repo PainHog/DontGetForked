@@ -30,11 +30,12 @@ Until your pieces arrive, the draft uses public-domain engravings as stand-ins (
 | Front cover | 612 × 792 (US Letter, portrait) | 1 |
 | Back-cover panel | 4:3 | 1 |
 | Part title pages | 3:1 wide | 2 |
-| Chapter header vignettes | about 4:1 (7.1 × 1.8 in) | 8 |
+| Chapter header vignettes | about 4:1 (7.1 × 1.8 in) | 9 |
 | Entity portraits (costume + revealed) | about 0.85:1 in the draft (1.66 × 1.95 in); final size to agree with Richard | 16 |
-| Chapter-end spot illustrations | 4:3, various heights | as many as fit |
+| Chapter-end spot illustrations | 4:3, various heights | as many as fit (6 in the draft) |
+| Town maps (Chapter 9: Puddlecombe, Thistlewick, Gallowsmere) | about 4:3 (3.0 × 2.2 in); the draft's schematic SVGs are generated from the town data and show what each must mark: the locations (numbered), the way out, the lock-up, a watched location's eye, the furniture's star | 3 |
 
-Later: town maps, a character sheet, and the online version's tokens and icons.
+Later: a decorated frame or header for the Entity Sheet and the one-page reference (both plain pages in the draft), and the online version's tokens and icons.
 
 ## What gets checked (from Richard's first game)
 Every piece goes through `book/art/ART-CHECKLIST.md`. The mistakes it was built from:
