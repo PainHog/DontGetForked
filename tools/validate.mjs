@@ -43,11 +43,13 @@ const walk = (dir, ext) => !existsSync(dir) ? [] : readdirSync(dir, { withFileTy
 
 /* -------------------------------------------- 0. Generated source -- */
 console.log("Generated pack source…");
-{
+try {
   const { stale, extra } = staleFiles();
   const bad = [...stale, ...extra].map((p) => p.slice(ROOT.length + 1));
   if (bad.length) err(`compendium source out of date with the game data (${bad.join(", ")}) — run: npm run build:packs`);
   else pass("compendium source matches module/config.mjs, book/src/towns.json and lang/en.json");
+} catch (e) {
+  err(`compendium source can't be generated: ${e.message}`); // e.g. a premade town that breaks Chapter 8's rules
 }
 
 /* -------------------------------------------- 1. Manifest -- */
