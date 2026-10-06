@@ -10,6 +10,73 @@ A verification playtest of Hard difficulty under the current rules, after the PT
 
 ---
 
+## 3. Setup
+
+### 3.1 Gallowsmere as Chapter 9 prints it
+
+**Gallowsmere** (Hard): Limit 15, the way out 10, the lock-up 12, the final flight mob 11 escaping at Lead 6; a local chase from Lead 1 to 4 against 8 + half the Suspicion (at most 12). Five items, two essentials: **a new lock for the dungeon** (the smithy, tools), **the silver spoons** (the silversmith, silver), black-edged writing paper (the printer, books), bandages, lots (the tailor, cloth), a side of bacon (the butcher, food). The furniture: a suit of armour (Bulky) at the tailor, behind a heavy cellar trapdoor (Brawn 12, not watched). Every location is watched. Villagers: old Granny Mott (practising the bells) and a gang of children (gossiping, loudly). Lantern Night: bells rung every hour.
+
+The page checks out against Chapter 8: one 12 under the ceiling of two (the butcher's tug-of-war; the furniture's trapdoor is "already 2 harder", a 10 before its +2), the Hard numbers line matches the difficulty table, and the two ways in at each location have different quiet traits. I couldn't see the map (it is art); the armour is Bulky, so a small entrance wouldn't have mattered.
+
+### 3.2 Main line A party (R1–R17)
+
+d8 in the book's order (1 Dracula … 8 Jekyll & Hyde): R1 = 4, R2 = 2, R3 = 6, R4 = 5. Picks on a d6 (1–2 the first, 3–4 the second, 5–6 the third); the Duty on its table, rerolling one already taken. 3 charges each.
+
+| Entity | Brawn | Nimble | Sly | Charm | Wits | Signature | Gift (R) | Perk (R) | Duty (R) | Weakness |
+|---|---|---|---|---|---|---|---|---|---|---|
+| The Werewolf | d10 | d12 | d6 | d4 | d8 | Good Dog (hidden Monster) | Through the Hedge, open with Brawn (R5 = 3) | **Shortcut**: the way out 2 easier when he rolls it (R6 = 3) | **Cook** (R7 = 1): the bacon | Hounds (Soon) |
+| Frankenstein's Creature | d12 | d8 | d6 | d4 | d10 | Brute Force (Brawn instead) | Hovel Watcher, hidden Monster (R8 = 3) | Tireless (R9 = 4) | **Butler** (R10 = 4): the spoons | Fire (Soon) |
+| A Ghost | d4 | d12 | d10 | d8 | d6 | Through the Wall (open with Sly) | Chill, raise (R11 = 2) | **Spectral** (R12 = 1) | **Handyman** (R13 = 5): the lock | Cold Iron (Always) |
+| The Invisible Man | d4 | d8 | d12 | d6 | d10 | Unseen (hidden Monster) | Through the Gap, open with Nimble (R14 = 2) | Hidden Pockets (R15 = 3) | Handyman (R16 = 5) taken: rerolled **Librarian** (R17 = 3): the paper | Flour (Soon) |
+
+The Duty reroll now reads straight off Chapter 2: "(for the Castle Duty, roll on its table, rerolling one already taken)".
+
+### 3.3 Main line B: the rolled Hard town (R70–R147)
+
+Built by Chapter 8's Rolling a Town, Hard column, every number rolled.
+
+**The list** (R70–R79; d6 kind, d6 item; the first two are the essentials): **a cookbook "for the guests"** (books), **ink and sealing wax** (books), a wheel of strong cheese (food), the wedding cake in the shop window (food), seed potatoes (plants). **Lantern Night** (R80 = 2): a costume parade through the square at midnight.
+
+**Places** (R81–R86). The book says "roll or pick, one item per place" but gives no die, so I rolled a d6, 1–2 / 3–4 / 5–6 down the shopping table's list of places (S1). The ink rolled the schoolhouse, already the cookbook's, and was rolled again (R86).
+
+**Obstacles** (counts R87–R91; each obstacle a d20 on the obstacle table, a d20 for its Difficulty (1–8: 8 · 9–17: 10 · 18–20: 12), a d10 for watched (1–6); R92–R142). Second ways in were rerolled until their quiet way differed: the baker's (R128 strongbox, Wits again → R130 garden wall) and the seed merchant's (R129, R131 strongbox, Wits again → R132 trapdoor). **The furniture** (R143–R147): a suit of armour (Bulky) at the baker (location rolled on a d6 in list order, 6 to be rerolled: S1), behind a locked front door rolled at 12, +2, held at 12.
+
+| # | Location · item | Obstacle | Quiet way | Loud way | Difficulty | Watched |
+|---|---|---|---|---|---|---|
+| 1 | **The schoolhouse**: a cookbook (books) · essential | Way in: a locked front door | Sly | Brawn | 8 | — |
+| | | or: the shopkeeper behind the counter | Charm | Sly | 10 | watched |
+| 2 | **The bookseller**: ink and sealing wax (books) · essential | Way in: a maze of festival stalls (group) | Wits | — | 12 | watched |
+| | | or: a tug-of-war across the lane (group) | Brawn | — | 8 | watched |
+| | | Then: a dark, cluttered back room | Wits | Sly | 10 | — |
+| | | Then: a crowded shop floor (group) | Sly | — | 8 | — |
+| 3 | **The tavern cellar**: a wheel of strong cheese (food) | Way in: a locked front door | Sly | Brawn | 10 | watched |
+| | | or: a locked strongbox | Wits | Charm | 10 | watched |
+| | | Then: a cart blocking the alley | Brawn | Nimble | 8 | watched |
+| 4 | **The baker**: the wedding cake (food) | Way in: the night watchman on his round | Wits | — | 8 | — |
+| | | or: a high garden wall | Nimble | Brawn | 8 | — |
+| | | Then: a heavy cellar trapdoor | Brawn | — | 8 | watched |
+| | | Then: the rooftops (group) | Nimble | — | 8 | — |
+| | | Furniture: a locked front door (the suit of armour, Bulky) | Sly | Brawn | 12 | watched |
+| 5 | **The seed merchant**: seed potatoes (plants) | Way in: a dark, cluttered back room | Wits | Sly | 8 | — |
+| | | or: a heavy cellar trapdoor | Brawn | — | 8 | watched |
+| | | Then: a locked front door | Sly | Brawn | 10 | — |
+
+Hard: Suspicion Limit 15 · the way out 10 · the lock-up 12 · the final flight: mob 11, escape at Lead 6. 17 obstacles, 9 watched (53%; the table's share is 60%); Difficulties 8 ×10, 10 ×5, 12 ×2 (the table's shares are 40 / 45 / 15%). The ceiling allows two 12s on Hard: the maze and the armour's door, which rolled a 12 before its +2 (S2). Every location is watched. No town name: the tables don't make one.
+
+### 3.4 Main line B party (R62–R69)
+
+R62 = 4, R63 = 4 (repeat), R64 = 8, R65 = 6, R66 = 2, then R67 = 8 and R68 = 2 (repeats) and R69 = 5: **the Werewolf, Jekyll & Hyde, the Ghost, the Creature, the Invisible Man**, default picks. The default Duties (Gardener, Librarian, Butler, Handyman, Tailor) don't clash. 3 charges each.
+
+| Entity | Dice | Signature | Gift | Perk | Duty (item here) | Weakness |
+|---|---|---|---|---|---|---|
+| The Werewolf | Brawn d10 · Nimble d12 · Sly d6 · Charm d4 · Wits d8 | Good Dog | Keen Nose (Wits instead) | Night Runner (alone: Lead 2) | Gardener (the seed potatoes) | Hounds (Soon) |
+| Jekyll & Hyde | Jekyll: Brawn d4 · Nimble d6 · Sly d8 · Charm d12 · Wits d10; Hyde: Brawn d12 · Nimble d10 · Sly d8 · Charm d4 · Wits d6 | The Draught (starts as Jekyll) | Doctor's Bag (raise) | Practised Hand (back to Jekyll free) | Librarian (the cookbook and the ink) | A Familiar Face (Soon) |
+| A Ghost | as above | Through the Wall | Chill (raise) | Spectral | Butler (none) | Cold Iron (Always) |
+| The Creature | as above | Brute Force | Mountain Stride (open with Nimble) | Strong Back | Handyman (none) | Fire (Soon) |
+| The Invisible Man | as above | Unseen | Through the Gap (open with Nimble) | Out of Sight | Tailor (none) | Flour (Soon) |
+
+---
+
 ## 5. Play log: main line A (Gallowsmere, Hard, 4 Entities)
 
 Notation: trait die + second die = total vs Difficulty → result. "Shows" = the Monster die beat the trait die. Sus = Suspicion after the roll. Charges are shown as before → after.
@@ -69,6 +136,49 @@ At 10 of 15 with the armour to carry, the party drops the bacon: the two essenti
 | 8 | R60–R61 | Werewolf, the way out (Sly / Nimble / Brawn loud, watched) | **Shortcut**: 10 → 8. Nimble d12, Monster: 92% against the Mask's 86% (a show only matters if the roll fails; he has no charge for Good Dog, and an overdraw would buy nothing the Monster doesn't) | 1 + 10 (shows) | 11 vs 8 | Success: **everyone out** | 13 |
 
 **How the Year Went: Grand Year.** Both essentials, two of the three extras (the bacon missing) and the suit of armour; nobody left behind. "A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there." Then the missing kind: "Turnip soup every night until spring." Out on **Turn 8** with four Turns to spare. Suspicion 11 when the last roll was made (13 after its show). Charges: 9 of 12 spent (Good Dog ×3 in one chase; Through the Wall ×2 and Chill; Unseen ×2; Hovel Watcher ×1). The armour cost +2 (S3).
+
+---
+
+## 6. Play log: main line B (a rolled Hard town, 5 Entities)
+
+**Plan.** The Librarian's two essentials are both books. J&H takes the schoolhouse (one obstacle: the front door, Sly 8, not watched; Jekyll's Sly d8 is a d10 there). The Ghost and the Invisible Man take the bookseller: the Ghost walks past both of its group obstacles by Spectral, so the only roll is the back room. The Werewolf (Gardener) takes the seed merchant. The Creature takes the baker (the watchman with Wits d10, the trapdoor with Brawn d12), and the armour's door (Sly 12, watched) goes to the Invisible Man: Out of Sight means Trouble there can't get him caught while he carries nothing. The tavern (every obstacle watched, three 10s and an 8) is insurance only.
+
+**Turn 1 (Sus 0).** Moves; all five locations are watched (the schoolhouse and the seed merchant only by their second way in: "It's watched if any obstacle is, either way in"):
+
+| Roll | Check | d6 | Result | Sus |
+|---|---|---|---|---|
+| R148 | the schoolhouse (J&H) | 1 | — | 0 |
+| R149 | the bookseller (Invisible Man, Ghost) | 4 | whose (1–3 Invisible Man, 4–6 Ghost): R152 = 4, Cold Spot. The face (R153–R154): the baker's wife, tipsy from the cider | 1 |
+| R150 | the seed merchant (Werewolf) | 1 | — | 1 |
+| R151 | the baker (Creature) | 3 | — | 1 |
+
+| Turn | Roll | Who / where | Choice and why | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|---|
+| 2 | R155–R156 | J&H (Jekyll), schoolhouse way A (locked front door, Sly / Brawn loud, 8) | Sly d8 → d10 (Librarian), Mask: 65 / 18 / 17%, and Trouble here costs only +1 | 3 + 3 | 6 vs 8 | **Cost**: **the cookbook** (essential). "Drop an item" is barred (he carries only what this roll won); Turn 2 is far from dawn and 1 of 15 far from the Limit; the Storyteller takes **his next roll's trait die one size smaller** (his next roll would be at the tavern, every obstacle a 10) | 1 |
+| 2 | — | The Ghost passes the tug-of-war (way B, group, watched) by **Spectral**, at no action | | | | | 1 |
+| 2 | R157–R158 | Ghost, bookseller (dark back room, Wits / Sly loud, 10) | Its Wits is a d6, and Through the Wall can't open it (the back room lists Sly). Sly d10 the loud way, **Chill** (3 → 2) to d12, Mask: the loud +1 comes whatever the result, so Trouble here costs nothing more | 10 + 6 | 16 vs 10 | Success (loud +1) | 2 |
+| 2 | — | The Ghost passes the crowded shop floor (group) by Spectral, at no action: **the ink and sealing wax** (essential) | | | | | 2 |
+| 2 | R159–R160 | Werewolf, seed merchant way A (dark back room, Wits / Sly loud, 8) | Wits d8 → d10 (Gardener), Mask | 1 + 6 | 7 vs 8 | **Cost**. He carries nothing; the Storyteller takes **his next roll's trait die one size smaller** (the front door, a 10, is next) | 2 |
+| 2 | R161–R162 | Creature, baker way A (night watchman, Wits 8, not watched) | Wits d10, Mask | 7 + 6 | 13 vs 8 | Success | 2 |
+| 2 | — | The Invisible Man, with nothing left to do at the bookseller, moves to the baker | | | | | 2 |
+| 3 | R163–R164 | Creature, baker (heavy cellar trapdoor, Brawn 8, watched) | Brawn d12, Mask | 8 + 4 | 12 vs 8 | Success | 2 |
+| 3 | R165–R166 | Invisible Man, baker (the rooftops, group, Nimble 8) | Nimble d8, Mask: 56 / 23 / 21%; Unseen kept for the armour's door | 7 + 6 | 13 vs 8 | Success: **the wedding cake** | 2 |
+| 3 | R167–R168 | Werewolf, seed merchant (locked front door, Sly / Brawn loud, 10) | Brawn d10 → d12 (Gardener) → **d10** (the Cost), the loud way, **Good Dog** (3 → 2): 64 / 15 / 21% against Sly d6's 45% | 3 + 9 (shows, hidden) | 12 vs 10 | Success: **the seed potatoes** (loud +1) | 3 |
+| 3 | — | A Win is in hand on Turn 3. The Ghost and J&H move to the way out; the tavern is dropped | | | | | 3 |
+| 3 | R169 | The way out, the first time anyone comes back (Ghost, J&H) | Tell check | 3 | — | — | 3 |
+| 4 | — | The Invisible Man hands the cake to the Creature (free, same place): Out of Sight protects him only while he carries nothing | | | | | 3 |
+| 4 | R170–R171 | Invisible Man, the armour's locked front door (Sly / Brawn loud, 12, watched) | Sly d12, **Unseen** (3 → 2): 54 / 16 / 30% | 2 + 5 | 7 vs 12 | **Trouble**: Suspicion +1, but **not caught** (Out of Sight: he carries nothing) | 4 |
+| 4 | — | The Creature (with the cake) and the Werewolf move to the way out | | | | | 4 |
+| 5 | R172–R173 | Invisible Man, the door again | Sly d12, **Unseen** (2 → 1) | 6 + 8 (shows, hidden) | 14 vs 12 | Success: he takes **the suit of armour** (Bulky) | 4 |
+| 5 | — | End of the Turn: the armour, +1 | | | | | 5 |
+| 6 | — | The Invisible Man sets off with the armour (Turns 6–7) | | | | | 5 |
+| 6 | — | End of the Turn: the armour, +1 | | | | | 6 |
+| 7 | — | The Invisible Man acts first and finishes the carried move (S3) | | | | | 6 |
+| 7 | R174–R175 | Werewolf, the way out (Sly / Nimble / Brawn loud, 10, watched) | Nimble d12, Monster: 70% against the Mask's 54% (nobody's ability can raise a d12 or open a way the way out doesn't list); the Werewolf rolls because Night Runner gives him Lead 2 if he's caught | 8 + 2 | 10 vs 10 | Success: **everyone out** | 6 |
+
+**How the Year Went: Grand Year.** Both essentials, two of the three extras (the cheese missing) and the suit of armour; nobody left behind. Then "Turnip soup every night until spring." Out on **Turn 7** with five Turns to spare, at **Suspicion 6 of 15**. Charges: **4 of 15 spent** (Chill, Good Dog, Unseen ×2); J&H and the Creature never spent one, and J&H's Cost (a smaller next die) never bit: he made no other roll. The armour cost +2 (S3).
+
+**Why it was so easy.** Of the town's 17 obstacles, the party rolled 8. The Ghost walked past both of the bookseller's group obstacles for free, so one roll (a Success) got the second essential; the schoolhouse had a single unwatched obstacle; and Out of Sight let the Invisible Man take two tries at the armour's watched Difficulty 12 door with no risk of a chase. A Hard town of 9 watched obstacles and two 12s took 7 Turns and 10 rolls of the dice (not counting Tell checks).
 
 ---
 
@@ -139,3 +249,117 @@ Every roll in order, as logged when rolled (`Math.random`, one die per line). La
 | R59 | A T7 Tell way out first return (Creature, IM, Werewolf) | d6 = 2 |
 | R60 | A T8 Werewolf way out (Shortcut 10->8) Nimble | d12 = 1 |
 | R61 | A T8 Werewolf Monster | d10 = 10 |
+| R62 | B party pick 1 | d8 = 4 |
+| R63 | B party pick 2 | d8 = 4 |
+| R64 | B party pick 3 | d8 = 8 |
+| R65 | B party pick 4 | d8 = 6 |
+| R66 | B party pick 5 | d8 = 2 |
+| R67 | B party pick 5 (R63 repeat) | d8 = 8 |
+| R68 | B party pick 5 (R67 repeat) | d8 = 2 |
+| R69 | B party pick 5 (R68 repeat) | d8 = 5 |
+| R70 | B list item 1 kind | d6 = 3 |
+| R71 | B list item 1 item | d6 = 3 |
+| R72 | B list item 2 kind | d6 = 3 |
+| R73 | B list item 2 item | d6 = 4 |
+| R74 | B list item 3 kind | d6 = 1 |
+| R75 | B list item 3 item | d6 = 1 |
+| R76 | B list item 4 kind | d6 = 1 |
+| R77 | B list item 4 item | d6 = 6 |
+| R78 | B list item 5 kind | d6 = 2 |
+| R79 | B list item 5 item | d6 = 1 |
+| R80 | B Lantern Night custom | d6 = 2 |
+| R81 | B place item 1 cookbook (1-2 bookseller,3-4 printer,5-6 schoolhouse) | d6 = 6 |
+| R82 | B place item 2 ink | d6 = 6 |
+| R83 | B place item 3 cheese (1-2 baker,3-4 butcher,5-6 tavern cellar) | d6 = 6 |
+| R84 | B place item 4 cake | d6 = 2 |
+| R85 | B place item 5 seed potatoes (1-2 market garden,3-4 florist,5-6 seed merchant) | d6 = 6 |
+| R86 | B place item 2 ink reroll (schoolhouse taken) | d6 = 2 |
+| R87 | B obstacles count schoolhouse | d20 = 3 |
+| R88 | B obstacles count bookseller | d20 = 16 |
+| R89 | B obstacles count tavern cellar | d20 = 13 |
+| R90 | B obstacles count baker | d20 = 15 |
+| R91 | B obstacles count seed merchant | d20 = 8 |
+| R92 | B obst schoolhouse way A table | d20 = 9 |
+| R93 | B obst schoolhouse way A Difficulty | d20 = 3 |
+| R94 | B obst schoolhouse way A watched | d10 = 10 |
+| R95 | B obst bookseller way A table | d20 = 20 |
+| R96 | B obst bookseller way A Difficulty | d20 = 20 |
+| R97 | B obst bookseller way A watched | d10 = 2 |
+| R98 | B obst bookseller then 1 table | d20 = 18 |
+| R99 | B obst bookseller then 1 Difficulty | d20 = 13 |
+| R100 | B obst bookseller then 1 watched | d10 = 9 |
+| R101 | B obst bookseller then 2 table | d20 = 11 |
+| R102 | B obst bookseller then 2 Difficulty | d20 = 8 |
+| R103 | B obst bookseller then 2 watched | d10 = 9 |
+| R104 | B obst tavern way A table | d20 = 9 |
+| R105 | B obst tavern way A Difficulty | d20 = 16 |
+| R106 | B obst tavern way A watched | d10 = 5 |
+| R107 | B obst tavern then 1 table | d20 = 3 |
+| R108 | B obst tavern then 1 Difficulty | d20 = 6 |
+| R109 | B obst tavern then 1 watched | d10 = 3 |
+| R110 | B obst baker way A table | d20 = 19 |
+| R111 | B obst baker way A Difficulty | d20 = 5 |
+| R112 | B obst baker way A watched | d10 = 10 |
+| R113 | B obst baker then 1 table | d20 = 1 |
+| R114 | B obst baker then 1 Difficulty | d20 = 6 |
+| R115 | B obst baker then 1 watched | d10 = 2 |
+| R116 | B obst baker then 2 table | d20 = 7 |
+| R117 | B obst baker then 2 Difficulty | d20 = 2 |
+| R118 | B obst baker then 2 watched | d10 = 8 |
+| R119 | B obst seed merchant way A table | d20 = 18 |
+| R120 | B obst seed merchant way A Difficulty | d20 = 3 |
+| R121 | B obst seed merchant way A watched | d10 = 9 |
+| R122 | B obst seed merchant then 1 table | d20 = 9 |
+| R123 | B obst seed merchant then 1 Difficulty | d20 = 15 |
+| R124 | B obst seed merchant then 1 watched | d10 = 7 |
+| R125 | B obst schoolhouse way B table (quiet not Sly) | d20 = 13 |
+| R126 | B obst bookseller way B table (quiet not Wits) | d20 = 2 |
+| R127 | B obst tavern way B table (quiet not Sly) | d20 = 17 |
+| R128 | B obst baker way B table (quiet not Wits) | d20 = 17 |
+| R129 | B obst seed merchant way B table (quiet not Wits) | d20 = 17 |
+| R130 | B obst baker way B table reroll (quiet not Wits) | d20 = 5 |
+| R131 | B obst seed merchant way B table reroll (quiet not Wits) | d20 = 17 |
+| R132 | B obst seed merchant way B table reroll 2 (quiet not Wits) | d20 = 1 |
+| R133 | B obst schoolhouse way B Difficulty | d20 = 17 |
+| R134 | B obst schoolhouse way B watched | d10 = 5 |
+| R135 | B obst bookseller way B Difficulty | d20 = 4 |
+| R136 | B obst bookseller way B watched | d10 = 3 |
+| R137 | B obst tavern way B Difficulty | d20 = 13 |
+| R138 | B obst tavern way B watched | d10 = 4 |
+| R139 | B obst baker way B Difficulty | d20 = 7 |
+| R140 | B obst baker way B watched | d10 = 7 |
+| R141 | B obst seed merchant way B Difficulty | d20 = 8 |
+| R142 | B obst seed merchant way B watched | d10 = 3 |
+| R143 | B furniture piece | d6 = 3 |
+| R144 | B furniture location (1 schoolhouse,2 bookseller,3 tavern,4 baker,5 seed merchant,6 reroll) | d6 = 4 |
+| R145 | B furniture obstacle table | d20 = 9 |
+| R146 | B furniture obstacle Difficulty (+2) | d20 = 19 |
+| R147 | B furniture obstacle watched | d10 = 3 |
+| R148 | B T1 Tell schoolhouse (J&H) | d6 = 1 |
+| R149 | B T1 Tell bookseller (IM, Ghost) | d6 = 4 |
+| R150 | B T1 Tell seed merchant (Werewolf) | d6 = 1 |
+| R151 | B T1 Tell baker (Creature) | d6 = 3 |
+| R152 | B T1 bookseller whose Tell (1-3 IM, 4-6 Ghost) | d6 = 4 |
+| R153 | B T1 villager face (who) | d6 = 1 |
+| R154 | B T1 villager face (doing) | d6 = 2 |
+| R155 | B T2 J&H (Jekyll) schoolhouse front door Sly (d8 Librarian->d10) | d10 = 3 |
+| R156 | B T2 J&H Mask | d6 = 3 |
+| R157 | B T2 Ghost bookseller back room Sly loud (d10 Chill->d12) | d12 = 10 |
+| R158 | B T2 Ghost Mask | d6 = 6 |
+| R159 | B T2 Werewolf seed merchant back room Wits (d8 Gardener->d10) | d10 = 1 |
+| R160 | B T2 Werewolf Mask | d6 = 6 |
+| R161 | B T2 Creature baker watchman Wits | d10 = 7 |
+| R162 | B T2 Creature Mask | d6 = 6 |
+| R163 | B T3 Creature baker trapdoor Brawn | d12 = 8 |
+| R164 | B T3 Creature Mask | d6 = 4 |
+| R165 | B T3 IM baker rooftops (group) Nimble | d8 = 7 |
+| R166 | B T3 IM Mask | d6 = 6 |
+| R167 | B T3 Werewolf seed merchant front door Brawn loud (d10 Gardener d12, step-down d10) | d10 = 3 |
+| R168 | B T3 Werewolf Monster (Good Dog) | d10 = 9 |
+| R169 | B T3 Tell way out first return (Ghost, J&H) | d6 = 3 |
+| R170 | B T4 IM baker furniture front door Sly | d12 = 2 |
+| R171 | B T4 IM Monster (Unseen) | d10 = 5 |
+| R172 | B T5 IM baker furniture front door Sly | d12 = 6 |
+| R173 | B T5 IM Monster (Unseen) | d10 = 8 |
+| R174 | B T7 Werewolf way out Nimble | d12 = 8 |
+| R175 | B T7 Werewolf Monster | d10 = 2 |
