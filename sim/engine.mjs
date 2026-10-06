@@ -279,7 +279,7 @@ function followsBehind(S, members) {
  *  nightRunner   your local chase starts at Lead 2
  *  shortcut      the way out is 2 easier when you roll it
  *  fetch         a final flight you're in starts at Lead 3; the way out is 1 easier while you're there (B5; fetchRule)
- *  outOfSight    Trouble gets you caught only while you carry loot or furniture
+ *  outOfSight    Trouble gets you caught only while you or anyone with you carries loot or furniture (V17)
  *  hiddenPockets captured, you keep what you carry
  *  lightStep     the loud way costs you no Suspicion
  *  spectral      you get past group obstacles without rolling
@@ -308,16 +308,16 @@ const carrying = (m) => m.items.length > 0 || !!m.furniture;
 
 /**
  * Out of Sight (C8, the Invisible Man): the chance that Trouble at a watched obstacle gets him caught.
- * outOfSightRule (candidate texts after the audit, sim/FINDINGS.md):
- *  carry   "only while you carry loot or furniture" (the book now);
- *  place   … "or someone at your place does";
+ * outOfSightRule (candidate texts after the audit, sim/FINDINGS.md; V17 decided "place"):
+ *  carry   "only while you carry loot or furniture" (the book before V17);
+ *  place   "only while you or anyone with you carries loot or furniture" (V17, the book);
  *  half    "on Trouble at a watched obstacle you're caught only on a 1–3 on a d6";
  *  handed  … "or you were handed loot or handed it over this Turn";
  *  handedSmart  handed, played by a party that dodges it (he never takes the loot when someone else there can).
  */
 function seenChance(S, m) {
   if (!hasPerk(m, "outOfSight")) return 1;
-  const rule = S.P.outOfSightRule ?? "carry";
+  const rule = S.P.outOfSightRule ?? "place";
   if (rule === "half") return 0.5;
   if (carrying(m)) return 1;
   if (rule === "place" && hereOf(S).some((o) => o !== m && carrying(o))) return 1;

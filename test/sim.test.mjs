@@ -292,10 +292,10 @@ test("the way out: one rolls for all, and on Trouble the party tries again next 
   }
 });
 
-test("Out of Sight: after handing its loot over, the Invisible Man rolls unwatched", () => {
+test("the roller plans after handing its loot over (SA-05; the pre-V17 Out of Sight, where that left him unwatched)", () => {
   const inv = member("invisible", { perk: "outOfSight" }), jekyll = member("jekyll-hyde", { charges: 0 }); // Sly d12 against Jekyll's d8
   const neighbour = ob(["sly"], 8, { watched: true });
-  const { S, loc } = state([inv, jekyll], [neighbour], { faces: [1, 1] });
+  const { S, loc } = state([inv, jekyll], [neighbour], { faces: [1, 1], params: { outOfSightRule: "carry" } });
   inv.items = [{ id: "x", essential: false }];
   S.turn = 1; E.workLocation(S, loc);
   assert.ok(S.rec.counts["loot handed over"] >= 1);
@@ -314,7 +314,7 @@ test("a lost Turn skips a move: the Entity follows a Turn behind", () => {
   S.turn = 5; assert.equal(E.hereOf(S).length, 1);
 });
 
-test("outOfSightRule candidates: someone at your place carrying; half the time", () => {
+test("Out of Sight (V17): caught while anyone with him carries loot; the other candidates", () => {
   const run = (rule, faces, partnerCarries = false) => {
     const inv = member("invisible", { perk: "outOfSight" }), jekyll = member("jekyll-hyde", { charges: 0 });
     const neighbour = ob(["sly"], 8, { watched: true });
@@ -323,8 +323,10 @@ test("outOfSightRule candidates: someone at your place carrying; half the time",
     S.turn = 1; E.workLocation(S, loc);
     return S.rec.counts["local chases"] ?? 0;
   };
-  assert.equal(run("carry", [1, 1], true), 0); // the book: only what he carries counts
-  assert.equal(run("place", [1, 1], true), 1); // his partner's loot gives him away
+  assert.equal(defaults().outOfSightRule, "place"); // V17
+  assert.equal(run("carry", [1, 1], true), 0); // the book before V17: only what he carries counts
+  assert.equal(run("place", [1, 1], true), 1); // V17: his partner's loot gives him away
+  assert.equal(run("place", [1, 1]), 0); // nobody with him carries anything
   assert.equal(run("half", [1, 1, 4]), 0); // 4–6: they didn't see him
   assert.equal(run("half", [1, 1, 3]), 1);
 });

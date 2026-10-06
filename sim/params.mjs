@@ -258,10 +258,10 @@ export const PARAMS = {
     ref: "player policy",
   },
   outOfSightRule: {
-    kind: "content", default: "carry", values: ["carry", "place", "half", "handed", "handedSmart"],
-    title: "The Invisible Man's Out of Sight (candidate texts after the audit)",
-    doc: "carry = \"trouble gets you caught only while you carry loot or furniture\" (the book); place = … \"or someone at your place does\"; half = \"on Trouble at a watched obstacle you're caught only on a 1–3 on a d6\"; handed = … \"or you were handed loot or handed it over this Turn\"; handedSmart = handed, with a party that keeps the loot out of his hands (it never needs to hand it over).",
-    ref: "Chapter 2 (the Invisible Man); sim/FINDINGS.md, the audit follow-up",
+    kind: "content", default: "place", values: ["place", "carry", "half", "handed", "handedSmart"],
+    title: "The Invisible Man's Out of Sight (V17, 2026-10-06: place)",
+    doc: "place = \"Trouble gets you caught only while you or anyone with you carries loot or furniture\" (V17, the book); carry = \"only while you carry loot or furniture\" (the book before V17: free hand-over let him roll empty-handed, +2.5 to +3.4); half = \"on Trouble at a watched obstacle you're caught only on a 1–3 on a d6\"; handed = \"…, or you were handed loot or handed it over this Turn\"; handedSmart = handed, with a party that keeps the loot out of his hands (it never needs to hand it over).",
+    ref: "Chapter 2 (the Invisible Man); DESIGN V17; sim/FINDINGS.md",
   },
   roster: {
     kind: "content", default: "approved", values: ["approved", "placeholder", "proposed"],
