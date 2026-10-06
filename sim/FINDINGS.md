@@ -255,3 +255,15 @@ With B6, Hard wins by party size 52.3 · 57.1 · 59.0% and forked 10.8 · 9.3 ·
 **Local chases** (with B6): a local chase lasts 3 rounds (median), 6 at the 90th percentile; 1.5% of Hard local chases last 10 or more. One chase in five raises Suspicion by 6 or more, and 1.5% of Hard raids are forked by Turn 4. Capping what one local chase can raise: at 4, wins 93.6 / 76.5 / 57.6%, Hard captures 0.42; at 3, 94.2 / 77.8 / 58.9%, 0.44; at 2, 95.0 / 79.7 / 60.7%, 0.46 (Hard forked by Turn 4: 0.7 / 0.4 / 0.2%). Not adopted (V1): S6 chose the snowball, and the caps move every win rate.
 
 **Furniture noise** (with B6; "always" = the party always goes for it, paired with the same raids played without it): as written (every Turn carried), Grand Year when tried 55.6%, a Win lost 16.6%, wins with always 88.6 / 63.0 / 45.7%; only on Turns it moves, 60.5% and 13.2% (too safe). Kept as written, with "even while set down" (V4). The simulator's together-play counted one noise per two-Turn move and none while waiting; it now counts every Turn (pairs and singles, the default, already did).
+
+## Premade towns with B6 (2026-10-06, after PT6)
+
+`node sim/premade-check.mjs 2000` with every rule through V11 (seed 1):
+
+| Town | Win (target) | Forked (target) | Win, 3 · 4 · 5 | Forked, 3 · 4 · 5 | Captures | Goes for the furniture |
+|---|---|---|---|---|---|---|
+| Puddlecombe, Easy | 89.5% (87–93%) | 0.7% (0–2%) | 87.2 · 90.0 · 91.3 | 1.0 · 0.4 · 0.8 | 0.10 | 12.2% |
+| Thistlewick, Standard | 73.9% (72–78%) | 7.0% (3–7%) | 71.3 · 75.1 · 75.3 | 7.3 · 7.5 · 6.2 | 0.21 | 51.8% |
+| Gallowsmere, Hard | 57.6% (55–60%) | 9.3% (8–12%) | 54.0 · 59.8 · 59.1 | 11.6 · 9.0 · 7.2 | 0.38 | 0.1% |
+
+Thistlewick's forked rate sits at the top of its target (was 6.5% before B6); on seeds 2 and 3 (3,000 raids per party size) it is 6.9% and 6.4%, with wins 74.8% and 75.2%. Left as printed; worth watching if a later change raises Standard forked rates.
