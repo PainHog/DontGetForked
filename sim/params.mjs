@@ -60,8 +60,8 @@ export const PARAMS = {
     ref: "DESIGN B2; PT5 m9",
   },
   spectralRule: {
-    kind: "rule", default: "any", values: ["any", "noLoot"],
-    title: "A Ghost's Spectral: past group obstacles without rolling",
+    kind: "rule", default: "noLoot", values: ["noLoot", "any"],
+    title: "A Ghost's Spectral: past group obstacles without rolling (V19 2026-10-06: noLoot)",
     doc: "any = as written; noLoot = not while carrying loot or furniture, like Through the Wall (candidate after B7: A Ghost the largest outlier).",
     ref: "DESIGN C8; sim/FINDINGS.md after B7",
   },

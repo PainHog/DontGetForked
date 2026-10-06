@@ -341,3 +341,11 @@ Hard only, 2,000 raids, Mesmerise watched-only: as it stands 55.3 / 54.6 / 54.8%
 
 **Decided (B7, under Richard's advance approval):** `mesmeriseRule: "watched"` and the Hard lock-up 10.
 
+## After B7: A Ghost and Thistlewick (2026-10-06, for V19–V20)
+
+Full report with B7 (seed 1): wins 91.8 / 73.6 / 57.0%, forked 0.8 / 5.2 / 9.4%, Hard captures 0.35; largest outlier A Ghost +3.6. Three seeds, 2,000 raids: A Ghost +2.7 (1.9 to 3.6). **Spectral not while carrying** (`spectralRule: "noLoot"`): A Ghost +2.0 (1.3 to 2.6); the largest average outliers are now the Werewolf's two Gift versions, Keen Nose −2.6 and Through the Hedge +2.5 (inherent in a switch against an open approach, within noise); wins 91.6–91.8 / 73.0–74.2 / 56.2–56.3%.
+
+Premade Thistlewick after B7, three seeds: won 73.1–74.0%, forked 7.2–7.6% (target 3–7%). Seed merchant's watchman 10 → 8: won 77.5–78.3%, forked 6.5–6.8% (wins over). **Hatter's nosy neighbour unwatched:** won 76.1–77.2%, forked 6.2–6.4%.
+
+**Decided (V19–V20, under Richard's advance approval).**
+

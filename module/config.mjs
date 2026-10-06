@@ -129,7 +129,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling, at no action, even in a Turn you move.", default: true },
+      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling, at no action, even in a Turn you move, unless you carry loot or furniture.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously." },
       { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you’re back where you were caught and lose your next Turn instead of being captured (if the Limit comes that round, you just join the final flight)." },
     ],

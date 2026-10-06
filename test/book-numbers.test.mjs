@@ -494,8 +494,9 @@ test("Chapter 9's towns are book/src/towns.json, built from the tables, with the
       assert.ok(count >= 1 && count <= 3, `${t.key}: ${l.place} has 1–3 obstacles`);
     }
     const map = read(`book/art/map-${t.key}.svg`).match(/<title[^>]*>([^<]*)<\/title>/)[1];
-    const eyes = t.locations.every((l) => [...l.waysIn, ...l.then].some((o) => o.watched)) ? "Every location is watched" : null;
-    assert.ok(eyes, `${t.key}: every location is watched (the map title's wording assumes it)`);
+    // a location is watched if any of its obstacles is, either way in (not the furniture's): Chapter 4
+    const watched = t.locations.map((l, n) => [n + 1, l]).filter(([, l]) => [...l.waysIn, ...l.then].some((o) => o.watched));
+    const eyes = watched.length === t.locations.length ? "Every location is watched" : watched.length ? `Watched: ${watched.map(([n, l]) => `${n} ${l.place}`).join(", ")}` : "No location is watched";
     assert.equal(map, `Map of ${t.name}: ${t.locations.map((l, n) => `${n + 1} ${l.place}`).join(", ")}, the lock-up and the way out. ${eyes}; the star marks the furniture, at ${t.locations[at].place}.`, `${t.key}: the map's title (its alt text) names its locations, the eyes and the star`);
   }
 });

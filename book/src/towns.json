@@ -129,7 +129,7 @@
           "place": "the hatter",
           "item": [6, 3],
           "waysIn": [
-            { "obstacle": "neighbour", "difficulty": 8, "watched": true },
+            { "obstacle": "neighbour", "difficulty": 8 },
             { "obstacle": "rooftops", "difficulty": 10 }
           ],
           "then": [],
