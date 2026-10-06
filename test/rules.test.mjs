@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves, obstacleOn, secondWayIn,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves, obstacleOn, secondWayIn, villagerOn,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -213,4 +213,11 @@ test("C18: the obstacle table: each trait the quiet way four times, 12 loud ways
   const { NUMBERS } = await import("../sim/params.mjs");
   assert.equal(NUMBERS.obstacleTable, "approved");
   assert.deepEqual(OBSTACLE_TABLES.approved.map((o) => [o.quiet, o.loud ?? null, !!o.group]), DGF.obstacleTable.map((o) => [o.quiet, o.loud ?? null, !!o.group]));
+});
+
+test("C19: the villagers: two d6 tables, flavour only", () => {
+  assert.equal(DGF.villagers.who.length, 6);
+  assert.equal(DGF.villagers.doing.length, 6);
+  assert.deepEqual(villagerOn(4, 2), { who: DGF.villagers.who[3], doing: DGF.villagers.doing[1] });
+  assert.throws(() => villagerOn(7, 1));
 });
