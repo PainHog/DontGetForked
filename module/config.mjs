@@ -140,7 +140,7 @@ DGF.entities = Object.freeze([
     gift: {
       name: "Witchcraft",
       versions: [
-        { key: "broomstick", name: "Broomstick", effect: "open", trait: "sly", text: "In over the rooftops, quiet as an owl.", default: true },
+        { key: "broomstick", name: "Broomstick", effect: "open", trait: "nimble", text: "In over the rooftops, quiet as an owl.", default: true },
         { key: "blackCat", name: "Black Cat", effect: "hidden", text: "Everyone blames the cat." },
         { key: "potionForThat", name: "A Potion for That", effect: "switch", trait: "wits", text: "There’s a potion for everything." },
       ],

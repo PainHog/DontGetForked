@@ -54,7 +54,7 @@ export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, si
     for (const size of sizes) {
       for (let i = 0; i < runs; i++) {
         const rng = makeRng(seed, label, size, i);
-        const party = makeParty(rng.fork("party"), size, numbers.charges, ROSTERS[params.roster] || ROSTER);
+        const party = makeParty(rng.fork("party"), size, numbers.charges, (Array.isArray(params.roster) ? params.roster : ROSTERS[params.roster] || ROSTER));
         // campaign upgrades (optional rules): each bonus charge goes to the next Entity in the party
         // (bonusStack: all of them on one Entity instead)
         for (let k = 0; k < (numbers.bonusCharges ?? 0); k++) { const m = party[numbers.bonusStack ? 0 : k % party.length]; m.charges += 1; m.chargesStart += 1; }

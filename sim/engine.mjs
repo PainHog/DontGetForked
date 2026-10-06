@@ -980,10 +980,11 @@ function finalFlight(S, trigger) {
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
-  let lead = (S.L.finalStart ?? N.lead.finalStart) + (S.P.fetchRule === "flight" && active(S).some((o) => hasPerk(o, "fetch")) ? 1 : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
+  let lead = (S.L.finalStart ?? N.lead.finalStart) + (S.P.fetchRule === "flight" && active(S).some((o) => hasPerk(o, "fetch")) ? (S.P.fetchLead ?? 1) : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const closeIn = N.finalCloseIn > 0 && round + 1 >= N.finalCloseIn ? round + 2 - N.finalCloseIn : 0;
     const mobD = Math.min(Math.max(baseMob, N.finalCloseCap ?? 12), baseMob + closeIn) + fury;
+    const fetchEase = S.P.fetchMob && fleeing.some((o) => o.status !== "captured" && hasPerk(o, "fetch")) ? S.P.fetchMob : 0; // B4 candidate
     // Policy: carriers drop the furniture when the mob is about to corner them.
     if (lead <= 1 && S.furnitureCarried) dropFurniture(S, "final flight");
     const ground = chaseGround(S);
@@ -991,7 +992,7 @@ function finalFlight(S, trigger) {
     const results = [];
     for (const m of fleeing) {
       const ctx = {
-        phase: "final", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: fleeing.filter((h) => h !== m),
+        phase: "final", options: groundFor(m, ground), difficulty: mobD - fetchEase, witnessed: false, helpers: fleeing.filter((h) => h !== m),
         locKind: null, weakness: weak.get(m), weakOf: (o) => weak.get(o),
         furyLambda: furyRule && fury < N.furyCap ? N.furyLambda : 0,
       };

@@ -207,3 +207,13 @@ Before B3 (the numbers C21 was tuned on): 90.1 / 0.3%, 76.3 / 6.4%, 56.9 / 8.5% 
 | **G: as C, Easy Limit 11, Hard keeps escape 6 (3,000)** | **93.1 / 76.7 / 59.0** | **0.3 / 4.6 / 8.2** | **7.0 · 10.6**, 18 / 22% | **32%, 0.28** |
 
 Overdraw once per flight changes nothing measurable (the simulated players rarely overdraw twice); it only closes the gap in the wording. Package G meets every win and forked target (Easy 93.1, at the edge) and brings Hard captures into the 0.2–0.3 target; Hard flights stay long (the escape at 5 drops Hard forked below 8%).
+
+## Balance after B3 (2026-10-06, for B4)
+
+Measured with all B3 rules (2,500–3,000 raids per label and party size): wins 92.3–92.4 / 74.2–75.3 / 56.0–57.1%, forked 0.3 / 4.3–4.7 / 7.9–8.8% (on target). Entities, Gifts and Perks near or past ±2.5, with their range across six runs (same raids, different variants elsewhere): the Witch's Broomstick +3.0 to +3.6, Dracula +2.3 to +2.9, the Werewolf's Through the Hedge +2.2 to +2.8, Fetch −2.5 to −3.1, Jekyll & Hyde −2.4 to −2.8, the Creature's Book-Learned −2.6 to −2.8. Run-to-run noise on these is about ±0.5.
+
+Tried in memory (`sim/run.mjs` now accepts a roster array, so a patched copy can be played): Broomstick opening with Charm +2.5, **with Nimble −1.1** (Witch −1.4); Through the Hedge with Nimble +2.2; Dracula Charm d10 / Nimble d12 +2.4 (Broomstick then +3.6); Fetch starting the flight 2 higher −2.6, or making the flight's mob 1 easier −2.5 (both too small to matter: flights are rarer and shorter since B3).
+
+**Decided (B4, under Richard's advance approval):** Broomstick opens with Nimble (it fits "in over the rooftops"; the Witch's Nimble is her d4). The rest sit at the edge of the target, within noise, and wait for the playtest.
+
+Other targets now: Hard captures 0.35 per raid (target 0.2–0.3; B3's "cornered at the Limit is captured" adds them back: the same package without it gave 0.28). The Mask is chosen on 22% of all rolls but 36% of the rolls where there's a choice (the final flight forces the Monster); the target ("each on at least a quarter of rolls") is met where there's a choice. A party that always goes for furniture: Grand Year 80% at random towns with the default policy's choices (it only goes when safe).

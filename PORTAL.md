@@ -1,6 +1,6 @@
 Now: Rules tuned after the latest playtest: final flights are shorter, getting caught locally is less of a death sentence, and the three towns are being re-checked.
 Next: A few rules questions from the latest playtest, then Richard's first two-player try of the online version.
-Number: Design decisions made = 81
+Number: Design decisions made = 82
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 140

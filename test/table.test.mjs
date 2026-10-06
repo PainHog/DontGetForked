@@ -114,7 +114,7 @@ test("the sheet shows the book: dice, signature, Gift, Perk, Duty, Weakness, Tel
   const sheet = new EntitySheet({ document: witch });
   await asUser(ANN, () => sheet.render());
   const html = sheet.renderedParts.sheet;
-  for (const s of ["Hedge Spell", "hers or a friend’s", "Broomstick", "open an approach with Sly", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
+  for (const s of ["Hedge Spell", "hers or a friend’s", "Broomstick", "open an approach with Nimble", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
     assert.ok(html.includes(s), `the sheet shows ${s}`);
   assert.ok(!html.includes('data-action="drinkDraught"'), "only Jekyll & Hyde has the Draught");
   const jh = new EntitySheet({ document: jekyll });
