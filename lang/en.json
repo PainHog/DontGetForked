@@ -410,11 +410,11 @@
   "DGF.List.essentialsByDie": "How many essentials: a d6, odd one, even two.",
   "DGF.List.essentialsFixed": "Essentials: {n}.",
   "DGF.List.essentialsRolled": "Essentials: a d6 rolled {face} (odd one, even two): {n}.",
-  "DGF.Year.furnitureLost": "The furniture was lost for the night when its carrier was captured: it can't come home.",
-  "DGF.Raid.furnitureLost": "The furniture is lost for the night.",
+  "DGF.Year.furnitureLost": "The furniture was lost or abandoned for the night: it can't come home.",
+  "DGF.Raid.furnitureLost": "The furniture is lost or abandoned for the night: it can't be taken again, and it makes no more noise.",
   "DGF.Chase.fate.flees": "{name} is Already Dead: the Limit has come, so it isn't captured and loses no Turn: it joins the final flight.",
   "DGF.Raid.furnitureInPlay": "The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down.",
   "DGF.Raid.furnitureOut": "The furniture has left town.",
   "DGF.Raid.furnitureOutButton": "out of town",
-  "DGF.Raid.furnitureLostButton": "lost"
+  "DGF.Raid.furnitureLostButton": "lost or abandoned"
 }

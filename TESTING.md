@@ -144,7 +144,7 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 
 1. **Ann:** roll Sly with *The furniture's extra obstacle* ticked at Difficulty 10: the card says *against 12* and *2 harder (the furniture's extra obstacle)*. At 12 it stays 12.
 2. **Ann:** tick *Carrying furniture* on the Witch's sheet: both Raid windows say *The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down*. **GM:** **Next Turn**: Suspicion +1, and the event list says *carrying furniture*. Untick it (she sets it down), Next Turn: **still +1** (the piece is in town). **◀ Turn** back over a Turn that raised it: the rise is taken back.
-3. **GM:** on the furniture line press **out of town**: the line says *The furniture has left town*; Next Turn: nothing. (Press **lost** instead and the line says it is lost for the night; nothing either.) The way out beaten or the final flight escaped also takes it out of town by itself; a carrier captured loses it (section 12).
+3. **GM:** on the furniture line press **out of town**: the line says *The furniture has left town*; Next Turn: nothing. (Press **lost or abandoned** instead and the line says it is lost or abandoned for the night; nothing either.) The way out beaten or the final flight escaped also takes it out of town by itself; a carrier captured loses it (section 12).
 
 ## 15. The final flight and the year
 

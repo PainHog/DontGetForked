@@ -237,7 +237,7 @@ test("the local chase through to capture: the ground each round, the Weakness, t
   assert.equal(dracula.system.carryingFurniture, false);
   assert.equal(raid().furnitureLost, true);
   assert.match(lock.content, /furniture it carried is lost for the night/);
-  assert.match((await asUser(BEN, () => openHud())).renderedParts.body, /The furniture is lost for the night/);
+  assert.match((await asUser(BEN, () => openHud())).renderedParts.body, /The furniture is lost or abandoned for the night/);
   assert.ok(fired.chaseEnded >= 1);
   const hud = await asUser(ANN, () => openHud());
   assert.match(hud.renderedParts.body, /The lock-up \(Difficulty 10\)/);
