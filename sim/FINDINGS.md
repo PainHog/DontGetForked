@@ -149,3 +149,21 @@ The second way in is rolled again until its quiet trait differs from the first.
 Lower Limits, fewer charges, more watched obstacles or a shorter night each take only 2–4 win points; the final mob's Difficulty is very strong on forked (+1 nearly triples Hard's forked rate); a longer list is what brings wins down evenly. Package M meets every win and forked target. At 2,000 raids: Entities −1.9 to +2.8 (A Ghost +2.8), Gifts and Perks −3.3 to +2.3 (the Werewolf's Fetch −3.3), Duties within ±0.8; Hard captures 0.35 (target 0.2–0.3), Trouble 21.7%.
 
 Targets still missed now and with M (design questions, not numbers): the Mask is chosen on only 22–23% of rolls (target at least a quarter), and a party that goes for furniture reaches a Grand Year about 89% of the time (target about half).
+
+## Fine-tuning after B1 (2026-10-06, for B2)
+
+Measured with the B1 numbers. Switches added: `furnitureRule` noisySlow / slowHard / slowWatched / noisySlowHard, `fetchRule`, `alreadyDeadTurns`.
+
+**The furniture gamble** (target: a party that goes for it reaches a Grand Year about half the time and drops below a Win about 1 time in 5). Measured with `furniturePolicy: "always"` against `"never"` on the same raids, 1,500 per label and party size:
+
+| Rule | Grand Year when tried | Dropped below a Win | Wins in normal play E / S / H |
+|---|---|---|---|
+| Slow (now) | 71.1% | 8.6% | 92.4 / 77.5 / 57.7 |
+| Slow + noisy (+1 Suspicion each Turn carried) | 60.1% | 15.1% | 92.1 / 77.2 / 57.4 |
+| Slow + extra obstacle 2 harder | 65.1% | 10.3% | 92.1 / 77.3 / 57.6 |
+| Slow + extra obstacle always watched | 67.8% | 10.3% | 91.9 / 77.3 / 57.7 |
+| Slow + noisy + 2 harder | 55.1% | 16.5% | 91.9 / 77.1 / 57.5 |
+
+**The Werewolf's Fetch** (−3.2 against its other Perks, which give a head start in every local chase or an easier way out): "drop an item is never your Cost", "carrying doesn't slow you" and "grab a captured companion's loot" all leave it at −3.0 to −3.2 (the situations are too rare). "The final flight starts at Lead +1 while you're in it" brings it to −2.3 (2,500 raids per cell; Hard forked 7.7%).
+
+**A Ghost's Already Dead** losing two Turns instead of one changes nothing measurable; A Ghost stays at +2.7 and the Witch's Broomstick at +2.7–2.8, just over the ±2.5 target (they have ranged 2.3–2.8 across runs).

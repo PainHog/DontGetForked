@@ -73,7 +73,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
       // P4: each Turn, every Entity either rolls once or moves.
       S.turn++;
       // furnitureRule "slow"/"noisySlow" (S7 candidate): carrying furniture, a move takes two Turns.
-      if (S.furnitureCarried && (S.P.furnitureRule === "slow" || S.P.furnitureRule === "noisySlow")) { S.turn++; noisyFurniture(S); if (S.phase !== "raid") break; }
+      if (S.furnitureCarried && ["slow", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"].includes(S.P.furnitureRule) && !(S.P.fetchRule === "carry" && S.party.some((c) => c.furniture === S.furnitureCarried && hasPerk(c, "fetch")))) { S.turn++; noisyFurniture(S); if (S.phase !== "raid") break; }
       S.at = target;
       arrive(S, target);
       if (S.phase !== "raid") break;
@@ -220,7 +220,7 @@ function chooseTargetSplit(S, g) {
 
 /** furnitureRule "noisy"/"both" (S7 candidate): +1 Suspicion at the end of each Turn a piece is carried in town. */
 function noisyFurniture(S) {
-  if (!S.furnitureCarried || !["noisy", "both", "noisySlow"].includes(S.P.furnitureRule)) return;
+  if (!S.furnitureCarried || !["noisy", "both", "noisySlow", "noisySlowHard"].includes(S.P.furnitureRule)) return;
   addSusp(S, 1, "furniture");
   if (limitHit(S)) finalFlight(S, "limit");
 }
@@ -398,7 +398,7 @@ function arrive(S, loc) {
 function workLocation(S, loc) {
   const acted = new Set();
   const tried = new Set();
-  for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = false; acted.add(m); S.rec.count("lost turns"); }
+  for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = typeof m.loseTurn === "number" && m.loseTurn > 1 ? m.loseTurn - 1 : false; acted.add(m); S.rec.count("lost turns"); }
 
   // T5: past an obstacle someone opened, only the opener goes on (if it's caught, the way closes again).
   if (loc.solo && loc.solo.status !== "active") {
@@ -521,7 +521,10 @@ function completeLocation(S, loc) {
   }
   if (loc.furniturePending && wantsFurnitureHere(S, loc)) {
     // furniturePlace "onList": take on the extra obstacle; the piece is carried once it is cleared.
-    loc.obstacles.push(loc.furniturePending.obstacle);
+    const fob = loc.furniturePending.obstacle;
+    if (S.P.furnitureRule === "slowHard" || S.P.furnitureRule === "noisySlowHard") fob.difficulty = Math.min(12, fob.difficulty + 2);
+    if (S.P.furnitureRule === "slowWatched") fob.witnessed = true;
+    loc.obstacles.push(fob);
     loc.furniture = { size: loc.furniturePending.size };
     loc.furniturePending = null;
     loc.done = false;
@@ -576,7 +579,7 @@ function leaveTown(S) {
 function ctxFor(S, m, ob, loc, phase) {
   const helpers = hereOf(S).filter((h) => h !== m); // P7: only Entities at the same location
   return {
-    phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0), witnessed: ob.witnessed,
+    phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && S.P.fetchRule === "lockup" && hasPerk(m, "fetch") ? 2 : 0), witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false,
   };
 }
@@ -796,7 +799,7 @@ function pickCost(S, m, gain = 0) {
     // T10: the Storyteller never picks a Cost that costs nothing (a Suspicion +1 the roll already raised).
     const opts = hasPerk(m, "patienceOfAges") || (hasPerk(m, "wiseWoman") && m.lastTrait === "wits") ? ["stepdown"] : ["turn", "stepdown"];
     if (gain < 1) opts.push("suspicion");
-    if (items.length && !hasPerk(m, "keeperOfTreasures")) opts.push("drop");
+    if (items.length && !hasPerk(m, "keeperOfTreasures") && !(S.P.fetchRule === "keeper" && hasPerk(m, "fetch"))) opts.push("drop");
     kind = S.rng.pick(opts);
   }
   S.rec.count(`cost:${kind}`);
@@ -876,7 +879,7 @@ function localChase(S, m) {
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
     if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
     if (lead <= 0) {
-      if (hasPerk(m, "alreadyDead")) { m.loseTurn = true; S.rec.count("already dead: drifted off"); return; }
+      if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); return; }
       return capture(S, m);
     }
   }
@@ -899,7 +902,7 @@ function groupChase(S, group) {
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
     if (limitHit(S)) return finalFlight(S, "limit");
     if (lead >= N.lead.localEscape) return;
-    if (lead <= 0) { for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = true; else capture(S, m); } return; }
+    if (lead <= 0) { for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); } return; }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
 }
@@ -909,6 +912,11 @@ function capture(S, m) {
   S.captures++;
   m.capturedTurn = S.turn; // the capture used this Turn: the first slip try is next Turn
   S.rec.count("captures");
+  if (S.P.fetchRule === "grab" && m.items.length && !hasPerk(m, "hiddenPockets")) {
+    // B2 candidate: a Werewolf with Fetch beside the captive grabs what it carried.
+    const dog = (S.here ?? active(S)).find((o) => o !== m && o.status === "active" && hasPerk(o, "fetch"));
+    if (dog) { dog.items.push(...m.items); m.items = []; S.rec.count("fetch: grabbed a captive's loot"); }
+  }
   if (S.P.captiveItems === "lost" && !hasPerk(m, "hiddenPockets")) m.items = [];
   if (m.furniture) dropFurniture(S, "carrier captured");
 }
@@ -958,7 +966,7 @@ function finalFlight(S, trigger) {
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
-  let lead = S.L.finalStart ?? N.lead.finalStart; // a label may set its own starting Lead
+  let lead = (S.L.finalStart ?? N.lead.finalStart) + (S.P.fetchRule === "flight" && active(S).some((o) => hasPerk(o, "fetch")) ? 1 : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = baseMob + fury;
     // Policy: carriers drop the furniture when the mob is about to corner them.
