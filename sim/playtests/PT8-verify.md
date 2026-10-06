@@ -439,9 +439,100 @@ Items 2–4 and 6–14 are the gaps PT6 and PT7 listed (their m4); the page gain
 
 ---
 
-## 9. Findings
+## 9. Findings (most severe first)
 
-(In progress.)
+No blockers. Every change read cleanly at the moment it mattered: V15's d3 and the laundry, V16 at a capture, V17 both ways, V18's advice, B7's lock-up at 10 on every label, V19 empty-handed and carrying, V20 at the hatter. What needs a ruling is at their edges: B7's "where someone's watching" (M1), V17's "with you" (m1) and V15's "share a place" (m2). Each finding is marked **wording** (the book already implies an answer, or the fix only says more clearly what it means) or **rules** (the fix would change a rule or a number: needs the author's decision; numbers only, no new numbers proposed).
+
+### 9.1 Major
+
+| id | Kind | Passage (quoted, chapter) | What happened / what I did | Suggested fix |
+|---|---|---|---|---|
+| M1 | wording (rules if the location reading is meant) | Ch2, Dracula: "Mesmerise (signature): open an approach with Charm **where someone's watching**. He bends a mind with a look." · Ch3: "roll that trait at 2 lower Difficulty, watched as usual" · Ch4: "A location … It's watched if any obstacle is, either way in." · Ch8: "A watched obstacle means someone is looking." | B7's new limit reads two ways, and the town pages invite the second: at a **watched obstacle**, or anywhere in a **watched location** (Gallowsmere's map: "Every location is watched"). It came up on Dracula's second roll of main line A: the printer's dark back room is unwatched, but the printer is watched by its neighbour. I ruled the obstacle (S2), so he rolled Sly d8 the loud way at 8 (56 / 23 / 21, +1 every time) and it took two Turns and +2 Suspicion; the other reading gives Charm d12 at 6 (86 / 10 / 4). Reach in Gallowsmere: **8 of 18 obstacles** under the obstacle reading, **13** under the location reading (add the printer's rooftops and back room, the tailor's drainpipe and furniture trapdoor, the butcher's tug-of-war: a Brawn 12 becomes Charm 10). Since B7 was a balance change, the reading decides how much it took off Dracula. | Say which in Dracula's entry: e.g. "open an approach with Charm at a watched obstacle" (or "…anywhere in a watched location"), and check that the simulator and Foundry use the same reading. |
+
+### 9.2 Minor
+
+| id | Kind | Passage (quoted, chapter) | What happened / what I did | Suggested fix |
+|---|---|---|---|---|
+| m1 | wording | Ch2, the Invisible Man: "Out of Sight (default): Trouble gets you caught only while you or **anyone with you** carries loot or furniture: they can't see you, but they can see a floating candlestick." | "With you" isn't defined. I ruled "at the same place" (Chapter 3: "a location, the way out or the lock-up"; S3). Drill a1: the Creature held loot at the butcher, so the Invisible Man's Trouble at the shopkeeper got him caught (a 6-round chase, Suspicion 7 → 10); a2: alone and empty-handed, +1 and no catch. Cases the words don't settle: a friend at the same location before (or past) another obstacle; a friend between places on a carried move; a captive at the lock-up who kept loot by Hidden Pockets; a friend in the same group check. The candlestick suggests "close enough to be seen together", which may be narrower than a location. | Say it: e.g. "while you, or anyone at the same place, carries loot or furniture". |
+| m2 | wording, or rules if not meant | Ch8, Rolling a Town: "Locations: **one for each item** on the list …: a d3 or pick, one item per place; if a kind has more items than places, **two may share a place**." · Ch4: "A location: 1–3 obstacles, crossed in order, guarding **a list item**" | C2 (7.1): four silver items for three places; the fourth (the tea service) rolled the laundry, already the tablecloth's. One location guarding two items, or two locations at one place? The text says both "one for each item" and "share a place", and Chapter 4's location guards one item. I'd rule one location (Chapter 3 calls a location a "place"): that saves the party one to three obstacles (about 2 rolls on Easy, more on Hard), a Tell check and a move. Rare (four of one kind on a 4- or 5-item list), but the rule exists for it. | Say which: e.g. "two items may share a place: one location guards both, and passing its last obstacle puts both in your hand"; and how such a location is numbered for the furniture's d6. |
+| m3 | rules | Ch4: "Taking a piece is free; **drop it any time**." · "Loot has no limit; hand it over free in the same place." · Ch3: "A dropped item falls where you are; picking it up costs your next action." · Ch2: Spectral "unless you carry loot or furniture"; Through the Wall "not while you carry loot or furniture"; Out of Sight "while you or anyone with you carries loot or furniture" | Three abilities now turn on carrying loot (V17, V19, and Through the Wall since PT5). The book says how a piece is put down but not loot: loot leaves your hands only by a handover or a Cost's "drop an item". I ruled loot can't be set down at will (S4). Drill b2: a Ghost alone with the bacon couldn't use Spectral at the tailor's shop floor; it rolled, got Trouble and was captured, and the bacon was lost. Read the other way, it sets the bacon down, passes free, and picks it up later for an action; an Out of Sight companion could do the same before the Invisible Man rolls. | Needs the author's decision: can loot be set down at will (free, and picked up for an action like a dropped item)? Then say so under Carrying. |
+| m4 | rules (design question) | Ch3: "Cost: … **your next roll's trait die one size smaller**." · "Raises and steps down cancel out (… a d12 raised and stepped down stays a d12)." · "The Storyteller never picks a Cost that costs nothing right then" · Ch8: "a smaller die before a hard roll" | The smaller die often costs nothing. Picked 4 times in PT8: it bit once (main B: the Werewolf's Wits d8, not d10, at the watchman, and Good Dog carried him anyway); a raise that did nothing swallowed it once (main A: the Creature's Brute Force Brawn d12 at his Duty's location: the Butler's raise can't lift a d12 but still cancels the step down); twice it never bit (main A's Creature and main B's Dracula left town without another roll). Once the Storyteller couldn't pick it, since it would cost nothing (main A: the Invisible Man's next roll was Sly d12 at his Duty's location). PT7: picked 4 times; twice it cancelled a raise, and once it never came to a roll. Of the other Costs, "drop an item" was barred 6 times of 7 (the roller carried nothing, or only what the roll won), and both Costs at the way out were "free". Early in a raid every Cost is close to free. | Needs the author's decision whether that's intended (a mild Cost, and a d12's Duty raise meant to absorb it), or whether the smaller die should wait for a roll it can bite, or a d12's useless raise shouldn't cancel it. Numbers only; no new number proposed. |
+| m5 | wording (usability) | At the Table: "The rules on one page. The chapters have the details." · Entity Sheet: "overdraw: Suspicion +2, or your Weakness once the hunt is on (once per flight)" | Drill g (8.7): running main line B from the page I needed a chapter 14 times, 12 of them for the gaps PT6 and PT7 listed. Since PT7 the page has the overdraw's timing ("once per flight; from your own next roll"), but the Entity Sheet's line still doesn't, and nothing on the page covers helping a friend's roll or the way out's terms (everyone there; watched; a Cost gets everyone out free). | As PT7 suggested, a short line for each if they fit; at least "… from your own next roll" on the Entity Sheet and a way-out line on the page. |
+| m6 | rules if not meant | Ch3: "Only you get through (**and only you can carry a piece out that way**)" · Ch4: "Bulky pieces need one carrier, **Huge two**" | A piece behind an approach someone opened can only be carried out by the opener, so a **Huge** piece behind an opened approach can't come out at all, unless the opener is the Creature with Strong Back ("you carry a Huge piece alone"). Main C's four-poster bed was Huge, behind a group obstacle that lists only Charm: a Ghost in that party could have opened it with Through the Wall at 10 and then found nobody could help carry it. Nothing warns the player before the charge is spent. | Needs the author's decision whether that's meant; if so, say it ("an approach only you can take won't bring out a Huge piece"); if not, let helpers carry with the opener. |
+
+### 9.3 Wording
+
+| id | Passage (quoted, chapter) | Issue | Suggested fix |
+|---|---|---|---|
+| w1 | Ch8, Rolling a Town: "**a d3** or pick" · Ch1, What You Need: "d4, d6, d8, d10 and d12, plus a second d6 (the Mask) and a second d10 (the Monster); and a d20 for the Storyteller" | A d3 isn't in the dice list and isn't explained. I used a d6 halved (S11), as Chapter 2's random picks do ("roll a d6: 1–2 the first option, 3–4 the second, 5–6 the third"). | "a d3 (a d6: 1–2, 3–4, 5–6)". |
+| w2 | Ch3: "Only you get through (and only you can carry a piece out that way), though the way out and a rescue work as usual" | Main A, Turn 8: Dracula opened the way out with Mesmerise while the Ghost carried the armour. "The way out … work[s] as usual" says the armour leaves town with everyone (S6); the parenthesis read alone says only the opener carries a piece out that way. | "…though an approach opened at the way out gets everyone out with all they carry, and one at the lock-up frees every captive". |
+| w3 | Ch4: "A location … It's watched if any obstacle is, either way in." · Ch5: "(a watched furniture obstacle doesn't count; …)" | V20 put the furniture's exception only in Chapter 5's Tell check. Chapter 4's definition, read alone, makes the hatter watched (its furniture's guard dog is), while Chapter 9's map title says it isn't. It matters only for the Tell check and the map's eye, which agree with Chapter 5 (drill f). | Chapter 4: "It's watched if any of its obstacles is, either way in (the furniture's aside)." |
+| w4 | Ch6: "Rescue: the lock-up is an obstacle — Sly, or Brawn the loud way, **always watched**" · "Slipping free: … at the lock-up Difficulty" · Ch2: Mesmerise "where someone's watching" · Ch3: "a captive may open its own way out" | Slipping free isn't called watched (its Trouble starts no chase), so whether a captive Dracula may Mesmerise his way out isn't clear. I read yes (drill c3, S10). | "(the lock-up is always watched, for slipping free too)". |
+| w5 | Ch7, Campaign Play: "each upgrade gives one Entity of the players' choice one extra charge" · Ch3: "Critical: … you get back one spent charge, **up to your starting number**" | Is the upgrade's charge part of that Entity's starting number, so a Critical can win it back? I'd read yes; not met in play. | "one extra charge (part of its starting number)". |
+
+**Counts: 0 blockers, 1 major, 6 minor, 5 wording** (12 in all). By kind: **9 wording** (M1, m1, m2, m5, w1–w5) and **3 rules** questions for the author (m3, m4, m6).
+
+### 9.4 PT7's findings: what the book now says
+
+| PT7 id | Status | Quote now in the book (or why not) |
+|---|---|---|
+| m1 the order of rolls in a flight round | **resolved** | Ch6, the Majority Rule: "Everyone rolls each round, **in any order the party likes**." (V12). No final flight was played in PT8. |
+| m2 how a piece is abandoned | **resolved** | Ch4: "Once taken, it raises Suspicion by 1 at the end of each Turn, even set down, until it's carried out of town, lost or abandoned (**free: it stays put, goes quiet, can't be taken again**)." It also answers PT6's half: a piece leaves only when "carried out of town". Not met in play (every piece came home). |
+| m3 when a carried move ends | **resolved** | Ch4: "Carrying, a move takes two Turns: **you're between places until you act in the second**." All three main lines: the carriers acted, then the way out was rolled in the same Turn. |
+| m4 At the Table gaps | **partly** | At the Table: "At zero charges, overdraw: … (once per flight; **from your own next roll**)". The Entity Sheet's overdraw line lacks it, and the other gaps remain (drill g; m5). |
+| m5 quick Hard Grand Years | **not changed** (V13, by decision) | V17 and V19 have since narrowed Out of Sight and Spectral. Main A was again a Grand Year on Turn 8, at Suspicion 11 of 15. |
+| m6 the Limit ending a lone Hard local chase | **not changed** (V14, by decision) | Ch5 unchanged. Drill e1's chase ended at the Limit (he joined the flight); e3 was cornered as the Limit came and was captured first. |
+| w1 no die for a place or the furniture's location | **resolved** | Ch8: "**a d3** or pick, one item per place" and "(pick, or **number them and roll a d6, rerolling a number without one**; Chapter 4)". Main C. The d3 itself is this playtest's w1. |
+| w2 the ceiling and the furniture's +2 | **resolved** | Ch8: "(**the furniture's obstacle counts by its roll, before its +2**)". Main C: the furniture's rolled 10 didn't count; the bookseller's 12 was the one allowed. |
+
+**PT7: 5 resolved, 1 partly, 2 not changed by decision** (of 8).
+
+### 9.5 The book audit's wording fixes, checked in reading
+
+| Fix | What the book says now | Read cleanly? |
+|---|---|---|
+| Alt text | The cover, all sixteen portraits and the three maps carry alt text; the maps' titles name the watched places and the star (Thistlewick's: "Watched: 1 the baker, 2 the china shop, 4 the ironmonger, 5 the seed merchant", matching V20). | Yes |
+| Chapter 1's dice | "a second d6 (the Mask) and a second d10 (the Monster); and a d20 for the Storyteller" | Yes (no d3: w1) |
+| "Action" in Chapter 4 | "every Entity takes one action: a roll at its location, a move, or waiting" | Yes: Spectral "at no action", "helping costs the charge, not your action", "lose a Turn (you skip your next action)" and slipping free all fit it |
+| Chapter 5's Suspicion table | "Furniture taken, each Turn (even set down) +1"; "Good results never lower it." | Yes |
+| Chapter 7's epilogue and campaign | "Nothing carries over to the next raid, unless you play the optional campaign rules below. Read the line for the result, then (except after Forked) one line for each kind with an item on the list that didn't come home." | Yes (main A); w5 on the campaign's charge |
+| Credits | "Game design & writing Richard Moore" | Yes |
+| Terminology | Trouble, Cost, Success, Critical, Turn, Suspicion, Limit and Lead capitalised throughout; "Frankenstein's Creature" and "the Creature" | Yes: no stray lowercase term in the rules chapters |
+| Helping "at the same place (a location, the way out or the lock-up)" | Ch3 | Yes (it also gave S3 and S5) |
+| Chapter 9's example of play | Splits on Turn 1; Hedge Spell "only hers" in a local chase; the Cost's "drop an item" barred | Yes, consistent with the rules now |
+
+---
+
+## 10. Balance and usability notes
+
+### 10.1 Numbers from play
+
+- **Results:** main A (Gallowsmere, Hard) **Grand Year**, out on **Turn 8**; main B (Thistlewick, Standard) **Grand Year**, out on **Turn 8**; main C (rolled, Easy) **Grand Year**, out on **Turn 12**. Nobody was left behind, and no raid reached the Limit or dawn.
+- **Suspicion at the end of each Turn:** main A 1, 2, 3, 6, 6, 10, 11 (out at 11 of 15). Main B 2, 2, 2, 2, 2, 2, 3 (out at 3 of 11). Main C 0, 0, 1, 2, 2, 4, 5, 6, 8, 8, 9 (out at 9 of 11).
+- **Suspicion sources:** main A (11): Tells 2, Trouble 5 (one in a chase, one slipping free), the loud way 1, a Monster show 2, the armour 1. Main B (3): Tells 2, the mirror 1. Main C (9): Trouble 6 (every one unwatched, one a group check), a show 2, the bed 1. No Cost was taken as Suspicion.
+- **Tells:** 14 checks in the main lines, 4 went off (main A 2 of 6, the lock-up's among them; main B 2 of 5; main C 0 of 3, one stopped by Familiar's Warning). No check at the hatter, on arrival or at its furniture (V20).
+- **Costs** (9): the smaller die 4 (bit once), lose a Turn 3, the way out's "free" 2. "Drop an item" barred 6 times; "Suspicion +1" barred once (a show had already raised it). See m4.
+- **Charges:** main A 9 of 12; main B 6 of 12; main C 8 of 9 (one won back by a Critical).
+- **Opened approaches:** 7 in the raids (Mesmerise 3, Through the Wall 4) and 3 in drills (Mesmerise 2, Mountain Stride 1): 9 got through, 1 Trouble (Mountain Stride at the lock-up). With PT5–PT7's 20, 30 opened approaches and 1 Trouble.
+- **Spectral:** 3 passes (main A's shop floor and main B's rooftops, each after handing its loot over; drill b1's tug-of-war); refused once, carrying (b2), which cost a capture.
+- **Furniture:** all three pieces came home (Bulky, Bulky, Huge). Each was beaten a Turn or more before its carriers set off and was taken only then, so each cost **+1** (S8).
+- **Local chases:** 8, 29 rounds: main A's Ghost (mob 9, escaped in round 2 on a Critical), main A's Invisible Man (mob 10, cornered in round 1), a1 (mob 11–12, escaped in round 6), b2 (mob 11, cornered in round 1), drill d's Creature (mob 12, escaped in round 3 after an overdraw), e1 (Limit in round 5), e2 (escaped in round 6), e3 (cornered as the Limit came, round 5). In five of the eight, round 1 was rolled with a hidden Monster (Fade or Unseen), and four of those five rolls succeeded.
+- **The lock-up at 10:** slipping free 7 tries (Cost, Trouble, Success; Trouble, Trouble, Success; Mesmerise at 8, Success), rescues 2 (Mountain Stride at 8, Trouble; Brawn at 10, Success). Both real captives got out on their third Turn.
+
+### 10.2 Balance
+
+- **Three Grand Years from three raids**, and with PT7's two, five main-line Grand Years in a row. One raid per line isn't a sample, and the simulator's figures are the measure (PT7's m5 was decided by V13: on Gallowsmere a party that always goes for the armour gets a Grand Year about half the times it tries). Still: main B never came near a chase (Suspicion 3 of 11, ten rolls after the Tell checks), and main A, on Hard with a capture on Turn 4, was home on Turn 8 at 11 of 15.
+- **The Ghost** did the heavy lifting in both premade towns: Spectral got an item free in each, and Through the Wall opened both furniture obstacles. V19 cost it nothing there, because a friend always stood by to take its loot; alone (b2) it bit hard.
+- **Dracula** used Mesmerise three times in the raids (at 6, 8 and 8 after its 2 lower) and was refused once under my reading (M1). At the way out it is strong: it works at any watched obstacle that doesn't list Charm, and the way out is always watched (main A's way out at 8 instead of 10).
+- **Out of Sight under V17** decides on the companion's hands, not the Invisible Man's; at the way out it never protects once anyone holds loot.
+- **Easy main C** was the tense one: six Troubles at unwatched obstacles cost only Suspicion, the laundry's shopkeeper at 10 took four tries, and the Huge bed behind a group 12 took every Turn.
+
+### 10.3 Using the Entity Sheet, At the Table and the town pages
+
+- **Gallowsmere's and Thistlewick's pages** ran their towns; the map titles give the watched places, so the hatter reads unwatched at a glance.
+- **The rolled Easy town** took 56 rolls (R95–R150); every table worked, the d3 aside (w1). The laundry came up and was the Butler's place; the bed at the laundry was a happy accident.
+- **The Entity Sheet:** the "Carrying (loot)" and "Furniture" boxes mattered more than before: V17, V19 and Through the Wall all ask what you carry, and so does Hidden Pockets at a capture. The overdraw line still lacks "from your own next roll" (m5).
+- **At the Table:** the Standard and Hard columns, the lock-up row (10 everywhere) and the chase table carried play; the gaps are in m5.
 
 ---
 
