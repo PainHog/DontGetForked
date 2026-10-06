@@ -197,6 +197,12 @@ export const PARAMS = {
     doc: "entity = each Entity's Tell may trigger on arrival at a watched location; party = one chance for the party, as likely as four Entities' together.",
     ref: "DESIGN Weakness and Tell",
   },
+  openedRule: {
+    kind: "rule", default: "onlyOpener", values: ["onlyOpener", "othersMayFollow"],
+    title: "An obstacle someone opened, for the others there",
+    doc: "onlyOpener = only the opener goes on, and the others can't try it until the opener is caught (the simulator so far); othersMayFollow = it isn't beaten for the others, who may still beat it their own way, and once one does it's beaten for them all (Chapter 3: \"Only you get through\"; Chapter 4: \"Once anyone beats an obstacle … it stays beaten\").",
+    ref: "Chapter 3 (open an approach), Chapter 4; T5",
+  },
   exitTries: {
     kind: "rule", default: "one", values: ["one", "each"],
     title: "Rolls at the way out per Turn",

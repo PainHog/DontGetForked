@@ -472,14 +472,38 @@ function workLocation(S, loc) {
   }
   const past = () => pastHere(S, loc);
   // Behind a group obstacle the others got past (below): each who wants past rolls for itself again (Chapter 4).
+  // Behind an obstacle someone opened (openedRule "othersMayFollow"): it isn't beaten for the others, who may still beat
+  // it their own way; once one does (a Success or a Cost), it's beaten for them all (Chapter 4), unless that one opened it too.
   if (loc.behind) {
     const ob = loc.behindOb;
     for (const m of [...loc.behind]) if (m.status !== "active") loc.behind.delete(m);
     const alone = pastHere(S, loc).length === 0; // nobody here is past it: they must roll to get anywhere
-    const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0));
-    if (rollers.length && !groupCheck(S, loc, ob, rollers, acted)) return;
-    for (const m of [...loc.behind]) if (ob.passed.has(m.id)) loc.behind.delete(m);
-    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; }
+    if (loc.behindOpened) {
+      const worth = alone || loc.obstacles.some((o) => !o.cleared); // past it there's still work to share
+      while (S.phase === "raid" && loc.behind.size && worth) {
+        let best = null;
+        for (const m of hereOf(S)) {
+          if (!loc.behind.has(m) || acted.has(m)) continue;
+          const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
+          if (!best || plan.value > best.plan.value) best = { m, plan };
+        }
+        if (!best || (!alone && best.plan.value <= 0)) break;
+        acted.add(best.m);
+        const r = executeRoll(S, best.m, best.plan, "raid");
+        addSusp(S, r.suspGain, "roll");
+        if (r.band !== "trouble") {
+          if (best.plan.cand.via && best.plan.cand.via.ability.effect === "open") loc.behind.delete(best.m);
+          else loc.behind.clear();
+        }
+        if (limitHit(S)) return finalFlight(S, "limit");
+        if (r.caught) { localChase(S, best.m); if (S.phase !== "raid") return; }
+      }
+    } else {
+      const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0));
+      if (rollers.length && !groupCheck(S, loc, ob, rollers, acted)) return;
+      for (const m of [...loc.behind]) if (ob.passed.has(m.id)) loc.behind.delete(m);
+    }
+    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; loc.behindOpened = false; }
   }
   while (S.phase === "raid") {
     const ob = loc.obstacles.find((o) => !o.cleared);
@@ -546,7 +570,14 @@ function workLocation(S, loc) {
     if (r.band !== "trouble") {
       ob.cleared = true;
       const opened = S.P.openTrait === "unlisted" && best.plan.cand.via && best.plan.cand.via.ability.effect === "open" && loc.id !== "exit" && loc.id !== "lockup";
-      if (opened && !loc.solo && past().length > 1) { loc.solo = best.m; ob.openedOnly = true; S.rec.count("opened: only the opener goes on"); }
+      if (opened && !loc.solo && past().length > 1) {
+        if (S.P.openedRule === "othersMayFollow" && !loc.behind) {
+          loc.behind = new Set(past().filter((m) => m !== best.m));
+          loc.behindOb = ob;
+          loc.behindOpened = true;
+          S.rec.count("opened: the others stay behind it");
+        } else { loc.solo = best.m; ob.openedOnly = true; S.rec.count("opened: only the opener goes on"); }
+      }
     }
     if (limitHit(S)) return finalFlight(S, "limit");
     if (r.caught) {
