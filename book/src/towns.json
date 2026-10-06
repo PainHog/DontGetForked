@@ -233,7 +233,7 @@
             { "obstacle": "rooftops", "difficulty": 10 }
           ],
           "then": [
-            { "obstacle": "backRoom", "difficulty": 10 }
+            { "obstacle": "backRoom", "difficulty": 8 }
           ],
           "map": { "x": 460, "y": 110 }
         },

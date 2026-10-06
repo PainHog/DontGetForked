@@ -96,7 +96,7 @@ function resolveTown(t) {
     custom: custom.text, customD6: DGF.festival.customs.indexOf(custom) + 1, villagers, locations,
     furnitureAt: withFurniture[0].key,
     wayOut: { difficulty: L.exit }, lockup: { difficulty: L.lockup },
-    limit: L.limit, finalMob: L.finalMob, map: t.map ?? null,
+    limit: L.limit, finalMob: L.finalMob, finalEscape: L.finalEscape, map: t.map ?? null,
     stats: {
       obstacles: rolled.length, twelves,
       watched: rolled.filter((o) => o.watched).length,

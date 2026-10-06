@@ -50,7 +50,7 @@ function townBlock(t, { newPage }) {
 <ol class="town-list">${list}</ol>
 <p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}), at ${host.place} (${host.n}).</p>
 <p><strong>Villagers:</strong> ${villagers}.</p>
-<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · the way out ${t.wayOut.difficulty} · the lock-up ${t.lockup.difficulty} · the final flight’s mob ${t.finalMob}.</p>
+<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · the way out ${t.wayOut.difficulty} · the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, escape at Lead ${t.finalEscape}.</p>
 </div>
 <figure class="art map" data-art="map-${t.key}"></figure>
 </div>
