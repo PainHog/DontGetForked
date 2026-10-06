@@ -99,7 +99,7 @@ Turn each off, check, and turn it back on:
 
 Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You need two Entities: Ann's **Witch** and a **Dracula** with no player (the GM rolls for him). Every Entity is *Active* with 3 charges (a new raid resets them).
 
-1. **GM:** on the Raid window, **Shopping list** → Essentials *1* → **Roll the list**. A card **The shopping list** shows five items with their kinds, the first marked *essential*, with the dice on the card. Both Raid windows now have a closed **The shopping list (5)** line; open it.
+1. **GM:** on the Raid window, **Shopping list** → **Roll the list**. On Standard a d6 first decides the essentials (odd one, even two): the card **The shopping list** says *Essentials: a d6 rolled N (odd one, even two): 1 or 2*, then shows five items with their kinds, the first one or two marked *essential*. (Easy always has one, Hard two, with no extra die.) Both Raid windows now have a closed **The shopping list (5)** line; open it.
 2. **GM:** **Tell check**: both Entities ticked, Where: *the baker's* → **Roll the check**. A **A Tell check: the baker's** card shows the d6 and, because the Witch is arriving, a second d6 (*Familiar's Warning: the second d6 must also roll 4–6*).
    - If both are 4–6: *A Tell goes off: [Entity] — [its Tell]* with the Tell's text, **Suspicion +1 (a Tell) — on the track**, and the Raid window rises by 1. The GM's card has **Cancel Suspicion**.
    - Otherwise: *Nothing gives them away*.
@@ -115,16 +115,17 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 4. **GM:** open Dracula's sheet, roll **Sly** with the Mask, *Watched* ticked, *Part of the group check* ticked. The window's line goes once both have rolled.
    - **Check:** Suspicion rose **once for the whole group check, by the biggest trigger** (with the Witch's +2, Dracula's Trouble adds nothing more). The event list on the GM's Raid window shows one line for the group.
    - If Dracula got **Trouble**, a local chase starts (section 12). If not, roll Sly for Dracula with *Watched* until Trouble (outside a group check), which starts his chase.
+   - If **both** got Trouble, they flee together on one shared Lead (moved by the majority rule), Night Runner and Fear the Curse don't apply, and in each round Suspicion rises **once**, by the biggest trigger among that round's rolls (the roll cards say so; the event list shows one line per round).
 
 ## 12. A local chase through to capture
 
-1. **GM:** give Dracula an item (*a pair of candlesticks*) before he is caught, if you can.
+1. **GM:** give Dracula an item (*a pair of candlesticks*) before he is caught, if you can, and tick *Carrying furniture* on his sheet (his rolls then use the Monster die, and his Nimble is one size smaller).
 2. When he is caught, **both browsers** open **The Chase** window by itself, and the chat shows **A local chase!** (*Fleeing: Dracula… The Lead starts at 1; clear at 4, cornered at 0*) and **A local chase: round 1**: the ground (one of the six chase-table rows, e.g. *The crowded square: Sly or Charm work*), *The mob: Difficulty 10 + half the Suspicion (at most 12)*, and *The mob has brought their Weakness: Dracula* (Garlic is *Always*).
    - The tracker shows the Lead track 0–4 with 1 marked, the mob, the ground, Dracula's traits for the round and a red *Garlic* tag. Ann's tracker has **no Roll** button (she doesn't own Dracula) and no controls; the GM's has **Roll**, **Roll the ground**, **Move the Lead** (greyed until everyone has rolled), Lead ±1, Escaped / Cornered / Call it off.
    - The caught card says *The local chase is on* and has no Start button.
 3. **GM:** press **Roll** for Dracula on the tracker. The dialog says *A local chase, round 1: … Roll Sly or Charm against the mob's Difficulty N* and the Weakness notice; the trait is preset to his best allowed trait. Pick a trait the ground doesn't list → refused with *This round the ground lets you roll …*.
 4. Roll: the card shows the trait die **one size smaller** (*One size smaller (the Weakness)*) and *Chase round 1 (…): Lead +1/0/−1*. A card **round 1, the Lead** shows *Lead +1: now 2* (or the move) and the next **round 2** card rolls a new ground. In a local chase, Trouble and the Monster showing still raise Suspicion.
-5. Keep rolling until the Lead reaches 0 (or 4 — then he's clear: *Clear! Back where they were caught, with the Turn used up*; get him caught again and repeat). At 0: **Cornered!**, then **The lock-up**: *Dracula is captured and held at the lock-up. The town takes back what it was carrying: a pair of candlesticks.* His sheet: Status *Captured*, the item gone. Both Raid windows: *The lock-up (Difficulty 10): Dracula (since Turn N)*.
+5. Keep rolling until the Lead reaches 0 (or 4 — then he's clear: *Clear! Back where they were caught, with the Turn used up*; get him caught again and repeat). At 0: **Cornered!**, then **The lock-up**: *Dracula is captured and held at the lock-up. The town takes back what it was carrying: a pair of candlesticks. The furniture it carried is lost for the night.* His sheet: Status *Captured*, the item gone, *Carrying furniture* unticked; both Raid windows say *The furniture is lost for the night* (and at the end of the raid the year form can't count it as home). Both Raid windows: *The lock-up (Difficulty 10): Dracula (since Turn N)*.
 6. **GM:** roll anything for Dracula without *At the lock-up*: refused (*Held at the lock-up: its one roll is slipping free*).
 
 ## 13. Slipping free and a rescue
@@ -150,7 +151,7 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 
 ## 16. A forked raid
 
-1. **GM:** New raid → *Standard*: everyone Active, charges back to 3. **Shopping list** → roll it. **Start the hunt**: **The final flight!** (*The Storyteller started it*).
+1. **GM:** New raid → *Standard*: everyone Active, charges back to 3. **Shopping list** → roll it (note how the essentials die fell). **Start the hunt**: **The final flight!** (*The Storyteller started it*).
 2. Roll Trouble for both until the Lead reaches 0: **Cornered by the mob!** *Forked: the monsters are killed and the raid is lost.* — and, by itself, **How the year went: Forked**, with the Forked line and one line for each kind on the list.
 
 ## 17. Running it by hand (switches)

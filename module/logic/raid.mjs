@@ -13,7 +13,8 @@
  *             group,   // the group check open (or the last one), module/logic/checks.mjs; null
  *             tells,   // the Tell checks made: [{ id, place, turn, goesOff, actorId, name }]
  *             list,    // the shopping list: [{ name, duty, essential }]
- *             over }   // how the raid ended: null, or { result, at } once the year is decided
+ *             over,    // how the raid ended: null, or { result, turn } once the year is decided
+ *             furnitureLost } // F15: a carrier was captured: the piece is gone for the night
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
  * 12th Turn ends), Chapter 5 (the Limit by difficulty; one roll, one rise; at the
@@ -46,6 +47,7 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     tells: [],
     list: [],
     over: null,
+    furnitureLost: false,
   };
 }
 
@@ -70,6 +72,7 @@ export function normalizeRaid(stored) {
     tells: Array.isArray(s.tells) ? s.tells : [],
     list: Array.isArray(s.list) ? s.list : [],
     over: s.over && typeof s.over === "object" ? s.over : null,
+    furnitureLost: !!s.furnitureLost,
   };
 }
 
@@ -111,6 +114,7 @@ export function raidView(state) {
     exit: DGF.labels[state.difficulty]?.exit ?? null,
     lockup: DGF.labels[state.difficulty]?.lockup ?? null,
     over: state.over ? { ...state.over } : null,
+    furnitureLost: !!state.furnitureLost,
   };
 }
 
@@ -247,4 +251,9 @@ export function undoEndOfTurnFurniture(state) {
   const turn = state.dawn ? state.turn : state.turn - 1;
   const eventId = furnitureEventId(turn);
   return state.ledger.some((e) => e.eventId === eventId) ? cancel(state, eventId) : state;
+}
+
+/** F15 (Chapter 6, Captured): a furniture carrier was captured: the piece is gone for the night. */
+export function loseFurniture(state) {
+  return state.furnitureLost ? state : { ...state, furnitureLost: true };
 }

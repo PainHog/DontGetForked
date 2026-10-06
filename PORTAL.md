@@ -3,7 +3,7 @@ Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsm
 Number: Design decisions made = 80
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 133
+Number: Automated checks passing = 137
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 

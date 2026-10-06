@@ -91,8 +91,8 @@ test("boot: the slice-2 switches are registered and on; the Storyteller's HUD ha
 });
 
 test("the shopping list: rolled on the d66 table (a d6 for the kind, a d6 for the item); everyone sees it", async () => {
-  diceQueue.push(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6); // 14d6: five items, then spares
-  dialogResponders.push(press("roll", { essentials: 1 }));
+  diceQueue.push(3, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6); // F16: a d6 for the essentials (3: odd, one), then 14d6: five items and spares
+  dialogResponders.push(press("roll"));
   await asUser(GM, () => currentHud().runAction("shoppingList"));
   await settle();
   const list = raid().list;
@@ -100,6 +100,7 @@ test("the shopping list: rolled on the d66 table (a d6 for the kind, a d6 for th
   assert.deepEqual(list.map((i) => i.essential), [true, false, false, false, false]);
   assert.deepEqual(list.map((i) => i.duty), ["cook", "gardener", "librarian", "butler", "handyman"]);
   assert.match(lastMessage().content, /The shopping list/);
+  assert.match(lastMessage().content, /a d6 rolled 3 \(odd one, even two\): 1/);
   assert.match(lastMessage().content, /a coil of rope/);
   const annHud = await asUser(ANN, () => openHud());
   assert.match(annHud.renderedParts.body, /The shopping list \(5\)/);
@@ -198,7 +199,8 @@ test("a group check: both roll together, Suspicion rises once (by the biggest tr
   assert.match(gmT.renderedParts.body, /data-lead="1" data-escape="4"/);
 });
 
-test("the local chase through to capture: the ground each round, the Weakness, the Lead; cornered = captured, the loot taken", async () => {
+test("the local chase through to capture: the ground each round, the Weakness, the Lead; cornered = captured, the loot and the furniture taken", async () => {
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": true })); // carriers can't use the Mask: the Monster die
   // a chase roll off the ground is refused
   const off = await refusedRoll(BEN, dracula, { trait: "nimble", second: "mask", chase: true });
   assert.ok(off.warnings.some((w) => w.includes("the ground lets you roll Sly or Charm")));
@@ -219,7 +221,7 @@ test("the local chase through to capture: the ground each round, the Weakness, t
   assert.equal(view().value, 4);
   assert.equal(chase().mob, 12, "checked each round: 10 + half of 4");
   // round 3: Trouble again: cornered → captured; the town takes back the candlesticks
-  await rollAs(BEN, dracula, { trait: "brawn", second: "mask", chase: true }, [1, 2]);
+  await rollAs(BEN, dracula, { trait: "brawn", second: "mask", chase: true }, [2, 1]);
   assert.equal(chase().outcome, "cornered");
   assert.equal(chase().lead, 0);
   assert.equal(chase().history.length, 3);
@@ -231,6 +233,11 @@ test("the local chase through to capture: the ground each round, the Weakness, t
   assert.equal(cardOf(lock).event, "captured");
   assert.match(lock.content, /Dracula is captured/);
   assert.match(lock.content, /a pair of candlesticks/);
+  // F15: the furniture he carried is lost for the night
+  assert.equal(dracula.system.carryingFurniture, false);
+  assert.equal(raid().furnitureLost, true);
+  assert.match(lock.content, /furniture it carried is lost for the night/);
+  assert.match((await asUser(BEN, () => openHud())).renderedParts.body, /The furniture is lost for the night/);
   assert.ok(fired.chaseEnded >= 1);
   const hud = await asUser(ANN, () => openHud());
   assert.match(hud.renderedParts.body, /The lock-up \(Difficulty 10\)/);
@@ -378,11 +385,11 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
   assert.equal(raid().chase, null);
   assert.deepEqual(raid().list, []);
   assert.equal(witch.system.charges.value, 3, "a new year: charges refill");
-  diceQueue.push(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6);
-  await op(GM, OPS.raidList, { action: "roll", essentials: 2 });
+  diceQueue.push(4, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6); // the essentials d6: 4, even: two
+  const listed = await op(GM, OPS.raidList, { action: "roll" });
   await settle();
+  assert.deepEqual([listed.essentials, listed.essentialsFace], [2, 4]);
   assert.deepEqual(raid().list.map((i) => i.essential), [true, true, false, false, false]);
-  assert.equal((await op(GM, OPS.raidList, { action: "roll", essentials: 3 })).reason, "badEssentials");
 
   diceQueue.push(4); // the rooftops (Nimble, Wits)
   await asUser(GM, () => currentHud().runAction("toggleHunt"));
@@ -409,23 +416,36 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
 test("two caught in one group check flee on a shared Lead; the Limit ends their chase and everyone joins the final flight", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
-  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 7; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  assert.equal(view().value, 9);
+  assert.equal(view().value, 7);
   await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id], label: "the rooftops" });
   await settle();
   await rollAs(ANN, witch, { trait: "nimble", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1]);
   assert.equal(raid().chase, null, "no chase until the whole group check is in");
   await rollAs(BEN, dracula, { trait: "sly", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1, 5]); // then the ground: the parade
-  assert.equal(view().value, 10, "the group check rose once");
+  assert.equal(view().value, 8, "the group check rose once");
   const c = chase();
   assert.equal(c.kind, "local");
   assert.deepEqual(c.members.map((m) => m.name), ["A Witch", "Dracula"], "caught together, they flee together");
   assert.equal(c.groupId, raid().group.id);
-  assert.equal(c.mob, 12, "10 + half of 10, at most 12");
+  assert.equal(c.lead, 1, "a shared Lead starts at 1");
+  assert.equal(c.mob, 12, "10 + half of 8");
   const caughtCards = game.messages.filter((m) => cardOf(m)?.groupId === c.groupId);
   assert.ok(caughtCards.every((m) => cardOf(m).chaseStarted === c.id));
-  // round 1: the Witch's Monster shows (+2): Suspicion reaches the Limit; the local chase ends at once and the flight begins
+  // round 1 (F13): the Witch's Trouble (+1) and Dracula's Monster (+2) rise once, by the biggest; 1 Success, 1 Trouble: Lead 0 move
+  await rollAs(ANN, witch, { trait: "charm", second: "mask", chase: true }, [1, 1]);
+  const wc = cardOf(lastMessage());
+  assert.equal(wc.eventId, `chase:${c.id}:1`);
+  assert.match(lastMessage().content, /rises once a round/);
+  assert.equal(view().value, 9);
+  await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true }, [8, 10, 5]); // then round 2's ground
+  assert.equal(cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1)).suspicion, 2);
+  assert.equal(view().value, 10, "the round rose once, by its biggest trigger");
+  assert.equal(R.eventsOf(raid()).find((e) => e.eventId === `chase:${c.id}:1`).amount, 2);
+  assert.equal(chase().lead, 1);
+  assert.equal(chase().round, 2);
+  // round 2: the Witch's Monster shows (+2): Suspicion reaches the Limit; the local chase ends at once and the flight begins
   await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [1, 9, 2]); // then the flight's ground
   assert.equal(view().value, 12);
   assert.equal(view().hunt, true);

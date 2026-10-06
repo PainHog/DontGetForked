@@ -500,3 +500,61 @@ test("B2: while furniture is carried, Suspicion rises by 1 at the end of each Tu
   assert.equal(s.dawn, false);
   assert.equal(suspicionOf(s).value, 2);
 });
+
+/* ------------------------------------------- F13–F16 (approved 2026-10-06) -- */
+
+test("F13: in a shared local chase every roll of a round shares one Suspicion event (once, by the biggest); alone, one roll one rise", async () => {
+  const { chaseEventId, isSharedLocal } = await import("../module/logic/chase.mjs");
+  const shared = newChase({ id: "s", members: [member("a", "dracula"), member("b", "witch")] });
+  assert.equal(isSharedLocal(shared), true);
+  assert.equal(chaseEventId(shared), "chase:s:1");
+  assert.equal(chaseEventId({ ...shared, round: 3 }), "chase:s:3");
+  assert.equal(chaseEventId(newChase({ id: "l", members: [member("a", "dracula")] })), null);
+  assert.equal(chaseEventId(newChase({ id: "f", kind: "final", cause: "limit", members: shared.members })), null);
+  let s = newRaid({ id: "r" });
+  s = recordEvent(s, { eventId: "chase:s:1", amount: 1, source: "roll", messageId: "m1" }); // Trouble
+  s = recordEvent(s, { eventId: "chase:s:1", amount: 2, source: "roll", messageId: "m2" }); // the Monster shows
+  s = recordEvent(s, { eventId: "chase:s:2", amount: 1, source: "roll", messageId: "m3" }); // the next round rises again
+  assert.equal(suspicionOf(s).value, 3);
+});
+
+test("F14: Night Runner and Fear the Curse work only for an Entity fleeing alone, never in a shared chase", () => {
+  assert.equal(DGF.perkRules.nightRunner.aloneOnly, true);
+  assert.equal(DGF.perkRules.fearTheCurse.aloneOnly, true);
+  const runner = member("w", "werewolf", { perk: "nightRunner" });
+  const curse = member("m", "mummy", { perk: "fearTheCurse" });
+  assert.equal(newChase({ id: "a", members: [runner] }).lead, 2);
+  assert.equal(newChase({ id: "b", members: [runner, member("d", "dracula")] }).lead, 1);
+  assert.equal(mobDifficulty(newChase({ id: "c", members: [curse] }), { suspicion: 0 }), 9);
+  assert.equal(mobDifficulty(newChase({ id: "d", members: [curse, runner] }), { suspicion: 0 }), 10);
+  // the Storyteller takes the other one out: now it flees alone, and the mob is easier from the next round
+  assert.equal(mobDifficulty(removeMember(newChase({ id: "e", members: [curse, runner] }), "w"), { suspicion: 0 }), 9);
+});
+
+test("F15: a captured carrier's furniture is lost for the night: it can't come home", async () => {
+  const { loseFurniture } = await import("../module/logic/raid.mjs");
+  let s = newRaid({ id: "r" });
+  assert.equal(s.furnitureLost, false);
+  s = loseFurniture(s);
+  assert.equal(s.furnitureLost, true);
+  assert.equal(loseFurniture(s), s);
+  assert.equal(normalizeRaid(JSON.parse(JSON.stringify(s))).furnitureLost, true);
+  assert.equal(normalizeRaid({}).furnitureLost, false);
+  const list = [{ name: "cheese", duty: "cook", essential: true, home: true }, { name: "rope", duty: "handyman", home: true }];
+  assert.equal(yearFromList({ list, furnitureHome: true }).result, "grand");
+  const lost = yearFromList({ list, furnitureHome: true, furnitureLost: true });
+  assert.equal(lost.result, "win");
+  assert.equal(lost.furnitureHome, false);
+  assert.equal(captureUpdate({ ...entitySystem("creature"), carryingFurniture: true }, { turn: 3 }).furniture, true);
+});
+
+test("F16: essentials: Easy one, Hard two; on Standard any die: odd one, even two", async () => {
+  const { essentialsFor } = await import("../module/logic/year.mjs");
+  for (let f = 1; f <= 6; f++) {
+    assert.equal(essentialsFor("easy", f), 1);
+    assert.equal(essentialsFor("hard", f), 2);
+    assert.equal(essentialsFor("standard", f), f % 2 ? 1 : 2);
+  }
+  assert.equal(essentialsFor("standard", 19), 1);
+  assert.equal(essentialsFor("standard", 20), 2);
+});

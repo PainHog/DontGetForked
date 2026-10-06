@@ -14,7 +14,7 @@
       {{/each}}
     </tbody>
   </table>
-  <label class="dgf-check"><input type="checkbox" name="furnitureHome"{{#if furnitureHome}} checked{{/if}}> {{localize "DGF.Year.furnitureHome"}}</label>
+  {{#if furnitureLost}}<p class="dgf-hint">{{localize "DGF.Year.furnitureLost"}}</p>{{else}}<label class="dgf-check"><input type="checkbox" name="furnitureHome"{{#if furnitureHome}} checked{{/if}}> {{localize "DGF.Year.furnitureHome"}}</label>{{/if}}
   <label>{{localize "DGF.Year.leftBehind"}} <input type="number" name="leftBehind" value="{{leftBehind}}" min="0" step="1"></label>
   {{#if leftNames}}<p class="dgf-hint">{{localize "DGF.Year.heldNow" names=leftNames}}</p>{{/if}}
   <label class="dgf-check"><input type="checkbox" name="forked"{{#if forked}} checked{{/if}}> {{localize "DGF.Year.forked"}}</label>

@@ -94,6 +94,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       list: state.list.map((it) => ({ name: it.name, essential: it.essential })),
       chase: state.chase && !state.chase.outcome ? t("DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape }) : "",
       over: v.over ? t("DGF.Raid.over", { result: t(`DGF.Result.${v.over.result}`) }) : "",
+      furnitureLost: v.furnitureLost,
     };
   }
 

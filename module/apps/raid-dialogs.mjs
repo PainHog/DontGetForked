@@ -71,19 +71,19 @@ export async function tellCheckDialog() {
   return result;
 }
 
-/** The shopping list: roll it on the d66 table (how many essentials, when the label lets you choose), or clear it. */
+/** The shopping list: roll it on the d66 table (how many essentials: the label's, or on Standard a die roll, F16), or clear it. */
 export async function shoppingListDialog() {
   if (!game.user?.isGM) return null;
   const raid = getRaid();
   const shape = listShape(raid.difficulty);
-  const options = shape.essentials.map((n) => `<option value="${n}">${n}</option>`).join("");
+  const how = shape.essentials.length > 1 ? t("DGF.List.essentialsByDie") : t("DGF.List.essentialsFixed", { n: shape.essentials[0] });
   const current = raid.list.length ? `<ul>${raid.list.map((it) => `<li>${foundry.utils.escapeHTML(it.name)}${it.essential ? ` (${t("DGF.List.essential")})` : ""}</li>`).join("")}</ul>` : "";
   const answer = await foundry.applications.api.DialogV2.wait({
     window: { title: t("DGF.List.title") },
     classes: ["dont-get-forked", "dgf-raid-dialog"],
-    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.List.intro", { size: shape.size, label: t(`DGF.Label.${raid.difficulty}`) })}</p>${current}<label>${t("DGF.List.essentials")} <select name="essentials">${options}</select></label></div>`,
+    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.List.intro", { size: shape.size, label: t(`DGF.Label.${raid.difficulty}`) })} ${how}</p>${current}</div>`,
     buttons: [
-      { action: "roll", label: t("DGF.List.roll"), default: true, callback: (event, button) => ({ action: "roll", essentials: Number(field(button.form, "essentials")?.value ?? shape.essentials[0]) }) },
+      { action: "roll", label: t("DGF.List.roll"), default: true, callback: () => ({ action: "roll" }) },
       { action: "clear", label: t("DGF.List.clear"), callback: () => ({ action: "clear" }) },
       { action: "cancel", label: t("DGF.Dialog.cancel") },
     ],
@@ -103,7 +103,7 @@ export async function yearDialog() {
     i, name: it.name, essential: it.essential, home: it.home,
     duties: DGF.duties.map((x) => ({ key: x.key, label: x.kind, selected: x.key === it.duty })),
   }));
-  const content = await render(YEAR_TEMPLATE, { rows, furnitureHome: d.furnitureHome, leftBehind: d.leftBehind, leftNames: d.leftNames.join(", "), forked: d.forked, hasList: raid.list.length > 0 });
+  const content = await render(YEAR_TEMPLATE, { rows, furnitureHome: d.furnitureHome, furnitureLost: d.furnitureLost, leftBehind: d.leftBehind, leftNames: d.leftNames.join(", "), forked: d.forked, hasList: raid.list.length > 0 });
   const answer = await ask({
     title: t("DGF.Year.formTitle"), content, okLabel: t("DGF.Year.decide"),
     read: (form) => ({

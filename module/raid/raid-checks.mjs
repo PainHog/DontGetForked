@@ -20,7 +20,7 @@ import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import { rollShoppingList, epilogueLines, tellGoesOff } from "../logic/rules.mjs";
 import { newGroup, closeGroup, needsSecondDie, readTellCheck, placeChecked } from "../logic/checks.mjs";
-import { yearFromList, homeFromCarried, listShape, listItem } from "../logic/year.mjs";
+import { yearFromList, homeFromCarried, listShape, listItem, essentialsFor } from "../logic/year.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { registerOp, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
@@ -41,7 +41,8 @@ export function yearDefaults(raid = getRaid()) {
   const carried = out.flatMap((a) => (a.system.carried ?? []).map((c) => c.name));
   return {
     list: homeFromCarried(base, carried),
-    furnitureHome: out.some((a) => a.system.carryingFurniture),
+    furnitureHome: !raid.furnitureLost && out.some((a) => a.system.carryingFurniture),
+    furnitureLost: !!raid.furnitureLost,
     leftBehind: held.length,
     leftNames: held.map((a) => a.name),
     forked: raid.chase?.kind === "final" && raid.chase.outcome === "cornered",
@@ -160,10 +161,10 @@ export function registerCheckOps() {
     },
   });
 
-  // GM: the shopping list — roll it on the d66 table, set it by hand, or clear it.
+  // GM: the shopping list — roll it on the d66 table (F16: on Standard, any die: odd one essential, even two), set it by hand, or clear it.
   registerOp(OPS.raidList, {
     gmOnly: true,
-    apply: async ({ action = "roll", essentials, list = [] }) => {
+    apply: async ({ action = "roll", list = [] }) => {
       const raid = getRaid();
       if (action === "clear") { await mutateRaid((s) => R.setList(s, [])); return { ok: true }; }
       if (action === "set") {
@@ -173,12 +174,21 @@ export function registerCheckOps() {
         return { ok: true, size: items.length };
       }
       const shape = listShape(raid.difficulty);
-      const n = Number(essentials ?? shape.essentials[0]);
-      if (!shape.essentials.includes(n)) return { ok: false, reason: "badEssentials" };
+      let essentialsFace = 0;
+      const pre = [];
+      if (shape.essentials.length > 1) {
+        const r = await new Roll("1d6").evaluate();
+        essentialsFace = r.total;
+        pre.push(r);
+      }
+      const n = essentialsFor(raid.difficulty, essentialsFace || 1);
       const { list: rolled, rolls } = await rollList(shape.size, n);
       const { state } = await mutateRaid((s) => R.setList(s, rolled));
-      await postCard({ kind: CARD.raid, event: "list", raidId: state.raidId, difficulty: state.difficulty, items: rolled.map((it) => ({ name: it.name, essential: it.essential, kind: DGF.duties.find((d) => d.key === it.duty)?.kind ?? "" })) }, { rolls });
-      return { ok: true, list: rolled.map((it) => it.name) };
+      await postCard({
+        kind: CARD.raid, event: "list", raidId: state.raidId, difficulty: state.difficulty, essentials: n, essentialsFace,
+        items: rolled.map((it) => ({ name: it.name, essential: it.essential, kind: DGF.duties.find((d) => d.key === it.duty)?.kind ?? "" })),
+      }, { rolls: [...pre, ...rolls] });
+      return { ok: true, essentials: n, essentialsFace, list: rolled.map((it) => it.name) };
     },
   });
 
@@ -192,7 +202,7 @@ export function registerCheckOps() {
       try { items = list.map((it) => listItem(it)); } catch (err) { return { ok: false, reason: "badList" }; }
       if (!items.length && !forked) return { ok: false, reason: "emptyList" };
       const year = items.length
-        ? yearFromList({ list: items, furnitureHome: !!furnitureHome, leftBehind: Number(leftBehind) || 0, forked: !!forked })
+        ? yearFromList({ list: items, furnitureHome: !!furnitureHome, leftBehind: Number(leftBehind) || 0, forked: !!forked, furnitureLost: raid.furnitureLost })
         : { result: "forked", lines: epilogueLines({ result: "forked" }), listSize: 0, itemsHome: 0, missingDuties: [], leftBehind: 0 };
       const held = entities().filter((a) => isCaptive(a.system)).map((a) => a.name);
       await mutateRaid((s) => R.endRaid(R.setList(s, items), { result: year.result }));

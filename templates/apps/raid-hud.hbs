@@ -16,6 +16,7 @@
     <ul>{{#each captives}}<li data-actor-id="{{actorId}}">{{name}}{{#if since}} <span class="dgf-hint">{{since}}</span>{{/if}}{{#if ../isGM}} <button type="button" class="dgf-link" data-action="freeCaptive" data-actor-id="{{actorId}}">{{localize "DGF.Raid.free"}}</button>{{/if}}</li>{{/each}}</ul>
   </div>
   {{/if}}
+  {{#if furnitureLost}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureLost"}}</p>{{/if}}
   {{#if list.length}}
   <details class="dgf-hud-list"><summary>{{localize "DGF.Raid.listCount" n=list.length}}</summary>
     <ul>{{#each list}}<li>{{name}}{{#if essential}} <em>({{localize "DGF.List.essential"}})</em>{{/if}}</li>{{/each}}</ul>

@@ -175,10 +175,17 @@ export async function driveChase() {
   return null;
 }
 
-/** Capture an Entity: held at the lock-up, and the town takes back what it carried. */
+/**
+ * Capture an Entity: held at the lock-up, and the town takes back what it carried. F15: a
+ * carrier's furniture is lost for the night — nobody carries it any more and it can't come home.
+ */
 async function capture(actor, turn) {
   const c = captureUpdate(actor.system, { turn });
   await actor.update(prefix(c.update));
+  if (c.furniture) {
+    await mutateRaid((s) => R.loseFurniture(s));
+    for (const other of entities().filter((a) => a.id !== actor.id && a.system.carryingFurniture)) await other.update({ "system.carryingFurniture": false });
+  }
   return { name: actor.name, taken: c.taken, kept: c.kept, furniture: c.furniture };
 }
 

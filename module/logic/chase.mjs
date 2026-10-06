@@ -18,9 +18,11 @@
  * Source: rulebook Chapter 6 (The Lead; The Ground; Your Weakness; The Local
  * Chase; The Final Flight and the Majority Rule; the chase table) and Chapter 5
  * (At the Limit). Perks from Chapter 2 via DGF.perkRules: Wall-Crawler and Fly by
- * Night (a trait you can always roll in a chase), Night Runner (your local chase
- * starts at Lead 2), Fear the Curse (the mob in your local chase is 1 easier),
- * Already Dead (cornered in a local chase, you lose your next Turn instead).
+ * Night (a trait you can always roll in a chase), Night Runner and Fear the Curse
+ * (when you flee alone: Lead 2, the mob 1 easier; F14: `aloneOnly`), Fetch (the
+ * final flight starts at Lead 3), Already Dead (cornered in a local chase, you
+ * lose your next Turn instead). F13: in a shared local chase, Suspicion rises once
+ * a round, by the biggest trigger among that round's rolls (chaseEventId).
  */
 import { DGF } from "../config.mjs";
 import { leadMove, majorityMove, localMobDifficulty, weaknessInPlay } from "./rules.mjs";
@@ -29,6 +31,27 @@ import { findEntity } from "./entity.mjs";
 const perkRule = (perk) => DGF.perkRules[perk] ?? {};
 export const CHASE_KINDS = Object.freeze(["local", "final"]);
 
+/** A member's Perk value for this chase: a Perk marked `aloneOnly` works only when that Entity flees alone (F14). */
+function perkValue(chase, member, key) {
+  const r = perkRule(member.perk);
+  if (r.aloneOnly && chase.members.length !== 1) return 0;
+  return r[key] ?? 0;
+}
+
+/** Several fleeing on one Lead in a local chase (caught together in one group check). */
+export function isSharedLocal(chase) {
+  return !!chase && chase.kind === "local" && chase.members.length > 1;
+}
+
+/**
+ * F13: the Suspicion event a chase roll belongs to. In a shared local chase every roll of
+ * a round shares one event (it rises once, by the biggest trigger); otherwise null (one
+ * roll, one rise; in the final flight Suspicion has stopped anyway).
+ */
+export function chaseEventId(chase, round = chase?.round) {
+  return isSharedLocal(chase) ? `chase:${chase.id}:${round}` : null;
+}
+
 /** A chase member from an Entity actor's id, name and system data (its Perk and its Weakness's timing). */
 export function memberOf({ id, name = "", system = {} }) {
   const e = findEntity(system.entityKey);
@@ -36,7 +59,7 @@ export function memberOf({ id, name = "", system = {} }) {
 }
 
 /**
- * A new chase. Local: Lead 1, escape at 4 (Night Runner: starts at Lead 2).
+ * A new chase. Local: Lead 1, escape at 4 (Night Runner, fleeing alone: starts at Lead 2).
  * Final flight: Lead 2, escape at 6; a flight that dawn started brings the Dawn Weaknesses.
  * A Perk with a starting Lead for the flight (DGF.perkRules finalLead) works the same way.
  */
@@ -52,8 +75,8 @@ export function newChase({ id, kind = "local", cause = "caught", members = [], t
     escape: kind === "final" ? L.finalEscape : L.localEscape,
     round: 1, mob: null, ground: null, rolls: {}, history: [], outcome: "",
   };
-  // Night Runner: "your local chase starts at Lead 2"; a final-flight Perk (finalLead) the same way for the flight.
-  const perkLead = Math.max(0, ...chase.members.map((m) => perkRule(m.perk)[kind === "final" ? "finalLead" : "localLead"] ?? 0));
+  // Night Runner: "when you flee alone, your local chase starts at Lead 2" (F14); Fetch: the final flight starts at Lead 3.
+  const perkLead = Math.max(0, ...chase.members.map((m) => perkValue(chase, m, kind === "final" ? "finalLead" : "localLead")));
   chase.lead = Math.max(chase.lead, perkLead);
   chase.start = chase.lead;
   return chase;
@@ -73,7 +96,7 @@ export function groundOn(face) {
 
 /**
  * The mob's Difficulty. Local: 10 plus half the Suspicion, at most 12, checked each
- * round (Fear the Curse: 1 easier). Final flight: the town's label, whatever the party's size.
+ * round (Fear the Curse, fleeing alone: 1 easier). Final flight: the town's label, whatever the party's size.
  */
 export function mobDifficulty(chase, { suspicion = 0, label = "standard" } = {}) {
   if (chase.kind === "final") {
@@ -81,7 +104,7 @@ export function mobDifficulty(chase, { suspicion = 0, label = "standard" } = {})
     if (!L) throw new Error(`unknown difficulty: ${label}`);
     return L.finalMob;
   }
-  const ease = Math.max(0, ...chase.members.map((m) => perkRule(m.perk).localMobEase ?? 0));
+  const ease = Math.max(0, ...chase.members.map((m) => perkValue(chase, m, "localMobEase")));
   return localMobDifficulty(suspicion) - ease;
 }
 

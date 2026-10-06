@@ -42,10 +42,12 @@ export function homeFromCarried(list, carried = []) {
 
 /**
  * The year from the list. `forked`: cornered in the final flight — the raid is lost,
- * so nothing came home. Returns { result, lines, listSize, itemsHome, essentialsAllHome,
+ * so nothing came home. `furnitureLost`: a carrier was captured, so the piece can't
+ * come home (F15). Returns { result, lines, listSize, itemsHome, essentialsAllHome,
  * extrasMissing, missingDuties, furnitureHome, leftBehind }.
  */
-export function yearFromList({ list, furnitureHome = false, leftBehind = 0, forked = false }) {
+export function yearFromList({ list, furnitureHome = false, leftBehind = 0, forked = false, furnitureLost = false }) {
+  if (furnitureLost) furnitureHome = false; // F15: a captured carrier's piece is gone for the night
   const items = (list ?? []).map(listItem);
   if (!items.length) throw new Error("the shopping list is empty");
   const home = (it) => !forked && it.home;
@@ -59,6 +61,16 @@ export function yearFromList({ list, furnitureHome = false, leftBehind = 0, fork
     result, lines: epilogueLines({ result, missingDuties }), listSize: items.length, itemsHome, essentialsAllHome,
     extrasMissing, missingDuties, furnitureHome: !forked && !!furnitureHome, leftBehind: forked ? 0 : lost,
   };
+}
+
+/**
+ * How many essentials (Chapter 8, F16): Easy one, Hard two; on Standard roll any die: odd, one; even, two.
+ * `face` is that die's roll (unused when the label has only one number).
+ */
+export function essentialsFor(label, face = 1) {
+  const { essentials } = listShape(label);
+  if (essentials.length === 1) return essentials[0];
+  return face % 2 === 1 ? Math.min(...essentials) : Math.max(...essentials);
 }
 
 /** The label's list size and how many essentials it may have (Chapter 4: 4 on Easy, 5 on Standard and Hard). */

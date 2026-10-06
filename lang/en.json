@@ -313,7 +313,6 @@
   "DGF.Chase.fate.forked": "Forked: the monsters are killed and the raid is lost.",
   "DGF.Chase.taken": "The town takes back what it was carrying: {items}.",
   "DGF.Chase.kept": "It keeps what it carries: {items} (Hidden Pockets).",
-  "DGF.Chase.furnitureTaken": "It no longer carries the furniture.",
   "DGF.Chase.who": "Fleeing: {names}.",
   "DGF.Chase.startText": "{cause}. The Lead starts at {lead}; clear at {escape}, cornered at 0.",
   "DGF.Chase.groundLine": "{ground}: {traits} work.",
@@ -367,7 +366,6 @@
   "DGF.Group.unnamed": "the group obstacle",
   "DGF.List.title": "The shopping list",
   "DGF.List.intro": "{label}: {size} items, rolled on the shopping table (a d6 for the kind, a d6 for the item; a repeat is rolled again). The first rolled are the essentials.",
-  "DGF.List.essentials": "Essentials",
   "DGF.List.essential": "essential",
   "DGF.List.roll": "Roll the list",
   "DGF.List.clear": "Clear the list",
@@ -405,5 +403,12 @@
   "DGF.Raid.tellCheck": "Tell check",
   "DGF.Raid.chase": "Chase",
   "DGF.Raid.list": "Shopping list",
-  "DGF.Raid.endRaid": "End the raid"
+  "DGF.Raid.endRaid": "End the raid",
+  "DGF.Chase.furnitureLost": "The furniture it carried is lost for the night.",
+  "DGF.Card.roundRise": "(in a shared chase, Suspicion rises once a round, by the biggest trigger)",
+  "DGF.List.essentialsByDie": "How many essentials: a d6, odd one, even two.",
+  "DGF.List.essentialsFixed": "Essentials: {n}.",
+  "DGF.List.essentialsRolled": "Essentials: a d6 rolled {face} (odd one, even two): {n}.",
+  "DGF.Year.furnitureLost": "The furniture was lost for the night when its carrier was captured: it can't come home.",
+  "DGF.Raid.furnitureLost": "The furniture is lost for the night."
 }

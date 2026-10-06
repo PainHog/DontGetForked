@@ -18,6 +18,7 @@ import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
 import { chaseRollContext, chaseWeakness, lockupDifficulty } from "../raid/chase-flow.mjs";
 import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
+import { chaseEventId } from "../logic/chase.mjs";
 import { postCard } from "../chat/cards.mjs";
 import { t, traitLabel, dieLabel, planText, traitList } from "../helpers/i18n.mjs";
 
@@ -271,8 +272,12 @@ export async function performRoll(actor, values) {
   const where = rollSituation(actor, values, raid);
   const chaseCtx = where.chase?.ok && plan.tracked ? where.chase : null;
   const groupId = where.group && setting(SETTINGS.autoGroupChecks) ? where.group.id : "";
+  // F13: a shared local chase rises once a round, by the biggest trigger: its rolls share the round's event
+  const roundEvent = chaseCtx ? chaseEventId(raid.chase, chaseCtx.round) : null;
   const card = {
-    v: 1, kind: CARD.roll, raidId: raid.raidId, eventId: groupId ? groupEventId(groupId) : `roll:${foundry.utils.randomID()}`,
+    v: 1, kind: CARD.roll, raidId: raid.raidId,
+    eventId: groupId ? groupEventId(groupId) : roundEvent ?? `roll:${foundry.utils.randomID()}`,
+    roundEvent: !!roundEvent,
     groupId, lockup: plan.lockup, furniture: plan.furniture,
     chaseId: chaseCtx?.chaseId ?? "", chaseRound: chaseCtx?.round ?? 0, chaseKind: chaseCtx?.kind ?? "",
     groundName: chaseCtx ? DGF.chaseTable[chaseCtx.ground.face - 1]?.name ?? "" : "",

@@ -85,7 +85,8 @@ function rollContext(card) {
     caughtNote: card.caught ? t("DGF.Card.caught") : card.unseen ? t("DGF.Card.unseen") : card.troubleUnwatched ? t("DGF.Card.unwatched") : "",
     flags: join([card.loud ? t("DGF.Card.loud") : "", card.watched ? t("DGF.Card.watched") : "", card.wayOut ? t("DGF.Card.wayOut") : "", card.chase ? t("DGF.Card.chase") : "",
       card.lockup ? t(`DGF.Card.lockup.${card.lockup}`) : "", card.furniture ? t("DGF.Card.furniture") : "", card.groupId ? t("DGF.Card.group") : ""]),
-    chaseNote: card.chaseId ? t("DGF.Card.chaseRound", { round: card.chaseRound, ground: card.groundName ?? "", move: card.leadMove > 0 ? `+${card.leadMove}` : `${card.leadMove}` }) + (card.chaseShared ? ` ${t("DGF.Card.majority")}` : "") : "",
+    chaseNote: card.chaseId ? t("DGF.Card.chaseRound", { round: card.chaseRound, ground: card.groundName ?? "", move: card.leadMove > 0 ? `+${card.leadMove}` : `${card.leadMove}` })
+      + (card.chaseShared ? ` ${t("DGF.Card.majority")}` : "") + (card.roundEvent && card.suspicion > 0 ? ` ${t("DGF.Card.roundRise")}` : "") : "",
     lockupNote: card.lockup === "slip"
       ? (card.freed ? t("DGF.Card.slipFree") : card.slipTrouble ? t("DGF.Card.slipTrouble") : t("DGF.Card.slipHeld"))
       : card.lockup === "rescue" && card.rescued ? t("DGF.Card.rescued") : "",
@@ -132,6 +133,9 @@ function raidContext(card) {
     }),
     hunt: card.event === "hunt",
     items: (card.items ?? []).map((it) => ({ name: it.name, note: [it.kind, it.essential ? t("DGF.List.essential") : ""].filter(Boolean).join(", ") })),
+    essentialsLine: card.event === "list" && card.essentials
+      ? (card.essentialsFace ? t("DGF.List.essentialsRolled", { face: card.essentialsFace, n: card.essentials }) : t("DGF.List.essentialsFixed", { n: card.essentials }))
+      : "",
     left: card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
   };
 }
@@ -145,7 +149,7 @@ function chaseContext(card) {
       const bits = [t("DGF.Chase.fate.captured", { name: f.name })];
       if (f.taken?.length) bits.push(t("DGF.Chase.taken", { items: f.taken.join(", ") }));
       if (f.kept?.length) bits.push(t("DGF.Chase.kept", { items: f.kept.join(", ") }));
-      if (f.furniture) bits.push(t("DGF.Chase.furnitureTaken"));
+      if (f.furniture) bits.push(t("DGF.Chase.furnitureLost"));
       return bits.join(" ");
     }
     if (f.fate === "loseTurn") return t("DGF.Chase.fate.loseTurn", { name: f.name, turn: f.skipTurn ?? "" });
