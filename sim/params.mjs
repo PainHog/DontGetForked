@@ -48,9 +48,9 @@ export const PARAMS = {
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
-    kind: "rule", default: "weakness", values: ["weakness", "free", "forbidden", "fury"],
+    kind: "rule", default: "weakness", values: ["weakness", "free", "forbidden", "fury", "once"],
     title: "Overdraw (and Suspicion triggers) once the hunt is on",
-    doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap).",
+    doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap); once = as weakness, and each Entity may overdraw at most once per flight (PT4 M1 candidate).",
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
   raiseCap: {
@@ -271,9 +271,11 @@ export const NUMBERS = {
   obstacleTable: "approved", // C18: the d20 obstacle table; "random" was the placeholder generator // C17: rolled towns, at most one Difficulty-12 obstacle (two at Hard); "rolled" and "budget" were the other candidates
   overdrawSuspicion: 2,
   lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6/S9
+  finalCloseIn: 0, // PT4 M2 candidate: from this round of the final flight on (1-based), the mob is 1 harder each round (0 = off)
+  finalCloseCap: 12,
   localMob: { base: 10, perSuspicion: 0.5, max: 12 }, // S9
   finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
-  maxChaseRounds: 20,
+  maxChaseRounds: 200, // a safety stop only (was 20, which ended about 1 Standard or Hard flight in 10 early and counted it as an escape)
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
   furyLambda: 0.25, // policy: how much the simulated players fear a point of fury
   labels: {

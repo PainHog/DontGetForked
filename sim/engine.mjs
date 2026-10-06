@@ -602,6 +602,7 @@ function overdrawAllowed(S, phase, owner, ctx) {
   const r = S.P.overdrawAtLimit;
   if (r === "forbidden") return false;
   if (r === "weakness") return !(ctx && ctx.weakOf && ctx.weakOf(owner));
+  if (r === "once") return !(ctx && ctx.weakOf && ctx.weakOf(owner)) && !owner.overdrewInFlight;
   return true;
 }
 
@@ -969,7 +970,8 @@ function finalFlight(S, trigger) {
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
   let lead = (S.L.finalStart ?? N.lead.finalStart) + (S.P.fetchRule === "flight" && active(S).some((o) => hasPerk(o, "fetch")) ? 1 : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
   for (let round = 0; round < N.maxChaseRounds; round++) {
-    const mobD = baseMob + fury;
+    const closeIn = N.finalCloseIn > 0 && round + 1 >= N.finalCloseIn ? round + 2 - N.finalCloseIn : 0;
+    const mobD = Math.min(Math.max(baseMob, N.finalCloseCap ?? 12), baseMob + closeIn) + fury;
     // Policy: carriers drop the furniture when the mob is about to corner them.
     if (lead <= 1 && S.furnitureCarried) dropFurniture(S, "final flight");
     const ground = chaseGround(S);
@@ -983,7 +985,7 @@ function finalFlight(S, trigger) {
       };
       const plan = planRoll(S, m, ctx);
       const r = executeRoll(S, m, plan, "final");
-      if (S.P.overdrawAtLimit === "weakness") for (const o of r.overdrawn) { if (!weak.get(o)) S.rec.count("weakness taken by overdraw"); weak.set(o, true); }
+      if (S.P.overdrawAtLimit === "weakness" || S.P.overdrawAtLimit === "once") for (const o of r.overdrawn) { if (!weak.get(o)) S.rec.count("weakness taken by overdraw"); weak.set(o, true); o.overdrewInFlight = true; }
       results.push(r);
     }
     if (furyRule) {
@@ -994,15 +996,17 @@ function finalFlight(S, trigger) {
       S.rec.count("fury", fury - before);
     }
     lead += majorityMove(results, critW);
-    if (lead >= N.lead.finalEscape) {
+    if (lead >= (S.L.finalEscape ?? N.lead.finalEscape)) { // a label may set its own escape
       for (const m of fleeing) m.status = "home";
       S.rec.count("final flight escaped");
+      S.rec.count("final flight rounds", round + 1);
       return;
     }
     if (lead <= 0) {
       for (const m of fleeing) m.status = "forked";
       S.forked = true;
       S.rec.count("forked");
+      S.rec.count("final flight rounds", round + 1);
       return;
     }
   }

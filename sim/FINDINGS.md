@@ -185,3 +185,23 @@ Re-run at 3,000 raids per party size with seed 7: 90.1 / 0.5%, 76.9 / 6.1%, 55.5
 How they were tuned (counts and Difficulties only, all within the rules): the first drafts played 94.7% (Easy), 65.3% (Standard) and 55.9% / 7.9% forked (Hard). Puddlecombe got a watched second obstacle at the market garden (the night watchman) and a watched trapdoor; Thistlewick lost the seed merchant's third obstacle (a Difficulty-12 drainpipe) and two Difficulty-10 watched obstacles became 8; Gallowsmere's strongbox went from 12 to 10 and three ways in became watched. What moves a fixed town most is where the watched marks sit: a watched obstacle the party must cross (the second or third) costs far more than a watched way in, which a party can go round.
 
 Two things worth knowing: the simulated parties go for Gallowsmere's suit of armour in none of the raids (it stands at the first essential, with too little of the night left to carry it), and at Thistlewick half the parties try for the gilt mirror and 40% of raids end in a Grand Year.
+
+## PT4's questions: the final flight, local chases and overdraw (2026-10-06, for B3)
+
+**Simulator correction:** `maxChaseRounds` was 20, and a flight that reached it counted as an escape: about 1 Standard or Hard flight in 10. It is now 200 (a safety stop only). Baseline with the correction, 2,000 raids per label and party size: wins 92.3 / 76.9 / 57.8%, forked 0.3 / 4.6 / 8.8% (still on target); final flights average **10.5 rounds**, and 21–23% of them end forked; 45% of local chases end in capture; Hard captures 0.35 per raid.
+
+`node sim/pt4-check.mjs [runs] [variants…]` (new switches: `overdrawAtLimit: "once"`, `finalCloseIn`, and a label's own `finalEscape`):
+
+| Variant | Win E / S / H | Forked E / S / H | Flight rounds (S · H), forked per flight | Local capture rate, Hard captures |
+|---|---|---|---|---|
+| Now (2,000) | 92.3 / 76.9 / 57.8 | 0.3 / 4.6 / 8.8 | 10.5 · 10.5, 21–23% | 45%, 0.35 |
+| Overdraw once per flight (1,000) | 92.2 / 77.9 / 57.0 | 0.4 / 4.5 / 8.9 | 10.5 · 10.5 | 45%, 0.35 |
+| Overdraw feeds the mob's fury (1,000) | 87.7 / 72.1 / 49.8 | 7.7 / 19.0 / 34.3 | 8.9, 86% | — |
+| Flight escapes at 5 (1,000) | 92.2 / 78.0 / 57.2 | 0.5 / 4.0 / 7.8 | 7.1 · 6.9, 18–19% | — |
+| Mob closes in from round 6 (1,000) | 90.2 / 75.0 / 53.1 | 3.3 / 11.3 / 21.1 | 10.7, 52% | — |
+| Local mob 8 + half Suspicion (1,000) | 93.6 / 79.0 / 57.7 | 0.6 / 4.6 / 9.2 | — | 35%, 0.29 |
+| Local chase starts at Lead 2 (1,000) | 94.1 / 79.4 / 62.7 | 0.4 / 4.6 / 8.7 | — | 20%, 0.16 |
+| C: escape 5, local 8, Standard Limit 11, overdraw once (2,000) | 93.6 / 76.5 / 59.5 | 0.3 / 4.5 / 6.9 | 7.0 · 6.7, 18% | 33%, 0.28 |
+| **G: as C, Easy Limit 11, Hard keeps escape 6 (3,000)** | **93.1 / 76.7 / 59.0** | **0.3 / 4.6 / 8.2** | **7.0 · 10.6**, 18 / 22% | **32%, 0.28** |
+
+Overdraw once per flight changes nothing measurable (the simulated players rarely overdraw twice); it only closes the gap in the wording. Package G meets every win and forked target (Easy 93.1, at the edge) and brings Hard captures into the 0.2–0.3 target; Hard flights stay long (the escape at 5 drops Hard forked below 8%).
