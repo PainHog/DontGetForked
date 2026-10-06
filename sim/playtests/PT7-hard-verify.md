@@ -1,4 +1,4 @@
-# PT7: Hard verification playtest after the PT6 fixes (Gallowsmere, a rolled Hard town, drills a–e)
+# PT7: Hard verification playtest after the PT6 fixes (Gallowsmere, a rolled Hard town, drills a–f)
 
 ## 1. What this is
 
@@ -6,7 +6,46 @@ A verification playtest of Hard difficulty under the current rules, after the PT
 
 **Rules source:** the rulebook text only: `book/src/chapters/11-ch01.html` to `17-ch07.html`, `31-ch08.html`, `32-ch09.html`, `40-entity-sheet.html` and `41-reference.html`, read as text (commit 0b6eff6 for the book; the book did not change while I played). Not the simulator, not `docs/`, not the Foundry code. Where the book is silent I made a ruling, listed it in section 4, and logged it as a finding in section 8.
 
-**Dice:** every random result is a real `Math.random` roll, numbered R1 onward and listed in section 10. Drills say exactly what I chose at their start; every roll after that is real. The players played to win; the Storyteller played by Chapter 3 and Chapter 8's advice ("Pick the one that hurts most right now").
+**Dice:** every random result is a real `Math.random` roll, numbered R1 onward and listed in section 10 (354 rolls). Drills say exactly what I chose at their start; every roll after that is real. The players played to win; the Storyteller played by Chapter 3 and Chapter 8's advice ("Pick the one that hurts most right now").
+
+---
+
+## 2. Summary
+
+| Line | What it puts through the text | Result | Ended | Suspicion |
+|---|---|---|---|---|
+| **Main line A**: Gallowsmere (Hard) as printed, 4 random Entities, random picks | The premade Hard town; a random Duty rerolled; a lone local chase at mob 10; Through the Wall at a later obstacle and at the furniture's; Spectral; the armour carried | **Grand Year**: both essentials, 2 of 3 extras, the suit of armour | Out on **Turn 8** | 11 of 15 (13 after the last roll's show) |
+| **Main line B**: a Hard town rolled on Chapter 8's tables, 5 random Entities, defaults | Every Rolling a Town table, Hard column; the ceiling; Spectral past two group obstacles; Out of Sight at a watched 12; the armour carried | **Grand Year**: both essentials, 2 of 3 extras, the suit of armour | Out on **Turn 7** | 6 of 15 |
+| Drill a1: Hard flight from the Limit, 3 | B6 with three | Escaped in **5 rounds** (35 dice) | — | — |
+| Drill a2: Hard flight from the Limit, 5 | B6 with five | Escaped in **2 rounds** (22 dice) | — | — |
+| Drill b: a lone local chase at Suspicion 11 (Hard) | Mob 12; overdraws in a local chase; the Limit in the round of a cornering | **Captured** in round 3 as the Limit came (9 dice) | — | 11 → 15 |
+| Drill c: an overdraw on a friend's roll, then the overdrawer's own roll | "from your own next roll (even later the same round)" | The Witch's own roll that round was a size smaller; the flight escaped in **4 rounds** (36 dice) | — | — |
+| Drill d: the furniture abandoned for good | V11, mid-raid at Suspicion 11 | Abandoned at the start of Turn 5; a local chase then brought the Limit; the flight escaped in **3 rounds** (27 dice): **Partial** | Turn 5 | 11 → 15 |
+| Drill e: At the Table alone | Main line B's lookups | 10 lookups in play still needed a chapter (2 more were building the town), plus 2 from the drills | — | — |
+| Drill f (extra): Already Dead | V5 below the Limit (f1) and at it (f2) | f1 cornered: back before the watchman, next Turn lost; f2 cornered as the Limit came: joined the flight | — | 9 → 11; 14 → 15 |
+
+**Fix targets and where each was exercised**
+
+| Target | Where | Rolls |
+|---|---|---|
+| **B6** in Hard final flights | a1, a2, c, the drill d flight: four flights, 14 rounds; the Lead moved by 2 in 6 of them | R181–R245, R256–R291, R316–R342 |
+| **B6** in shared local chases | Not met: no group check went wrong (every chase was alone) | — |
+| **V2** a switch ability in a chase, your own roll | a1, a2 (Ancient Lore, Brute Force), drill b (Ancient Lore, twice overdrawn), the drill d flight (Brute Force) | R184, R186, R191, R193, R225, R233, R244, R294, R297, R300, R326 |
+| **V2** on a friend's roll | The drill d flight, round 2: the Creature's Brute Force (overdrawn) on the Werewolf's roll; he rolled his own Brawn d10 | R328 |
+| **V4 / V11** furniture noise until out, lost or abandoned for good | Main A and main B (carried, +2 each); drill d (abandoned for good) | R53, R172 |
+| **V5** Already Dead | f1 (below the Limit: back where caught, a Turn lost); f2 (cornered as the Limit came: joined the flight) | R343–R354 |
+| The overdraw's Weakness "from your own next roll (even later the same round)" | Drill c round 1 (on a friend's roll, then her own); six own-roll or roll-first overdraws in round 2 (a1, a2, c, d) | R257, R263, R191, R193, R240, R244, R268, R328 |
+| A random Duty rerolls one already taken | Main A: the Invisible Man rolled Handyman (the Ghost's) and rerolled | R16–R17 |
+| An approach opened at any obstacle | Main A: Through the Wall at the smithy's watchman and at the furniture's trapdoor | R39, R53 |
+| Chapter 9: Gallowsmere as printed | Main A | R1–R61 |
+| Chapter 8: Rolling a Town (Hard) | Main B | R70–R147 |
+| The At the Table page | Drill e (main B) | — |
+
+**Counts: 0 blockers, 0 major, 6 minor, 2 wording** (section 8). By kind: **5 wording** (m2, m3, m4, w1, w2) and **3 rules** questions for the author (m1, m5, m6).
+
+**PT6's 8 findings: 4 resolved, 1 partly, 3 not** (m2 kept by decision; m3 and m4 unchanged in the book). Section 8.4.
+
+**Flight lengths seen (all Hard):** 5, 2, 4 and 3 rounds (3, 5, 4 and 4 Entities; 35, 22, 36 and 27 dice); all four escaped. Exact numbers from the book for these parties: escape 63–76%, 4.3–5.6 rounds on average, 10 rounds or more 7–15% of the time, forked in round 1 7–11% (section 9.2). **Local chases:** 5, of 1–4 rounds; every one at Suspicion 9 or more on Hard ended at the Limit or a cornering.
 
 ---
 
@@ -74,6 +113,23 @@ R62 = 4, R63 = 4 (repeat), R64 = 8, R65 = 6, R66 = 2, then R67 = 8 and R68 = 2 (
 | A Ghost | as above | Through the Wall | Chill (raise) | Spectral | Butler (none) | Cold Iron (Always) |
 | The Creature | as above | Brute Force | Mountain Stride (open with Nimble) | Strong Back | Handyman (none) | Fire (Soon) |
 | The Invisible Man | as above | Unseen | Through the Gap (open with Nimble) | Out of Sight | Tailor (none) | Flour (Soon) |
+
+---
+
+## 4. Standing readings (my rulings where the book is silent; the ones that matter are findings in section 8)
+
+| # | Reading | Finding |
+|---|---|---|
+| S1 | Rolling a town: "roll or pick, one item per place" and the furniture "at one of the list's locations (roll or pick)" give no die. I rolled a d6: 1–2 / 3–4 / 5–6 down the kind's three places (as the picks do), and 1–5 down the list for the furniture's location, rerolling a 6. A place already taken was rolled again. | w1 |
+| S2 | The ceiling ("at most … two in a Hard town (the furniture's +2 doesn't count)"): a furniture obstacle that rolls a 12 before its +2 counts as one of the two; one that reaches 12 only by the +2 doesn't. Main B's armour door rolled a 12, and with the maze it made two, so nothing was rerolled either way. | w2 |
+| S3 | A carried move's second Turn ends when the carrier acts in that Turn ("each result (a move too) counts at once"), so the party can roll the way out after it in the same Turn (as PT6 read it). Main A and main B each paid **+2** for a 2-Turn carry, not +3. | m3 |
+| S4 | A Cost's "next roll's trait die one size smaller" waits for the Entity's next roll, wherever it comes. J&H's (main B, Turn 2) never bit: he made no other roll. | — (the text says "your next roll") |
+| S5 | In a final flight the Entities roll one at a time, in any order the party chooses, each spending abilities before its own roll (Chapter 3: "Spend abilities before you roll"; Chapter 4 for Turns: "Entities act one at a time, in any order"). So an overdraw on a friend's roll comes before the overdrawer's own roll only if the party orders it that way (drill c). | m1 |
+| S6 | "Abandoned for good": the party declares it, at any time, wherever the piece is; from then it makes no noise (no +1 at the end of the Turn it was abandoned in, since by then it has been abandoned), and it can't be taken again ("for good"). Drill d. | m2 |
+| S7 | A Limit brought by an overdraw or a show in a local chase comes with that roll (one roll, one rise), and if that roll also corners the Entity, it is "captured first and stays behind" (drill b). Already Dead overrides this for the Ghost: "(if the Limit comes that round, you just join the final flight)" (drill f2). | — (the text answers it) |
+| S8 | A local chase's Weakness ends with it: a flight that follows is a new chase, and a Soon Weakness comes "from the third round of any chase" again (drill d: the Werewolf). | — (the text answers it) |
+| S9 | A friend's switch on your roll in a chase: you roll your own die for the switched trait ("The roller rolls its own die"; V2). Drill d's flight: the Creature's Brute Force gave the Werewolf his own Brawn d10 on a parade. | — |
+| S10 | In a premade town the faces are the town's two villagers; in a rolled town I rolled one on Chapter 8's tables when a Tell went off at a watched place. | — |
 
 ---
 
@@ -184,7 +240,7 @@ At 10 of 15 with the armour to carry, the party drops the bacon: the two essenti
 
 ## 7. Play log: drills
 
-Flights: every Entity rolls the Monster d10 (the Mask is off) against mob 11; the Lead starts at 2 and the party escapes at 6 (Hard). "S – T" counts Successes (a Critical as two) against Trouble; the Majority Rule moves the Lead 1 toward the side with more, or 2 if it leads by two or more. Each round's dice are the ground roll and then two dice per Entity, rolled one at a time in the order listed (S5). Default picks unless said; I chose each drill's start, and every roll after it is real.
+Flights: every Entity rolls the Monster d10 (the Mask is off) against mob 11; the Lead starts at 2 and the party escapes at 6 (Hard). "S – T" counts Successes (a Critical as two) against Trouble; the Majority Rule moves the Lead 1 toward the side with more, or 2 if it leads by two or more. Each round's dice are the ground roll and then two dice per Entity, rolled one at a time in the order of their roll numbers (S5; the columns keep one order for reading). Default picks unless said; I chose each drill's start, and every roll after it is real.
 
 ### 7.1 Drill a: two Hard final flights from the Limit
 
@@ -228,7 +284,7 @@ Flights: every Entity rolls the Monster d10 (the Mask is off) against mob 11; th
 | Round | Ground | Dracula | J&H | Mummy | Witch | S – T | Lead |
 |---|---|---|---|---|---|---|---|
 | 1 | R256 = 6 dead end | Brawn d8 → d6 (Garlic) → **d8: the Witch overdraws Hedge Spell** on his roll: 2 + 10 = 12 S | Jekyll Wits d10: 7 + 4 = 11 S | Wits d12: 3 + 5 = 8 T | Wits d12 → **d10**: her Weakness (Rowan) is in play "from your own next roll (even later the same round)": 4 + 6 = 10 C | 2 – 1 | 3 |
-| 2 | R265 = 4 rooftops | Nimble d10 → d8: 7 + 6 = 13 S | Wits d10 → d12 (Doctor's Bag **overdrawn**, own roll): 2 + 2 = 4 T | Wits d12: 1 + 4 = 5 T | Wits d10 (Rowan): 4 + 8 = 12 S | 2 – 2 | 3 |
+| 2 | R265 = 4 rooftops | Nimble d10 → d8: 7 + 6 = 13 S | Jekyll Wits d10 → d12 (Doctor's Bag **overdrawn**, own roll): 2 + 2 = 4 T | Wits d12: 1 + 4 = 5 T | Wits d10 (Rowan): 4 + 8 = 12 S | 2 – 2 | 3 |
 | 3 | R274 = 2 back alleys (every Weakness in play) | Nimble d8: 8 + 4 = 12 S | Jekyll Sly d8 → d6: 6 + 5 = 11 S | Sly d6 → d4: 4 + 7 = 11 S | Sly d10 → d8: 8 + 10 = 18 S | 4 – 0 | **5** (+2) |
 | 4 | R283 = 1 square | Charm d12 → d10: 10 + 5 = 15 S | Jekyll Charm d12 → d10: 10 + 1 = 11 S | Charm d8 → d6: 3 + 10 = 13 S | Sly d10 → d8: 6 + 2 = 8 T | 3 – 1 | **6: escaped** |
 
@@ -284,9 +340,9 @@ I ran main line B's lookups from the At the Table page, the Entity sheets and th
 
 From the drills, two more: **when an overdraw's Weakness starts** (drill c; the page and the sheet say "or your Weakness once the hunt is on (once per flight)" but not "from your own next roll (even later the same round)"), and **what happens when the Limit comes during a local chase** (drills b and d; Chapter 5). Items 3–12 are the same gaps PT6 listed (its m4); none was added to the page. Finding m4.
 
-### 7.6 Drill f (extra): Already Dead cornered below the Limit
+### 7.6 Drill f (extra): Already Dead, below the Limit and at it
 
-**Start (chosen):** Gallowsmere, Turn 6, Suspicion 9: **a Ghost with the Already Dead Perk** (otherwise default: Chill, Butler; Cold Iron, Always) caught alone at the smithy's watchman, holding the lock. Lead 1, escape 4, mob 8 + 4 = 12. 1 charge. Cornered, Already Dead only costs it a Turn, so it plays the Mask to keep Suspicion down once its charge is gone.
+**f1. Start (chosen):** Gallowsmere, Turn 6, Suspicion 9: **a Ghost with the Already Dead Perk** (otherwise default: Chill, Butler; Cold Iron, Always) caught alone at the smithy's watchman, holding the lock. Lead 1, escape 4, mob 8 + 4 = 12. 1 charge. Cornered, Already Dead only costs it a Turn, so it plays the Mask to keep Suspicion down once its charge is gone.
 
 | Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
 |---|---|---|---|---|---|---|---|
@@ -295,6 +351,110 @@ From the drills, two more: **when an overdraw's Weakness starts** (drill c; the 
 | 3 | R349 = 4 rooftops | Nimble d12 → d10, Mask | 3 + 5 | 8 vs 12 | Trouble: **cornered** | 0 | 11 |
 
 "Cornered in a local chase, you're back where you were caught and lose your next Turn instead of being captured." The Ghost is back before the watchman with the lock (not captured, so the town takes nothing) and loses Turn 7. PT6's w3 is answered by the text as it stands. 3 rounds, 9 dice.
+
+**f2. Start (chosen):** the same Ghost, Turn 9, Suspicion **14**, 0 charges, caught alone at the printer's neighbour holding the paper. Lead 1, mob 12. Any Trouble now both corners it and brings the Limit.
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R352 = 6 dead end | Wits d6 → d4 (Cold Iron), Mask | 2 + 4 | 6 vs 12 | Trouble: **cornered** in the round **the Limit** comes | 0 | 15 |
+
+Chapter 5 says "anyone the same round cornered is captured first and stays behind"; the Perk says "(if the Limit comes that round, you just join the final flight)". The Perk is the more specific rule and wins: the Ghost joins the flight with the paper. 1 round, 3 dice. V5 read cleanly in both cases.
+
+
+---
+
+## 8. Findings (most severe first)
+
+No blockers and no major findings: every changed rule read cleanly at the moment it mattered (B6 in four Hard flights; V2 on own rolls and on a friend's; the furniture's noise carried and abandoned; V5 below the Limit and at it; the overdraw's new timing; the random Duty reroll; an approach opened at a later obstacle and at the furniture's). Each finding is marked **wording** (the book already implies an answer, or the fix only says more clearly what it means) or **rules** (the fix would change a rule or a number: needs the author's decision; numbers only, no new numbers proposed).
+
+### 8.1 Major
+
+None.
+
+### 8.2 Minor
+
+| id | Kind | Passage (quoted, chapter) | What happened / what I did | Suggested fix |
+|---|---|---|---|---|
+| m1 | rules | Ch6: "your Weakness is then in play **from your own next roll (even later the same round)** to the end of the flight" · Ch6, the Majority Rule: "Everyone rolls each round." · Ch3: "Spend abilities before you roll." | The new sentence settles PT6's m1, but it makes **the order of rolls inside a round** matter, and the book doesn't say what that order is. "Later the same round" implies the rolls come one at a time; nothing says who goes first, or that the party chooses (Chapter 4's "one at a time, in any order" is about Turns; its group check, "all declare … then roll together", is about obstacles). I ruled the party chooses (S5). Then the clause only bites a party that orders its rolls badly: an overdrawer who rolls before helping a friend gets the old timing. In drill c the Witch overdrew Hedge Spell on Dracula's round-1 roll and rolled last: her own Wits was a d10, not a d12, in rounds 1 and 2 (against mob 11 with the Monster: 55 / 17 / 28% instead of 63 / 14 / 23%), for Dracula's one roll at d8, not d6 (45 / 20 / 35% instead of 35 / 20 / 45%). Had she rolled first, only round 2 would have paid. In drill d's flight the Creature rolled first and then overdrew on the Werewolf's roll in round 2: free. | Needs the author's decision: either the party picks the order each round (and the clause is a trap for the careless), or everyone declares abilities before anyone rolls, as at a group check (and an overdraw on a friend's roll always reaches your own roll that round). Then say which in the Majority Rule box. |
+| m2 | wording | Ch4: "From the Turn a piece is taken until it's out of town, lost **or abandoned for good**, Suspicion rises by 1 at the end of each Turn, even set down." · "Taking a piece is free; drop it any time." | The new words name the way to stop the noise (PT6 m5) but not how it's done. Drill d: the party wanted to abandon the suit of armour at the start of Turn 5 and had to rule (S6) that (1) the party simply declares it, (2) wherever the piece is (here, set down at the tailor, two of them standing by it), (3) the Turn it's abandoned in ends without its +1 (by then it has been "abandoned for good"), and (4) it can't be taken again ("for good"). None is written, and (3) and (4) change numbers: read the other way, the Turn of abandoning costs +1, and a piece taken back is a free way to stop and restart the noise. The other half of PT6's m5 is still open too: does a piece set down at the way out leave town when the party does? | Say it: e.g. "To abandon a piece for good, say so at any time: it makes no more noise from the end of that Turn and can't be taken again." And "a piece leaves town only if someone holds it". |
+| m3 | wording, or rules if not meant | Ch4: "Carrying, every move takes two Turns (halfway, you're between places)." · "Entities act one at a time, in any order, and each result (a move too) counts at once." | PT6's m3, unchanged in the book: when does a carried move end, when the carrier acts in its second Turn or at the end of that Turn? I read the first (S3), as PT6 did: in main A (Turn 8) and main B (Turn 7) the carrier finished its move first and the way out was rolled after it in the same Turn, so each piece cost **+2**. Read the other way each would have cost **+3**, and each party would have left a Turn later (Turn 9 and Turn 8). On Hard this is the difference between leaving at 11 and at 12 of 15 in main A. | Say which: e.g. "A carrier arrives when it takes the second Turn of the move" (or "at the end of that Turn"). |
+| m4 | wording (usability) | At the Table: "The rules on one page. The chapters have the details." | Drill e (7.5): running main line B from the page alone I still needed a chapter for ten things during play, the same ones PT6 listed (m4): whether a location is watched by its other way in; whose Tell when two arrive; the two limits on choosing a Cost; where an approach can be opened; "beat or pass the last and it's in your hand"; raises and steps down cancel out; handing loot over; when the furniture's obstacle can be tried, how many carry a piece and what carrying does to a carrier; the way out (everyone there, watched, its Tell check on the first return); two ways in, keep to one. The drills added two: when an overdraw's Weakness starts (neither the page nor the sheet has "from your own next roll"), and the Limit during a local chase. The page itself is unchanged since PT6. | As PT6 suggested: a short line for each, if they fit; at least the overdraw's timing on the page and the sheet ("overdraw: … or your Weakness from your own next roll"). |
+| m5 | rules (balance) | Ch8, the difficulty table, Hard: "0 · 40 · 45 · 15%" obstacle shares, "Suspicion Limit 15", "The way out: Difficulty 10" · Ch2, Out of Sight: "trouble gets you caught only while you carry loot or furniture" · Spectral: "you get past group obstacles without rolling, at no action" | Both Hard raids came home with a **Grand Year**, early: Gallowsmere on Turn 8 at Suspicion 11 (9 of 12 charges spent), the rolled town on **Turn 7 at Suspicion 6** (4 of 15 charges spent), neither ever near a flight. In the rolled town the party rolled 8 of its 17 obstacles: Spectral took the Ghost past both of the bookseller's group obstacles (one roll got an essential), and Out of Sight let the Invisible Man try the armour's watched Difficulty 12 door twice with no chance of a chase (the first try was Trouble: +1, no catch). With PT5's two Gallowsmere raids, the four Hard raids played so far ended forked (Turn 2), Grand Year (Turn 10), Grand Year (Turn 8), Grand Year (Turn 7). Four raids are not a sample. | Worth a simulator look at how often a Hard raid is over by Turn 8, and at Out of Sight and Spectral on Hard. |
+| m6 | rules (design question) | Ch5: "If the Limit comes during a local chase, that chase ends at once and those Entities join the flight; anyone the same round cornered is captured first and stays behind." · Ch3: "overdraw costs Suspicion +2" · Ch6: "The mob's Difficulty is 8 plus half the Suspicion (round down), at most 12" | On Hard the local mob is at its cap of 12 from Suspicion 8, where a lone Entity escapes about **20–22%** of the time (exact, the Monster, no charges: the Mummy 20%, the Werewolf 22%, a Ghost 22%; the Werewolf with Night Runner 46%; the Mummy with the Mask 2%). From Suspicion 13, any overdraw or Monster show brings the Limit with the roll, and then **any result short of a cornering ends the chase** and the Entity joins the flight. So at Lead 1 the best play can be to drag the whole party into the final flight: in drill b the Mummy overdrew at 13 (Wits d10 and the Monster against 12: 64% not cornered, against 45% for Charm d6 without the overdraw) and was cornered anyway; in drill d the Werewolf's Trouble at 14 brought the Limit at Lead 1 and he joined the flight. Both high-Suspicion lone chases in this playtest ended at the Limit, in rounds 3 and 4. | Needs the author's decision whether the Limit is meant to rescue a lone Entity from its local chase (PT5's M1, the local chase spiral, was kept by decision; this is its far end on Hard). |
+
+### 8.3 Wording
+
+| id | Passage (quoted) | Issue | Suggested fix |
+|---|---|---|---|
+| w1 | Ch8, Rolling a Town: "Locations: one for each item on the list, at one of the places its kind is found (the shopping table lists them): **roll or pick**, one item per place." · The Furniture: "standing at one of the list's locations (**roll or pick**; Chapter 4)" | No die is named for either roll (three places for most kinds, two for silver; four or five locations for the furniture). I used a d6 split evenly and rerolled a taken place (S1). | Name the die: e.g. "roll a d6: 1–2 the first place, 3–4 the second, 5–6 the third (silver: 1–3, 4–6)", and for the furniture "roll a d6 down the list, rerolling a 6". |
+| w2 | Ch8: "The ceiling: at most one Difficulty 12 in an Easy or Standard town, two in a Hard town (**the furniture's +2 doesn't count**). Reroll any extra." | A furniture obstacle that rolls a 12 before its +2 (main B's armour door): does it count as one of the two? I counted it (S2); it didn't change the town, but with three natural 12s it would decide which one is rerolled. | "(a furniture obstacle counts only if it rolled 12 before its +2)", or "(the furniture's obstacle never counts)". |
+
+**Counts: 0 blockers, 0 major, 6 minor, 2 wording** (8 in all). By kind: **5 wording** (m2, m3, m4, w1, w2: the book already implies an answer, or the fix only says more clearly what it means) and **3 rules** questions for the author (m1, m5, m6).
+
+### 8.4 PT6's findings: what the book now says
+
+| PT6 id | Status | Quote now in the book (or why not) |
+|---|---|---|
+| m1 an overdraw on a friend's roll | **resolved** | Ch6: "your Weakness is then in play from your own next roll (even later the same round) to the end of the flight". Drill c, real dice. It opens the order-of-rolls question (m1 above). |
+| m2 B6's side effects | **not** (kept by decision) | Ch6 unchanged: "…or by 2 if they outnumber it by two or more". The review log (row 51: "V10 B6 unchanged") kept it. Four Hard flights here took 2–5 rounds; exact odds for these parties are in section 9 (escape 63–76%, forked in round 1 7–11%). |
+| m3 when a carried move ends | **not** | Ch4 unchanged on this: "Carrying, every move takes two Turns (halfway, you're between places)." Both main lines read it as PT6 did (m3 above). |
+| m4 At the Table gaps | **not** | The page is unchanged; drill e found the same ten gaps (m4 above). |
+| m5 an abandoned piece | **partly** | Ch4: "until it's out of town, lost **or abandoned for good**". The way to stop the noise is in the book; how to abandon, whether that Turn pays, whether it can be retaken, and whether a set-down piece leaves town are not (m2 above). |
+| w1 an approach at any obstacle | **resolved** | Ch3: "Open an approach nobody else can take: at any obstacle, not only a way in, if it doesn't list the ability's trait…". Main A: the Ghost at the smithy's watchman (its second obstacle) and at the tailor's furniture trapdoor. |
+| w2 a random Duty already taken | **resolved** | Ch2: "(for the Castle Duty, roll on its table, rerolling one already taken)". Main A: the Invisible Man rolled Handyman, the Ghost's (R16), and rerolled Librarian (R17). |
+| w3 Already Dead: where the Ghost ends up | **resolved** | Ch2: "cornered in a local chase, you're back where you were caught and lose your next Turn instead of being captured (if the Limit comes that round, you just join the final flight)". Drill f1 (back before the watchman, Turn lost) and f2 (cornered as the Limit came: joined the flight), real dice. |
+
+**PT6: 4 resolved, 1 partly, 3 not** (of 8). Of the three not resolved, m2 was kept by decision (the review log, row 51); m3 and m4 were not taken up, and the book's text is unchanged for both.
+
+---
+
+## 9. Balance and usability notes
+
+### 9.1 Numbers from play
+
+- **Results:** main A (Gallowsmere) **Grand Year**, out on **Turn 8**; main B (the rolled Hard town) **Grand Year**, out on **Turn 7**; drill d (from a chosen start at Suspicion 11) Partial, through a flight. Neither main line came near a flight (m5).
+- **Suspicion at the end of each Turn:** main A 3, 4, 5, 5, 5, 10, 11 (out on Turn 8 at 11; 13 after the way out's show). Main B 1, 2, 3, 4, 5, 6 (out on Turn 7 at 6).
+- **Suspicion sources:** main A (11 before the last roll): Tells 3, Trouble 2 (one catch; one unwatched tug-of-war), the loud way 2, a Monster show 2 (the Ghost at the trapdoor), carrying 2. Main B (6): a Tell 1, the loud way 2, Trouble 1 (Out of Sight: no catch), carrying 2. No Cost was taken as Suspicion.
+- **Tells:** 4 of 11 checks went off (main A 3 of 6, all three on Turn 1; main B 1 of 5).
+- **Costs chosen** (Chapter 8: "a smaller die before a hard roll"): all four were "your next roll's trait die one size smaller". "Drop an item" was barred twice (the roller carried only what the roll won, or nothing) and was weak once (a friend stood by to pick it up); "lose a Turn" never hurt more on Turns 2–5. Twice the smaller die cancelled a raise (a Duty, Chill); once it never bit (J&H made no other roll).
+- **Charges:** main A **9 of 12** spent (Good Dog ×3 in one local chase; Through the Wall ×2 and Chill; Unseen ×2; Hovel Watcher). Main B **4 of 15** (Chill, Good Dog, Unseen ×2); J&H and the Creature spent none.
+- **Opened approaches:** 2 rolled (the Ghost's Through the Wall at the smithy's watchman and at the furniture's trapdoor), 2 Successes. With PT5's and PT6's, 20 opened approaches, none Trouble.
+- **Furniture:** the suit of armour both times. Main A: the Ghost opened the trapdoor with Through the Wall (after handing its loot to the Creature, since the Wall works "not while you carry loot or furniture") and carried it alone, +2. Main B: the Invisible Man, carrying nothing, took Trouble then a Success at the watched 12 door, +2. Drill d: abandoned for good at once (m2).
+- **Local chases:** 5 played, 14 rounds: main A's Werewolf at mob 10 (escaped in round 3 on a Critical, after three Good Dogs); drill b's Mummy at 12 (captured as the Limit came, round 3); drill d's Werewolf at 12 (joined the flight at the Limit, round 4); drill f1's Ghost at 12 (cornered, round 3: Already Dead); f2 (cornered as the Limit came, round 1: joined the flight). Every high-Suspicion chase on Hard ended at the Limit or a cornering (m6).
+
+### 9.2 Hard final flights under B6
+
+**Seen in play** (each round is one ground roll plus two dice per Entity):
+
+| Flight | Entities | Rounds | Dice | Lead after each round | Result |
+|---|---|---|---|---|---|
+| a1 | 3 (Invisible Man, Mummy, Creature) | **5** | 35 | 2, 2, 3, 5, 6 | escaped |
+| a2 | 5 (Mummy, Witch, J&H, Werewolf, Creature) | **2** | 22 | 4, 6 | escaped |
+| c | 4 (Witch, J&H, Mummy, Dracula) | **4** | 36 | 3, 3, 5, 6 | escaped |
+| d | 4 (Werewolf, Creature, Ghost, Invisible Man) | **3** | 27 | 4, 5, 6 | escaped |
+
+14 rounds and 120 dice in all; the Lead moved by 2 in 6 of the 14 rounds and never fell. Charges: every party spent its useful charges in round 1 and overdrew in round 2 (six overdraws in round 2, all free; one in round 1, drill c, which cost the Witch two rolls). Dead charges: the Invisible Man's in a1 (1) and drill d (2), as in PT5's m8 (kept by decision).
+
+**Exact odds from the book's numbers** (best die per ground, Weaknesses on time, no charges, J&H in his better form each round; the same calculation reproduces PT6's figures for its Hard parties):
+
+| Party | Escape | Forked | Mean rounds (mean dice) | 10+ rounds | Forked in round 1 | Forked by round 3 | Escaped by round 3 |
+|---|---|---|---|---|---|---|---|
+| a1: Invisible Man, Mummy, Creature | 63% | 37% | 5.6 (39) | 15% | 7% | 17% | 22% |
+| a2: Mummy, Witch, J&H, Werewolf, Creature | 72% | 28% | 4.4 (48) | 8% | 9% | 16% | 37% |
+| c: Witch, J&H, Mummy, Dracula | 74% | 26% | 4.5 (41) | 8% | 9% | 16% | 33% |
+| d and main A: Werewolf, Creature, Ghost, Invisible Man | 67% | 33% | 4.7 (42) | 10% | 11% | 19% | 29% |
+| main B: Werewolf, J&H, Ghost, Creature, Invisible Man | 76% | 24% | 4.3 (47) | 7% | 9% | 15% | 38% |
+
+The three-Entity party is the weak one: a Hard flight of 3 escapes 63% of the time and runs 10 rounds or more 15% of the time; four or five escape 67–76%.
+
+**What felt good:** Hard flights fit in a few minutes (2–5 rounds); V2 kept the Mummy and the Creature on their best die whatever the ground, and a friend's switch on a parade (drill d) was a good table moment. The new overdraw sentence and Already Dead each answered their question in one reading. Through the Wall at the furniture, after handing the loot over, played like a ghost. **What felt bad:** at Suspicion 8+ on Hard a lone local chase is grim (mob 12), and both such chases ended at the Limit (m6). Both main lines were over by Turn 7–8 with charges left, the rolled town at Suspicion 6 (m5).
+
+### 9.3 Using the Entity Sheet, At the Table and the town pages
+
+- **Gallowsmere's page** was enough to run the town, with Chapter 9's opener for "keep to one way in" and "already 2 harder".
+- **The rolled town** took 78 rolls to build (R70–R147, with four rerolls) and every table worked; only w1 and w2 needed a ruling. A rolled town names nothing, and some obstacles land oddly (a night watchman not watched; a locked front door as a third obstacle or as the furniture's); the obstacle table's flavour carried it.
+- **The Entity Sheet:** "In a chase: □ Weakness in play □ overdrawn this flight" was ticked in every flight. Its overdraw line ("or your Weakness once the hunt is on (once per flight)") doesn't say when the Weakness starts (m4).
+- **At the Table:** the Hard column, the B6 line and the chase table carried every flight. The gaps are in m4.
 
 ---
 
@@ -655,3 +815,6 @@ Every roll in order, as logged when rolled (`Math.random`, one die per line). La
 | R349 | f Ghost chase r3 ground | d6 = 4 |
 | R350 | f Ghost chase r3 Nimble (d12 Cold Iron->d10) | d10 = 3 |
 | R351 | f Ghost chase r3 Mask | d6 = 5 |
+| R352 | f2 Ghost chase r1 ground | d6 = 6 |
+| R353 | f2 Ghost chase r1 Wits (d6 Cold Iron->d4) | d4 = 2 |
+| R354 | f2 Ghost chase r1 Mask | d6 = 4 |
