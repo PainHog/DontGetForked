@@ -29,10 +29,12 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * of the same dice (`forms`). A signature does one standard effect (with its trait
  * for "switch" and "open"); Jekyll & Hyde's is "form": The Draught changes Jekyll to
  * Hyde or back (one charge), and the Monster showing on a Jekyll roll turns him into
- * Hyde for free (C2b). Gifts, Perks, Weaknesses and Tells are still to be written.
+ * Hyde for free (C2b). A signature's `text` is the book's line after "(signature):"; a
+ * Gift version's `text` is its flavour line (its rule is the standard effect's wording).
+ * Gifts, Perks, Weaknesses and Tells: C3–C9 (rulebook Chapter 2).
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm" },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", text: "open an approach with Charm. He bends a mind with a look." },
     gift: {
       name: "Shape of the Night",
       versions: [
@@ -49,7 +51,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Garlic", timing: "always", text: "Every kitchen in town has some, and the mob knows it." },
     tell: { name: "No Reflection", text: "A shop window shows everyone but him." },
   },
-  { key: "creature", name: "Frankenstein’s Creature", duty: "handyman", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn" },
+  { key: "creature", name: "Frankenstein’s Creature", duty: "handyman", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn", text: "use Brawn instead of the trait called. Stronger than any man, it breaks what others pick." },
     gift: {
       name: "Made, Not Born",
       versions: [
@@ -66,7 +68,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Fire", timing: "soon", text: "Someone has to light the torches." },
     tell: { name: "Head and Shoulders", text: "He stands a head above the whole crowd, and no costume hides it." },
   },
-  { key: "mummy", name: "The Mummy", duty: "librarian", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits" },
+  { key: "mummy", name: "The Mummy", duty: "librarian", dice: { brawn: 10, nimble: 4, sly: 6, charm: 8, wits: 12 }, signature: { name: "Ancient Lore", effect: "switch", trait: "wits", text: "use Wits instead of the trait called. It knew this trick three thousand years ago." },
     gift: {
       name: "Secrets of the Tomb",
       versions: [
@@ -83,7 +85,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
   },
-  { key: "werewolf", name: "The Werewolf", duty: "gardener", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden" },
+  { key: "werewolf", name: "The Werewolf", duty: "gardener", dice: { brawn: 10, nimble: 12, sly: 6, charm: 4, wits: 8 }, signature: { name: "Good Dog", effect: "hidden", text: "roll the Monster die without risking Suspicion. If the wolf shows, the crowd sees a very large dog." },
     gift: {
       name: "The Wolf Within",
       versions: [
@@ -100,7 +102,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
   },
-  { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden" },
+  { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden", text: "roll the Monster die without risking Suspicion. When the monster shows, there’s nothing to see." },
     gift: {
       name: "A Scientist’s Tricks",
       versions: [
@@ -117,7 +119,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Flour", timing: "soon", text: "Someone throws a bag of flour, and there he is." },
     tell: { name: "Bandages and Goggles", text: "A wrapped head, dark goggles, a false nose, and a sneeze from nowhere." },
   },
-  { key: "ghost", name: "A Ghost", duty: "butler", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "sly", noLoot: true },
+  { key: "ghost", name: "A Ghost", duty: "butler", dice: { brawn: 4, nimble: 12, sly: 10, charm: 8, wits: 6 }, signature: { name: "Through the Wall", effect: "open", trait: "sly", noLoot: true, text: "open an approach with Sly, but not while you carry loot or furniture: nothing you carry passes through. It drifts in where there’s no door." },
     gift: {
       name: "Haunting",
       versions: [
@@ -134,7 +136,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise" },
+  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s." },
     gift: {
       name: "Witchcraft",
       versions: [
@@ -153,7 +155,7 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form" },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back; the new form lasts until the next draught. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free." },
     gift: {
       name: "The Other Self",
       versions: [
@@ -294,6 +296,33 @@ DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });
 /** C3: when the mob brings a Weakness. "soon" bites from this round of a chase (1-based). */
 DGF.weaknessTimings = Object.freeze(["always", "soon", "dawn"]);
 DGF.weaknessSoonRound = 3;
+
+/**
+ * Chapter 2 Perks that bend a roll, as data for the rules logic (module/logic/roll-plan.mjs).
+ * Each line restates its Perk's text; nothing here is new. `showMargin` / `formMargin`:
+ * how far the Monster die must beat the trait die (1 = "higher", 2 = "by 2 or more").
+ */
+DGF.perkRules = Object.freeze({
+  hypnoticEyes: Object.freeze({ trait: "charm", showMargin: 2 }), // On Charm rolls, the Monster shows only if it beats your trait die by 2 or more.
+  oldMoney: Object.freeze({ trait: "charm", noCost: "suspicion" }), // A Cost on a Charm roll is never Suspicion +1.
+  tireless: Object.freeze({ carryNimble: false }), // Carrying doesn’t make your Nimble smaller.
+  patienceOfAges: Object.freeze({ noCost: "loseTurn" }), // “Lose a Turn” is never your Cost.
+  keeperOfTreasures: Object.freeze({ noCost: "drop" }), // “Drop an item” is never your Cost.
+  shortcut: Object.freeze({ exitEase: 2 }), // The way out is 2 easier when you roll it.
+  outOfSight: Object.freeze({ caughtOnlyCarrying: true }), // Trouble gets you caught only while you carry loot or furniture.
+  lightStep: Object.freeze({ loud: 0 }), // The loud way costs you no Suspicion.
+  rattle: Object.freeze({ monsterShows: 1 }), // The Monster showing on your roll is Suspicion +1, not +2.
+  wiseWoman: Object.freeze({ trait: "wits", noCost: "loseTurn" }), // A Cost on your Wits roll is never “lose a Turn”.
+  practisedHand: Object.freeze({ freeDraughtTo: "jekyll" }), // Changing back to Jekyll costs no charge.
+  steadyNerves: Object.freeze({ formMargin: 2 }), // Hyde takes over only if the Monster beats your trait die by 2 or more.
+  bruteStrength: Object.freeze({ form: "hyde", carryNimble: false }), // As Hyde, carrying doesn’t make your Nimble smaller.
+});
+
+/** P3: the four Costs the Storyteller picks from, in the book's order. */
+DGF.costs = Object.freeze(["suspicion", "drop", "loseTurn", "smaller"]);
+
+/** An Entity during a raid: free, or held at the lock-up (Chapter 6). */
+DGF.statuses = Object.freeze(["active", "captured"]);
 
 /** CORE-RULES Rolling 2: the second die. */
 DGF.second = Object.freeze({ mask: 6, monster: 10 });

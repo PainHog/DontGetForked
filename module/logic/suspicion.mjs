@@ -12,13 +12,16 @@
  *    eventId apply only their largest amount (a group check shares one eventId,
  *    so Suspicion rises once, by the worst result — P6);
  *  - good results never lower it; only a few specific abilities or Perks can
- *    (negative amounts are accepted only from sources "ability" or "perk");
+ *    (negative amounts are accepted only from sources "ability" or "perk", and
+ *    from "storyteller": the Storyteller's own correction on the Raid HUD, which
+ *    is table housekeeping, not a game rule);
  *  - the track never goes past the Limit; extra points are lost (R11);
  *  - once the hunt is on, Suspicion stops (S1) → entries marked `hunt` are ignored;
- *  - a cancelled entry (an amendment, e.g. an ability that undoes a trigger) is ignored.
+ *  - a cancelled entry (an amendment, e.g. an ability that undoes a trigger, or
+ *    the Storyteller undoing an event) is ignored; restoring it counts it again.
  */
 
-const LOWERING = new Set(["ability", "perk"]);
+const LOWERING = new Set(["ability", "perk", "storyteller"]);
 
 /** Fold the ledger into the current value. */
 export function foldSuspicion(entries, limit) {
@@ -48,4 +51,9 @@ export function addEntry(entries, entry) {
 /** A new ledger with every entry of an event cancelled. */
 export function cancelEvent(entries, eventId) {
   return entries.map((e) => (e.eventId === eventId ? { ...e, cancelled: true } : e));
+}
+
+/** A new ledger with every entry of an event counted again (undoes cancelEvent). */
+export function restoreEvent(entries, eventId) {
+  return entries.map((e) => (e.eventId === eventId ? { ...e, cancelled: false } : e));
 }
