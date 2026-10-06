@@ -20,7 +20,7 @@ import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, postedByOwner } from "../chat/cards.mjs";
 import { newRaidUpdate } from "../logic/lockup.mjs";
-import { rollAbilities } from "../logic/entity.mjs";
+import { rollAbilities, isInRaid } from "../logic/entity.mjs";
 
 /** The raid as every client sees it now. */
 export function getRaid() {
@@ -126,6 +126,9 @@ async function markCards(eventId, patch) {
 }
 
 const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
+const prefixed = (update) => Object.fromEntries(Object.entries(update).map(([k, v]) => [`system.${k}`, v]));
+/** Every Entity in the world (one of the eight chosen), in this raid or not. */
+const allEntities = () => game.actors.filter((a) => isEntity(a) && a.system.entityKey);
 
 export function registerRaidOps() {
   setRaidIdReader(() => getRaid().raidId);
@@ -226,7 +229,7 @@ export function registerRaidOps() {
     apply: async ({ delta = 1 }) => {
       const step = Math.sign(Number(delta)) || 1;
       const auto = setting(SETTINGS.autoFurniture);
-      const carriers = game.actors.filter((a) => isEntity(a) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name);
+      const carriers = game.actors.filter((a) => isEntity(a) && isInRaid(a.system) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name);
       const { state } = await mutateRaid((s) => (step > 0
         ? R.advanceTurn(auto ? R.endOfTurnFurniture(s, carriers) : s, 1)
         : R.advanceTurn(R.undoEndOfTurnFurniture(s), -1)));
@@ -282,16 +285,38 @@ export function registerRaidOps() {
     gmOnly: true,
     apply: async ({ difficulty = "standard" }) => {
       if (!R.LABELS.includes(difficulty)) return { ok: false, reason: "badDifficulty" };
-      const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty }));
-      // a new raid is a new year: everyone is free, charges refill, the last raid's marks go (setting resetOnNewRaid)
-      if (setting(SETTINGS.resetOnNewRaid)) {
-        for (const actor of game.actors.filter((a) => isEntity(a) && a.system.entityKey)) {
-          const update = Object.fromEntries(Object.entries(newRaidUpdate(actor.system)).map(([k, v]) => [`system.${k}`, v]));
-          await actor.update(update);
-        }
+      // F26: who is in this raid: every Entity with a player owner (the Storyteller can change it on the Raid window
+      // or the sheet). A new raid is a new year for them: free, charges refilled, the last raid's marks gone (resetOnNewRaid).
+      const reset = setting(SETTINGS.resetOnNewRaid);
+      const members = allEntities().filter((a) => a.hasPlayerOwner);
+      const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty, readied: reset ? members.map((a) => a.id) : [] }));
+      for (const actor of allEntities()) {
+        const inRaid = members.includes(actor);
+        await actor.update({ "system.inRaid": inRaid, ...(inRaid && reset ? prefixed(newRaidUpdate(actor.system)) : {}) });
       }
-      return { ok: true, raidId: state.raidId };
+      return { ok: true, raidId: state.raidId, members: members.map((a) => a.id) };
     },
+  });
+
+  // GM (F26): tick an Entity into this raid or out of it (the Raid window; the sheet's tick does the same).
+  registerOp(OPS.raidMember, {
+    gmOnly: true,
+    apply: async ({ actorId, inRaid }) => {
+      const actor = game.actors.get(actorId);
+      if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
+      await actor.update({ "system.inRaid": !!inRaid });
+      return { ok: true, inRaid: !!inRaid };
+    },
+  });
+
+  // F26: an Entity ticked into the raid after it began is made ready for it once, as a new raid would have (resetOnNewRaid).
+  Hooks.on("updateActor", (actor, diff) => {
+    if (!isActiveGM() || !isEntity(actor) || diff?.system?.inRaid !== true || !setting(SETTINGS.resetOnNewRaid)) return;
+    const raid = getRaid();
+    if (!raid.raidId || R.markReadied(raid, actor.id) === raid) return;
+    mutateRaid((s) => R.markReadied(s, actor.id))
+      .then(() => actor.update(prefixed(newRaidUpdate(actor.system))))
+      .catch((err) => console.error("Don't Get Forked | readying an Entity failed", err));
   });
 
   // Anyone: the helpers on a roll card pay for the abilities they lent (Chapter 3: helping costs the helper's charge),

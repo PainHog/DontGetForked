@@ -12,7 +12,8 @@
  *    delivered to every connected client's hooks, as Foundry does;
  *  - documents: Actors (with the system's data models and derived data), Items,
  *    ChatMessages — players may write only what they own (actors) or authored
- *    (messages); creating actors and writing world settings are GM-only;
+ *    (messages); creating or deleting actors and writing world settings are GM-only;
+ *  - users connecting and dropping (setConnected fires userConnected on every client);
  *  - data models: foundry.data.fields (String/Number/Boolean/Schema/Array/Object…)
  *    fill each field's `initial` value and VALIDATE every create and update
  *    (type, choices, integer, min/max, blank), throwing like Foundry does;
@@ -326,6 +327,12 @@ class Collection extends Array {
 /** Run `fn` as `user` (async continuations included). */
 export function asUser(user, fn) { return als.run({ user }, fn); }
 
+/** A user connects or drops: Foundry fires userConnected (user, connected) on every client still connected. */
+export function setConnected(user, connected) {
+  user.active = !!connected;
+  broadcast("userConnected", user, !!connected);
+}
+
 /** Deliver an event to every connected client (each runs its own hooks as itself). */
 function broadcast(name, ...args) {
   for (const u of game.users.filter(x => x.active)) asUser(u, () => Hooks.callAll(name, ...args));
@@ -590,6 +597,14 @@ export class Actor extends BaseDocument {
     return this;
   }
   async setFlag(scope, key, value) { return this.update({ [`flags.${scope}.${key}`]: value }); }
+  async delete(options = {}) {
+    touch();
+    if (!game.user?.isGM) throw new Error(`${game.user?.name} lacks permission to delete Actor ${this.name}`);
+    const i = game.actors.indexOf(this);
+    if (i >= 0) game.actors.splice(i, 1);
+    broadcast("deleteActor", this, options, game.user.id);
+    return this;
+  }
   async createEmbeddedDocuments(type, list) {
     if (!this.isOwner) throw new Error(`${game.user.name} lacks permission to add items to ${this.name}`);
     const IC = CONFIG.Item.documentClass ?? Item;

@@ -16,6 +16,7 @@
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
  *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
  *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
+ *             readied,  // F26: the Entities a new raid (or the Storyteller's tick) made ready for this raid; null in an older raid
  *             partyOut, // null, or { how: "wayOut" | "flight", turn, piece } once the party has left town (no hunt or chase starts);
  *                       //   piece: what that leaving made of the furniture ("out" | "lost"), or "" if it moved nothing
  *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
@@ -34,7 +35,7 @@ export const FURNITURE_STATES = Object.freeze(["", "inPlay", "out", "lost"]);
 export const LABELS = Object.freeze(Object.keys(DGF.labels));
 
 /** A fresh raid at this difficulty ("easy" | "standard" | "hard"). */
-export function newRaid({ id = "", difficulty = "standard" } = {}) {
+export function newRaid({ id = "", difficulty = "standard", readied = [] } = {}) {
   if (!DGF.labels[difficulty]) throw new Error(`unknown difficulty: ${difficulty}`);
   return {
     v: RAID_VERSION,
@@ -55,6 +56,7 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     over: null,
     furniture: "",
     furnitureLost: false,
+    readied: [...readied],
     partyOut: null,
     endedChase: null,
   };
@@ -83,6 +85,7 @@ export function normalizeRaid(stored) {
     over: s.over && typeof s.over === "object" ? s.over : null,
     furniture: FURNITURE_STATES.includes(s.furniture) ? s.furniture : s.furnitureLost ? "lost" : "",
     furnitureLost: s.furniture === "lost" || (!FURNITURE_STATES.includes(s.furniture) && !!s.furnitureLost),
+    readied: Array.isArray(s.readied) ? s.readied : null, // an older raid didn't keep it: nobody is made ready again
     partyOut: s.partyOut && typeof s.partyOut === "object" ? s.partyOut : null,
     endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
@@ -263,6 +266,16 @@ export function endOfTurnFurniture(state, carriers = []) {
   if (s.ledger.some((e) => e.eventId === eventId)) return restore(s, eventId);
   // set down, nobody's name goes with it: the event says so ("the furniture (set down)")
   return recordEvent(s, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: carriers.length ? "furniture" : "furnitureDown", actorName: carriers.join(", ") });
+}
+
+/**
+ * F26: an Entity the Storyteller ticks into the raid after it began is made ready for it once (as a new raid makes
+ * ready the Entities in it). Returns the state with it marked, or the same state if it was already, or if this raid
+ * is from before the mark was kept (readied null: nobody is made ready twice).
+ */
+export function markReadied(state, actorId) {
+  if (!Array.isArray(state.readied) || state.readied.includes(actorId)) return state;
+  return { ...state, readied: [...state.readied, actorId] };
 }
 
 /** The Storyteller steps a Turn back: the Turn that ended didn't end after all, so its furniture event stops counting. */

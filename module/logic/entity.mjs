@@ -159,6 +159,11 @@ export function draughtPlan(system, { hunt = false } = {}) {
   return { from: system.form, to, traits: diceFor(system.entityKey, to), cost, ...payFor({ charges: system.charges?.value ?? 0, uses: 1, cost, hunt, weaknessInPlay: !!system.weaknessInPlay, overdrewInFlight: !!system.overdrewInFlight }) };
 }
 
+/** F26: is this Entity in the raid now? An Entity without the mark (from an older world) is. */
+export function isInRaid(system) {
+  return system?.inRaid !== false;
+}
+
 /**
  * Party checks (Chapter 2): no two players play the same Entity; no two Entities
  * take the same Castle Duty. `party` = [{ id, entityKey, duty }] in seating order;

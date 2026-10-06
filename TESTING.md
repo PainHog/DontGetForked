@@ -1,6 +1,6 @@
 # Testing the Foundry system in real Foundry — slices 1 and 2, and the compendiums
 
-The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15; section 20 (the audit's fixes) about 15. Dice are random, so some steps say "roll until…".
+The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15; sections 20–21 (the audit's fixes, who is in the raid) about 25. Dice are random, so some steps say "roll until…".
 
 **What slice 1 covers:** the Entity sheets, the roll dialog and roll cards, charges and abilities, Costs, Jekyll & Hyde's change of form, and the Raid HUD (Suspicion, the Limit, the Turns, dawn and the hunt).
 **What slice 2 covers:** chases (the local chase and the final flight, with the chase tracker: the Lead, the ground, the mob, Weaknesses, the majority rule), the lock-up (capture, slipping free, rescue, left behind), group checks (one Suspicion rise), Tell checks, carried furniture's Suspicion, the shopping list and how the year went.
@@ -9,8 +9,8 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 ## Setup
 
 1. Until a release is published, copy the repository folder into your Foundry data folder as `Data/systems/dont-get-forked` (the folder name must match). Restart Foundry. *(After a release: Install System → manifest URL `https://github.com/PainHog/DontGetForked/releases/latest/download/system.json`.)*
-2. Create a world with the system **Don't Get Forked** (Foundry 13 or 14) and launch it.
-3. In **Configure Players**, add a player user, say **Ann** (role: Player).
+2. Create a world with the system **Don't Get Forked** (Foundry 13) and launch it.
+3. In **Configure Players**, add two player users, say **Ann** and **Ben** (role: Player). Ben never logs in: he owns the Dracula the GM rolls for, because a new raid puts in the raid only the Entities a player owns (section 21).
 4. Browser 1: log in as Gamemaster. Browser 2 (or a private window): log in as Ann.
 5. Keep the browser console open in both (F12 → Console). Any red error is worth a screenshot.
 
@@ -28,7 +28,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
    - **Weakness: Rowan (Soon)** and **Tell: A Black Cat**, with the book's text;
    - Status *Active*, Carrying furniture (unticked), *Carrying: Nothing yet*, Notes.
    - Change the Gift to *Black Cat*: the text under it changes. Change it back.
-2. **GM:** New Entity → **Dracula**, no player. Then New Entity → **Jekyll & Hyde**, player **Ann**. The chooser marks Entities already in the world ("already in this world").
+2. **GM:** New Entity → **Dracula**, player **Ben**. Then New Entity → **Jekyll & Hyde**, player **Ann**. The chooser marks Entities already in the world ("already in this world").
 3. **Ann:** the Actors sidebar shows all three. Ann can edit the Witch and Jekyll & Hyde, and open Dracula's sheet read-only.
 
 ## 3. A plain roll
@@ -98,7 +98,7 @@ Turn each off, check, and turn it back on:
 
 ## 10. The shopping list and Tell checks (slice 2 starts here)
 
-Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You need two Entities: Ann's **Witch** and a **Dracula** with no player (the GM rolls for him). Every Entity is *Active* with 3 charges (a new raid resets them).
+Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You need two Entities: Ann's **Witch** and Ben's **Dracula** (Ben isn't logged in: the GM rolls for him). Every Entity is *Active* with 3 charges (a new raid resets them).
 
 1. **GM:** on the Raid window, **Shopping list** → **Roll the list**. On Standard a d6 first decides the essentials (odd one, even two): the card **The shopping list** says *Essentials: a d6 rolled N (odd one, even two): 1 or 2*, then shows five items with their kinds, the first one or two marked *essential*. (Easy always has one, Hard two, with no extra die.) Both Raid windows now have a closed **The shopping list (5)** line; open it.
 2. **GM:** **Tell check**: both Entities ticked, Where: *the baker's* → **Roll the check**. A **A Tell check: the baker's** card shows the d6 and, because the Witch is arriving, a second d6 (*Familiar's Warning: the second d6 must also roll 4–6*).
@@ -212,6 +212,17 @@ These check the fixes from the system audit (`docs/audits/FOUNDRY-AUDIT.md`). St
 9. **Helping costs the helper, once.** **Ann** rolls with **Bat (Dracula)** ticked: Dracula (GM's sheet) goes down 1 charge, once. *(Optional, Ann's console:)* `game.dontGetForked.runOp("actor.spendCharges", { actorId: "<Dracula's id>", count: 3 })` → `{ ok: false, … }`, Dracula's charges unchanged.
 10. **No pretending to be the Storyteller.** *(Optional, Ann's console:)* `game.users.activeGM.query("dont-get-forked.op", { op: "raid.adjust", args: { delta: 3 }, userId: game.users.activeGM.id, requestId: "test-1" })` → `{ ok: false, reason: "spoofed" }`; Suspicion doesn't move.
 11. **The furniture tick.** In the roll dialog, *The furniture's extra obstacle* says it adds the 2 harder to the Difficulty rolled for it, and to leave it off in a premade town (whose furniture obstacle is printed 2 harder already).
+
+## 21. Who is in the raid, a Storyteller who drops, and Hidden Pockets (about 10 minutes)
+
+1. **Who is in the raid.** **GM:** New Entity → **The Werewolf**, *no player*; on its sheet set the Perk to *Fetch*. Press **New raid** → *Standard*. The Raid window's **In this raid (2)** list (Storyteller only) shows the Witch and Dracula, and the Werewolf *(not in this raid)*; the Werewolf's sheet has *In this raid* unticked (Ann sees no tick on her sheets).
+2. **Ann** rolls the way out (Witch, Sly): Difficulty **8**, no *1 easier (Fetch)*: the Werewolf isn't there. **GM:** **back in town**; in **In this raid**, press **add** next to the Werewolf (or tick *In this raid* on its sheet). Ann rolls the way out again: Difficulty **7**, *1 easier (Fetch)*. **back in town**.
+3. **GM:** press **take out** next to the Werewolf. **Start the hunt**: the final flight lists the Witch and Dracula only. **Stop the hunt**. **Group check** and **Tell check** list only the Witch and Dracula; in Ann's roll dialog, *Help from the others* has nothing from the Werewolf.
+4. **GM:** set the Werewolf's charges to 0, then **New raid**: the Werewolf still has 0 (it wasn't in the raid); **add** it on the Raid window: charges back to 3 and *Active* (made ready for this raid, once). **take out** again, or delete it.
+5. **A Storyteller who drops.** *(Needs a third browser.)* In Configure Players, add a user **Assistant** with role *Assistant GM* and log it in. **GM:** start a local chase (Ann rolls Trouble with *Watched*). Close the GM's tab (the Assistant becomes the Storyteller). **Ann** rolls her chase round from the chase tracker: the Assistant's chase tracker records it and the Lead moves, and the next round's ground is rolled, with no reload. Log the GM back in. *(The automated tests also cover a roll whose request was lost as the GM dropped: the Assistant picks it up when it takes over.)*
+6. **A chase roll for someone who dropped.** In a local chase, close Ann's tab. **GM:** the chase tracker shows **Roll** next to the Witch: roll it for her; it counts and the Lead moves. Log Ann back in.
+7. **A deleted Entity in a chase.** **GM:** New Entity → **A Ghost** for Ann, **Start the hunt**; Ann and the GM roll for the Witch and Dracula, then delete the Ghost from the Actors sidebar: it leaves the chase tracker and the round's Lead moves at once. **Stop the hunt**. The same in an open group check: deleting an Entity takes it out of the *waiting for* list.
+8. **Hidden Pockets keeps loot, not furniture.** **GM:** New Entity → **The Invisible Man** for Ann, Perk *Hidden Pockets*; Ann adds an item (*+ Add an item*: "the silver spoons") and ticks *Carrying furniture*. Get him captured the rules' way: a local chase that corners him (Ann rolls Trouble with *Watched*, then Trouble in the chase), or, quicker, the GM's console `game.dontGetForked.runOp("lockup.set", { actorId: "<his id>", captured: true })` (changing *Status* on the sheet only moves him, it takes nothing). He keeps the spoons on his sheet, *Carrying furniture* is unticked, and the Raid window says *The furniture is lost or abandoned for the night*.
 
 ## What to send back
 

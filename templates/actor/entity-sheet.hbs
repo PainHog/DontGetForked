@@ -60,6 +60,7 @@
         <select name="system.status">{{#each statuses}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
       </label>
       <label class="dgf-check"><input type="checkbox" name="system.carryingFurniture"{{#if system.carryingFurniture}} checked{{/if}}> {{localize "DGF.Sheet.carryingFurniture"}}</label>
+      {{#if isGM}}<label class="dgf-check"><input type="checkbox" name="system.inRaid"{{#if inRaid}} checked{{/if}}> {{localize "DGF.Sheet.inRaid"}}</label>{{else}}{{#unless inRaid}}<span class="dgf-hint">{{localize "DGF.Sheet.notInRaid"}}</span>{{/unless}}{{/if}}
     </div>
     {{#if marks.length}}
     <ul class="dgf-marks">

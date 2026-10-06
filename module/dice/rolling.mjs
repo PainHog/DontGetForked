@@ -12,7 +12,7 @@
 import { SYSTEM_ID, SETTINGS, OPS, HOOKS, CARD, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import { buildRollPlan, resolvePlannedRoll, planOdds, chargesAfter } from "../logic/roll-plan.mjs";
-import { rollAbilities, otherForm, diceFor, payFor, draughtPlan } from "../logic/entity.mjs";
+import { rollAbilities, otherForm, diceFor, payFor, draughtPlan, isInRaid } from "../logic/entity.mjs";
 import { runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
@@ -45,7 +45,7 @@ export function abilityChoices(actor, raid = getRaid()) {
   const own = rollAbilities(actor.system).map((a) => entry(a, actor, true));
   // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help
   const flight = raid.hunt && raid.chase && !raid.chase.outcome && raid.chase.kind === "final" ? new Set(raid.chase.members.map((m) => m.actorId)) : null;
-  const helpers = game.actors.filter((a) => isEntity(a) && a.id !== actor.id && a.system.entityKey && (!flight || flight.has(a.id)))
+  const helpers = game.actors.filter((a) => isEntity(a) && a.id !== actor.id && a.system.entityKey && isInRaid(a.system) && (!flight || flight.has(a.id)))
     .flatMap((h) => rollAbilities(h.system).filter((a) => a.effect !== "open").map((a) => entry(a, h, false)));
   return [...own, ...helpers];
 }
@@ -134,6 +134,7 @@ function dialogContext(actor, values, raid) {
   if (sys.skipTurn && sys.skipTurn === raid.turn && !raid.dawn) notices.push(t("DGF.Roll.notice.skipTurn", { turn: raid.turn }));
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
   if (sys.status === "captured") notices.push(t("DGF.Roll.notice.captured"));
+  if (!isInRaid(sys)) notices.push(t("DGF.Roll.notice.notInRaid"));
   const where = rollSituation(actor, { ...values, chase: true, lockup: true, group: true }, raid);
   const c = where.chase;
   if (c?.ok) {

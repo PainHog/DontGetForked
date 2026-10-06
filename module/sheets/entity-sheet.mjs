@@ -8,7 +8,7 @@
  */
 import { SYSTEM_ID } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
-import { partyClashes } from "../logic/entity.mjs";
+import { partyClashes, isInRaid } from "../logic/entity.mjs";
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
 import { chooseEntity, becomeEntityUpdate } from "../entities/create.mjs";
 import { getRaid } from "../raid/store.mjs";
@@ -45,7 +45,8 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
     const view = sys.view;
     const raid = getRaid();
     const effect = (e, trait) => t(`DGF.Effect.${e}`, { trait: traitLabel(trait) });
-    const party = game.actors.filter((a) => a.type === actor.type).map((a) => ({ id: a.id, entityKey: a.system.entityKey, duty: a.system.duty }));
+    // the party is the Entities in this raid (F26): unplayed Entities in the world clash with nobody
+    const party = game.actors.filter((a) => a.type === actor.type && isInRaid(a.system)).map((a) => ({ id: a.id, entityKey: a.system.entityKey, duty: a.system.duty }));
     const clashes = partyClashes(party);
     const warnings = [];
     if (clashes.entity.includes(actor.id)) warnings.push(t("DGF.Sheet.warn.duplicate"));
@@ -55,6 +56,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       actor,
       system: sys,
       isGM: !!game.user?.isGM,
+      inRaid: isInRaid(sys),
       hasEntity: !!view,
       view,
       entityName: view?.name ?? "",

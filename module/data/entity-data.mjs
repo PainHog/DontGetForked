@@ -36,6 +36,7 @@ export class EntityData extends foundry.abstract.TypeDataModel {
       skipTurn: count(0),                       // a Cost: the Turn this Entity loses (0 = none)
       weaknessInPlay: new f.BooleanField({ initial: false }),
       overdrewInFlight: new f.BooleanField({ initial: false }), // B3: overdrawn once in this final flight (no second)
+      inRaid: new f.BooleanField({ initial: true }), // F26: in this raid (a new raid ticks those with a player owner); missing = in
       notes: new f.StringField({ required: true, blank: true, initial: "" }),
     };
   }

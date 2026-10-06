@@ -202,7 +202,8 @@ test("a request off the wire that claims to come from the active Storyteller, or
 test("the Raid HUD follows the Entities: a captive appears at the lock-up when captured, and goes when freed", async () => {
   const gmHud = await asUser(GM, () => openHud());
   const annHud = await asUser(ANN, () => openHud());
-  const listed = (hud) => hud.renderedParts.body.includes(`data-actor-id="${witch.id}"`);
+  // the lock-up's list (F26 added the party's list, which names everyone)
+  const listed = (hud) => /dgf-hud-lockup/.test(hud.renderedParts.body) && hud.renderedParts.body.split("dgf-hud-lockup")[1].includes(`data-actor-id="${witch.id}"`);
   assert.equal(listed(gmHud), false);
   await op(GM, OPS.lockupSet, { actorId: witch.id, captured: true }); // carrying nothing: the raid itself doesn't change
   await settle();

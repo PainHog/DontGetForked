@@ -70,6 +70,13 @@ export function closeGroup(group) {
   return { ...group, open: false };
 }
 
+/** A member taken out of the group check (its Entity was deleted): its roll goes with it. */
+export function groupWithout(group, actorId) {
+  const rolls = { ...group.rolls };
+  delete rolls[actorId];
+  return { ...group, members: group.members.filter((m) => m.actorId !== actorId), rolls };
+}
+
 /** The members caught in this group check: they flee together. */
 export function groupCaught(group) {
   return group ? group.members.filter((m) => group.rolls[m.actorId]?.caught) : [];

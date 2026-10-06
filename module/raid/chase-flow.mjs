@@ -23,8 +23,9 @@ import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import * as C from "../logic/chase.mjs";
 import { captureUpdate, freeUpdate, isCaptive } from "../logic/lockup.mjs";
-import { groupRecord, groupDone, closeGroup, groupCaught } from "../logic/checks.mjs";
-import { registerOp, isActiveGM } from "../net/gm-ops.mjs";
+import { groupRecord, groupDone, closeGroup, groupCaught, groupWithout } from "../logic/checks.mjs";
+import { isInRaid } from "../logic/entity.mjs";
+import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid, mutateRaid, onRaidMutation } from "./store.mjs";
 import { cardOf, updateCard, postCard, postedByOwner } from "../chat/cards.mjs";
@@ -33,9 +34,19 @@ const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
 const randomID = () => foundry.utils.randomID();
 const prefix = (update) => Object.fromEntries(Object.entries(update).map(([k, v]) => [`system.${k}`, v]));
 
-/** The Entities in the world (those with one of the eight chosen). */
-export function entities() {
+/** F26: is this Entity in the raid? (One without the mark, from an older world, is.) */
+export function inRaid(actor) {
+  return isInRaid(actor?.system);
+}
+
+/** Every Entity in the world (one of the eight chosen), in this raid or not. */
+export function allEntities() {
   return game.actors.filter((a) => isEntity(a) && a.system.entityKey);
+}
+
+/** The Entities in this raid (F26): every raid rule (the flight, the checks, the lock-up, the year) counts only these. */
+export function entities() {
+  return allEntities().filter(inRaid);
 }
 
 /** A chase member from an Entity actor. */
@@ -61,7 +72,7 @@ export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (state.partyOut) return { state, started: false, reason: "partyOut" };
   if (state.hunt) return { state, started: false, reason: "huntOn" };
   if (C.isRunning(state.chase)) return { state, started: false, reason: "chaseRunning" };
-  const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter(isEntity).map(memberFor);
+  const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a)).map(memberFor);
   if (!members.length) return { state, started: false, reason: "nobody" };
   const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty });
   return { state: R.setChase(state, chase), started: true, chase };
@@ -304,8 +315,41 @@ async function lockupEffects(card, turn) {
   return freed;
 }
 
+/**
+ * A deleted Entity leaves the running chase (its round can then complete; with nobody left, the chase is off) and
+ * the open group check (complete without it, the check closes and those caught flee together).
+ */
+async function dropDeleted(actorId) {
+  const { state } = await mutateRaid((s) => {
+    let st = s;
+    if (C.isRunning(st.chase) && C.memberIn(st.chase, actorId)) {
+      const c = C.removeMember(st.chase, actorId);
+      st = R.setChase(st, c.members.length ? c : C.endChase(c, "dropped"));
+    }
+    if (st.group?.open && st.group.members.some((m) => m.actorId === actorId)) st = R.setGroup(st, groupWithout(st.group, actorId));
+    return st;
+  });
+  if (state.group?.open && groupDone(state.group)) await runOp(OPS.raidGroup, { action: "close" });
+}
+
 export function registerChaseOps() {
   onRaidMutation({ transform: huntTransform, announce: announceChase, followUp: chaseFollowUp });
+
+  // Only the active Storyteller's client writes: a deleted Entity leaves the chase and the group check.
+  Hooks.on("deleteActor", (actor) => {
+    if (!isActiveGM() || !isEntity(actor)) return;
+    dropDeleted(actor.id).catch((err) => console.error("Don't Get Forked | dropping a deleted Entity failed", err));
+  });
+
+  // A chase round's roll is recorded even if its roller's request is lost (they dropped mid-roll): the active
+  // Storyteller's client picks the card up as it arrives. raid.roll is idempotent for a chase card (the same
+  // message is recorded once, its Suspicion entry replaced), so the roller's own request then changes nothing.
+  Hooks.on("createChatMessage", (message) => {
+    if (!isActiveGM()) return;
+    const card = cardOf(message);
+    if (card?.kind !== CARD.roll || !card.chaseId || card.gmSeen || card.caught || card.lockup || card.wayOutBeaten || card.groupId) return;
+    runOp(OPS.raidRoll, { messageId: message.id }).catch((err) => console.error("Don't Get Forked | chase roll pick-up failed", err));
+  });
 
   // Anyone: a roll card reached the GM. Everything is read from the card, never from the request.
   registerOp(OPS.raidRoll, {

@@ -16,7 +16,7 @@ import { runOp } from "../net/gm-ops.mjs";
 import { getRaid } from "../raid/store.mjs";
 import { setting } from "../settings.mjs";
 import { t } from "../helpers/i18n.mjs";
-import { entities } from "../raid/chase-flow.mjs";
+import { entities, allEntities, inRaid } from "../raid/chase-flow.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { groupWaiting } from "../logic/checks.mjs";
 import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog } from "./raid-dialogs.mjs";
@@ -51,6 +51,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       furnitureLost: () => runOp(OPS.raidFurniture, { state: "lost" }),
       furnitureOut: () => runOp(OPS.raidFurniture, { state: "out" }),
       backInTown: () => runOp(OPS.raidBackInTown, {}),
+      toggleMember: RaidHud.#onToggleMember,
     },
   };
 
@@ -91,6 +92,9 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
         waiting: groupWaiting(state.group).map((m) => m.name).join(", "),
       } : null,
       groupsOn: setting(SETTINGS.autoGroupChecks),
+      // F26: who is in this raid (the Storyteller's list: tick an Entity in or out)
+      party: isGM ? allEntities().map((a) => ({ actorId: a.id, name: a.name, inRaid: inRaid(a) })) : [],
+      partyCount: entities().length,
       captives: entities().filter((a) => isCaptive(a.system)).map((a) => ({
         actorId: a.id, name: a.name,
         since: a.system.capturedTurn ? t("DGF.Raid.heldSince", { turn: a.system.capturedTurn }) : "",
@@ -104,6 +108,12 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       furnitureInPlay: v.furniture === "inPlay" && setting(SETTINGS.autoFurniture),
       furnitureOut: v.furniture === "out",
     };
+  }
+
+  static async #onToggleMember(event, target) {
+    const actor = game.actors.get(target.dataset.actorId);
+    if (!actor) return null;
+    return runOp(OPS.raidMember, { actorId: actor.id, inRaid: !inRaid(actor) });
   }
 
   static async #onFree(event, target) {

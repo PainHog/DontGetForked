@@ -2,15 +2,15 @@
 
 The whole Foundry VTT system, not one diff: `system.json`, `module/` (rules logic, apps, sheet, chat cards, raid store, chases and the lock-up, GM operations, dice, settings), `templates/`, `lang/en.json`, `styles/`, `packs/`, `tools/`, `test/`, `.github/workflows/` and `TESTING.md`, read against the rulebook (`book/src/chapters/*.html`, the source of truth) and `docs/LESSONS.md` (Foundry). There is no live Foundry here: every finding is proved by a test on the fake Foundry (`tools/fake-foundry.mjs`) or by the exact code path.
 
-**Result:** 18 findings fixed, each with a test written to fail first (`test/audit.test.mjs`, 19 tests); 14 left open (rule questions, design choices and recommendations). `npm run check` at the audit's last commit: 226 tests (the other audits' included), 224 pass, 0 fail, 2 todo (the book audit's known mismatches BA-03 and BA-21).
+**Result:** 18 findings fixed in the audit, each with a test written to fail first (`test/audit.test.mjs`, 19 tests); then, on Richard's decisions F26 and V16 (DESIGN.md, 2026-10-06), six of the open ones (`test/party.test.mjs`, 14 tests). 8 remain open (a book question, a security floor, and notes). `npm run check` with these changes on `main`: 240 tests (the other audits' included), 238 pass, 0 fail, 2 todo (the book audit's known mismatches BA-03 and BA-21).
 
 | Severity | Fixed | Open | Total |
 |---|---|---|---|
 | High | 1 | 0 | 1 |
-| Medium | 6 | 1 | 7 |
-| Low | 9 | 7 | 16 |
+| Medium | 7 | 0 | 7 |
+| Low | 14 | 2 | 16 |
 | Info | 2 | 6 | 8 |
-| **Total** | **18** | **14** | **32** |
+| **Total** | **24** | **8** | **32** |
 
 Severity: **High** anyone can do something only the Storyteller should; **Medium** a rule applied wrongly, or a player can change what isn't theirs; **Low** a wrong or stale screen, a lost charge, a corner case; **Info** a note or a gap the book leaves to the table.
 
@@ -92,29 +92,37 @@ Dry run of `release.yml`: `PORTAL.md` (the family portal page) and `TESTING.md` 
 
 **FA-18 · Info · Stale comments:** `module/config.mjs` said the Standard Limit was 12 (B3 made it 11); `module/logic/chase.mjs` said the local mob was 10 plus half (B3: 8). Comments only.
 
+## Fixed after Richard's decisions (F26, V16)
+
+Tests in `test/party.test.mjs`; the human steps are `TESTING.md` section 21.
+
+**FA-R1 → F26 · Medium · The system had no notion of "the party": every Entity in the world counted.**
+Proof (before): with an unplayed Werewolf set to Fetch in the world, Ann's way out was Difficulty 7 (*1 easier (Fetch)*), and the final flight's members were the Witch, Dracula **and the Werewolf**, so the flight waited for a roll nobody would make. Left behind, the helpers, the Tell and group pickers and the sheet's Duty clashes counted every Entity too.
+*Fix:* each Entity has an *In this raid* mark (`system.inRaid`; missing, as in an older world, counts as in). **New raid** sets it for every Entity with a player owner and clears it for the rest; the Storyteller changes it on the Raid window (**In this raid** list: **add** / **take out**, a GM operation `raid.member`) or on the sheet (the tick shows only to a GM). Every raid rule now reads only the Entities in the raid (`entities()` in module/raid/chase-flow.mjs; `allEntities()` is the whole world): Fetch's way-out ease, the final flight at the Limit or at dawn, a caught Entity's chase, group and Tell checks (pickers and operations), helpers, carried furniture's noise, the lock-up list, rescue, left behind and the year, the sheet's party clashes. A new raid's reset (*A new raid resets the Entities*) applies to the Entities in it; one ticked in later is made ready then, once per raid (the raid keeps `readied`; an older raid without it makes nobody ready twice). An Entity outside the raid can still roll; its roll dialog says it isn't in the raid. *Tests:* "F26: a new raid puts every Entity with a player owner in the raid, and only those", "… without the mark … counts as in the raid", "… Fetch that isn't in the raid doesn't ease the way out; ticked in on the Raid window, it does", "… the final flight takes only the Entities in the raid; helpers come only from the raid", "… group and Tell checks pick from the Entities in the raid only", "… the lock-up and the year count only the Entities in the raid", "… a new raid resets only the Entities in it; one ticked in later is made ready then", "… the sheet shows the Storyteller the tick; a player can't change it there".
+*Follow-up:* the compendium guide still says a new raid frees "every Entity"; reword it ("every Entity in the raid") at the next pack rebuild (`npm run build:packs`), which the V15 places change also needs.
+
+**FA-R3 · Low · Storyteller handover.** `reconcile` and `driveChase` ran only on a client's `ready`, so a GM who became the active one when the other dropped didn't catch up on rolls the other never saw.
+*Fix (module/dont-get-forked.mjs):* on `userConnected`, a client that has just become the active GM runs the same catch-up as `ready` (a raid to play, the rolls nobody saw, a chase where it stopped). *Test:* "a Storyteller who takes over (the active one drops) catches up on the rolls the other never saw" (the fake Foundry now fires `userConnected`).
+
+**FA-R4 · Low · A chase roll whose request was lost (its roller dropped mid-roll) left the chase waiting**, and let the roller roll that round again on return.
+*Fix (module/raid/chase-flow.mjs):* the active Storyteller's client picks a chase round's card up as it arrives (`createChatMessage`); `raid.roll` is idempotent for a chase card, so the roller's own request then changes nothing. Only chase-round cards (not caught, lock-up, way-out or group cards, whose side effects aren't all idempotent; reconcile still covers those). The Storyteller can also roll a member's chase roll for them from the tracker (a GM owns every Entity), and it counts. *Test:* "a chase roll whose request was lost still counts; the Storyteller can roll a member's chase roll for them".
+
+**FA-R5 · Low · A deleted Entity stayed in a running chase or an open group check.**
+*Fix:* on `deleteActor` the active Storyteller's client takes it out of the chase (the round can then complete and the Lead moves; with nobody left the chase is off) and out of the group check (complete without it, the check closes and anyone caught flees, as when the Storyteller closes it). *Test:* "a deleted Entity leaves a running chase and an open group check" (the fake Foundry now deletes actors).
+
+**FA-R8 → V16 · Low · Hidden Pockets keeps the loot you carry, not furniture.** The system already did this (the capture keeps the loot, takes the piece and marks it lost for the night, F15); a test now pins it: "V16: captured, Hidden Pockets keeps the loot but not the furniture (F15)". The Perk's wording is the book's (another session).
+
+**FA-R10 · Low · `compatibility.verified` was "14", untested.** Now "13" (minimum 13) until Richard tests on 14; TESTING.md says Foundry 13. In 14, check `ChatMessage.applyRollMode` and the core `rollMode` setting first: they are the v13 calls most likely to move. Everything else is v13's namespaced API (ApplicationV2, DialogV2, ActorSheetV2, TypeDataModel, `foundry.applications.handlebars.renderTemplate`, `renderChatMessageHTML`, `User#query`), with no v1 Application, no deprecated global and no `renderChatMessage`. *Test:* "the manifest claims the Foundry version it was tested on (13) until Richard tests on 14".
+
 ## Open: questions and recommendations
 
-**FA-R1 · Medium · The system has no notion of "the party": every Entity in the world counts.**
-The Entities compendium invites dragging all eight in, and `entities()` (module/raid/chase-flow.mjs) is every Entity actor. Proof (fake Foundry): with an unplayed Werewolf set to Fetch in the world, Ann's way out was Difficulty 7 (*1 easier (Fetch)*), and the final flight's members were the Witch, Dracula **and the Werewolf**, so the flight waited for a roll nobody would make until the Storyteller took it out by hand. Left behind, the helpers list and the Tell and group pickers count every Entity too.
-Options: **(1, recommended)** a "in this raid" tick per Entity, set on **New raid** (defaulting to Entities with a player owner) and shown on the HUD; every party rule reads it. (2) Count only Entities with a player owner (simple, but a Storyteller running an absent player's Entity loses it). (3) Leave it and tell the Storyteller to keep only the party's Entities in the world (TESTING.md and the guide).
-
 **FA-R2 · Low · What a request can still claim.** After FA-04 a console request can still claim to be another *connected* Storyteller (a second GM or Assistant), and the card operations (FA-05, FA-06) trust only what the server records (the card's author). Foundry v13 gives a query handler no sender, so this is the floor without server-side identity. Accept.
-
-**FA-R3 · Low · Storyteller handover.** `reconcile` and `driveChase` run on a client's `ready`. If the active GM drops and another GM becomes active, the new one doesn't catch up until the next raid write or a reload. Recommend re-running them on `userConnected` when this client becomes the active GM.
-
-**FA-R4 · Low · A player who drops between posting a chase roll and the Storyteller's client recording it** leaves the chase waiting; when they're back, the tracker lets them roll that round again (the first card was never recorded). Recommend the active GM processing tracked cards on `createChatMessage` (which needs `promptHome` made idempotent first), or a "pick up rolls" button on the tracker that runs `reconcile`.
-
-**FA-R5 · Low · A deleted Entity stays in a running chase or an open group check** until the Storyteller takes it out or closes the check (both possible by hand; nothing crashes). Recommend a `deleteActor` hook that drops it.
 
 **FA-R6 · Info · Undo is Suspicion only.** It cancels an event's Suspicion; a chase or capture that event caused stays (the tracker's buttons and the lock-up's free undo those). Worth a line in the guide.
 
 **FA-R7 · Low · Book question: the Witch's Hedge Spell.** `module/config.mjs` says "…hers or a friend's (in a local chase, only hers)", which REVIEW row 43 lists among PT4's wording fixes, but Chapter 2 doesn't have the bracket (the book audit marks it BA-03). The book is the source of truth: either the bracket goes into Chapter 2, or out of the config. Richard's call.
 
-**FA-R8 · Low · Rule question: Hidden Pockets and furniture.** Captured with Hidden Pockets, the Invisible Man "keeps what you carry"; the system keeps his loot but still takes a piece of furniture (Chapter 6: "the town takes back what you were carrying, furniture included"; F15). Does Hidden Pockets keep a carried piece? Recommend: no (a captive can't carry furniture in the lock-up), and say so in the Perk.
-
 **FA-R9 · Info · What the system leaves to the table.** The campaign upgrades (three at most; one extra charge to an Entity of the players' choice each raid) aren't tracked: the Storyteller sets an Entity's starting charges on its sheet and a new raid refills to it. Also by hand: how many carry a Huge piece and small entrances, a carried move taking two Turns, Spectral, handing loot over, a lost Turn being skipped, one action per Turn.
-
-**FA-R10 · Low · `compatibility.verified` is "14".** Nothing in this repository has run on Foundry 14 (TESTING.md says "13 or 14"). Recommend setting `verified` to the version Richard's TESTING.md run used. In 14, check `ChatMessage.applyRollMode` and the core `rollMode` setting first: they are the v13 calls most likely to move. Everything else is v13's namespaced API (ApplicationV2, DialogV2, ActorSheetV2, TypeDataModel, `foundry.applications.handlebars.renderTemplate`, `renderChatMessageHTML`, `User#query`), with no v1 Application, no deprecated global and no `renderChatMessage`.
 
 **FA-R11 · Info · A player can edit their own Entity's status and charges on the sheet** (as on paper), so a captive could free itself. Accept, or let only the Storyteller change status in the data model's `_preUpdate`.
 

@@ -61,7 +61,7 @@ Hooks.once("init", function () {
 
   // The HUD lists who is held at the lock-up and the tracker shows whose Weakness is in play: they follow the
   // Entities as well as the raid. Only a change that shows there re-renders them (not every actor update).
-  const SHOWN = ["status", "capturedTurn", "weaknessInPlay", "entityKey"];
+  const SHOWN = ["status", "capturedTurn", "weaknessInPlay", "entityKey", "inRaid"];
   const onEntityChange = (actor, diff) => {
     if (actor?.type !== ACTOR_TYPES.entity) return;
     if (diff && !("name" in diff) && !SHOWN.some((k) => diff.system && k in diff.system)) return;
@@ -95,14 +95,28 @@ Hooks.once("init", function () {
 /*  Ready                                       */
 /* -------------------------------------------- */
 
+/** The active Storyteller's catch-up: a raid to play, the rolls nobody saw, a chase where it stopped. */
+async function catchUp() {
+  await seedRaid();
+  await reconcile();
+  await driveChase(); // a chase the automation runs picks up where it stopped
+}
+
+const wasActiveGM = new Map(); // user id → this client was the active GM (one entry in a real client)
+
 Hooks.once("ready", async function () {
   listenSocket();
   primeRaid();
-  if (isActiveGM()) {
-    await seedRaid();
-    await reconcile();
-    await driveChase(); // a chase the automation runs picks up where it stopped
-  }
+  wasActiveGM.set(game.user?.id ?? "", isActiveGM());
+  if (isActiveGM()) await catchUp();
   await openHud();
   console.log("Don't Get Forked | Ready.");
+});
+
+// The Storyteller role can pass to another GM when the active one drops: the new one catches up then.
+Hooks.on("userConnected", () => {
+  const key = game.user?.id ?? "";
+  const now = isActiveGM(), was = wasActiveGM.get(key) ?? false;
+  wasActiveGM.set(key, now);
+  if (now && !was) catchUp().catch((err) => console.error("Don't Get Forked | catching up failed", err));
 });

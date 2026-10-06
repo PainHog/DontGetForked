@@ -20,6 +20,11 @@
   {{#if furnitureLost}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureLost"}}</p>{{/if}}
   {{#if furnitureOut}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureOut"}}</p>{{/if}}
   {{#if furnitureInPlay}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureInPlay"}}{{#if isGM}} <button type="button" class="dgf-link" data-action="furnitureOut">{{localize "DGF.Raid.furnitureOutButton"}}</button> <button type="button" class="dgf-link" data-action="furnitureLost">{{localize "DGF.Raid.furnitureLostButton"}}</button>{{/if}}</p>{{/if}}
+  {{#if party.length}}
+  <details class="dgf-hud-list dgf-hud-party"><summary>{{localize "DGF.Raid.party" n=partyCount}}</summary>
+    <ul>{{#each party}}<li class="{{#unless inRaid}}dgf-out{{/unless}}">{{name}}{{#unless inRaid}} <span class="dgf-hint">{{localize "DGF.Raid.notInRaid"}}</span>{{/unless}} <button type="button" class="dgf-link" data-action="toggleMember" data-actor-id="{{actorId}}">{{#if inRaid}}{{localize "DGF.Raid.leaveRaid"}}{{else}}{{localize "DGF.Raid.joinRaid"}}{{/if}}</button></li>{{/each}}</ul>
+  </details>
+  {{/if}}
   {{#if list.length}}
   <details class="dgf-hud-list"><summary>{{localize "DGF.Raid.listCount" n=list.length}}</summary>
     <ul>{{#each list}}<li>{{name}}{{#if essential}} <em>({{localize "DGF.List.essential"}})</em>{{/if}}</li>{{/each}}</ul>

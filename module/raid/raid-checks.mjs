@@ -26,7 +26,7 @@ import { registerOp, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid, mutateRaid } from "./store.mjs";
 import { postCard } from "../chat/cards.mjs";
-import { entities } from "./chase-flow.mjs";
+import { entities, inRaid } from "./chase-flow.mjs";
 
 const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
 
@@ -118,7 +118,7 @@ export function registerCheckOps() {
       }
       if (!setting(SETTINGS.autoGroupChecks)) return { ok: false, reason: "groupChecksOff" };
       if (getRaid().group?.open) return { ok: false, reason: "groupOpen" };
-      const list = members.map((id) => game.actors.get(id)).filter(isEntity).map((a) => ({ actorId: a.id, name: a.name }));
+      const list = members.map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a)).map((a) => ({ actorId: a.id, name: a.name }));
       if (list.length < 2) return { ok: false, reason: "tooFew" };
       const id = foundry.utils.randomID();
       const { state } = await mutateRaid((s) => R.setGroup(s, newGroup({ id, label: String(label ?? ""), turn: s.turn, members: list })));
@@ -133,7 +133,7 @@ export function registerCheckOps() {
     apply: async ({ arriving = [], place = "" }) => {
       const raid = getRaid();
       if (placeChecked(raid.tells, place)) return { ok: false, reason: "alreadyChecked" };
-      const actors = [...new Set(arriving)].map((id) => game.actors.get(id)).filter(isEntity);
+      const actors = [...new Set(arriving)].map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a));
       if (!actors.length) return { ok: false, reason: "nobodyArriving" };
       const list = actors.map((a) => ({ actorId: a.id, name: a.name, perk: a.system.perk, entityKey: a.system.entityKey }));
       const rolls = [];
