@@ -257,17 +257,17 @@
  },
  {
   "name": "creature-costume",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Ca%27_Rezzonico_-_Il_gigante_Magrat_1760_-_Pietro_Longhi.jpg",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout%2C_1825_De_Reuse_Familie_%28titel_op_object%29%2C_BI-B-FM-117-12.jpg/1920px-Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout%2C_1825_De_Reuse_Familie_%28titel_op_object%29%2C_BI-B-FM-117-12.jpg",
   "crop": [
-   0.04,
-   0.07,
-   0.96,
+   0.59,
+   0.33,
+   0.95,
    1
   ],
   "aspect": 0.85,
   "width": 640,
   "quality": 70,
-  "source_file": "frankenstein-costume-1.jpg"
+  "source_file": "commons: BI-B-FM-117-12"
  },
  {
   "name": "creature-revealed",
@@ -285,17 +285,17 @@
  },
  {
   "name": "mummy-costume",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/A%C3%AFda_-_vingt-quatre_projets_de_costumes_-_attribu%C3%A9s_%C3%A0_Auguste_Mariette_-_btv1b52503433g_%2818_of_25%29.jpg",
+  "url": "https://images.metmuseum.org/CRDImages/dp/original/DPB882600.jpg",
   "crop": [
-   0.29,
-   0.2,
-   0.81,
+   0.165,
+   0.13,
+   0.925,
    1
   ],
   "aspect": 0.85,
   "width": 640,
   "quality": 70,
-  "source_file": "mummy-costume-2.jpg"
+  "source_file": "met: 422975"
  },
  {
   "name": "mummy-revealed",

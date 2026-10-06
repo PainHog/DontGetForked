@@ -172,11 +172,12 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### creature-costume: Frankenstein’s Creature, in costume
 
-- **Work:** Ca' Rezzonico - Il gigante Magrat 1760 - Pietro Longhi.jpg
-- **Artist:** Pietro Longhi (1701-1785); c. 1760 ('Il gigante Magrat', Ca' Rezzonico, Venice)
-- **Source:** https://commons.wikimedia.org/wiki/File:Ca%27_Rezzonico_-_Il_gigante_Magrat_1760_-_Pietro_Longhi.jpg
-- **Licence:** Public domain (PD-old-100-expired, CC-PD-Mark). Painter died 1785; 2D reproduction, Commons: PD-old-100-expired (PD-Art).
-- **Audit:** The giant stands on the pavement, both feet down, hand on hip; masked revellers in tricorns and bautas stand beside him; a notice pinned to the wall. Character: two eyes, two arms, two legs. Not the film look: an ordinary big man in a greatcoat.
+- **Work:** Reuzenfiguren in de optocht voor de Heilige Rombout, 1825. De Reuse Familie, BI-B-FM-117-12.jpg (Mechelen's festival giants in the 1825 procession)
+- **Artist:** Jan Vervloet (Flemish, 1798-1869), lithograph; printed by Burggraaff, published by Van Velsen-Van der Elst, Mechelen, 1825
+- **Source:** https://commons.wikimedia.org/wiki/File:Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout,_1825_De_Reuse_Familie_(titel_op_object),_BI-B-FM-117-12.jpg (prepared from Commons' 1920 px rendition)
+- **Licence:** CC0 (Rijksmuseum Amsterdam scan released CC0), checked 2026-10-06; artist died 1869, published 1825.
+- **Replaces** (2026-10-06): Pietro Longhi's *Il gigante Magrat* (Ca' Rezzonico, Venice), because Italian law lets state museums charge for commercial reproductions of works they hold, even out of copyright.
+- **Audit:** Three festival giants standing on the cobbles, their skirts reaching the ground; a fifer (fife held to his mouth) and a drummer (drum hung at his side, sticks in hand) standing at their feet, two legs each, both feet down. Faces turned to us show two eyes. The other two giants and the printed caption are cropped off.
 
 ### creature-revealed: Frankenstein’s Creature, revealed
 
@@ -188,11 +189,12 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### mummy-costume: the Mummy, in costume
 
-- **Work:** Aïda - vingt-quatre projets de costumes - attribués à Auguste Mariette - btv1b52503433g (18 of 25).jpg
-- **Artist:** Auguste Mariette (1821-1881), attributed; 1871 (Aida costume designs)
-- **Source:** https://commons.wikimedia.org/wiki/File:A%C3%AFda_-_vingt-quatre_projets_de_costumes_-_attribu%C3%A9s_%C3%A0_Auguste_Mariette_-_btv1b52503433g_(18_of_25).jpg
-- **Licence:** Public domain (PD US expired, PD France). Designer died 1881; made 1871; Commons: PD France + PD US expired.
-- **Audit:** An extra standing, holding a standard in his right hand (the pole runs out of the frame at top and bottom); the headdress on his head, armbands on his arms. Character: two eyes, two arms, legs cut by the bottom frame. The designer's notes are cropped off.
+- **Work:** Blanche Rosevelt in Egyptian Costume, from the set Actors and Actresses, Second Series (N71), for Duke brand cigarettes (colour lithograph card, 1888-90)
+- **Artist:** W. Duke, Sons & Co. (New York and Durham, North Carolina), publisher; artist unrecorded
+- **Source:** https://www.metmuseum.org/art/collection/search/422975 (The Jefferson R. Burdick Collection)
+- **Licence:** Public domain; The Metropolitan Museum of Art's Open Access image (CC0, free for any use including commercial), checked 2026-10-06. Published in the US 1888-90.
+- **Replaces** (2026-10-06): Auguste Mariette's *Aïda* costume design, a Bibliothèque nationale de France scan, because the BnF requires a paid licence for commercial reuse of its scans.
+- **Audit:** Head and shoulders in profile: the headdress sits on her head and falls to the collar; one eye (profile), one ear hidden by the headdress. The card's frame and printed caption are cropped off.
 
 ### mummy-revealed: the Mummy, revealed
 
