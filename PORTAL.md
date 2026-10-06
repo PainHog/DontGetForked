@@ -1,6 +1,6 @@
 Now: The rules have settled: the last two computer playtests found nothing major. A kit for the first real playtest with people is ready.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
-Number: Design decisions made = 88
+Number: Design decisions made = 89
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 155
