@@ -48,7 +48,7 @@ export const PARAMS = {
     ref: "CORE-RULES Abilities (effect 4 is described only as fiction)",
   },
   overdrawAtLimit: {
-    kind: "rule", default: "weakness", values: ["weakness", "free", "forbidden", "fury", "once"],
+    kind: "rule", default: "once", values: ["once", "weakness", "free", "forbidden", "fury"],
     title: "Overdraw (and Suspicion triggers) once the hunt is on",
     doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap); once = as weakness, and each Entity may overdraw at most once per flight (PT4 M1 candidate).",
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
@@ -136,6 +136,12 @@ export const PARAMS = {
     title: "What makes furniture risky (S7 slow; B2 2026-10-06: noisySlowHard is the rule)",
     doc: "base = carrying only (no Mask, Nimble one size smaller); hardLoc = the furniture's location is 2 harder; noisy = +1 Suspicion at the end of each Turn a piece is carried in town; both = hardLoc + noisy; slow = while carrying, a move takes two Turns; noisySlow = noisy + slow; slowHard = slow, and the furniture's extra obstacle is 2 harder (B2 candidate); slowWatched = slow, and the furniture's extra obstacle is always watched (B2 candidate); noisySlowHard = noisy + slow + the extra obstacle 2 harder (B2 candidate).",
     ref: "DESIGN Furniture; S7",
+  },
+  corneredAtLimit: {
+    kind: "rule", default: "captured", values: ["captured", "flight"],
+    title: "Cornered in the round the Limit comes (B3, 2026-10-06: captured)",
+    doc: "captured = you are captured first, then the final flight starts without you; flight = the chase ends at once and you join the flight (the rule before B3).",
+    ref: "DESIGN B3; PT4 m29",
   },
   fetchRule: {
     kind: "rule", default: "flight", values: ["flight", "pickup", "keeper", "carry", "grab", "lockup"],
@@ -273,7 +279,7 @@ export const NUMBERS = {
   lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6/S9
   finalCloseIn: 0, // PT4 M2 candidate: from this round of the final flight on (1-based), the mob is 1 harder each round (0 = off)
   finalCloseCap: 12,
-  localMob: { base: 10, perSuspicion: 0.5, max: 12 }, // S9
+  localMob: { base: 8, perSuspicion: 0.5, max: 12 }, // S9; B3: base 8 (was 10)
   finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
   maxChaseRounds: 200, // a safety stop only (was 20, which ended about 1 Standard or Hard flight in 10 early and counted it as an escape)
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
@@ -281,12 +287,12 @@ export const NUMBERS = {
   labels: {
     // S9 (approved 2026-10-04); Limits raised in S10. `difficulty` is the share of each Difficulty among a label's obstacles.
     easy: {
-      items: 4, essentials: [1], limit: 12, turns: 12, finalMob: 10, lockup: 10, exit: 6, // B1: 4 items (was 3)
+      items: 4, essentials: [1], limit: 11, turns: 12, finalMob: 10, lockup: 10, exit: 6, finalEscape: 5, // B1: 4 items (was 3); B3: Limit 11, flight escapes at 5
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 5, essentials: [1, 2], limit: 12, turns: 12, finalMob: 11, lockup: 10, exit: 8, // B1: 5 items, Limit 12 (were 4, 13)
+      items: 5, essentials: [1, 2], limit: 11, turns: 12, finalMob: 11, lockup: 10, exit: 8, finalEscape: 5, // B1: 5 items (was 4); B3: Limit 11 (B1 12), flight escapes at 5
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },

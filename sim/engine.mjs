@@ -878,6 +878,13 @@ function localChase(S, m) {
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
     if (S.P.chaseSusp === "yes") addSusp(S, r.suspGain, "chase"); // chaseSusp "no" (S6 candidate): chase rolls don't raise Suspicion
+    // B3: cornered in the round the Limit comes, you're captured first; then the final flight starts without you.
+    if (lead <= 0 && S.P.corneredAtLimit === "captured") {
+      if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); }
+      else capture(S, m);
+      if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); finalFlight(S, "limit"); }
+      return;
+    }
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
     if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
     if (lead <= 0) {
@@ -902,6 +909,11 @@ function groupChase(S, group) {
     const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
     lead += majorityMove(results, critW);
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
+    if (lead <= 0 && S.P.corneredAtLimit === "captured") {
+      for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); }
+      if (limitHit(S)) finalFlight(S, "limit");
+      return;
+    }
     if (limitHit(S)) return finalFlight(S, "limit");
     if (lead >= N.lead.localEscape) return;
     if (lead <= 0) { for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); } return; }

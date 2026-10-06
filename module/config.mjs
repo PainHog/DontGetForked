@@ -294,7 +294,7 @@ DGF.festival = Object.freeze({
 DGF.tell = Object.freeze({ die: 6, goesOffOn: 4 });
 
 /** C3: when the mob brings a Weakness. "soon" bites from this round of a chase (1-based). */
-DGF.weaknessTimings = Object.freeze(["always", "soon", "dawn"]);
+DGF.weaknessTimings = Object.freeze(["always", "soon"]); // B3: no Entity had Dawn timing; the line was dropped
 DGF.weaknessSoonRound = 3;
 
 /**
@@ -391,9 +391,9 @@ DGF.epilogue = Object.freeze({
 DGF.charges = 3;
 DGF.turns = 12;
 DGF.lead = Object.freeze({ localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 });
-DGF.localMob = Object.freeze({ base: 10, perSuspicion: 0.5, max: 12 });
+DGF.localMob = Object.freeze({ base: 8, perSuspicion: 0.5, max: 12 }); // B3: base 8 (was 10)
 DGF.labels = Object.freeze({
-  easy: Object.freeze({ items: 4, essentials: [1], limit: 12, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 12, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, exit: 10, finalMob: 11, lockup: 12, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
+  easy: Object.freeze({ items: 4, essentials: [1], limit: 11, finalEscape: 5, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 11, finalEscape: 5, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, finalEscape: 6, exit: 10, finalMob: 11, lockup: 12, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
 });
