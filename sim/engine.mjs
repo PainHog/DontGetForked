@@ -886,6 +886,7 @@ function localChaseBody(S, m, t) {
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
     if (S.P.chaseSusp === "yes") addSusp(S, r.suspGain, "chase"); // chaseSusp "no" (S6 candidate): chase rolls don't raise Suspicion
+    else if (S.P.chaseSusp.startsWith("cap")) { const add = Math.min(r.suspGain, Number(S.P.chaseSusp.slice(3)) - (t.gain ?? 0)); if (add > 0) { t.gain = (t.gain ?? 0) + add; addSusp(S, add, "chase"); } } // PT5 candidate: at most N per chase
     // B3: cornered in the round the Limit comes, you're captured first; then the final flight starts without you.
     if (lead <= 0 && S.P.corneredAtLimit === "captured") {
       if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); }
@@ -908,7 +909,7 @@ function groupChase(S, group) {
   const N = S.N;
   S.rec.count("local chases (shared)");
   const weak = new Map(group.map((m) => [m, weakStart(S, m, false)]));
-  let lead = N.lead.localStart;
+  let lead = N.lead.localStart, gained = 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
@@ -917,6 +918,7 @@ function groupChase(S, group) {
     const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
     lead += majorityMove(results, critW, S.P.finalMove ?? "majority");
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
+    else if (S.P.chaseSusp.startsWith("cap")) { const add = Math.min(Math.max(0, ...results.map((r) => r.suspGain)), Number(S.P.chaseSusp.slice(3)) - gained); if (add > 0) { gained += add; addSusp(S, add, "chase"); } }
     if (lead <= 0 && S.P.corneredAtLimit === "captured") {
       for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); }
       if (limitHit(S)) finalFlight(S, "limit");

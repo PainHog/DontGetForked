@@ -132,9 +132,9 @@ export const PARAMS = {
     ref: "CORE-RULES 0.4 Rolling 4 (S2)",
   },
   chaseSusp: {
-    kind: "rule", default: "yes", values: ["yes", "no"],
-    title: "Do local-chase rolls raise Suspicion? (S6 candidate)",
-    doc: "yes = as written: trouble and the Monster showing raise Suspicion in a chase like anywhere else; no = you are already caught, so chase rolls only move the Lead.",
+    kind: "rule", default: "yes", values: ["yes", "no", "cap2", "cap3", "cap4"],
+    title: "Do local-chase rolls raise Suspicion? (S6: yes)",
+    doc: "yes = as written: trouble and the Monster showing raise Suspicion in a chase like anywhere else; no = you are already caught, so chase rolls only move the Lead; capN = as yes, but one local chase raises Suspicion by at most N in all (PT5 candidates).",
     ref: "DESIGN Suspicion package; Chase",
   },
   slipRule: {
