@@ -233,6 +233,12 @@ export const PARAMS = {
     doc: "ifSafe = once every list location is done, with Turns and Suspicion to spare; never; always = as soon as the essentials are in hand.",
     ref: "player policy",
   },
+  outOfSightRule: {
+    kind: "content", default: "carry", values: ["carry", "place", "half", "handed", "handedSmart"],
+    title: "The Invisible Man's Out of Sight (candidate texts after the audit)",
+    doc: "carry = \"trouble gets you caught only while you carry loot or furniture\" (the book); place = … \"or someone at your place does\"; half = \"on Trouble at a watched obstacle you're caught only on a 1–3 on a d6\"; handed = … \"or you were handed loot or handed it over this Turn\"; handedSmart = handed, with a party that keeps the loot out of his hands (it never needs to hand it over).",
+    ref: "Chapter 2 (the Invisible Man); sim/FINDINGS.md, the audit follow-up",
+  },
   roster: {
     kind: "content", default: "approved", values: ["approved", "placeholder", "proposed"],
     title: "Which Entities",

@@ -292,8 +292,27 @@ function followsBehind(S, members) {
  *  steadyNerves  Hyde takes over only if the Monster beats Jekyll's trait die by 2+
  *  bruteStrength as Hyde, carrying doesn't make your Nimble smaller
  */
-const unseen = (m) => hasPerk(m, "outOfSight") && !m.items.length && !m.furniture;
 const hasPerk = (m, k) => m.perk === k;
+const carrying = (m) => m.items.length > 0 || !!m.furniture;
+
+/**
+ * Out of Sight (C8, the Invisible Man): the chance that Trouble at a watched obstacle gets him caught.
+ * outOfSightRule (candidate texts after the audit, sim/FINDINGS.md):
+ *  carry   "only while you carry loot or furniture" (the book now);
+ *  place   … "or someone at your place does";
+ *  half    "on Trouble at a watched obstacle you're caught only on a 1–3 on a d6";
+ *  handed  … "or you were handed loot or handed it over this Turn";
+ *  handedSmart  handed, played by a party that dodges it (he never takes the loot when someone else there can).
+ */
+function seenChance(S, m) {
+  if (!hasPerk(m, "outOfSight")) return 1;
+  const rule = S.P.outOfSightRule ?? "carry";
+  if (rule === "half") return 0.5;
+  if (carrying(m)) return 1;
+  if (rule === "place" && hereOf(S).some((o) => o !== m && carrying(o))) return 1;
+  if ((rule === "handed" || rule === "handedSmart") && m.handTurn === S.turn) return 1;
+  return 0;
+}
 
 /** An Entity's dice now (Jekyll & Hyde: the form it's in). */
 const diceOf = (m) => (m.ent.formDice ? m.ent.formDice[m.form === "hyde" ? "hyde" : "jekyll"] : m.ent.dice);
@@ -505,6 +524,7 @@ function workLocation(S, loc) {
         const to = others.reduce((a, b) => (b.items.length < a.items.length ? b : a));
         to.items.push(...best.m.items);
         best.m.items = [];
+        best.m.handTurn = to.handTurn = S.turn; // outOfSightRule "handed"
         S.rec.count("loot handed over");
         // Plan again with empty hands: Out of Sight's "only while you carry loot", Through the Wall's "not while you carry
         // loot" (before the audit the roll kept the plan made while still carrying).
@@ -608,8 +628,10 @@ function completeLocation(S, loc) {
   loc.done = true;
   if (!loc.itemsTaken) {
     loc.itemsTaken = true;
+    // outOfSightRule "handedSmart": the party keeps the loot out of the Invisible Man's hands when someone else is there.
+    const takers = S.P.outOfSightRule === "handedSmart" && act.some((m) => !hasPerk(m, "outOfSight")) ? act.filter((m) => !hasPerk(m, "outOfSight")) : act;
     for (const it of loc.items) {
-      const holder = act.reduce((a, b) => (b.items.length < a.items.length ? b : a), act[0]);
+      const holder = takers.reduce((a, b) => (b.items.length < a.items.length ? b : a), takers[0]);
       holder.items.push(it);
     }
   }
@@ -842,7 +864,8 @@ function planRoll(S, m, ctx) {
             (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
             (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1) + odExtra;
           // monsterRule "maskSafe" (S2 candidate): trouble on a Mask roll never gets you caught.
-          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon) && !unseen(m);
+          const seenP = seenChance(S, m);
+          const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon) && seenP > 0;
           let gain;
           if (phase === "local" || phase === "final") gain = d.success - d.trouble + (critExtra ? d[critKey] : 0);
           else if (phase === "slip") gain = d.success + (P.slipRule === "cost" || hasPerk(m, "builtToLast") ? 0.8 * d.cost : 0); // a Cost does nothing (Chapter 6) unless it frees you
@@ -850,9 +873,9 @@ function planRoll(S, m, ctx) {
           // Overdraw once the hunt is on puts your Weakness in play for the rest of the flight (S1; B3 "once"). Before the audit this
           // cost was weighed only under "weakness", so with "once" (the default since B3) the players overdrew almost for free.
           const weakCost = phase === "final" && (P.overdrawAtLimit === "weakness" || P.overdrawAtLimit === "once") ? 0.3 * overdraws : 0;
-          const value = gain - lambda * eSusp - mu * (witnessed ? d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0) - weakCost;
+          const value = gain - lambda * eSusp - mu * (witnessed ? seenP * d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0) - weakCost;
           if (!best || value > best.value + 1e-12) {
-            best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, difficulty: D, fixedSusp: fixed };
+            best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, seenP, difficulty: D, fixedSusp: fixed };
           }
         }
       }
@@ -907,7 +930,9 @@ function executeRoll(S, m, plan, phase, { noCost = false, deferCost = false } = 
     entity: m.id,
   });
   if (P.overdrawStack === "stack" && plan.overdraws) gain += S.N.overdrawSuspicion; // paid on top of the roll's rise
-  return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind, costPending, overdrawn };
+  // Out of Sight, outOfSightRule "half": seen on a 1–3 on a d6.
+  const caught = b === "trouble" && plan.witnessed && (plan.seenP === undefined || plan.seenP >= 1 || S.rng.die(6) <= 3);
+  return { band: b, critical, show, suspGain: gain, caught, costKind, costPending, overdrawn };
 }
 
 /** P3: the Storyteller picks a Cost (costChoice). */

@@ -313,3 +313,18 @@ test("a lost Turn skips a move: the Entity follows a Turn behind", () => {
   S.turn = 4; assert.equal(E.hereOf(S).length, 0);
   S.turn = 5; assert.equal(E.hereOf(S).length, 1);
 });
+
+test("outOfSightRule candidates: someone at your place carrying; half the time", () => {
+  const run = (rule, faces, partnerCarries = false) => {
+    const inv = member("invisible", { perk: "outOfSight" }), jekyll = member("jekyll-hyde", { charges: 0 });
+    const neighbour = ob(["sly"], 8, { watched: true });
+    const { S, loc } = state([inv, jekyll], [neighbour], { faces, params: { outOfSightRule: rule } });
+    if (partnerCarries) jekyll.items = [{ id: "x", essential: false }];
+    S.turn = 1; E.workLocation(S, loc);
+    return S.rec.counts["local chases"] ?? 0;
+  };
+  assert.equal(run("carry", [1, 1], true), 0); // the book: only what he carries counts
+  assert.equal(run("place", [1, 1], true), 1); // his partner's loot gives him away
+  assert.equal(run("half", [1, 1, 4]), 0); // 4–6: they didn't see him
+  assert.equal(run("half", [1, 1, 3]), 1);
+});
