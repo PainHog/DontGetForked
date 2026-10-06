@@ -207,10 +207,6 @@
           "then": [
             { "obstacle": "watchman", "difficulty": 10, "watched": true }
           ],
-          "furniture": {
-            "piece": "armour",
-            "obstacle": { "obstacle": "trapdoor", "difficulty": 10 }
-          },
           "map": { "x": 140, "y": 110 }
         },
         {
@@ -252,6 +248,10 @@
           "then": [
             { "obstacle": "shopFloor", "difficulty": 10, "watched": true }
           ],
+          "furniture": {
+            "piece": "armour",
+            "obstacle": { "obstacle": "trapdoor", "difficulty": 10 }
+          },
           "map": { "x": 465, "y": 290 }
         },
         {
