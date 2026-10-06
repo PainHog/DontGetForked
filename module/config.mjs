@@ -129,9 +129,9 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling, at no action.", default: true },
+      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling, at no action, even in a Turn you move.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously." },
-      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you lose your next Turn instead of being captured." },
+      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you lose your next Turn instead of being captured (if the Limit comes that round, you just join the final flight)." },
     ],
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
@@ -155,7 +155,7 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back; the new form lasts until the next draught. He starts each raid as Jekyll, and drinks like any ability: before a roll, at no action. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free." },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free." },
     gift: {
       name: "The Other Self",
       versions: [
@@ -322,7 +322,7 @@ DGF.perkRules = Object.freeze({
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob in your local chase is 1 easier.
-  alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured.
+  alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep what you carry.
   familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive, a Tell check goes off only if a second d6 also rolls 4–6.

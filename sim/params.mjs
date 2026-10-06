@@ -53,10 +53,16 @@ export const PARAMS = {
     doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap); once = as weakness, and each Entity may overdraw at most once per flight (PT4 M1 candidate).",
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
+  furnitureNoise: {
+    kind: "rule", default: "carried", values: ["carried", "moving"],
+    title: "Which Turns a carried piece raises Suspicion (B2: +1 at the end of each Turn)",
+    doc: "carried = every Turn it's carried, both Turns of a move and waiting Turns included (as written); moving = only the Turns it moves (PT5 m9 candidate: a piece set down makes no noise). (Before PT5, together-play counted one per two-Turn move and no waiting Turns; pairs and singles already counted every Turn.)",
+    ref: "DESIGN B2; PT5 m9",
+  },
   finalMove: {
-    kind: "rule", default: "majority", values: ["majority", "margin2", "net"],
-    title: "How a shared Lead moves each round (the majority rule: final flights and shared local chases)",
-    doc: "majority = 1 toward whichever side has more (Successes vs Trouble), none on a tie (decided 2026-10-04); margin2 = as majority, but winning by 2 or more moves it 2; net = it moves by the whole difference (candidates for PT5's long Hard flights).",
+    kind: "rule", default: "margin2", values: ["margin2", "majority", "net"],
+    title: "How a shared Lead moves each round (the majority rule: final flights and shared local chases; B6 2026-10-06: margin2)",
+    doc: "majority = 1 toward whichever side has more (Successes vs Trouble), none on a tie (decided 2026-10-04); margin2 = as majority, but winning by 2 or more moves it 2; net = it moves by the whole difference (B6 decided margin2 after PT5's long Hard flights).",
     ref: "DESIGN 2026-10-04 (majority rule); PT5",
   },
   openEase: {
@@ -337,7 +343,7 @@ export const TARGETS = {
  * history; new candidate packages go here as rule changes are proposed.
  */
 export const PACKAGES = {
-  P0: { title: "The rules as decided (through B5, 2026-10-06) with the current numbers", params: {}, numbers: {} },
+  P0: { title: "The rules as decided (through B6, 2026-10-06) with the current numbers", params: {}, numbers: {} },
   N1: {
     title: "Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
     params: {},

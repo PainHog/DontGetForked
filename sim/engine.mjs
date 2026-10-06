@@ -69,17 +69,19 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
       if (S.P.exitRule === "free" || (S.P.exitRule === "gateCarriers" && !S.furnitureCarried)) { S.turn++; leaveTown(S); break; }
       target = exitLocation(S); // exitRule "gate": getting out is a group check like any other
     }
-    if (target === "wait") { S.turn++; captivesAct(S); continue; }
+    if (target === "wait") { S.turn++; captivesAct(S); if (S.phase !== "raid") break; noisyFurniture(S, "wait"); continue; }
     if (S.at !== target) {
       // P4: each Turn, every Entity either rolls once or moves.
       S.turn++;
       // furnitureRule "slow"/"noisySlow" (S7 candidate): carrying furniture, a move takes two Turns.
-      if (S.furnitureCarried && ["slow", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"].includes(S.P.furnitureRule) && !(S.P.fetchRule === "carry" && S.party.some((c) => c.furniture === S.furnitureCarried && hasPerk(c, "fetch")))) { S.turn++; noisyFurniture(S); if (S.phase !== "raid") break; }
+      if (S.furnitureCarried && ["slow", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"].includes(S.P.furnitureRule) && !(S.P.fetchRule === "carry" && S.party.some((c) => c.furniture === S.furnitureCarried && hasPerk(c, "fetch")))) { S.turn++; noisyFurniture(S, "move"); if (S.phase !== "raid") break; }
+      const moving = !!S.furnitureCarried;
       S.at = target;
       arrive(S, target);
       if (S.phase !== "raid") break;
       captivesAct(S);
       if (S.phase !== "raid") break;
+      if (moving) noisyFurniture(S, "move"); // the end of the move's last Turn
       continue;
     }
     S.turn++;
@@ -87,7 +89,7 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
     if (S.phase !== "raid") break;
     captivesAct(S);
     if (S.phase !== "raid") break;
-    noisyFurniture(S);
+    noisyFurniture(S, "work");
   }
   return summarise(S);
 }
@@ -113,6 +115,7 @@ function playSplit(S) {
     if (S.turn >= S.turns) { finalFlight(S, "dawn"); break; }
     S.turn++;
     regroup(S);
+    let carriedMoved = false; // furnitureNoise "moving": did a carried piece move this Turn?
     const groups = S.groups.filter(live);
     if (groups.length === 0) { captivesAct(S); continue; }
     // T4: once every group waits at the way out with nothing left to do, one Entity rolls for all.
@@ -124,12 +127,12 @@ function playSplit(S) {
       for (const g of groups) {
         if (S.phase !== "raid") break;
         if (!live(g)) continue;
-        if (g.busy > 0) { g.busy--; continue; } // the second Turn of a move while carrying furniture
+        if (g.busy > 0) { g.busy--; carriedMoved = true; continue; } // the second Turn of a move while carrying furniture
         const target = chooseTargetSplit(S, g);
         const dest = target === "exit" ? exit : target;
         if (g.at !== dest) {
           g.at = dest;
-          if (g.members.some((m) => m.status === "active" && m.furniture)) g.busy = 1;
+          if (g.members.some((m) => m.status === "active" && m.furniture)) { g.busy = 1; carriedMoved = true; }
           S.arrivers = g.members;
           arrive(S, dest);
           S.arrivers = null;
@@ -145,7 +148,7 @@ function playSplit(S) {
     }
     captivesAct(S);
     if (S.phase !== "raid") break;
-    noisyFurniture(S);
+    noisyFurniture(S, carriedMoved ? "move" : "work");
   }
 }
 
@@ -220,8 +223,12 @@ function chooseTargetSplit(S, g) {
 }
 
 /** furnitureRule "noisy"/"both" (S7 candidate): +1 Suspicion at the end of each Turn a piece is carried in town. */
-function noisyFurniture(S) {
+/** B2: a carried piece raises Suspicion by 1 at the end of a Turn. furnitureNoise "carried" = every Turn it's carried (as written);
+ *  "moving" = only a Turn it moves (PT5 m9 candidate). Before PT5, together-play counted one per two-Turn move and no waiting Turns. */
+function noisyFurniture(S, kind = "work") {
   if (!S.furnitureCarried || !["noisy", "both", "noisySlow", "noisySlowHard"].includes(S.P.furnitureRule)) return;
+  const rule = S.P.furnitureNoise ?? "carried";
+  if (rule === "moving" && kind !== "move") return;
   addSusp(S, 1, "furniture");
   if (limitHit(S)) finalFlight(S, "limit");
 }
