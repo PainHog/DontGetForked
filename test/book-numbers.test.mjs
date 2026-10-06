@@ -179,8 +179,8 @@ test("the labels' numbers in the chapters' prose (Chapters 4, 5, 6) are DGF.labe
   assert.deepEqual([L.easy.items, L.standard.items, L.hard.items], [eItems, shItems, shItems]);
   const [esLimit, hLimit] = match(TXT.ch5, /Limit: (\d+) on Easy and Standard, (\d+) on Hard/, "Chapter 5's opener");
   assert.deepEqual([L.easy.limit, L.standard.limit, L.hard.limit], [esLimit, esLimit, hLimit]);
-  const [esLock, hLock] = match(TXT.ch6, /lock-up Difficulty \((\d+) on Easy and Standard, (\d+) on Hard\)/, "Chapter 6, Captured");
-  assert.deepEqual([L.easy.lockup, L.standard.lockup, L.hard.lockup], [esLock, esLock, hLock]);
+  const [lock] = match(TXT.ch6, /lock-up Difficulty \((\d+)\)/, "Chapter 6, Captured"); // B7: one lock-up Difficulty for every label
+  assert.deepEqual([L.easy.lockup, L.standard.lockup, L.hard.lockup], [lock, lock, lock]);
   const [start, esEscape, hEscape] = match(TXT.ch6, /The Lead starts at (\d+) and the party escapes at (\d+) \(at (\d+) on Hard\)/, "Chapter 6, The Final Flight");
   assert.equal(start, DGF.lead.finalStart);
   assert.deepEqual([L.easy.finalEscape, L.standard.finalEscape, L.hard.finalEscape], [esEscape, esEscape, hEscape]);

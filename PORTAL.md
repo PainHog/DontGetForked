@@ -1,6 +1,6 @@
 Now: Full checks of the rulebook, the online version and the balance simulator: more than 80 problems found and fixed, from security holes in the online version to pictures without descriptions.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
-Number: Design decisions made = 94
+Number: Design decisions made = 95
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 243

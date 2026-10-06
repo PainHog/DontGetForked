@@ -168,7 +168,7 @@ test("the simulator's numbers and chase table are the book's (Chapters 4–6 and
   assert.deepEqual(row("limit"), [11, 11, 15]);
   assert.deepEqual(row("exit"), [6, 8, 10]);
   assert.deepEqual(row("finalMob"), [10, 11, 11]);
-  assert.deepEqual(row("lockup"), [10, 10, 12]);
+  assert.deepEqual(row("lockup"), [10, 10, 10]); // B7
   assert.deepEqual(["easy", "standard", "hard"].map((l) => L[l].finalEscape ?? NUMBERS.lead.finalEscape), [5, 5, 6]);
   assert.deepEqual(row("turns"), [12, 12, 12]);
   assert.equal(NUMBERS.charges, 3);
@@ -186,7 +186,7 @@ test("every rule switch defaults to the decided rule", () => {
     openTrait: "unlisted", waysIn: "two", overdrawStack: "merge", lootHandover: "free", chaseTable: "approved", captiveItems: "lost",
     multiCaught: "shared", monsterRule: "plus2", chaseSusp: "yes", slipRule: "success", furnitureRule: "noisySlowHard",
     corneredAtLimit: "captured", fetchRule: "flightExit", alreadyDeadTurns: 1, furniturePlace: "onList", exitRule: "gateSingle",
-    groupRule: "all", tellScope: "party", triesPerTurn: "each", exitTries: "one", openedRule: "onlyOpener", mesmeriseRule: "any", roster: "approved", dutyEdge: true,
+    groupRule: "all", tellScope: "party", triesPerTurn: "each", exitTries: "one", openedRule: "onlyOpener", mesmeriseRule: "watched", roster: "approved", dutyEdge: true,
     tellPartyChance: 0.5, weaknessRule: "timing",
   };
   const D = defaults();

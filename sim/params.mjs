@@ -60,8 +60,8 @@ export const PARAMS = {
     ref: "DESIGN B2; PT5 m9",
   },
   mesmeriseRule: {
-    kind: "rule", default: "any", values: ["any", "watched"],
-    title: "Dracula's Mesmerise (C2): where it can open an approach",
+    kind: "rule", default: "watched", values: ["watched", "any"],
+    title: "Dracula's Mesmerise (C2; B7 2026-10-06: watched)",
     doc: "any = as written (any obstacle that doesn't list Charm); watched = only at a watched obstacle: he needs someone to mesmerise (candidate after the audits: Dracula +2.9 on three seeds).",
     ref: "DESIGN C2; sim/FINDINGS.md after the audits",
   },
@@ -357,7 +357,7 @@ export const NUMBERS = {
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 5, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 12, exit: 10, // B1: 5 items, way out 10 (were 4, 8)
+      items: 5, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 10, exit: 10, // B1: 5 items, way out 10 (were 4, 8); B7: lock-up 10 (was 12)
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },

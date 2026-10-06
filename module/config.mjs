@@ -34,7 +34,7 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Gifts, Perks, Weaknesses and Tells: C3–C9 (rulebook Chapter 2).
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", text: "open an approach with Charm. He bends a mind with a look." },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", text: "open an approach with Charm where someone’s watching. He bends a mind with a look." },
     gift: {
       name: "Shape of the Night",
       versions: [
@@ -395,5 +395,5 @@ DGF.localMob = Object.freeze({ base: 8, perSuspicion: 0.5, max: 12 }); // B3: ba
 DGF.labels = Object.freeze({
   easy: Object.freeze({ items: 4, essentials: [1], limit: 11, finalEscape: 5, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
   standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 11, finalEscape: 5, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, finalEscape: 6, exit: 10, finalMob: 11, lockup: 12, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
+  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, finalEscape: 6, exit: 10, finalMob: 11, lockup: 10, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
 });

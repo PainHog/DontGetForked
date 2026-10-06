@@ -330,3 +330,14 @@ These three are now the default for a party that stays together (`"auto"`; pairs
 
 ### V17: Out of Sight with anyone carrying beside him (decided 2026-10-06)
 `outOfSightRule` now defaults to "place" ("Trouble gets you caught only while you or anyone with you carries loot or furniture"). `node sim/run.mjs` (2,000 raids per label and party size, seed 1): wins **92.2 / 74.4 / 56.4%**, forked **0.7 / 5.3 / 9.1%** (every target met; were 92.3 / 74.9 / 57.0 and 0.7 / 5.2 / 9.0); Hard captures 0.35 (0.34; target 0.2–0.3, accepted in the design log); Grand Year when a party always goes for furniture 54.5%, a Win lost 17.4%. Out of Sight **+0.2** (was +2.5), the Invisible Man +0.7. Largest outliers on this seed: Jekyll & Hyde −3.3, Dracula +3.2, Rattle −3.2, Book-Learned −3.1, A Ghost +2.9, Mountain Stride +2.7, Tireless −2.6 (the same edge cases as before V17, within run-to-run noise of about ±0.5–1; Dracula is +2.1 to +3.2 on every seed). `node sim/premade-check.mjs 2000`: Puddlecombe 89.4% won / 0.8% forked, Thistlewick 74.2 / 6.9, Gallowsmere 57.1 / 9.6, all inside their targets.
+
+## Dracula and Hard after the audits (2026-10-06, for B7)
+
+Three seeds (1, 7, 11), the rules through V17: Dracula +2.9 (2.3 to 3.2), A Ghost +2.5 (2.2 to 2.9), everything else inside ±2.5 on average (Jekyll & Hyde −2.1, from −3.3 to −1.3). Hard wins 56.4 / 55.3 / 55.1%.
+
+At 1,500 raids per cell (three seeds): Mesmerise only where someone's watching: Dracula +1.9 (1.7 to 2.1), largest average outlier −2.4; Hard wins 55.5 / 54.8 / 54.9%. Dracula's Charm d10 and Nimble d12: +2.5 (1.7 to 3.4), Hard 56.4 / 54.7 / 54.9%. Both: +1.4, Hard 55.1 / 54.4 / 54.3%.
+
+Hard only, 2,000 raids, Mesmerise watched-only: as it stands 55.3 / 54.6 / 54.8% won (forked 9.2 / 10.2 / 10.5%, captures 0.35–0.38); Hard Limit 16: 57.2 / 57.4 / 57.2% (forked 8.9–9.6%, captures 0.37–0.39); **Hard lock-up 10: 57.0 / 56.7 / 56.6% (forked 9.4–10.7%, captures 0.35–0.38)**.
+
+**Decided (B7, under Richard's advance approval):** `mesmeriseRule: "watched"` and the Hard lock-up 10.
+
