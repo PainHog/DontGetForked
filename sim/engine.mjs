@@ -44,7 +44,8 @@ export function playRaid({ party, town, params: P, numbers: N, rng, rec }) {
   // furniturePlace "onList" (S7 candidate): the piece stands at one of the list's locations, behind one extra
   // obstacle the party may take on once that location's loot is in hand; no separate trip.
   if (P.furniturePlace === "onList") {
-    const host = rng.pick(town.locations);
+    // a premade town (sim/premade.mjs) names where its piece stands; a rolled town picks at random
+    const host = town.furnitureHost ? town.locations.find((l) => l.id === town.furnitureHost) : rng.pick(town.locations);
     const fl = town.furnitureLoc;
     host.furniturePending = { size: fl.furniture.size, obstacle: fl.obstacles[fl.obstacles.length - 1] };
     fl.done = true;

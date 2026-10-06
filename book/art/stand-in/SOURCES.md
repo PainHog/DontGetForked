@@ -94,6 +94,14 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Licence:** Public domain (PD-Old-100). All makers died around 1500; PD-old-100.
 - **Audit:** Walled town, buildings on their foundations, a statue on its column; the town continues past the frame. Title lettering cropped off.
 
+## ch09-fair: Chapter 9 header
+
+- **Work:** Dorpskermis, RP-P-OB-62.004.jpg
+- **Artist:** Jan de Visscher (Dutch, c. 1636–after 1692), after a painting by Adriaen van Ostade (Dutch, 1610–1685); 1643–1692
+- **Source:** https://commons.wikimedia.org/wiki/File:Dorpskermis,_RP-P-OB-62.004.jpg (the 1920px thumbnail)
+- **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0 (Copyright: Publiek domein); both artists died more than 250 years ago. Checked on its Commons file page through the API on 2026-10-06.
+- **Audit:** A dance in front of an inn: the piper stands raised above the crowd (his footing is hidden behind the dancers), a couple dances hand in hand with a child between them, a man sits on a barrel raising a cup, onlookers stand in the doorway, a dog runs at the children, a broken cart lies by a dead tree, and a pole with a festival rag leans on the roof. Counted: faces in profile show one eye, frontal faces two; arms join at the shoulders. Feet, the dog's legs, the barrel and the cart wheel run off the bottom edge with the ground, deliberately (the street continues out of frame); nothing is cut inside the frame. The houses' upper storeys, the sky and the plate border are cropped off. Nothing crude in the crop (the scene is a dance; no drunkenness or brawling shown).
+
 ## back-moonrise: Back cover
 
 - **Work:** Samuel Palmer, The Rising Moon, 1857, NGA 119976.jpg

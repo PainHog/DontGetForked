@@ -143,6 +143,19 @@
   "quality": 70
  },
  {
+  "name": "ch09-fair",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Dorpskermis%2C_RP-P-OB-62.004.jpg/1920px-Dorpskermis%2C_RP-P-OB-62.004.jpg",
+  "crop": [
+   0.032,
+   0.455,
+   0.962,
+   1
+  ],
+  "width": 1500,
+  "aspect": 3.967,
+  "quality": 70
+ },
+ {
   "name": "back-moonrise",
   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Samuel_Palmer%2C_The_Rising_Moon%2C_1857%2C_NGA_119976.jpg",
   "crop": [

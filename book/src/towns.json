@@ -1,0 +1,156 @@
+{
+  "about": "The premade towns of Chapter 9 (decision C21). Built only from the approved tables: items as d6 faces on the shopping table (kind in Castle Duty order, then the item), places from the kind's 'Where in town', obstacles by key from the d20 obstacle table (module/config.mjs DGF.obstacleTable), furniture and customs by key, villagers as d6 faces. Each obstacle's difficulty is as rolled; the furniture's extra obstacle is printed 2 harder (at most 12). book/tools/towns.mjs checks every rule; book/tools/town-pages.mjs writes Chapter 9's town pages and maps from this file; sim/premade.mjs plays it.",
+  "towns": [
+    {
+      "key": "puddlecombe",
+      "name": "Puddlecombe",
+      "label": "easy",
+      "description": "A sleepy village that has never had a real monster.",
+      "custom": "pies",
+      "villagers": [{ "who": 1, "doing": 1 }, { "who": 2, "doing": 2 }],
+      "locations": [
+        {
+          "key": "tavern", "place": "the tavern cellar", "item": [1, 1], "essential": true,
+          "waysIn": [
+            { "obstacle": "frontDoor", "difficulty": 8, "watched": true },
+            { "obstacle": "trapdoor", "difficulty": 8, "watched": true }
+          ],
+          "then": [{ "obstacle": "backRoom", "difficulty": 6 }],
+          "furniture": { "piece": "bear", "obstacle": { "obstacle": "dog", "difficulty": 8 } }
+        },
+        {
+          "key": "garden", "place": "the market garden", "item": [2, 1],
+          "waysIn": [
+            { "obstacle": "gardenWall", "difficulty": 8 },
+            { "obstacle": "geese", "difficulty": 6 }
+          ],
+          "then": [{ "obstacle": "watchman", "difficulty": 8, "watched": true }]
+        },
+        {
+          "key": "draper", "place": "the draper", "item": [6, 5],
+          "waysIn": [
+            { "obstacle": "shopkeeper", "difficulty": 8, "watched": true },
+            { "obstacle": "window", "difficulty": 10 }
+          ],
+          "then": []
+        },
+        {
+          "key": "school", "place": "the schoolhouse", "item": [3, 5],
+          "waysIn": [
+            { "obstacle": "backGate", "difficulty": 8 },
+            { "obstacle": "drainpipe", "difficulty": 10 }
+          ],
+          "then": [{ "obstacle": "children", "difficulty": 8, "watched": true }]
+        }
+      ]
+    },
+    {
+      "key": "thistlewick",
+      "name": "Thistlewick",
+      "label": "standard",
+      "description": "A market town proud of its festival.",
+      "custom": "parade",
+      "villagers": [{ "who": 5, "doing": 3 }, { "who": 4, "doing": 4 }],
+      "locations": [
+        {
+          "key": "baker", "place": "the baker", "item": [1, 6], "essential": true,
+          "waysIn": [
+            { "obstacle": "shopFloor", "difficulty": 8, "watched": true },
+            { "obstacle": "window", "difficulty": 8 }
+          ],
+          "then": [{ "obstacle": "shopkeeper", "difficulty": 8, "watched": true }]
+        },
+        {
+          "key": "china", "place": "the china shop", "item": [4, 2], "essential": true,
+          "waysIn": [
+            { "obstacle": "frontDoor", "difficulty": 8 },
+            { "obstacle": "backGate", "difficulty": 10, "watched": true }
+          ],
+          "then": [{ "obstacle": "backRoom", "difficulty": 8 }]
+        },
+        {
+          "key": "hatter", "place": "the hatter", "item": [6, 3],
+          "waysIn": [
+            { "obstacle": "neighbour", "difficulty": 8, "watched": true },
+            { "obstacle": "rooftops", "difficulty": 10 }
+          ],
+          "then": [],
+          "furniture": { "piece": "mirror", "obstacle": { "obstacle": "dog", "difficulty": 8, "watched": true } }
+        },
+        {
+          "key": "ironmonger", "place": "the ironmonger", "item": [5, 5],
+          "waysIn": [
+            { "obstacle": "cart", "difficulty": 6 },
+            { "obstacle": "gardenWall", "difficulty": 8 }
+          ],
+          "then": [{ "obstacle": "strongbox", "difficulty": 8, "watched": true }]
+        },
+        {
+          "key": "seeds", "place": "the seed merchant", "item": [2, 4],
+          "waysIn": [
+            { "obstacle": "stalls", "difficulty": 8 },
+            { "obstacle": "geese", "difficulty": 6 }
+          ],
+          "then": [{ "obstacle": "watchman", "difficulty": 10, "watched": true }]
+        }
+      ]
+    },
+    {
+      "key": "gallowsmere",
+      "name": "Gallowsmere",
+      "label": "hard",
+      "description": "A walled town that remembers last year.",
+      "custom": "bells",
+      "villagers": [{ "who": 6, "doing": 6 }, { "who": 3, "doing": 5 }],
+      "locations": [
+        {
+          "key": "smithy", "place": "the smithy", "item": [5, 2], "essential": true,
+          "waysIn": [
+            { "obstacle": "backGate", "difficulty": 10, "watched": true },
+            { "obstacle": "gardenWall", "difficulty": 8, "watched": true }
+          ],
+          "then": [{ "obstacle": "watchman", "difficulty": 10, "watched": true }],
+          "furniture": { "piece": "armour", "obstacle": { "obstacle": "trapdoor", "difficulty": 10 } }
+        },
+        {
+          "key": "silversmith", "place": "the silversmith", "item": [4, 1], "essential": true,
+          "waysIn": [
+            { "obstacle": "frontDoor", "difficulty": 10, "watched": true },
+            { "obstacle": "window", "difficulty": 8, "watched": true }
+          ],
+          "then": [
+            { "obstacle": "dog", "difficulty": 8, "watched": true },
+            { "obstacle": "strongbox", "difficulty": 10 }
+          ]
+        },
+        {
+          "key": "printer", "place": "the printer", "item": [3, 2],
+          "waysIn": [
+            { "obstacle": "neighbour", "difficulty": 8, "watched": true },
+            { "obstacle": "rooftops", "difficulty": 10 }
+          ],
+          "then": [{ "obstacle": "backRoom", "difficulty": 10 }]
+        },
+        {
+          "key": "tailor", "place": "the tailor", "item": [6, 2],
+          "waysIn": [
+            { "obstacle": "doorman", "difficulty": 10, "watched": true },
+            { "obstacle": "drainpipe", "difficulty": 8 }
+          ],
+          "then": [{ "obstacle": "shopFloor", "difficulty": 10, "watched": true }]
+        },
+        {
+          "key": "butcher", "place": "the butcher", "item": [1, 2],
+          "waysIn": [
+            { "obstacle": "geese", "difficulty": 8, "watched": true },
+            { "obstacle": "cart", "difficulty": 10, "watched": true }
+          ],
+          "then": [
+            { "obstacle": "shopkeeper", "difficulty": 10, "watched": true },
+            { "obstacle": "tugOfWar", "difficulty": 12 }
+          ]
+        }
+      ]
+    }
+  ]
+}
