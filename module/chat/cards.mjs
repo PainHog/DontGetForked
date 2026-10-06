@@ -29,6 +29,9 @@ export function cardOf(message) {
 /** The current raid's id, read lazily (avoids an import cycle with the store). */
 let raidIdReader = () => "";
 export function setRaidIdReader(fn) { raidIdReader = fn; }
+/** How much an event raises now (a group check's rolls share one), read lazily from the store. */
+let eventAmountReader = () => 0;
+export function setEventAmountReader(fn) { eventAmountReader = fn; }
 
 /** Opens the end-of-raid form (set by the apps layer; avoids an import cycle). */
 let yearOpener = async () => null;
@@ -248,11 +251,15 @@ function button(label, dataset, onClick) {
 }
 
 /** Which Storyteller buttons a card shows (pure: for the hook and for tests). */
-export function gmButtons(card, currentRaidId) {
+export function gmButtons(card, currentRaidId, eventAmount = 0) {
   const out = [];
   if (!card) return out;
   if (card.kind === CARD.roll && card.band === "cost" && !card.cost) {
-    for (const c of card.costs ?? []) out.push({ action: "cost", choice: c, label: `DGF.Cost.${c}` });
+    for (const c of card.costs ?? []) {
+      // a group check rises once, by its biggest trigger: a Suspicion +1 it already raised would cost nothing (T10)
+      if (c === "suspicion" && card.groupId && eventAmount >= 1) continue;
+      out.push({ action: "cost", choice: c, label: `DGF.Cost.${c}` });
+    }
   }
   if ([CARD.roll, CARD.ability, CARD.tell].includes(card.kind) && card.suspicion > 0 && !card.hunt && card.raidId === currentRaidId) {
     if (card.cancelled) out.push({ action: "restore", label: "DGF.Card.restoreButton" });
@@ -289,7 +296,7 @@ export function onRenderChatMessage(message, html) {
   const card = cardOf(message);
   if (!card || !html?.querySelector) return;
   if (!game.user?.isGM) return;
-  const buttons = gmButtons(card, raidIdReader());
+  const buttons = gmButtons(card, raidIdReader(), card.groupId ? eventAmountReader(card.eventId) : 0);
   if (!buttons.length) return;
   let bar = html.querySelector(".dgf-card-actions");
   if (!bar) { bar = document.createElement("div"); bar.className = "dgf-card-actions"; html.appendChild(bar); }

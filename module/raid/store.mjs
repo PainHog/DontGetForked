@@ -18,7 +18,7 @@ import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
-import { cardOf, updateCard, postCard, setRaidIdReader } from "../chat/cards.mjs";
+import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader } from "../chat/cards.mjs";
 import { newRaidUpdate } from "../logic/lockup.mjs";
 
 /** The raid as every client sees it now. */
@@ -128,6 +128,7 @@ const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
 
 export function registerRaidOps() {
   setRaidIdReader(() => getRaid().raidId);
+  setEventAmountReader((eventId) => R.eventAmount(getRaid(), eventId));
 
   // Anyone: apply what a roll or ability card raised. The amount comes from the card, never from the request.
   registerOp(OPS.raidApplyCard, {
@@ -287,11 +288,16 @@ export async function reconcile() {
   const raid = getRaid();
   if (!raid.raidId) return 0;
   const known = new Set(raid.ledger.map((e) => e.messageId).filter(Boolean));
-  const todo = game.messages.contents.slice(-100).filter((m) => {
+  const recent = game.messages.contents.slice(-100);
+  // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) that the GM never saw
+  const tracked = (c) => c.kind === CARD.roll && (c.groupId || c.chaseId || c.lockup || c.caught || c.wayOutBeaten);
+  const unseen = recent.filter((m) => { const c = cardOf(m); return c && tracked(c) && c.raidId === raid.raidId && !c.gmSeen; });
+  const todo = recent.filter((m) => {
     const c = cardOf(m);
-    return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId
+    return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId && !unseen.includes(m)
       && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);
   });
+  for (const m of unseen) await runOp(OPS.raidRoll, { messageId: m.id });
   for (const m of todo) await runOp(OPS.raidApplyCard, { messageId: m.id });
-  return todo.length;
+  return todo.length + unseen.length;
 }

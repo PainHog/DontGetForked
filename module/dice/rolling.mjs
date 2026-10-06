@@ -278,7 +278,7 @@ export async function performRoll(actor, values) {
     groundName: chaseCtx ? DGF.chaseTable[chaseCtx.ground.face - 1]?.name ?? "" : "",
     chaseShared: !!chaseCtx && (chaseCtx.kind === "final" || (raid.chase?.members?.length ?? 0) > 1),
     leadMove: res.leadMove, freed: res.freed, rescued: res.rescued, slipTrouble: res.slipTrouble, wayOutBeaten: res.wayOutBeaten,
-    chaseStarted: "", freedNames: [],
+    chaseStarted: "", freedNames: [], gmSeen: false,
     actorId: actor.id, actorName: actor.name, userId: game.user.id, turn: raid.turn,
     calledTrait: plan.calledTrait, trait: plan.trait, baseDie: plan.baseDie, traitDie: plan.traitDie,
     second: plan.second, secondDie: plan.secondDie, baseDifficulty: plan.baseDifficulty, difficulty: plan.difficulty,

@@ -298,9 +298,9 @@ export function registerChaseOps() {
         }
         return { state: s, result: res };
       });
-      const patch = {};
+      const patch = { gmSeen: true };
       if (result.suspicion && !card.applied) patch.applied = true;
-      if (Object.keys(patch).length) await updateCard(message, patch);
+      await updateCard(message, patch);
       if (result.started) {
         const ids = card.groupId && result.group === "closed" ? caughtInGroup(card.groupId, raid.raidId).map((m) => m.id) : [messageId];
         await markChaseStarted(ids, result.started);

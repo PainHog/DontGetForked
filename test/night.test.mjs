@@ -406,6 +406,57 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
   assert.equal(dracula.system.status, "active", "forked is not captured");
 });
 
+test("two caught in one group check flee on a shared Lead; the Limit ends their chase and everyone joins the final flight", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  await settle();
+  assert.equal(view().value, 9);
+  await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id], label: "the rooftops" });
+  await settle();
+  await rollAs(ANN, witch, { trait: "nimble", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1]);
+  assert.equal(raid().chase, null, "no chase until the whole group check is in");
+  await rollAs(BEN, dracula, { trait: "sly", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1, 5]); // then the ground: the parade
+  assert.equal(view().value, 10, "the group check rose once");
+  const c = chase();
+  assert.equal(c.kind, "local");
+  assert.deepEqual(c.members.map((m) => m.name), ["A Witch", "Dracula"], "caught together, they flee together");
+  assert.equal(c.groupId, raid().group.id);
+  assert.equal(c.mob, 12, "10 + half of 10, at most 12");
+  const caughtCards = game.messages.filter((m) => cardOf(m)?.groupId === c.groupId);
+  assert.ok(caughtCards.every((m) => cardOf(m).chaseStarted === c.id));
+  // round 1: the Witch's Monster shows (+2): Suspicion reaches the Limit; the local chase ends at once and the flight begins
+  await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [1, 9, 2]); // then the flight's ground
+  assert.equal(view().value, 12);
+  assert.equal(view().hunt, true);
+  const f = chase();
+  assert.equal(f.kind, "final");
+  assert.equal(f.cause, "limit");
+  assert.deepEqual(f.members.map((m) => m.name), ["A Witch", "Dracula"]);
+  assert.equal(witch.system.status, "active");
+  assert.ok(cards(CARD.chase).some((m) => cardOf(m).chaseId === c.id && cardOf(m).event === "end" && cardOf(m).outcome === "ended"));
+  assert.match(cards(CARD.chase).find((m) => cardOf(m).chaseId === c.id && cardOf(m).outcome === "ended").content, /join the final flight/);
+  // the Storyteller stops the hunt: the flight is called off
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  assert.equal(chase().outcome, "dropped");
+});
+
+test("the way out: Sly or Nimble, or Brawn the loud way; beaten, everyone gets out and the Storyteller is asked about the year", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  const charm = await refusedRoll(ANN, witch, { trait: "charm", second: "mask", wayOut: true });
+  assert.ok(charm.warnings.some((w) => w.includes("The way out takes Sly or Nimble")));
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", wayOut: true }, [6, 4]); // 10 against 8
+  const card = cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1));
+  assert.equal(card.difficulty, 8);
+  assert.equal(card.wayOutBeaten, true);
+  const home = lastMessage();
+  assert.equal(cardOf(home).event, "home");
+  assert.match(home.content, /out of town/);
+  assert.deepEqual(buttonLabels(home, GM), ["How the year went"]);
+});
+
 test("every slice-2 automation can be switched off", async () => {
   // a new raid without the reset: charges stay where they were
   await asUser(ANN, () => witch.update({ "system.charges.value": 1 }));
@@ -526,6 +577,36 @@ test("players can't write the raid or the chase: every chase, lock-up and check 
   assert.equal((await op(ANN, OPS.raidRoll, { messageId: oldRoll.id })).reason, "otherRaid");
   // a captive can't free itself on the sheet's behalf of another: Ann can't touch Dracula
   await assert.rejects(asUser(ANN, () => dracula.update({ "system.status": "captured" })), /lacks permission/);
+});
+
+test("no Storyteller connected: a caught roll waits; when the GM returns, its chase starts", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "easy" });
+  await settle();
+  GM.active = false;
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1]);
+  const m = lastMessage();
+  assert.equal(cardOf(m).caught, true);
+  assert.equal(cardOf(m).gmSeen, false);
+  assert.equal(raid().chase, null);
+  GM.active = true;
+  diceQueue.push(2); // the ground, once the chase starts
+  const n = await asUser(GM, () => api.raid.reconcile());
+  await settle();
+  assert.equal(n, 1);
+  assert.equal(chase().kind, "local");
+  assert.equal(cardOf(m).gmSeen, true);
+  assert.equal(view().value, 1, "its Suspicion applied once");
+  assert.equal(await asUser(GM, () => api.raid.reconcile()), 0);
+  await op(GM, OPS.chaseEnd, { outcome: "dropped" });
+  await settle();
+});
+
+test("a group check's Cost: Suspicion +1 isn't offered once the group has already risen", async () => {
+  const { gmButtons } = await import("../module/chat/cards.mjs");
+  const card = { kind: CARD.roll, band: "cost", costs: ["suspicion", "loseTurn"], groupId: "g", eventId: "group:g", raidId: "r" };
+  assert.deepEqual(gmButtons(card, "r", 2).map((b) => b.choice), ["loseTurn"]);
+  assert.deepEqual(gmButtons(card, "r", 0).map((b) => b.choice), ["suspicion", "loseTurn"]);
+  assert.deepEqual(gmButtons({ ...card, groupId: "" }, "r", 2).map((b) => b.choice), ["suspicion", "loseTurn"]);
 });
 
 test("the night left no errors, no missing words and no unanswered dialogs", () => {
