@@ -74,6 +74,9 @@ test("the Entities pack holds the eight in the book's order, each exactly as New
     assert.equal(dragged.name, made.name);
     assert.equal(dragged.type, made.type);
     assert.deepEqual(dragged.toObject().system, made.toObject().system, `${raw.key} from the pack = New Entity`);
+    // linked tokens both ways, so a roll from a token changes the actor the raid tracks
+    assert.equal(doc.prototypeToken.actorLink, true, `${raw.key}: the pack's token is linked`);
+    assert.equal(made.prototypeToken.actorLink, true, `${raw.key}: New Entity's token is linked`);
   }
   assert.deepEqual(log.errors, []);
 });

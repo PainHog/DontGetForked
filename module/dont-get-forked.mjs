@@ -61,6 +61,10 @@ Hooks.once("init", function () {
 
   Hooks.on("renderChatMessageHTML", onRenderChatMessage);
   Hooks.on("renderActorDirectory", onRenderActorDirectory);
+  // An Entity made any other way (the sidebar's Create Actor, an import) also gets a linked token.
+  Hooks.on("preCreateActor", (actor, data) => {
+    if (actor.type === ACTOR_TYPES.entity && data?.prototypeToken?.actorLink === undefined) actor.updateSource({ "prototypeToken.actorLink": true });
+  });
 
   // Public API namespace for macros and other modules.
   game.dontGetForked = Object.assign(game.dontGetForked ?? {}, {

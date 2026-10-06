@@ -554,6 +554,7 @@ export class Actor extends BaseDocument {
     this.img = data.img ?? "icons/svg/mystery-man.svg";
     this.flags = clone(data.flags ?? {});
     this.ownership = clone(data.ownership ?? { default: 0 });
+    this.prototypeToken = { actorLink: false, ...clone(data.prototypeToken ?? {}) }; // Foundry's default: unlinked
     this.system = fillSystem("Actor", data.type, clone(data.system ?? {}));
     this.items = new Collection();
     const IC = CONFIG.Item.documentClass ?? Item;

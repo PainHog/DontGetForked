@@ -25,7 +25,8 @@ export async function createEntity(key, { name, ownerId = "", upgrades = 0 } = {
   if (!e) throw new Error(`unknown Entity: ${key}`);
   const ownership = { default: OBSERVER() };
   if (ownerId) ownership[ownerId] = OWNER();
-  return Actor.create({ name: name || e.name, type: ACTOR_TYPES.entity, system: entitySystem(key, { upgrades }), ownership });
+  // A linked token: rolls from a token on a scene change this actor, the one the raid tracks.
+  return Actor.create({ name: name || e.name, type: ACTOR_TYPES.entity, system: entitySystem(key, { upgrades }), ownership, prototypeToken: { actorLink: true } });
 }
 
 /** The update that turns an existing actor into this premade Entity (the book's defaults). */

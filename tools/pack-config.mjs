@@ -174,7 +174,8 @@ export function toCliDoc(def, raw, index) {
     doc.items = [];
     // null (not "") disables a token bar; "" would be cleaned back to the
     // system's primaryTokenAttribute. Override per pack once actors exist.
-    doc.prototypeToken = { bar1: { attribute: null }, bar2: { attribute: null } };
+    // actorLink: a dragged-in Entity's tokens change the actor the raid tracks.
+    doc.prototypeToken = { actorLink: true, bar1: { attribute: null }, bar2: { attribute: null } };
   }
   return doc;
 }
