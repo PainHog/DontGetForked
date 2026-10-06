@@ -19,7 +19,7 @@ import { SETTINGS, OPS, CARD, HOOKS, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import { rollShoppingList, epilogueLines, tellGoesOff } from "../logic/rules.mjs";
-import { newGroup, closeGroup, needsSecondDie, readTellCheck, placeChecked } from "../logic/checks.mjs";
+import { newGroup, closeGroup, needsSecondDie, readTellCheck, placeChecked, spectralPasses } from "../logic/checks.mjs";
 import { yearFromList, homeFromCarried, listShape, listItem, essentialsFor } from "../logic/year.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { registerOp, runOp } from "../net/gm-ops.mjs";
@@ -118,11 +118,17 @@ export function registerCheckOps() {
       }
       if (!setting(SETTINGS.autoGroupChecks)) return { ok: false, reason: "groupChecksOff" };
       if (getRaid().group?.open) return { ok: false, reason: "groupOpen" };
-      const list = members.map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a)).map((a) => ({ actorId: a.id, name: a.name }));
+      // V19: a Spectral Ghost carrying nothing is past without rolling; carrying, it rolls like anyone else
+      const list = members.map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a))
+        .map((a) => ({ actorId: a.id, name: a.name, passes: spectralPasses(a.system), spectral: !!DGF.perkRules[a.system.perk]?.groupPass }));
       if (list.length < 2) return { ok: false, reason: "tooFew" };
       const id = foundry.utils.randomID();
       const { state } = await mutateRaid((s) => R.setGroup(s, newGroup({ id, label: String(label ?? ""), turn: s.turn, members: list })));
-      await postCard({ kind: CARD.raid, event: "group", raidId: state.raidId, difficulty: state.difficulty, label: String(label ?? ""), names: list.map((m) => m.name) });
+      await postCard({
+        kind: CARD.raid, event: "group", raidId: state.raidId, difficulty: state.difficulty, label: String(label ?? ""),
+        names: list.filter((m) => !m.passes).map((m) => m.name),
+        passed: list.filter((m) => m.passes).map((m) => m.name), spectralRolls: list.filter((m) => m.spectral && !m.passes).map((m) => m.name),
+      });
       return { ok: true, groupId: id };
     },
   });

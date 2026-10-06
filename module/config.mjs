@@ -322,6 +322,7 @@ DGF.perkRules = Object.freeze({
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob in your local chase is 1 easier.
+  spectral: Object.freeze({ groupPass: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture.
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep the loot you carry (not furniture: V16).

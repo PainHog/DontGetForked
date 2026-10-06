@@ -156,6 +156,9 @@ function raidContext(card) {
       : "",
     left: card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
     piece: card.event === "backInTown" && card.pieceBack ? t("DGF.RaidCard.backInTown.piece") : "",
+    // V19: who Spectral gets past a group obstacle, and who carries and so rolls
+    passed: card.passed?.length ? t("DGF.RaidCard.group.passed", { names: card.passed.join(", ") }) : "",
+    spectralRolls: card.spectralRolls?.length ? t("DGF.RaidCard.group.spectralRolls", { names: card.spectralRolls.join(", ") }) : "",
   };
 }
 

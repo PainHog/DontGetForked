@@ -29,13 +29,25 @@ export function groupEventId(groupId) {
   return `group:${groupId}`;
 }
 
-/** Open a group check for these Entities ([{ actorId, name }], at least two). */
+/**
+ * V19 Spectral (A Ghost): "you get past group obstacles without rolling, at no action, even in a Turn you move,
+ * unless you carry loot or furniture". Does this Entity get past a group obstacle without rolling now?
+ */
+export function spectralPasses(system) {
+  return !!perkRule(system?.perk).groupPass && !((system?.carried?.length ?? 0) > 0 || system?.carryingFurniture);
+}
+
+/**
+ * Open a group check for these Entities ([{ actorId, name, passes }], at least two). A member that `passes`
+ * (Spectral, carrying nothing) is past without rolling: it isn't waited for and can't be caught.
+ */
 export function newGroup({ id, label = "", turn = 0, members = [] }) {
   if (!id) throw new Error("a group check needs an id");
   const seen = new Set();
-  const list = members.filter((m) => m?.actorId && !seen.has(m.actorId) && seen.add(m.actorId)).map((m) => ({ actorId: m.actorId, name: m.name ?? "" }));
-  if (list.length < 2) throw new Error("a group check is several Entities rolling together");
-  return { id, label, turn, members: list, rolls: {}, open: true };
+  const picked = members.filter((m) => m?.actorId && !seen.has(m.actorId) && seen.add(m.actorId));
+  if (picked.length < 2) throw new Error("a group check is several Entities rolling together");
+  const rolls = Object.fromEntries(picked.filter((m) => m.passes).map((m) => [m.actorId, { messageId: "", caught: false, passed: true }]));
+  return { id, label, turn, members: picked.map((m) => ({ actorId: m.actorId, name: m.name ?? "" })), rolls, open: true };
 }
 
 /** Is this Entity in the open group check and still to roll? */

@@ -75,6 +75,23 @@ test("Chapter 2 (F19): no Castle Duty raise in a chase, whether or not the track
   assert.equal(plan(witch, { duty: true }).traitDie, 12);
 });
 
+test("V19 Spectral: a Ghost gets past a group obstacle without rolling, unless it carries loot or furniture", async () => {
+  const { spectralPasses, newGroup, awaitsRoll, groupWaiting, groupRecord, groupDone, groupCaught } = await import("../module/logic/checks.mjs");
+  assert.equal(spectralPasses(entitySystem("ghost")), true, "Spectral is the Ghost's default Perk");
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), carried: [{ name: "a top hat" }] }), false);
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), carryingFurniture: true }), false);
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), perk: "rattle" }), false);
+  assert.equal(spectralPasses(entitySystem("witch")), false);
+  // in a group check it doesn't roll and isn't waited for, and it can't be caught
+  let g = newGroup({ id: "g", members: [{ actorId: "ghost", name: "A Ghost", passes: true }, { actorId: "w", name: "A Witch" }, { actorId: "d", name: "Dracula" }] });
+  assert.equal(awaitsRoll(g, "ghost"), false);
+  assert.deepEqual(groupWaiting(g).map((m) => m.actorId), ["w", "d"]);
+  g = groupRecord(g, "w", { messageId: "m1", caught: true }).group;
+  g = groupRecord(g, "d", { messageId: "m2" }).group;
+  assert.equal(groupDone(g), true);
+  assert.deepEqual(groupCaught(g).map((m) => m.actorId), ["w"]);
+});
+
 /* ------------------------------------------------------------- the table -- */
 
 const { game } = installFoundry({
@@ -382,6 +399,36 @@ test("B7 at the table: the roll dialog offers Mesmerise only where someone's wat
   await asUser(BEN, () => api.roll(dracula, { trait: "sly" }));
   await settle();
   assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only where someone/.test(w)));
+});
+
+test("V19 at the table: a group check lets an empty-handed Spectral Ghost past; one that carries rolls like anyone else", async () => {
+  const ghost = await asUser(GM, () => api.createEntity("ghost", { ownerId: BEN.id })); // Spectral is its default Perk
+  await settle();
+  const open = async () => {
+    await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id, ghost.id], label: "the crowded shop floor" });
+    await settle();
+  };
+  await open();
+  assert.deepEqual(raid().group.members.map((m) => m.actorId), [witch.id, dracula.id, ghost.id]);
+  assert.equal(raid().group.rolls[ghost.id]?.passed, true, "past without rolling");
+  assert.match(lastMessage().content, /A Ghost: past without rolling \(Spectral\)/);
+  let content = "";
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => api.roll(ghost, { trait: "sly" }));
+  await settle();
+  assert.match(content, /Spectral: past the crowded shop floor without rolling/);
+  assert.doesNotMatch(content, /name="group"/, "no group tick for it");
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, group: true }, [6, 4]);
+  await rollAs(BEN, dracula, { trait: "sly", second: "mask", difficulty: 8, group: true }, [6, 4]);
+  assert.equal(raid().group.open, false, "the check closes without waiting for the Ghost");
+  // carrying loot, the Ghost rolls like anyone else
+  await asUser(BEN, () => ghost.update({ "system.carried": [{ name: "a lace tablecloth" }] }));
+  await open();
+  assert.equal(raid().group.rolls[ghost.id], undefined);
+  assert.match(lastMessage().content, /A Ghost carries loot or furniture/);
+  await op(GM, OPS.raidGroup, { action: "close" });
+  await asUser(GM, () => ghost.delete());
+  await settle();
 });
 
 test("the roll dialog's furniture tick and the furniture switch say what they do", () => {
