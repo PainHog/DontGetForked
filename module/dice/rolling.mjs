@@ -231,7 +231,7 @@ export async function performRoll(actor, values) {
     warnings: plan.warnings.map((w) => w.code),
     traitFace: res.traitFace, secondFace: res.secondFace, total: res.total, band: res.band, critical: res.critical,
     showed: res.showed, show: res.show, hiddenShow: res.hiddenShow, triggers: res.triggers, suspicion: res.suspicion,
-    suspicionLabel: top.join(","), caught: res.caught, troubleUnwatched: res.troubleUnwatched,
+    suspicionLabel: top.join(","), caught: res.caught, troubleUnwatched: res.troubleUnwatched, unseen: res.unseen,
     formShift: res.formShift, formTo, chargeBack: res.chargeBack, costs: res.costs,
     autoCharges, chargesBefore: before, chargesAfter: after,
     applied: false, cancelled: false, cost: "", skipTurn: 0, dropped: "",

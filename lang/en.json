@@ -125,6 +125,7 @@
   "DGF.Card.suspicion": "Suspicion +{n} ({why})",
   "DGF.Card.caught": "Caught! Someone was watching: a local chase starts (Chapter 6).",
   "DGF.Card.unwatched": "Nobody was watching: no chase.",
+  "DGF.Card.unseen": "Watched, but nobody can see an Entity that carries nothing: no chase (Out of Sight).",
   "DGF.Card.loud": "the loud way",
   "DGF.Card.watched": "watched",
   "DGF.Card.wayOut": "the way out",

@@ -70,7 +70,7 @@ function rollContext(card) {
     suspicion: card.suspicion,
     suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: join((card.triggers ?? []).filter((x) => x.amount === card.suspicion).map((x) => trigger(x.key))) }) : "",
     suspicionStatus: card.suspicion > 0 ? status : "",
-    caughtNote: card.caught ? t("DGF.Card.caught") : card.troubleUnwatched ? t("DGF.Card.unwatched") : "",
+    caughtNote: card.caught ? t("DGF.Card.caught") : card.unseen ? t("DGF.Card.unseen") : card.troubleUnwatched ? t("DGF.Card.unwatched") : "",
     flags: join([card.loud ? t("DGF.Card.loud") : "", card.watched ? t("DGF.Card.watched") : "", card.wayOut ? t("DGF.Card.wayOut") : "", card.chase ? t("DGF.Card.chase") : ""]),
     abilities: join(abilities),
     payments: join(payments),

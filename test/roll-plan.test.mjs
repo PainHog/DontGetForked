@@ -183,6 +183,9 @@ test("Perks that bend a roll", () => {
   // Out of Sight (default): Trouble gets you caught only while you carry loot or furniture
   const inv = roller("invisible");
   assert.equal(resolvePlannedRoll(plan(inv, { watched: true }), 1, 1).caught, false);
+  assert.equal(resolvePlannedRoll(plan(inv, { watched: true }), 1, 1).unseen, true);
+  assert.equal(resolvePlannedRoll(plan(inv, { watched: false }), 1, 1).troubleUnwatched, true);
+  assert.equal(resolvePlannedRoll(plan(inv, { watched: false }), 1, 1).unseen, false);
   assert.equal(resolvePlannedRoll(plan(roller("invisible", { carried: [{ name: "a top hat" }] }), { watched: true }), 1, 1).caught, true);
   assert.equal(resolvePlannedRoll(plan(drac, { watched: true }), 1, 1).caught, true);
   assert.equal(resolvePlannedRoll(plan(drac, { watched: false }), 1, 1).caught, false);

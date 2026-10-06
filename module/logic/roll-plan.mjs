@@ -195,7 +195,8 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
     triggers,
     suspicion,
     caught,
-    troubleUnwatched: base.band === "trouble" && !caught && !plan.chase,
+    troubleUnwatched: base.band === "trouble" && !plan.watched && !plan.chase,
+    unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but carrying nothing
     formShift: plan.formMargin !== null && monster && margin >= plan.formMargin,
     chargeBack: base.critical && !plan.chase, // in a chase a Critical moves the Lead instead
     costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt }),
