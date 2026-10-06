@@ -20,33 +20,14 @@ function weightedNum(rng, table) {
 }
 
 /**
- * Candidate C18 obstacle table (not approved): d20 entries, the quiet trait first,
- * the loud way second; `group` = everyone rolls for themselves.
+ * Obstacle tables (C18): d20 entries, the quiet trait first, the loud way second;
+ * `group` = everyone rolls for themselves. "approved" is the book's; c18a was the
+ * first draft (it favoured Charm and a Brawn loud way: Dracula +3.2, Jekyll & Hyde -2.7).
+ * numbers.obstacleTable "random" uses the old random traits.
  */
 export const OBSTACLE_TABLES = {
-  // c18b: every trait is the quiet way 4 times; loud ways Brawn/Nimble 3, Charm/Sly/Wits 2; one group obstacle per trait.
-  c18b: [
-    { name: "A heavy cellar trapdoor", quiet: "brawn" },
-    { name: "A tug-of-war across the lane", quiet: "brawn", group: true },
-    { name: "A cart blocking the alley", quiet: "brawn", loud: "nimble" },
-    { name: "A bolted back gate", quiet: "brawn", loud: "charm" },
-    { name: "A high garden wall", quiet: "nimble", loud: "brawn" },
-    { name: "A shuttered window", quiet: "nimble", loud: "brawn" },
-    { name: "The rooftops", quiet: "nimble", group: true },
-    { name: "A rickety drainpipe", quiet: "nimble" },
-    { name: "A locked front door", quiet: "sly", loud: "brawn" },
-    { name: "A nosy neighbour at her window", quiet: "sly", loud: "wits" },
-    { name: "A crowded shop floor", quiet: "sly", group: true },
-    { name: "A muddy yard full of geese", quiet: "sly", loud: "nimble" },
-    { name: "The shopkeeper behind the counter", quiet: "charm", loud: "sly" },
-    { name: "A guard dog", quiet: "charm", loud: "nimble" },
-    { name: "A doorman checking invitations", quiet: "charm", loud: "wits" },
-    { name: "Children in costumes who want a closer look", quiet: "charm", group: true },
-    { name: "A locked strongbox", quiet: "wits", loud: "charm" },
-    { name: "A dark, cluttered back room", quiet: "wits", loud: "sly" },
-    { name: "The night watchman on his round", quiet: "wits" },
-    { name: "A maze of festival stalls", quiet: "wits", group: true },
-  ],
+  // C18 (approved 2026-10-06): the book's table (it was candidate c18b).
+  approved: DGF.obstacleTable,
   c18a: [
     { name: "A locked front door", quiet: "sly", loud: "brawn" },
     { name: "A high garden wall", quiet: "nimble", loud: "brawn" },
