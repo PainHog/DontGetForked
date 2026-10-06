@@ -77,7 +77,7 @@
         "wayOut": {
           "at": [578, 215],
           "out": [598, 215],
-          "label": [455, 262]
+          "label": [446, 196]
         },
         "lockup": { "x": 300, "y": 350, "label": "below" },
         "cottages": 34,
@@ -276,7 +276,7 @@
         "wayOut": {
           "at": [300, 408],
           "out": [300, 428],
-          "label": [318, 392]
+          "label": [326, 376]
         },
         "lockup": { "x": 300, "y": 315, "label": "below" },
         "cottages": 48,

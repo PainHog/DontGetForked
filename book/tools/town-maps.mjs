@@ -193,7 +193,7 @@ export function townMap(town) {
   const BW = 46, BH = 28;
   for (const p of places) {
     parts.marks.push(building(p.x, p.y, BW, BH, R));
-    boxes.push([p.x - BW / 2 - 6, p.y - BH / 2 - 6, p.x + BW / 2 + 6, p.y + BH / 2 + 6]);
+    boxes.push([p.x - BW / 2 - 18, p.y - BH / 2 - 14, p.x + BW / 2 + 18, p.y + BH / 2 + 14]); // with its number, eye and star
     // the number on the building's left side, an eye on its right if watched, a star on a free corner for the furniture
     const nx = p.x - BW / 2 - 2, ny = p.y;
     parts.marks.push(`<circle cx="${r1(nx)}" cy="${r1(ny)}" r="11.5" fill="${C.ink}"/><text x="${r1(nx)}" y="${r1(ny + 5.6)}" font-family="${DISPLAY}" font-weight="800" font-size="15.5" fill="${C.light}" text-anchor="middle">${p.n}</text>`);
@@ -205,7 +205,7 @@ export function townMap(town) {
   {
     const p = M.lockup;
     parts.marks.push(building(p.x, p.y, BW, BH, R, { bars: true }));
-    boxes.push([p.x - BW / 2 - 6, p.y - BH / 2 - 6, p.x + BW / 2 + 6, p.y + BH / 2 + 6]);
+    boxes.push([p.x - BW / 2 - 8, p.y - BH / 2 - 8, p.x + BW / 2 + 18, p.y + BH / 2 + 8]);
     parts.marks.push(`<g class="mark">${eye(p.x + BW / 2 + 3, p.y)}</g>`); // always watched
     parts.labels.push({ text: "The lock-up", ...labelPos(p, BW, BH, labelSide(p, hub)), size: LABEL });
   }

@@ -23,8 +23,8 @@ const low = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 const SIZE = { bulky: "Bulky", huge: "Huge" };
 
 function obstacleRow(step, o, cls = "") {
-  const name = `${o.name}${o.group ? " <em>(group)</em>" : ""}`;
-  return `<tr${cls ? ` class="${cls}"` : ""}><td><span class="step">${step}</span>${name}</td><td>${wayText(o.quiet, o.quietText)}</td><td>${o.loud ? wayText(o.loud, o.loudText) : "—"}</td><td class="num">${o.difficulty}</td><td class="num">${o.watched ? "watched" : ""}</td></tr>`;
+  const name = `${o.name}${o.group ? " <em>(group)</em>" : ""}${o.watched ? ' <span class="watched">watched</span>' : ""}`;
+  return `<tr${cls ? ` class="${cls}"` : ""}><td><span class="step">${step}</span>${name}</td><td>${wayText(o.quiet, o.quietText)}</td><td>${o.loud ? wayText(o.loud, o.loudText) : "—"}</td><td class="num">${o.difficulty}</td></tr>`;
 }
 
 function townBlock(t, { newPage }) {
@@ -34,7 +34,7 @@ function townBlock(t, { newPage }) {
   const villagers = t.villagers.map((v) => `${low(v.who)} (${low(v.doing)})`).join("; ");
   const rows = [];
   for (const l of L) {
-    rows.push(`<tr class="loc"><td colspan="5"><span class="loc-n">${l.n}</span>${cap(l.place)}: ${l.item} <span class="kind">(${l.kindName})</span>${l.essential ? " · <strong>essential</strong>" : ""}</td></tr>`);
+    rows.push(`<tr class="loc"><td colspan="4"><span class="loc-n">${l.n}</span>${cap(l.place)}: ${l.item} <span class="kind">(${l.kindName})</span>${l.essential ? " · <strong>essential</strong>" : ""}</td></tr>`);
     rows.push(obstacleRow("Way in", l.waysIn[0]));
     rows.push(obstacleRow("or", l.waysIn[1]));
     for (const o of l.then) rows.push(obstacleRow("Then", o));
@@ -48,14 +48,15 @@ function townBlock(t, { newPage }) {
 <p><strong>Lantern Night:</strong> ${t.custom}</p>
 <p class="town-list-head"><strong>The shopping list</strong> (${L.length} items):</p>
 <ol class="town-list">${list}</ol>
-<p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}), at ${host.place} (${host.n}), behind one more obstacle.</p>
+<p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}), at ${host.place} (${host.n}).</p>
 <p><strong>Villagers:</strong> ${villagers}.</p>
 <p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · the way out ${t.wayOut.difficulty} · the lock-up ${t.lockup.difficulty} · the final flight’s mob ${t.finalMob}.</p>
 </div>
-<figure class="art map" data-art="map-${t.key}"><figcaption>${t.name}. Any move takes one Turn.</figcaption></figure>
+<figure class="art map" data-art="map-${t.key}"></figure>
 </div>
 <table class="tbl town-key">
-<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th class="num">Difficulty</th><th class="num">Watched</th></tr></thead>
+<colgroup><col class="c-ob"><col class="c-quiet"><col class="c-loud"><col class="c-d"></colgroup>
+<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th class="num">Difficulty</th></tr></thead>
 <tbody>
 ${rows.join("\n")}
 </tbody>
