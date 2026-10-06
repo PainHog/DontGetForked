@@ -1,8 +1,9 @@
-Now: The Storyteller's advice is in: how to run the villagers, the mob and the lock-up.
-Next: The premade raids and town maps, decided with the author.
+Now: The online version's first part is ready to try: monster sheets, a dice roller that follows the rulebook, and a shared Suspicion tracker the Storyteller controls.
+Next: The author tries it in Foundry with a second player; then chases and the lock-up online, and the premade raids and town maps.
 Number: Design decisions made = 75
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
+Number: Automated checks passing = 93
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -45,6 +46,8 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator
+- [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
+- [ ] Online version, part 2: chases and the lock-up
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)

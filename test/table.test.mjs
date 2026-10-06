@@ -453,6 +453,21 @@ test("every automation can be switched off", async () => {
   assert.equal(asUser(GM, () => currentHud()).rendered, true);
 });
 
+test("a retried request applies once; only the active GM's client acts on a query", async () => {
+  const { handleQuery } = await import("../module/net/gm-ops.mjs");
+  const v = raid().value;
+  const payload = { op: OPS.raidAdjust, args: { delta: 1 }, userId: GM.id, requestId: "retry-0000000001" };
+  await asUser(GM, () => handleQuery(payload));
+  await asUser(GM, () => handleQuery(payload));
+  await settle();
+  assert.equal(raid().value, v + 1);
+  assert.deepEqual(await asUser(ANN, () => handleQuery({ ...payload, requestId: "retry-0000000002" })), { ok: false, reason: "notActiveGM" });
+  assert.deepEqual(await asUser(GM, () => handleQuery({ op: "raid.nonsense", args: {}, userId: GM.id })), { ok: false, reason: "unknownOp" });
+  await asUser(GM, () => api.runOp(OPS.raidUndo, {}));
+  await settle();
+  assert.equal(raid().value, v);
+});
+
 test("the session left no errors, no missing words and no unanswered dialogs", () => {
   assert.deepEqual(log.errors, []);
   assert.deepEqual(log.missingI18n, []);
