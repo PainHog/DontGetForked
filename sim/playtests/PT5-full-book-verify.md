@@ -35,7 +35,7 @@ A verification playtest after B3 (gentler local chases, shorter final flights, o
 | Target | Where | Rolls |
 |---|---|---|
 | B3: local mob 8 + half Suspicion (at most 12) | Main A (13 rounds, mob 9 → 12); drills b1, b2, d | R17–R55, R438–R469, R687–R698 |
-| B3: Easy/Standard Limit 11, flight escape at 5 (6 on Hard) | Standard line (Limit 11, never reached); drill a1 (escape at 5); main A, drill a2 (escape at 6) | R56–R69, R219–R421 |
+| B3: Easy/Standard Limit 11, flight escape at 5 (6 on Hard) | Standard line (Limit 11, never reached); drill a1 (escape at 5); main A, drill a2 (escape at 6) | R56–R69, R219–R437, R470–R686 |
 | B3: overdraw once per flight | Drills a1 (Mummy, round 2), a2 (J&H, round 2), c (Witch, round 1; Dracula barred) | R231, R256, R475 |
 | B3: cornered in the round the Limit comes: captured first | **Main A, naturally** (R54–R55); drill d (two set-ups, not reached) | R54–R55, R687–R698 |
 | B3: small entrances only where a map marks them | Standard line: a Huge clock carried in a rolled town ("no entrance is small"); Gallowsmere's map marks none | — |
@@ -126,7 +126,7 @@ Fixed parts (Standard): the way out 8 (Sly or Nimble, or Brawn loud, watched), *
 
 ---
 
-## 4. Standing readings (my rulings where the book is silent; each is a finding in section 8)
+## 4. Standing readings (my rulings where the book is silent; most are findings in section 8)
 
 | # | Reading | Finding |
 |---|---|---|
@@ -448,7 +448,7 @@ No blockers: every gap had a workable ruling, and play went on. Each finding is 
 | w1 | At the Table: "Trouble +1 · the Monster shows +2 · the loud way +1 · a Cost +1 · overdraw +2 · …" | Reads as if every Cost raises Suspicion. | "a Cost chosen as Suspicion +1" (as Chapter 5's table says). |
 | w2 | Ch2, Fetch: "The way out is 1 easier while you're there" | The party leaves together, so the Werewolf is always there when the way out is rolled, unless it's captured. | "…1 easier unless you're captured", or leave as is if "while you're there" is meant as a reminder. |
 | w3 | Entity Sheet: "**Form** (Jekyll & Hyde) □ Jekyll □ Hyde" · "Status: □ In town □ Caught □ Captured □ Out of town" | No starting form (M3). No "in the final flight" status. No box for "Weakness in play" or "overdrawn this flight", which every flight round needs. | Add "(starts as Jekyll)", a "Fleeing" status and a "Weakness in play / overdrawn" box. |
-| w4 | Ch3: "Raises and steps down cancel out (a d4 stepped down and raised stays a d4)." | The mirror case came up twice in main B: a d12 raised (no effect) and stepped down by a Cost. I kept the d12 (S12). | Add "(…and a d12 raised and stepped down stays a d12)". |
+| w4 | Ch3: "Raises and steps down cancel out (a d4 stepped down and raised stays a d4)." | The mirror case came up in main B (the Ghost's loud Nimble, Turn 3): a d12 raised by its Duty (no effect) and stepped down by a Cost. I kept the d12 (S12). | Add "(…and a d12 raised and stepped down stays a d12)". |
 
 **Counts: 0 blockers, 3 major, 17 minor, 4 wording.** By kind: 15 are wording fixes (M3, m1–m6, m11, m13–m15 and w1–w4, where the reading I used is what's meant) and 9 are rules questions for the author (M1, M2, m7–m10, m12, m16, m17).
 
