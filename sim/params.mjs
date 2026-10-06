@@ -59,6 +59,12 @@ export const PARAMS = {
     doc: "carried = every Turn it's carried, both Turns of a move and waiting Turns included (as written); moving = only the Turns it moves (PT5 m9 candidate: a piece set down makes no noise). (Before PT5, together-play counted one per two-Turn move and no waiting Turns; pairs and singles already counted every Turn.)",
     ref: "DESIGN B2; PT5 m9",
   },
+  mesmeriseRule: {
+    kind: "rule", default: "any", values: ["any", "watched"],
+    title: "Dracula's Mesmerise (C2): where it can open an approach",
+    doc: "any = as written (any obstacle that doesn't list Charm); watched = only at a watched obstacle: he needs someone to mesmerise (candidate after the audits: Dracula +2.9 on three seeds).",
+    ref: "DESIGN C2; sim/FINDINGS.md after the audits",
+  },
   finalMove: {
     kind: "rule", default: "margin2", values: ["margin2", "majority", "net"],
     title: "How a shared Lead moves each round (the majority rule: final flights and shared local chases; B6 2026-10-06: margin2)",

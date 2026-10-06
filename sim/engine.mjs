@@ -836,6 +836,7 @@ function rollCandidates(S, m, ctx) {
     }
     if (ab.effect === "open") {
       if (ab.noLoot && (m.items.length || m.furniture)) continue; // what you carry doesn't pass through walls
+      if (P.mesmeriseRule === "watched" && ab.name === "Mesmerise" && !ctx.witnessed) continue; // B7 candidate: only where someone is watching
       if (policy(S, "openPolicy") === "last" && phase === "raid" && ctx.leavesOthers) continue; // policy: don't shut the others out
       // openTrait "unlisted" (T5): only an approach the obstacle doesn't already offer, and never in a chase.
       if (P.openTrait === "unlisted" && (phase === "local" || phase === "final" || ctx.options.some((o) => o.trait === ab.trait))) continue;
