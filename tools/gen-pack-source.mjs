@@ -76,7 +76,7 @@ export const BOOK_QUOTES = Object.freeze({
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result (Chapter 5). At a <em>group</em> obstacle, everyone there rolls for themselves (Chapter 4)." },
   shopping: { chapter: "31-ch08.html", html: "For each item, roll a d6 for its kind and a d6 for the item itself; roll again on a repeated item." },
   shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules: it decides which Castle Duty gets its edge there." },
-  furniture: { chapter: "31-ch08.html", html: "Roll a d6 for the piece of furniture or decor standing at one of the list’s locations (roll or pick; Chapter 4)." },
+  furniture: { chapter: "31-ch08.html", html: "Roll a d6 for the piece of furniture or decor standing at one of the list’s locations (pick, or number them and roll a d6, rerolling a number without one; Chapter 4)." },
   villagers: { chapter: "31-ch08.html", html: "Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll who it is and what they’re doing." },
   townRows: { chapter: "32-ch09.html", html: "A location’s first two rows are its two ways in: the party picks one and keeps to it. The furniture’s obstacle is already 2 harder." },
   townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn." },

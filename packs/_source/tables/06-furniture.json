@@ -1,7 +1,7 @@
 {
   "key": "furniture",
   "name": "The Furniture (d6)",
-  "description": "<p>Roll a d6 for the piece of furniture or decor standing at one of the list’s locations (roll or pick; Chapter 4).</p><p><em>Rulebook, Chapter 8: The Furniture.</em></p>",
+  "description": "<p>Roll a d6 for the piece of furniture or decor standing at one of the list’s locations (pick, or number them and roll a d6, rerolling a number without one; Chapter 4).</p><p><em>Rulebook, Chapter 8: The Furniture.</em></p>",
   "formula": "1d6",
   "results": [
     {
