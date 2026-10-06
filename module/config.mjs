@@ -97,7 +97,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "nightRunner", name: "Night Runner", text: "When you flee alone, your local chase starts at Lead 2.", default: true },
       { key: "shortcut", name: "Shortcut", text: "The way out is 2 easier when you roll it." },
-      { key: "fetch", name: "Fetch", text: "While you’re in the final flight, it starts at Lead 3: you know the way home." },
+      { key: "fetch", name: "Fetch", text: "If you’re in the final flight, it starts at Lead 3: you know the way home." },
     ],
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
@@ -129,14 +129,14 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling.", default: true },
+      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling, at no action.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously." },
       { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you lose your next Turn instead of being captured." },
     ],
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s." },
+  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers)." },
     gift: {
       name: "Witchcraft",
       versions: [
@@ -146,7 +146,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "familiarsWarning", name: "Familiar’s Warning", text: "When you arrive, a Tell check goes off only if a second d6 also rolls 4–6: the cat warns you.", default: true },
+      { key: "familiarsWarning", name: "Familiar’s Warning", text: "When you arrive (alone or with others), a Tell check goes off only if a second d6 also rolls 4–6: the cat warns you.", default: true },
       { key: "flyByNight", name: "Fly by Night", text: "In a chase you can always roll Wits." },
       { key: "wiseWoman", name: "Wise Woman", text: "A Cost on your Wits roll is never “lose a Turn”." },
     ],
@@ -155,7 +155,7 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back; the new form lasts until the next draught. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free." },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back; the new form lasts until the next draught. He starts each raid as Jekyll, and drinks like any ability: before a roll, at no action. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free." },
     gift: {
       name: "The Other Self",
       versions: [
@@ -192,7 +192,7 @@ DGF.duties = Object.freeze([
 
 /** C14: the d66 shopping table: a d6 for the kind (in Castle Duty order), a d6 for the item. Only the kind matters to the rules. */
 DGF.shoppingTable = Object.freeze([
-  { duty: "cook", items: ["a wheel of strong cheese", "a side of bacon", "a cask of red wine (“for the guests”)", "a sack of flour", "a jar of honey", "the wedding cake in the baker’s window"] },
+  { duty: "cook", items: ["a wheel of strong cheese", "a side of bacon", "a cask of red wine (“for the guests”)", "a sack of flour", "a jar of honey", "the wedding cake in the shop window"] },
   { duty: "gardener", items: ["seed potatoes", "a pot of nightshade (purely ornamental)", "rose bushes for the graveyard", "turnip seed for next year’s lanterns", "a crate of lilies", "mushroom spawn for the cellar"] },
   { duty: "librarian", items: ["this week’s newspapers", "black-edged writing paper", "a cookbook “for the guests”", "ink and sealing wax", "an almanac with next year’s moons", "a book of etiquette"] },
   { duty: "butler", items: ["the silver spoons", "a tea service", "bed linen", "a lace tablecloth", "a pair of candlesticks", "a gravy boat"] },

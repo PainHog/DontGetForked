@@ -1,5 +1,5 @@
-Now: The online version now runs a whole night: chases with the mob on your heels, the lock-up and rescues, group and tell checks, and how the year went at the end.
-Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere), and Richard's first two-player try of the online version.
+Now: The rulebook has three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere) and a worked example of play; the online version runs a whole night.
+Next: A few rules questions from the latest playtest, then Richard's first two-player try of the online version.
 Number: Design decisions made = 80
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
@@ -43,7 +43,8 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] The obstacle table
 - [x] The villager table
 - [x] Advice for the Storyteller
-- [x] Rules chapters drafted (the monsters, towns and art still to come)
+- [x] Three ready-to-play towns with maps, and an example of play
+- [x] Rules chapters drafted
 - [ ] First full rulebook draft
 - [x] Balance pass: win and getting-forked rates on target
 - [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
