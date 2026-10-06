@@ -1,20 +1,23 @@
 # Rules simulator — method
 
-A first rough simulator exists for the core rules (`docs/CORE-RULES.md` draft 0.2), running
-on **placeholder content** (eight anonymous Entities, generated towns). Results:
-`sim/REPORT.md` (rules as written, with the package table) and `sim/REPORT-T2.md`; the
-findings in plain words are in `sim/FINDINGS.md`. This file describes the method that worked
-on *Heisty Spideys*, which the simulator follows.
+The simulator plays the rulebook (`book/src/chapters/`, summarised in `docs/CORE-RULES.md`)
+with the book's content: the eight Entities with their Gifts and Perks, rolled towns from
+Chapter 8's tables and the premade towns of Chapter 9. Results: `sim/REPORT.md` (the decided
+rules and numbers, with packages, presets and sweeps); the findings in plain words are in
+`sim/FINDINGS.md`; `docs/audits/SIM-AUDIT.md` checks the engine rule by rule against the book.
+This file describes the method that worked on *Heisty Spideys*, which the simulator follows.
 
 ```
-node sim/run.mjs                      # P0 + package table + presets + sweeps → sim/REPORT.md (~2 min)
-node sim/run.mjs --package T2         # the same for a package → sim/REPORT-T2.md
+node sim/run.mjs                      # P0 + package table + presets + sweeps → sim/REPORT.md (~10 min)
+node sim/run.mjs --package N1         # the same for a package → sim/REPORT-N1.md
+node sim/premade-check.mjs 2000       # the three premade towns against their targets
 node sim/tune.mjs --params '{…}'      # search label numbers toward the targets
 npm test                              # includes test/sim.test.mjs
 ```
 
-Until the rulebook exists, the dice rules live in `sim/rules.mjs`; they move to
-`module/logic/` when the book's rolling chapter is written (§1, §8).
+The decided dice rules live in `module/logic/rules.mjs` and the content in `module/config.mjs`,
+which the simulator reads (§1); `test/sim.test.mjs` pins what it reads to the book, so a
+change there fails a test instead of moving the baseline unnoticed (§8).
 
 **Why simulate.** On Heisty Spideys the rulebook read as tense and risky, but the
 simulator showed that, as written, a party almost could not lose: the dice pools were far
@@ -116,8 +119,8 @@ package’s rule switches.
 | `rng.mjs` | Seeded RNG (mulberry32 + FNV-1a stream derivation) |
 | `rules.mjs` | Core dice rules: die steps, P2 bands, Critical candidates, the Monster showing, exact odds, Lead moves |
 | `params.mjs` | Every judgement call (rule gaps, player policies, placeholder content) with defaults, alternatives, docs and refs; presets; the tunable numbers; the agreed targets; packages P0/T1/T2 |
-| `entities.mjs` | Placeholder Entities E1–E8 (guardrail 1 arrangements, standard-effect abilities, Gifts, Weakness type) + validator + party generator |
-| `town.mjs` | Random-table town generator (obstacles, locations, list, furniture, lock-up) and the placeholder chase table |
+| `entities.mjs` | The approved roster (from `module/config.mjs`), the old placeholder Entities E1–E8, validator, party generator |
+| `town.mjs` | Chapter 8's town generator (obstacle table, counts, Difficulties, watched, the ceiling, list, furniture, lock-up) and the chase tables |
 | `engine.mjs` | Plays one raid by the core rules: Turns, obstacles, group checks, Costs, Suspicion, local chases, capture and rescue, the final flight, results |
 | `recorder.mjs` | Counts and issue detectors |
 | `notes.mjs` | Rule gaps found while building the simulator; what is and isn't modelled |
@@ -125,4 +128,4 @@ package’s rule switches.
 | `tune.mjs` | Searches label numbers toward the targets (a proposal tool, not a decision) |
 | `premade.mjs` | The premade towns of Chapter 9 (C21), read from `book/src/towns.json` through `book/tools/towns.mjs`, built into the same shape `makeTown` returns |
 | `premade-check.mjs` | Plays each premade town as printed against its label's targets |
-| `FINDINGS.md` | The first simulation's findings in plain words |
+| `FINDINGS.md` | Every simulation's findings in plain words, newest last |

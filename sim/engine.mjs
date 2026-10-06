@@ -430,6 +430,8 @@ function arrive(S, loc) {
 
 /** One Turn of work at a location: every available Entity rolls once (P4). */
 function workLocation(S, loc) {
+  // T4: the party leaves together, so the way out waits for anyone still following a Turn behind (followsBehind).
+  if (loc.id === "exit" && active(S).some((m) => !arrived(S, m))) return;
   const acted = new Set();
   const tried = new Set();
   for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = typeof m.loseTurn === "number" && m.loseTurn > 1 ? m.loseTurn - 1 : false; acted.add(m); S.rec.count("lost turns"); }
