@@ -113,9 +113,14 @@ function applyBudget(rng, L, locs) {
   obs.forEach((o, i) => { o.witnessed = watched[i] === "yes"; });
 }
 
-/** Candidate (C17 C): rolled, but at most `cap` Difficulty-12 obstacles in town; extras are rolled again until they aren't 12. */
-function applyCap(rng, L, locs, cap) {
-  const obs = locs.flatMap((l) => l.obstacles.flatMap((o) => (o.alt ? [o, o.alt] : [o])));
+/**
+ * C17 (the ceiling): at most `cap` Difficulty-12 obstacles in town; extras are rolled again until they aren't 12.
+ * `extra` (the furniture's extra obstacle, counted by its roll before its +2) counts after the list's locations;
+ * `unused` (the rest of the generated furniture location, which a town with the piece on the list never uses) counts
+ * last, so it can't take a 12 from an obstacle the party meets (before the audit it counted ahead of the extra one).
+ */
+function applyCap(rng, L, locs, cap, extra = [], unused = []) {
+  const obs = [...locs.flatMap((l) => l.obstacles.flatMap((o) => (o.alt ? [o, o.alt] : [o]))), ...extra, ...unused];
   let n = 0;
   for (const o of obs) {
     if (o.difficulty !== 12) continue;
@@ -142,7 +147,11 @@ export function makeTown(rng, labelName, numbers) {
   const piece = rng.pick(DGF.furniture); // C16: the d6 furniture table
   fl.furniture = { key: piece.key, size: piece.size };
   if (numbers.townBudget === "budget") applyBudget(rng.fork("budget"), L, [...locations, fl]);
-  if (numbers.townBudget === "cap") applyCap(rng.fork("cap"), L, [...locations, fl], labelName === "hard" ? 2 : 1);
+  if (numbers.townBudget === "cap") {
+    const last = fl.obstacles[fl.obstacles.length - 1];
+    const rest = fl.obstacles.flatMap((o) => (o === last ? [] : o.alt ? [o, o.alt] : [o]));
+    applyCap(rng.fork("cap"), L, locations, labelName === "hard" ? 2 : 1, [last], rest);
+  }
   // The lock-up where captives are held; its rescue obstacle is re-made per rescue.
   const lockup = { id: "lockup", difficulty: L.lockup };
   return { label: labelName, L, items, locations, furnitureLoc: fl, lockup };

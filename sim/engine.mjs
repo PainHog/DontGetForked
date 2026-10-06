@@ -413,7 +413,17 @@ function workLocation(S, loc) {
     for (const o of loc.obstacles) if (o.openedOnly) { o.cleared = false; o.openedOnly = false; }
     loc.solo = null;
   }
-  const past = () => hereOf(S).filter((m) => !loc.solo || m === loc.solo);
+  const past = () => pastHere(S, loc);
+  // Behind a group obstacle the others got past (below): each who wants past rolls for itself again (Chapter 4).
+  if (loc.behind) {
+    const ob = loc.behindOb;
+    for (const m of [...loc.behind]) if (m.status !== "active") loc.behind.delete(m);
+    const alone = pastHere(S, loc).length === 0; // nobody here is past it: they must roll to get anywhere
+    const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0));
+    if (rollers.length && !groupCheck(S, loc, ob, rollers, acted)) return;
+    for (const m of [...loc.behind]) if (ob.passed.has(m.id)) loc.behind.delete(m);
+    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; }
+  }
   while (S.phase === "raid") {
     const ob = loc.obstacles.find((o) => !o.cleared);
     if (!ob) break;
@@ -429,31 +439,19 @@ function workLocation(S, loc) {
       const passedNow = () => past().filter((m) => ob.passed.has(m.id)).length;
       for (const m of avail) if (hasPerk(m, "spectral")) ob.passed.add(m.id); // drifts past without rolling
       if (passedNow() >= need) { ob.cleared = true; continue; }
-      let rollers = avail.filter((m) => !ob.passed.has(m.id)).map((m) => ({ m, plan: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")) }));
-      if (cap < Infinity) rollers = rollers.sort((a, b) => b.plan.value - a.plan.value).slice(0, need - passedNow());
-      if (rollers.length === 0) { ob.cleared = true; continue; }
-      let worst = 0;
-      const caught = [];
-      for (const { m, plan } of rollers) {
-        acted.add(m);
-        if (plan.value <= 0 && rollers.length > 1) S.rec.count("group: forced low-value roll");
-        const r = executeRoll(S, m, plan, "raid");
-        worst = Math.max(worst, r.suspGain);
-        if (r.band !== "trouble") ob.passed.add(m.id);
-        if (r.caught) caught.push(m);
+      let rollers = avail.filter((m) => !ob.passed.has(m.id));
+      if (cap < Infinity) rollers = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).slice(0, need - passedNow()).map((x) => x.m);
+      if (rollers.length === 0) {
+        // Everyone free to act is past it, and someone here isn't (it got Trouble). Those past go on; the others stay
+        // behind it and try again for themselves (above). Before the audit the obstacle was cleared for everyone here,
+        // so one who never got past went on with the rest.
+        loc.behind = new Set(past().filter((m) => !ob.passed.has(m.id)));
+        loc.behindOb = ob;
+        S.rec.count("group: left behind a group obstacle");
+        ob.cleared = true;
+        continue;
       }
-      S.rec.count("group checks");
-      addSusp(S, worst, "roll");
-      if (limitHit(S)) return finalFlight(S, "limit");
-      if (caught.length > 1 && S.P.multiCaught === "shared") {
-        groupChase(S, caught); // S11 candidate: one chase on a shared Lead (majority rule)
-        if (S.phase !== "raid") return;
-      } else {
-        for (const m of caught) {
-          localChase(S, m);
-          if (S.phase !== "raid") return;
-        }
-      }
+      if (!groupCheck(S, loc, ob, rollers, acted)) return;
       if (past().length === 0) break;
       if (passedNow() >= Math.min(cap, past().length)) ob.cleared = true;
       continue;
@@ -462,6 +460,8 @@ function workLocation(S, loc) {
     // A single obstacle: the best-placed available Entity tries it.
     // triesPerTurn "one" (S11 candidate): only one Entity may try a given obstacle each Turn.
     if (S.P.triesPerTurn === "one" && tried.has(ob)) break;
+    // exitTries "one" (Chapter 4, Getting Out): one rolls for all; on Trouble, try again next Turn.
+    if (loc.id === "exit" && (S.P.exitTries ?? "one") === "one" && tried.has(ob)) break;
     let best = null;
     for (const m of avail) {
       const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
@@ -478,6 +478,9 @@ function workLocation(S, loc) {
         to.items.push(...best.m.items);
         best.m.items = [];
         S.rec.count("loot handed over");
+        // Plan again with empty hands: Out of Sight's "only while you carry loot", Through the Wall's "not while you carry
+        // loot" (before the audit the roll kept the plan made while still carrying).
+        best.plan = planRoll(S, best.m, ctxFor(S, best.m, ob, loc, "raid"));
       }
     }
     const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
@@ -495,6 +498,61 @@ function workLocation(S, loc) {
   }
 
   if (S.phase === "raid" && hereOf(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
+}
+
+/** The Entities here who are past this location's obstacles so far: not behind a group obstacle, and (T5) only the opener past an opened approach. */
+function pastHere(S, loc) {
+  return hereOf(S).filter((m) => (!loc.solo || m === loc.solo) && !(loc.behind && loc.behind.has(m)));
+}
+
+/**
+ * A group check (P6, Chapter 4): the rollers declare their dice and abilities, then roll together; each gets past on its
+ * own result; Suspicion rises once, by the biggest trigger among the rolls; everyone in Trouble at a watched obstacle is
+ * caught together (R4). Plans are made in turn with the charges already promised set aside, so two rollers never count
+ * on the same last charge (before the audit they did, and the second paid an overdraw nobody chose). Costs are picked
+ * after all the rolls, so a Cost is never a Suspicion +1 the group already took (F23). Returns false if the raid ended.
+ */
+function groupCheck(S, loc, ob, rollers, acted) {
+  const promised = new Map();
+  const planned = rollers.map((m) => {
+    const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
+    for (const u of plan.uses) {
+      if (u.ability.effect === "form" && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) continue; // costs no charge
+      if (u.owner.charges > 0) { u.owner.charges -= 1; promised.set(u.owner, (promised.get(u.owner) || 0) + 1); }
+    }
+    return { m, plan };
+  });
+  for (const [o, n] of promised) o.charges += n;
+  let worst = 0;
+  const caught = [];
+  const results = [];
+  for (const { m, plan } of planned) {
+    acted.add(m);
+    if (plan.value <= 0 && planned.length > 1) S.rec.count("group: forced low-value roll");
+    const r = executeRoll(S, m, plan, "raid", { deferCost: true });
+    results.push({ m, r });
+    worst = Math.max(worst, r.suspGain);
+    if (r.band !== "trouble") ob.passed.add(m.id);
+    if (r.caught) caught.push(m);
+  }
+  for (const { m, r } of results) {
+    if (!r.costPending) continue;
+    r.costKind = pickCost(S, m, hasPerk(m, "oldMoney") && m.lastTrait === "charm" ? 9 : worst);
+    if (r.costKind === "suspicion") worst = Math.max(worst, 1);
+  }
+  S.rec.count("group checks");
+  addSusp(S, worst, "roll");
+  if (limitHit(S)) { finalFlight(S, "limit"); return false; }
+  if (caught.length > 1 && S.P.multiCaught === "shared") {
+    groupChase(S, caught); // R4: one chase on a shared Lead (majority rule)
+    if (S.phase !== "raid") return false;
+  } else {
+    for (const m of caught) {
+      localChase(S, m);
+      if (S.phase !== "raid") return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -517,7 +575,7 @@ function completeLocation(S, loc) {
     loc.done = false; // a later capture needs a new rescue
     return;
   }
-  const act = loc.solo && loc.solo.status === "active" ? [loc.solo] : hereOf(S); // T5: only the opener got through
+  const act = loc.solo && loc.solo.status === "active" ? [loc.solo] : pastHere(S, loc); // T5: only the opener got through; not who is behind a group obstacle
   if (act.length === 0) return; // everyone was caught: nobody is here to take the loot
   loc.done = true;
   if (!loc.itemsTaken) {
@@ -560,8 +618,9 @@ function completeLocation(S, loc) {
 function wantsFurnitureHere(S, loc) {
   const pol = S.P.furniturePolicy;
   if (pol === "never") return false;
-  const strong = hereOf(S).some((m) => hasPerk(m, "strongBack"));
-  if ((loc.solo ? 1 : hereOf(S).length) < (loc.furniturePending.size === "huge" && !strong ? 2 : 1)) return false;
+  const past = pastHere(S, loc); // "whoever is past all its obstacles may take on the extra one" (Chapter 4)
+  const strong = past.some((m) => hasPerk(m, "strongBack"));
+  if (past.length < (loc.furniturePending.size === "huge" && !strong ? 2 : 1)) return false;
   if (pol === "always") return true;
   const rest = S.town.locations.filter((l) => !l.done && l !== loc).reduce((a, l) => a + locationNeed(S, l), 0);
   return S.limit - S.susp >= 3 && rest + 1 + 2 + 2 <= turnsLeft(S);
@@ -589,7 +648,7 @@ function ctxFor(S, m, ob, loc, phase) {
   return {
     phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && ["lockup", "flightLockup"].includes(S.P.fetchRule) && hasPerk(m, "fetch") ? 2 : 0)
       - (loc && loc.id === "exit" && S.P.fetchRule === "flightExit" && [m, ...helpers].some((o) => hasPerk(o, "fetch")) ? 1 : 0), witnessed: ob.witnessed,
-    helpers, locKind: loc ? loc.kind : null, weakness: false,
+    helpers, locKind: loc ? loc.kind : null, weakness: false, noCost: !!loc && loc.id === "exit", // T4: an exit Cost costs nothing more
   };
 }
 
@@ -643,9 +702,20 @@ function planRoll(S, m, ctx) {
   const P = S.P;
   const phase = ctx.phase;
   const cands = ctx.options.map((o) => ({ trait: o.trait, loud: o.loud, quiet: false, via: null }));
+  // "Use the ability's trait instead" (Chapter 3; V2: in a chase, instead of the ground's). Only a trait the obstacle
+  // (or the ground) doesn't list: a trait it lists as loud is loud however you came to roll it (Chapter 5), so a switch
+  // to a listed trait is that option at the price of a charge. An ability can help any Entity's roll at the same place
+  // (Chapter 3; only opening an approach is your own roll's, F1), so a helper's switch counts too; sources() keeps it to
+  // your own in a local chase and at the lock-up. (Before the audit: own switches only, and a switch to a trait listed
+  // as loud was rolled quiet.)
+  const listed = new Set(ctx.options.map((o) => o.trait));
+  for (const src of sources(S, m, ctx, "switch")) {
+    if (listed.has(src.ability.trait)) continue;
+    listed.add(src.ability.trait); // sources() puts the owner with the most charges first
+    cands.push({ trait: src.ability.trait, loud: false, quiet: false, via: src });
+  }
   for (const ab of abilitiesOf(m)) {
     if (!(m.charges > 0 || overdrawAllowed(S, phase, m, ctx))) continue;
-    if (ab.effect === "switch") cands.push({ trait: ab.trait, loud: false, quiet: false, via: { owner: m, ability: ab } });
     // C2 (Jekyll & Hyde): The Draught changes form, so this roll and the next use the other form's dice.
     if (ab.effect === "form" && m.ent.formDice) {
       const other = m.ent.formDice[m.form === "hyde" ? "jekyll" : "hyde"];
@@ -678,7 +748,7 @@ function planRoll(S, m, ctx) {
   const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
   const mu = phase === "raid" ? P.caughtWeight : 0;
   const cc = chargeCost(S, phase);
-  const costSuspP = P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (m.items.length ? 0.25 : 1 / 3) : 0;
+  const costSuspP = ctx.noCost ? 0 : P.costChoice === "suspicion" ? 1 : P.costChoice === "mixed" ? (m.items.length ? 0.25 : 1 / 3) : 0;
   const loudSusp = P.loudRule === "suspicion" || P.loudRule === "both";
   const loudWitness = P.loudRule === "witness" || P.loudRule === "both";
   const critKey = P.critRule === "doubles" ? "critDoubles" : "critBeat4"; // value estimate only (beatN uses beat4's odds)
@@ -736,9 +806,11 @@ function planRoll(S, m, ctx) {
           const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon) && !unseen(m);
           let gain;
           if (phase === "local" || phase === "final") gain = d.success - d.trouble + (critExtra ? d[critKey] : 0);
-          else if (phase === "slip") gain = d.success + 0.8 * d.cost;
+          else if (phase === "slip") gain = d.success + (P.slipRule === "cost" || hasPerk(m, "builtToLast") ? 0.8 * d.cost : 0); // a Cost does nothing (Chapter 6) unless it frees you
           else gain = d.success + 0.6 * d.cost;
-          const weakCost = phase === "final" && P.overdrawAtLimit === "weakness" ? 0.3 * overdraws : 0;
+          // Overdraw once the hunt is on puts your Weakness in play for the rest of the flight (S1; B3 "once"). Before the audit this
+          // cost was weighed only under "weakness", so with "once" (the default since B3) the players overdrew almost for free.
+          const weakCost = phase === "final" && (P.overdrawAtLimit === "weakness" || P.overdrawAtLimit === "once") ? 0.3 * overdraws : 0;
           const value = gain - lambda * eSusp - mu * (witnessed ? d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0) - weakCost;
           if (!best || value > best.value + 1e-12) {
             best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, difficulty: D, fixedSusp: fixed };
@@ -751,7 +823,7 @@ function planRoll(S, m, ctx) {
 }
 
 /** Make the roll a plan describes, spend what it spends, and read the result (P2, CORE-RULES Rolling). */
-function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
+function executeRoll(S, m, plan, phase, { noCost = false, deferCost = false } = {}) {
   const P = S.P;
   const overdrawn = [];
   for (const u of plan.uses) {
@@ -783,7 +855,8 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
   if (b === "trouble") gain = Math.max(gain, 1); // a trouble result +1
   if (show) gain = Math.max(gain, P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1); // the Monster shows +2 (rattle: +1)
   let costKind = null;
-  if (b === "cost" && phase !== "local" && phase !== "final" && !noCost) {
+  const costPending = deferCost && b === "cost" && phase !== "local" && phase !== "final" && !noCost; // a group check picks its Costs after all its rolls
+  if (b === "cost" && phase !== "local" && phase !== "final" && !noCost && !deferCost) {
     costKind = pickCost(S, m, hasPerk(m, "oldMoney") && plan.cand.trait === "charm" ? 9 : gain);
     if (costKind === "suspicion") gain = Math.max(gain, 1);
   }
@@ -795,7 +868,7 @@ function executeRoll(S, m, plan, phase, { noCost = false } = {}) {
     entity: m.id,
   });
   if (P.overdrawStack === "stack" && plan.overdraws) gain += S.N.overdrawSuspicion; // paid on top of the roll's rise
-  return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind, overdrawn };
+  return { band: b, critical, show, suspGain: gain, caught: b === "trouble" && plan.witnessed, costKind, costPending, overdrawn };
 }
 
 /** P3: the Storyteller picks a Cost (costChoice). */
@@ -815,7 +888,9 @@ function pickCost(S, m, gain = 0) {
   S.rec.count(`cost:${kind}`);
   if (kind === "drop") {
     if (items.length === 0) { S.rec.detect("\"drop an item\" Cost with nothing carried (costs nothing)"); return kind; }
-    if (P.dropRule === "recover") { if (!hasPerk(m, "fetch")) m.loseTurn = true; return kind; } // picking it up again takes the next action
+    // Picking it up again takes the next action. Only the superseded Fetch (fetchRule "pickup", before B2) waived that;
+    // the audit (docs/audits/SIM-AUDIT.md) found the waiver still applied under B5's Fetch.
+    if (P.dropRule === "recover") { if (!(P.fetchRule === "pickup" && hasPerk(m, "fetch"))) m.loseTurn = true; return kind; }
     if (P.dropRule === "extrasOnly") {
       // Only an extra can be dropped (and is lost); with none carried the Storyteller picks another Cost.
       const extras = m.items.filter((i) => !i.essential);
@@ -966,11 +1041,12 @@ function captivesAct(S) {
     const ctx = {
       phase: "slip",
       options: [{ trait: "sly", loud: false }, { trait: "nimble", loud: false }, { trait: "brawn", loud: true }], // T8: like the way out
-      difficulty: S.town.lockup.difficulty, witnessed: false, helpers: [], locKind: null, weakness: false,
+      difficulty: S.town.lockup.difficulty, witnessed: false, helpers: [], locKind: null, weakness: false, noCost: true,
     };
     const plan = planRoll(S, m, ctx);
     if (plan.value <= 0.05) continue;
-    const r = executeRoll(S, m, plan, "slip");
+    // Chapter 6: "Only a Success frees you; a Cost does nothing" (no Storyteller Cost on a slip roll; Built to Last: a Cost frees).
+    const r = executeRoll(S, m, plan, "slip", { noCost: true });
     addSusp(S, r.suspGain, "slip");
     // slipRule (S6 candidate): "cost" = a Success or a Cost frees you; "success" = only a Success does.
     if (r.band === "success" || (r.band === "cost" && (S.P.slipRule === "cost" || hasPerk(m, "builtToLast")))) freeCaptive(S, m, "slipped free");

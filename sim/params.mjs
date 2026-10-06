@@ -197,6 +197,12 @@ export const PARAMS = {
     doc: "entity = each Entity's Tell may trigger on arrival at a watched location; party = one chance for the party, as likely as four Entities' together.",
     ref: "DESIGN Weakness and Tell",
   },
+  exitTries: {
+    kind: "rule", default: "one", values: ["one", "each"],
+    title: "Rolls at the way out per Turn",
+    doc: "one = one roll a Turn: \"one rolls for all … On Trouble … try again next Turn\" (Chapter 4, Getting Out; the reading since the audit, docs/audits/SIM-AUDIT.md); each = after Trouble another Entity there may roll it the same Turn, as at any other obstacle (Chapter 4, Turns: \"Several may try the same obstacle in one Turn\"; the simulator before the audit).",
+    ref: "Chapter 4, Getting Out and Turns",
+  },
   triesPerTurn: {
     kind: "rule", default: "each", values: ["each", "one"],
     title: "Tries at one obstacle per Turn",
