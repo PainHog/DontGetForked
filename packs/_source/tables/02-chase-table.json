@@ -1,0 +1,56 @@
+{
+  "key": "chase-table",
+  "name": "The Chase Table (d6)",
+  "description": "<p>The result says which traits work this round for everyone in the chase, and always includes one that isn’t Nimble.</p><p><em>Rulebook, Chapter 6: The Chase Table.</em></p><p>In Foundry the chase tracker rolls the ground each round (<strong>Roll the ground</strong> when chases are run by hand).</p>",
+  "formula": "1d6",
+  "results": [
+    {
+      "key": "crowdedSquare",
+      "description": "<p><strong>The crowded square.</strong> Lose yourself in the crowd, or bluff your way through.</p><p>Traits that work: Sly, Charm</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "backAlleys",
+      "description": "<p><strong>Back alleys.</strong> Duck, dodge, double back.</p><p>Traits that work: Nimble, Sly</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "marketStalls",
+      "description": "<p><strong>The market stalls.</strong> Overturn a cart, vault a stall.</p><p>Traits that work: Brawn, Nimble</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "rooftops",
+      "description": "<p><strong>Over the rooftops.</strong> Climb, jump, find a way down.</p><p>Traits that work: Nimble, Wits</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "parade",
+      "description": "<p><strong>The festival parade.</strong> Join in: you’re in costume, after all.</p><p>Traits that work: Charm, Sly</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "deadEnd",
+      "description": "<p><strong>A dead end.</strong> Break through, or think fast.</p><p>Traits that work: Brawn, Wits</p>",
+      "range": [
+        6,
+        6
+      ]
+    }
+  ]
+}

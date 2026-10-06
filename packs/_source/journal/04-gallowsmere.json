@@ -1,0 +1,33 @@
+{
+  "key": "gallowsmere",
+  "name": "Gallowsmere (Hard)",
+  "pages": [
+    {
+      "key": "town",
+      "name": "Gallowsmere",
+      "type": "text",
+      "text": {
+        "format": 1,
+        "content": "<p><strong>Hard.</strong> A walled town that remembers last year.</p>\n<p><strong>Lantern Night:</strong> Bells rung every hour to keep the real monsters away. They never work.</p>\n<p><strong>The shopping list</strong> (5 items):</p>\n<ol><li><strong>A new lock for the dungeon</strong> (essential)</li><li><strong>The silver spoons</strong> (essential)</li><li>Black-edged writing paper</li><li>Bandages, lots</li><li>A side of bacon</li></ol>\n<p><strong>The furniture:</strong> a suit of armour (Bulky), at the tailor (4).</p>\n<p><strong>Villagers:</strong> old Granny Mott, who has seen it all before (practising the bells); a gang of children (gossiping, loudly).</p>\n<p><strong>Hard:</strong> Suspicion Limit 15 · the way out 10 · the lock-up 12 · the final flight: mob 11, escape at Lead 6.</p>\n<h2>In Foundry</h2>\n<p>On the Raid HUD, <strong>New raid</strong> → <strong>Hard</strong> sets these numbers. To put this town’s list on the HUD (so its items show there and the end of the raid starts from them), run this as a script macro:</p>\n<pre><code>// Gallowsmere: put this shopping list on the Raid HUD (run as the Storyteller, after New raid → Hard).\ngame.dontGetForked.runOp(\"raid.list\", { action: \"set\", list: [\n  { name: \"a new lock for the dungeon\", duty: \"handyman\", essential: true },\n  { name: \"the silver spoons\", duty: \"butler\", essential: true },\n  { name: \"black-edged writing paper\", duty: \"librarian\", essential: false },\n  { name: \"bandages, lots\", duty: \"tailor\", essential: false },\n  { name: \"a side of bacon\", duty: \"cook\", essential: false }\n] });</code></pre>"
+      }
+    },
+    {
+      "key": "locations",
+      "name": "Locations",
+      "type": "text",
+      "text": {
+        "format": 1,
+        "content": "<p>A location’s first two rows are its two ways in: the party picks one and keeps to it. The furniture’s obstacle is already 2 harder. Any move takes one Turn.</p>\n<table>\n<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th>Difficulty</th></tr></thead>\n<tbody>\n<tr><th colspan=\"4\">1. The smithy: a new lock for the dungeon (tools and hardware) · <strong>essential</strong></th></tr>\n<tr><td><strong>Way in</strong> A bolted back gate <strong>watched</strong></td><td>Brawn (lift it off its hinges)</td><td>Charm (shout “Delivery!” until someone opens it)</td><td>10</td></tr>\n<tr><td><strong>or</strong> A high garden wall <strong>watched</strong></td><td>Nimble</td><td>Brawn (through the gate, lock and all)</td><td>8</td></tr>\n<tr><td><strong>Then</strong> The night watchman on his round <strong>watched</strong></td><td>Wits (time his round)</td><td>—</td><td>10</td></tr>\n<tr><th colspan=\"4\">2. The silversmith: the silver spoons (silver, china and linen) · <strong>essential</strong></th></tr>\n<tr><td><strong>Way in</strong> A locked front door <strong>watched</strong></td><td>Sly (pick the lock)</td><td>Brawn (kick it in)</td><td>10</td></tr>\n<tr><td><strong>or</strong> A shuttered window <strong>watched</strong></td><td>Nimble</td><td>Brawn (force the shutters)</td><td>8</td></tr>\n<tr><td><strong>Then</strong> A guard dog <strong>watched</strong></td><td>Charm (good dog)</td><td>Nimble (outrun it, barking)</td><td>8</td></tr>\n<tr><td><strong>Then</strong> A locked strongbox</td><td>Wits (work out the catch)</td><td>Charm (sweet-talk the clerk into opening it)</td><td>10</td></tr>\n<tr><th colspan=\"4\">3. The printer: black-edged writing paper (books and paper)</th></tr>\n<tr><td><strong>Way in</strong> A nosy neighbour at her window <strong>watched</strong></td><td>Sly</td><td>Wits (a false alarm: “Your cat’s on the roof!”)</td><td>8</td></tr>\n<tr><td><strong>or</strong> The rooftops <em>(group)</em></td><td>Nimble</td><td>—</td><td>10</td></tr>\n<tr><td><strong>Then</strong> A dark, cluttered back room</td><td>Wits</td><td>Sly (rummage through everything)</td><td>8</td></tr>\n<tr><th colspan=\"4\">4. The tailor: bandages, lots (cloth and costumes)</th></tr>\n<tr><td><strong>Way in</strong> A doorman checking invitations <strong>watched</strong></td><td>Charm</td><td>Wits (a forged invitation that fools nobody for long)</td><td>10</td></tr>\n<tr><td><strong>or</strong> A rickety drainpipe</td><td>Nimble</td><td>—</td><td>8</td></tr>\n<tr><td><strong>Then</strong> A crowded shop floor <em>(group)</em> <strong>watched</strong></td><td>Sly</td><td>—</td><td>10</td></tr>\n<tr><td><strong>Furniture</strong> A heavy cellar trapdoor</td><td>Brawn</td><td>—</td><td>12</td></tr>\n<tr><th colspan=\"4\">5. The butcher: a side of bacon (food and drink)</th></tr>\n<tr><td><strong>Way in</strong> A muddy yard full of geese <strong>watched</strong></td><td>Sly</td><td>Nimble (run for it, honking)</td><td>8</td></tr>\n<tr><td><strong>or</strong> A cart blocking the alley <strong>watched</strong></td><td>Brawn</td><td>Nimble (scramble over the load)</td><td>10</td></tr>\n<tr><td><strong>Then</strong> The shopkeeper behind the counter <strong>watched</strong></td><td>Charm</td><td>Sly (snatch it from under her nose)</td><td>10</td></tr>\n<tr><td><strong>Then</strong> A tug-of-war across the lane <em>(group)</em></td><td>Brawn</td><td>—</td><td>12</td></tr>\n</tbody>\n</table>"
+      }
+    },
+    {
+      "key": "map",
+      "name": "Map",
+      "type": "image",
+      "src": "systems/dont-get-forked/assets/maps/gallowsmere.svg",
+      "image": {
+        "caption": "On the map, an eye marks a watched location, a star the furniture."
+      }
+    }
+  ]
+}

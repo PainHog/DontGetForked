@@ -1,0 +1,33 @@
+{
+  "key": "thistlewick",
+  "name": "Thistlewick (Standard)",
+  "pages": [
+    {
+      "key": "town",
+      "name": "Thistlewick",
+      "type": "text",
+      "text": {
+        "format": 1,
+        "content": "<p><strong>Standard.</strong> A market town proud of its festival.</p>\n<p><strong>Lantern Night:</strong> A costume parade through the square at midnight.</p>\n<p><strong>The shopping list</strong> (5 items):</p>\n<ol><li><strong>The wedding cake in the shop window</strong> (essential)</li><li><strong>A tea service</strong> (essential)</li><li>A top hat</li><li>A coil of rope</li><li>Turnip seed for next year’s lanterns</li></ol>\n<p><strong>The furniture:</strong> a gilt mirror (Bulky), at the hatter (3).</p>\n<p><strong>Villagers:</strong> the mayor, in his best costume (judging the costume contest); the vicar (carrying a lantern and a pitchfork “for the parade”).</p>\n<p><strong>Standard:</strong> Suspicion Limit 11 · the way out 8 · the lock-up 10 · the final flight: mob 11, escape at Lead 5.</p>\n<h2>In Foundry</h2>\n<p>On the Raid HUD, <strong>New raid</strong> → <strong>Standard</strong> sets these numbers. To put this town’s list on the HUD (so its items show there and the end of the raid starts from them), run this as a script macro:</p>\n<pre><code>// Thistlewick: put this shopping list on the Raid HUD (run as the Storyteller, after New raid → Standard).\ngame.dontGetForked.runOp(\"raid.list\", { action: \"set\", list: [\n  { name: \"the wedding cake in the shop window\", duty: \"cook\", essential: true },\n  { name: \"a tea service\", duty: \"butler\", essential: true },\n  { name: \"a top hat\", duty: \"tailor\", essential: false },\n  { name: \"a coil of rope\", duty: \"handyman\", essential: false },\n  { name: \"turnip seed for next year’s lanterns\", duty: \"gardener\", essential: false }\n] });</code></pre>"
+      }
+    },
+    {
+      "key": "locations",
+      "name": "Locations",
+      "type": "text",
+      "text": {
+        "format": 1,
+        "content": "<p>A location’s first two rows are its two ways in: the party picks one and keeps to it. The furniture’s obstacle is already 2 harder. Any move takes one Turn.</p>\n<table>\n<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th>Difficulty</th></tr></thead>\n<tbody>\n<tr><th colspan=\"4\">1. The baker: the wedding cake in the shop window (food and drink) · <strong>essential</strong></th></tr>\n<tr><td><strong>Way in</strong> A crowded shop floor <em>(group)</em> <strong>watched</strong></td><td>Sly</td><td>—</td><td>8</td></tr>\n<tr><td><strong>or</strong> A shuttered window</td><td>Nimble</td><td>Brawn (force the shutters)</td><td>8</td></tr>\n<tr><td><strong>Then</strong> The shopkeeper behind the counter <strong>watched</strong></td><td>Charm</td><td>Sly (snatch it from under her nose)</td><td>8</td></tr>\n<tr><th colspan=\"4\">2. The china shop: a tea service (silver, china and linen) · <strong>essential</strong></th></tr>\n<tr><td><strong>Way in</strong> A locked front door</td><td>Sly (pick the lock)</td><td>Brawn (kick it in)</td><td>8</td></tr>\n<tr><td><strong>or</strong> A bolted back gate <strong>watched</strong></td><td>Brawn (lift it off its hinges)</td><td>Charm (shout “Delivery!” until someone opens it)</td><td>10</td></tr>\n<tr><td><strong>Then</strong> A dark, cluttered back room</td><td>Wits</td><td>Sly (rummage through everything)</td><td>8</td></tr>\n<tr><th colspan=\"4\">3. The hatter: a top hat (cloth and costumes)</th></tr>\n<tr><td><strong>Way in</strong> A nosy neighbour at her window <strong>watched</strong></td><td>Sly</td><td>Wits (a false alarm: “Your cat’s on the roof!”)</td><td>8</td></tr>\n<tr><td><strong>or</strong> The rooftops <em>(group)</em></td><td>Nimble</td><td>—</td><td>10</td></tr>\n<tr><td><strong>Furniture</strong> A guard dog <strong>watched</strong></td><td>Charm (good dog)</td><td>Nimble (outrun it, barking)</td><td>10</td></tr>\n<tr><th colspan=\"4\">4. The ironmonger: a coil of rope (tools and hardware)</th></tr>\n<tr><td><strong>Way in</strong> A cart blocking the alley</td><td>Brawn</td><td>Nimble (scramble over the load)</td><td>6</td></tr>\n<tr><td><strong>or</strong> A high garden wall</td><td>Nimble</td><td>Brawn (through the gate, lock and all)</td><td>8</td></tr>\n<tr><td><strong>Then</strong> A locked strongbox <strong>watched</strong></td><td>Wits (work out the catch)</td><td>Charm (sweet-talk the clerk into opening it)</td><td>8</td></tr>\n<tr><th colspan=\"4\">5. The seed merchant: turnip seed for next year’s lanterns (plants and seeds)</th></tr>\n<tr><td><strong>Way in</strong> A maze of festival stalls <em>(group)</em></td><td>Wits</td><td>—</td><td>8</td></tr>\n<tr><td><strong>or</strong> A muddy yard full of geese</td><td>Sly</td><td>Nimble (run for it, honking)</td><td>6</td></tr>\n<tr><td><strong>Then</strong> The night watchman on his round <strong>watched</strong></td><td>Wits (time his round)</td><td>—</td><td>10</td></tr>\n</tbody>\n</table>"
+      }
+    },
+    {
+      "key": "map",
+      "name": "Map",
+      "type": "image",
+      "src": "systems/dont-get-forked/assets/maps/thistlewick.svg",
+      "image": {
+        "caption": "On the map, an eye marks a watched location, a star the furniture."
+      }
+    }
+  ]
+}

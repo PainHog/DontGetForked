@@ -1,0 +1,32 @@
+{
+  "key": "werewolf",
+  "name": "The Werewolf",
+  "system": {
+    "entityKey": "werewolf",
+    "form": "",
+    "traits": {
+      "brawn": 10,
+      "nimble": 12,
+      "sly": 6,
+      "charm": 4,
+      "wits": 8
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "keenNose",
+    "perk": "nightRunner",
+    "duty": "gardener",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

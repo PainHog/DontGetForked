@@ -4,14 +4,19 @@
  * Run before every commit and in CI:  node tools/validate.mjs   (npm run validate)
  *
  * Checks:
+ *  0. Generated source — packs/_source/{entities,tables,journal} and assets/maps
+ *     are exactly what tools/gen-pack-source.mjs makes from the game data
+ *     (module/config.mjs, book/src/towns.json, lang/en.json).
  *  1. Manifest sanity — semver version; the id matches module/contracts.mjs and
  *     module/config.mjs; every referenced esmodule/style/lang/pack path exists;
  *     language files are valid JSON; declared packs match the build config both
- *     ways; pack subtypes are declared in documentTypes.
+ *     ways (name, document type, path); pack subtypes are declared in
+ *     documentTypes; packFolders name only declared packs.
  *  2. Pack integrity — every id is a unique 16-char [A-Za-z0-9]; every
- *     journal's pages are actually attached to it; and each COMPILED document
- *     deep-equals what the build derives from SOURCE (extracted from a temp
- *     copy with the official foundryvtt-cli — LevelDB bytes are
+ *     journal's pages and every table's results are actually attached to it;
+ *     every image page's picture ships with the system; and each COMPILED
+ *     document deep-equals what the build derives from SOURCE (extracted from a
+ *     temp copy with the official foundryvtt-cli — LevelDB bytes are
  *     non-deterministic, and opening the repo packs would dirty them).
  *  3. Templates — every .hbs compiles, and every helper used is registered
  *     (renders each template so an unknown helper throws "Missing helper").
@@ -28,12 +33,22 @@ import { pathToFileURL } from "node:url";
 import { extractPack } from "@foundryvtt/foundryvtt-cli";
 import Handlebars from "handlebars";
 import { ROOT, OUT, PACKS, readSource, toCliDoc } from "./pack-config.mjs";
+import { staleFiles } from "./gen-pack-source.mjs";
 
 const errors = [];
 const err = m => errors.push(m);
 const pass = m => console.log(`  ✓ ${m}`);
 const walk = (dir, ext) => !existsSync(dir) ? [] : readdirSync(dir, { withFileTypes: true })
   .flatMap(e => e.isDirectory() ? walk(join(dir, e.name), ext) : (e.name.endsWith(ext) ? [join(dir, e.name)] : []));
+
+/* -------------------------------------------- 0. Generated source -- */
+console.log("Generated pack source…");
+{
+  const { stale, extra } = staleFiles();
+  const bad = [...stale, ...extra].map((p) => p.slice(ROOT.length + 1));
+  if (bad.length) err(`compendium source out of date with the game data (${bad.join(", ")}) — run: npm run build:packs`);
+  else pass("compendium source matches module/config.mjs, book/src/towns.json and lang/en.json");
+}
 
 /* -------------------------------------------- 1. Manifest -- */
 console.log("Manifest…");
@@ -59,6 +74,15 @@ const buildPackNames = new Set(PACKS.map(d => d.out));
 for (const def of PACKS) if (!manifestPackNames.has(def.out)) err(`build pack "${def.out}" not declared in system.json packs[]`);
 for (const name of manifestPackNames) if (!buildPackNames.has(name)) err(`system.json pack "${name}" has no entry in tools/pack-config.mjs PACKS`);
 for (const p of manifest.packs ?? []) if (p.system && p.system !== manifest.id) err(`system.json pack "${p.name}" has system "${p.system}"`);
+for (const def of PACKS) {
+  const p = (manifest.packs ?? []).find((x) => x.name === def.out);
+  if (!p) continue;
+  if (p.type !== def.type) err(`system.json pack "${p.name}" has type "${p.type}", the build makes ${def.type}`);
+  if (p.path !== `packs/${def.out}`) err(`system.json pack "${p.name}" has path "${p.path}", the build writes packs/${def.out}`);
+  if (["Actor", "Item"].includes(def.type) && p.system !== manifest.id) err(`system.json pack "${p.name}" (${def.type}) needs "system": "${manifest.id}"`);
+}
+const walkFolders = (fs) => (fs ?? []).flatMap((f) => [...(f.packs ?? []), ...walkFolders(f.folders)]);
+for (const name of walkFolders(manifest.packFolders)) if (!manifestPackNames.has(name)) err(`system.json packFolders names undeclared pack "${name}"`);
 for (const def of PACKS) {
   if (def.subtype && def.type === "Item" && !(def.subtype in (manifest.documentTypes?.Item ?? {}))) err(`Item subtype "${def.subtype}" not in documentTypes`);
   if (def.subtype && def.type === "Actor" && !(def.subtype in (manifest.documentTypes?.Actor ?? {}))) err(`Actor subtype "${def.subtype}" not in documentTypes`);
@@ -103,7 +127,7 @@ else {
       let source;
       try { source = readSource(def.file); } catch (e) { err(e.message); continue; }
       if (compiled.size !== source.length) err(`${def.out}: compiled ${compiled.size} docs != ${source.length} source — rebuild packs`);
-      let pages = 0;
+      let pages = 0, results = 0;
       source.forEach((raw, i) => {
         const want = toCliDoc(def, raw, i);
         const got = compiled.get(want._id);
@@ -115,12 +139,25 @@ else {
           pages += got.pages?.length ?? 0;
           if ((got.pages?.length ?? 0) !== want.pages.length)
             err(`${def.out}: journal "${raw.key}" has ${got.pages?.length ?? 0} attached pages, expected ${want.pages.length}`);
+          // An image page's picture must ship with the system (systems/<id>/… → a file in the repo).
+          for (const pg of want.pages) {
+            if (!pg.src) continue;
+            const prefix = `systems/${manifest.id}/`;
+            if (!pg.src.startsWith(prefix) || !existsSync(join(ROOT, pg.src.slice(prefix.length)))) err(`${def.out}: page "${raw.key}#${pg.name}" shows a missing picture: ${pg.src}`);
+          }
+        }
+        if (def.type === "RollTable") {
+          results += got.results?.length ?? 0;
+          for (const r of want.results) claimId(r._id, `${def.out}::${raw.key}#result ${r.range?.join("–")}`);
+          if ((got.results?.length ?? 0) !== want.results.length)
+            err(`${def.out}: table "${raw.key}" has ${got.results?.length ?? 0} attached results, expected ${want.results.length}`);
         }
         if (got._stats?.systemId !== manifest.id) err(`${def.out}: "${raw.key}" _stats.systemId is "${got._stats?.systemId}"`);
         if (JSON.stringify(stable(got)) !== JSON.stringify(stable(want)))
           err(`${def.out}: "${raw.key}" compiled document differs from source — rebuild packs`);
       });
-      if (errors.length === before) pass(`pack ${def.out}: ${compiled.size} docs${pages ? ` (+${pages} attached pages)` : ""} match source`);
+      const extra = pages ? ` (+${pages} attached pages)` : results ? ` (+${results} attached results)` : "";
+      if (errors.length === before) pass(`pack ${def.out}: ${compiled.size} docs${extra} match source`);
     }
   } finally {
     rmSync(tmp, { recursive: true, force: true });

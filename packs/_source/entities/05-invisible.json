@@ -1,0 +1,32 @@
+{
+  "key": "invisible",
+  "name": "The Invisible Man",
+  "system": {
+    "entityKey": "invisible",
+    "form": "",
+    "traits": {
+      "brawn": 4,
+      "nimble": 8,
+      "sly": 12,
+      "charm": 6,
+      "wits": 10
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "throughTheGap",
+    "perk": "outOfSight",
+    "duty": "tailor",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

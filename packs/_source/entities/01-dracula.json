@@ -1,0 +1,32 @@
+{
+  "key": "dracula",
+  "name": "Dracula",
+  "system": {
+    "entityKey": "dracula",
+    "form": "",
+    "traits": {
+      "brawn": 8,
+      "nimble": 10,
+      "sly": 6,
+      "charm": 12,
+      "wits": 4
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "bat",
+    "perk": "hypnoticEyes",
+    "duty": "butler",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

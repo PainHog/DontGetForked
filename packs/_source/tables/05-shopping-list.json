@@ -1,0 +1,296 @@
+{
+  "key": "shopping-list",
+  "name": "The Shopping List (d66)",
+  "description": "<p>For each item, roll a d6 for its kind and a d6 for the item itself; roll again on a repeated item. Only the kind matters to the rules: it decides which Castle Duty gets its edge there.</p><p><em>Rulebook, Chapter 8: The Shopping List.</em></p><p>Read the total as the two dice, tens then units: 34 is a 3 for the kind and a 4 for the item. On the Raid HUD, <strong>Shopping list</strong> → <strong>Roll the list</strong> rolls a whole list on this table (a repeat is rolled again) and keeps it on the HUD.</p>",
+  "formula": "1d6 * 10 + 1d6",
+  "results": [
+    {
+      "key": "cook-1",
+      "range": [
+        11,
+        11
+      ],
+      "description": "<p><strong>Food and drink:</strong> a wheel of strong cheese</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "cook-2",
+      "range": [
+        12,
+        12
+      ],
+      "description": "<p><strong>Food and drink:</strong> a side of bacon</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "cook-3",
+      "range": [
+        13,
+        13
+      ],
+      "description": "<p><strong>Food and drink:</strong> a cask of red wine (“for the guests”)</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "cook-4",
+      "range": [
+        14,
+        14
+      ],
+      "description": "<p><strong>Food and drink:</strong> a sack of flour</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "cook-5",
+      "range": [
+        15,
+        15
+      ],
+      "description": "<p><strong>Food and drink:</strong> a jar of honey</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "cook-6",
+      "range": [
+        16,
+        16
+      ],
+      "description": "<p><strong>Food and drink:</strong> the wedding cake in the shop window</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+    },
+    {
+      "key": "gardener-1",
+      "range": [
+        21,
+        21
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> seed potatoes</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "gardener-2",
+      "range": [
+        22,
+        22
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> a pot of nightshade (purely ornamental)</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "gardener-3",
+      "range": [
+        23,
+        23
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> rose bushes for the graveyard</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "gardener-4",
+      "range": [
+        24,
+        24
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> turnip seed for next year’s lanterns</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "gardener-5",
+      "range": [
+        25,
+        25
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> a crate of lilies</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "gardener-6",
+      "range": [
+        26,
+        26
+      ],
+      "description": "<p><strong>Plants and seeds:</strong> mushroom spawn for the cellar</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+    },
+    {
+      "key": "librarian-1",
+      "range": [
+        31,
+        31
+      ],
+      "description": "<p><strong>Books and paper:</strong> this week’s newspapers</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "librarian-2",
+      "range": [
+        32,
+        32
+      ],
+      "description": "<p><strong>Books and paper:</strong> black-edged writing paper</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "librarian-3",
+      "range": [
+        33,
+        33
+      ],
+      "description": "<p><strong>Books and paper:</strong> a cookbook “for the guests”</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "librarian-4",
+      "range": [
+        34,
+        34
+      ],
+      "description": "<p><strong>Books and paper:</strong> ink and sealing wax</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "librarian-5",
+      "range": [
+        35,
+        35
+      ],
+      "description": "<p><strong>Books and paper:</strong> an almanac with next year’s moons</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "librarian-6",
+      "range": [
+        36,
+        36
+      ],
+      "description": "<p><strong>Books and paper:</strong> a book of etiquette</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+    },
+    {
+      "key": "butler-1",
+      "range": [
+        41,
+        41
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> the silver spoons</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "butler-2",
+      "range": [
+        42,
+        42
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> a tea service</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "butler-3",
+      "range": [
+        43,
+        43
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> bed linen</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "butler-4",
+      "range": [
+        44,
+        44
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> a lace tablecloth</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "butler-5",
+      "range": [
+        45,
+        45
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> a pair of candlesticks</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "butler-6",
+      "range": [
+        46,
+        46
+      ],
+      "description": "<p><strong>Silver, china and linen:</strong> a gravy boat</p><p>Where in town: the silversmith, the china shop</p>"
+    },
+    {
+      "key": "handyman-1",
+      "range": [
+        51,
+        51
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> a box of nails</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "handyman-2",
+      "range": [
+        52,
+        52
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> a new lock for the dungeon</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "handyman-3",
+      "range": [
+        53,
+        53
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> hinges that creak properly</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "handyman-4",
+      "range": [
+        54,
+        54
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> a lamp and a can of oil</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "handyman-5",
+      "range": [
+        55,
+        55
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> a coil of rope</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "handyman-6",
+      "range": [
+        56,
+        56
+      ],
+      "description": "<p><strong>Tools and hardware:</strong> a length of good chain</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+    },
+    {
+      "key": "tailor-1",
+      "range": [
+        61,
+        61
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> a bolt of black velvet</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    },
+    {
+      "key": "tailor-2",
+      "range": [
+        62,
+        62
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> bandages, lots</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    },
+    {
+      "key": "tailor-3",
+      "range": [
+        63,
+        63
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> a top hat</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    },
+    {
+      "key": "tailor-4",
+      "range": [
+        64,
+        64
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> a new cape</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    },
+    {
+      "key": "tailor-5",
+      "range": [
+        65,
+        65
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> knitting wool</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    },
+    {
+      "key": "tailor-6",
+      "range": [
+        66,
+        66
+      ],
+      "description": "<p><strong>Cloth and costumes:</strong> boots in a very large size</p><p>Where in town: the draper, the tailor, the hatter</p>"
+    }
+  ]
+}

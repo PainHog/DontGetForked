@@ -1,0 +1,168 @@
+{
+  "key": "obstacle-table",
+  "name": "The Obstacle Table (d20)",
+  "description": "<p>The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result (Chapter 5). At a <em>group</em> obstacle, everyone there rolls for themselves (Chapter 4).</p><p><em>Rulebook, Chapter 8: The Obstacle Table.</em></p>",
+  "formula": "1d20",
+  "results": [
+    {
+      "key": "trapdoor",
+      "description": "<p><strong>A heavy cellar trapdoor</strong></p><p>Quiet way: Brawn<br>Loud way: —</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "tugOfWar",
+      "description": "<p><strong>A tug-of-war across the lane</strong> <em>(group)</em></p><p>Quiet way: Brawn<br>Loud way: —</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "cart",
+      "description": "<p><strong>A cart blocking the alley</strong></p><p>Quiet way: Brawn<br>Loud way: Nimble (scramble over the load)</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "backGate",
+      "description": "<p><strong>A bolted back gate</strong></p><p>Quiet way: Brawn (lift it off its hinges)<br>Loud way: Charm (shout “Delivery!” until someone opens it)</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "gardenWall",
+      "description": "<p><strong>A high garden wall</strong></p><p>Quiet way: Nimble<br>Loud way: Brawn (through the gate, lock and all)</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "window",
+      "description": "<p><strong>A shuttered window</strong></p><p>Quiet way: Nimble<br>Loud way: Brawn (force the shutters)</p>",
+      "range": [
+        6,
+        6
+      ]
+    },
+    {
+      "key": "rooftops",
+      "description": "<p><strong>The rooftops</strong> <em>(group)</em></p><p>Quiet way: Nimble<br>Loud way: —</p>",
+      "range": [
+        7,
+        7
+      ]
+    },
+    {
+      "key": "drainpipe",
+      "description": "<p><strong>A rickety drainpipe</strong></p><p>Quiet way: Nimble<br>Loud way: —</p>",
+      "range": [
+        8,
+        8
+      ]
+    },
+    {
+      "key": "frontDoor",
+      "description": "<p><strong>A locked front door</strong></p><p>Quiet way: Sly (pick the lock)<br>Loud way: Brawn (kick it in)</p>",
+      "range": [
+        9,
+        9
+      ]
+    },
+    {
+      "key": "neighbour",
+      "description": "<p><strong>A nosy neighbour at her window</strong></p><p>Quiet way: Sly<br>Loud way: Wits (a false alarm: “Your cat’s on the roof!”)</p>",
+      "range": [
+        10,
+        10
+      ]
+    },
+    {
+      "key": "shopFloor",
+      "description": "<p><strong>A crowded shop floor</strong> <em>(group)</em></p><p>Quiet way: Sly<br>Loud way: —</p>",
+      "range": [
+        11,
+        11
+      ]
+    },
+    {
+      "key": "geese",
+      "description": "<p><strong>A muddy yard full of geese</strong></p><p>Quiet way: Sly<br>Loud way: Nimble (run for it, honking)</p>",
+      "range": [
+        12,
+        12
+      ]
+    },
+    {
+      "key": "shopkeeper",
+      "description": "<p><strong>The shopkeeper behind the counter</strong></p><p>Quiet way: Charm<br>Loud way: Sly (snatch it from under her nose)</p>",
+      "range": [
+        13,
+        13
+      ]
+    },
+    {
+      "key": "dog",
+      "description": "<p><strong>A guard dog</strong></p><p>Quiet way: Charm (good dog)<br>Loud way: Nimble (outrun it, barking)</p>",
+      "range": [
+        14,
+        14
+      ]
+    },
+    {
+      "key": "doorman",
+      "description": "<p><strong>A doorman checking invitations</strong></p><p>Quiet way: Charm<br>Loud way: Wits (a forged invitation that fools nobody for long)</p>",
+      "range": [
+        15,
+        15
+      ]
+    },
+    {
+      "key": "children",
+      "description": "<p><strong>Children in costumes who want a closer look</strong> <em>(group)</em></p><p>Quiet way: Charm<br>Loud way: —</p>",
+      "range": [
+        16,
+        16
+      ]
+    },
+    {
+      "key": "strongbox",
+      "description": "<p><strong>A locked strongbox</strong></p><p>Quiet way: Wits (work out the catch)<br>Loud way: Charm (sweet-talk the clerk into opening it)</p>",
+      "range": [
+        17,
+        17
+      ]
+    },
+    {
+      "key": "backRoom",
+      "description": "<p><strong>A dark, cluttered back room</strong></p><p>Quiet way: Wits<br>Loud way: Sly (rummage through everything)</p>",
+      "range": [
+        18,
+        18
+      ]
+    },
+    {
+      "key": "watchman",
+      "description": "<p><strong>The night watchman on his round</strong></p><p>Quiet way: Wits (time his round)<br>Loud way: —</p>",
+      "range": [
+        19,
+        19
+      ]
+    },
+    {
+      "key": "stalls",
+      "description": "<p><strong>A maze of festival stalls</strong> <em>(group)</em></p><p>Quiet way: Wits<br>Loud way: —</p>",
+      "range": [
+        20,
+        20
+      ]
+    }
+  ]
+}

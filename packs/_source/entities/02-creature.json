@@ -1,0 +1,32 @@
+{
+  "key": "creature",
+  "name": "Frankenstein’s Creature",
+  "system": {
+    "entityKey": "creature",
+    "form": "",
+    "traits": {
+      "brawn": 12,
+      "nimble": 8,
+      "sly": 6,
+      "charm": 4,
+      "wits": 10
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "mountainStride",
+    "perk": "strongBack",
+    "duty": "handyman",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

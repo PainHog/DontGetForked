@@ -1,0 +1,56 @@
+{
+  "key": "furniture",
+  "name": "The Furniture (d6)",
+  "description": "<p>Roll a d6 for the piece of furniture or decor standing at one of the list’s locations (roll or pick; Chapter 4).</p><p><em>Rulebook, Chapter 8: The Furniture.</em></p>",
+  "formula": "1d6",
+  "results": [
+    {
+      "key": "armchair",
+      "description": "<p><strong>A wingback armchair</strong></p><p>Size: Bulky</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "mirror",
+      "description": "<p><strong>A gilt mirror</strong></p><p>Size: Bulky</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "armour",
+      "description": "<p><strong>A suit of armour</strong></p><p>Size: Bulky</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "bear",
+      "description": "<p><strong>A stuffed bear</strong></p><p>Size: Bulky</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "clock",
+      "description": "<p><strong>A grandfather clock</strong></p><p>Size: Huge</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "bed",
+      "description": "<p><strong>A four-poster bed</strong></p><p>Size: Huge</p>",
+      "range": [
+        6,
+        6
+      ]
+    }
+  ]
+}

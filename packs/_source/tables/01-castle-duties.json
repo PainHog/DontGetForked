@@ -1,0 +1,56 @@
+{
+  "key": "castle-duties",
+  "name": "Castle Duties (d6)",
+  "description": "<p>Each Entity’s entry gives its default Duty; if two defaults clash in a party, the second player picks another or rolls a d6, rerolling any Duty already taken.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
+  "formula": "1d6",
+  "results": [
+    {
+      "key": "cook",
+      "description": "<p><strong>Cook</strong></p><p>Shops for: food and drink<br>Where in town: the baker, the butcher, the tavern cellar<br>At the castle: keeps the castle fed and knows every kitchen door</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "gardener",
+      "description": "<p><strong>Gardener</strong></p><p>Shops for: plants and seeds<br>Where in town: the market garden, the florist, the seed merchant<br>At the castle: knows what grows where, and what’s poisonous</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "librarian",
+      "description": "<p><strong>Librarian</strong></p><p>Shops for: books and paper<br>Where in town: the bookseller, the printer, the schoolhouse<br>At the castle: reads the town’s notices and signs</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "butler",
+      "description": "<p><strong>Butler</strong></p><p>Shops for: silver, china and linen<br>Where in town: the silversmith, the china shop<br>At the castle: knows how fine houses run, and where they keep the good spoons</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "handyman",
+      "description": "<p><strong>Handyman</strong></p><p>Shops for: tools and hardware<br>Where in town: the smithy, the ironmonger, the carpenter<br>At the castle: knows how locks and hinges work</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "tailor",
+      "description": "<p><strong>Tailor</strong></p><p>Shops for: cloth and costumes<br>Where in town: the draper, the tailor, the hatter<br>At the castle: keeps everyone’s disguises in one piece</p>",
+      "range": [
+        6,
+        6
+      ]
+    }
+  ]
+}

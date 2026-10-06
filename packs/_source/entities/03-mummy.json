@@ -1,0 +1,32 @@
+{
+  "key": "mummy",
+  "name": "The Mummy",
+  "system": {
+    "entityKey": "mummy",
+    "form": "",
+    "traits": {
+      "brawn": 10,
+      "nimble": 4,
+      "sly": 6,
+      "charm": 8,
+      "wits": 12
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "royalBearing",
+    "perk": "patienceOfAges",
+    "duty": "librarian",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

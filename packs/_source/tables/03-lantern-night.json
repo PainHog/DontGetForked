@@ -1,0 +1,56 @@
+{
+  "key": "lantern-night",
+  "name": "Lantern Night: Local Customs (d6)",
+  "description": "<p>Every town keeps it its own way: roll a d6 or pick a custom for each town. Customs are flavour, not rules.</p><p><em>Rulebook, Chapter 8: Lantern Night.</em></p>",
+  "formula": "1d6",
+  "results": [
+    {
+      "key": "lanterns",
+      "description": "<p>Turnip lanterns in every window.</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "parade",
+      "description": "<p>A costume parade through the square at midnight.</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "maskedBall",
+      "description": "<p>A masked ball at the mayor’s house.</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "pies",
+      "description": "<p>Pies left on doorsteps “for the wanderers”.</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "bonfire",
+      "description": "<p>A bonfire in the square, and a straw monster burned at dawn.</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "bells",
+      "description": "<p>Bells rung every hour to keep the real monsters away. They never work.</p>",
+      "range": [
+        6,
+        6
+      ]
+    }
+  ]
+}

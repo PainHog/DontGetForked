@@ -1,0 +1,32 @@
+{
+  "key": "ghost",
+  "name": "A Ghost",
+  "system": {
+    "entityKey": "ghost",
+    "form": "",
+    "traits": {
+      "brawn": 4,
+      "nimble": 12,
+      "sly": 10,
+      "charm": 8,
+      "wits": 6
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "chill",
+    "perk": "spectral",
+    "duty": "butler",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

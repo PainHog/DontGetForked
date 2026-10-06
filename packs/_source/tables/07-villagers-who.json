@@ -1,0 +1,56 @@
+{
+  "key": "villagers-who",
+  "name": "The Villagers: Who (d6)",
+  "description": "<p>Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll who it is and what they’re doing.</p><p><em>Rulebook, Chapter 8: The Villagers.</em></p>",
+  "formula": "1d6",
+  "results": [
+    {
+      "key": "who-1",
+      "description": "<p>The baker’s wife</p>",
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "key": "who-2",
+      "description": "<p>The night watchman</p>",
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "key": "who-3",
+      "description": "<p>A gang of children</p>",
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "key": "who-4",
+      "description": "<p>The vicar</p>",
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "key": "who-5",
+      "description": "<p>The mayor, in his best costume</p>",
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "key": "who-6",
+      "description": "<p>Old Granny Mott, who has seen it all before</p>",
+      "range": [
+        6,
+        6
+      ]
+    }
+  ]
+}

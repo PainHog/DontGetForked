@@ -1,0 +1,32 @@
+{
+  "key": "witch",
+  "name": "A Witch",
+  "system": {
+    "entityKey": "witch",
+    "form": "",
+    "traits": {
+      "brawn": 6,
+      "nimble": 4,
+      "sly": 10,
+      "charm": 8,
+      "wits": 12
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "broomstick",
+    "perk": "familiarsWarning",
+    "duty": "cook",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}

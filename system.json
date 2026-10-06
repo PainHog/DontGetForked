@@ -2,7 +2,7 @@
   "id": "dont-get-forked",
   "type": "system",
   "title": "Don't Get Forked",
-  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls. Chases and the lock-up come next.",
+  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls, with chases and the lock-up run for you. Compendiums hold the eight Entities, the book's random tables and its three premade towns.",
   "version": "0.1.0",
   "compatibility": {
     "minimum": "13",
@@ -32,7 +32,37 @@
       "entity": {}
     }
   },
-  "packs": [],
+  "packs": [
+    {
+      "name": "entities",
+      "label": "The Entities",
+      "path": "packs/entities",
+      "type": "Actor",
+      "system": "dont-get-forked",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "tables",
+      "label": "Random Tables",
+      "path": "packs/tables",
+      "type": "RollTable",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "journal",
+      "label": "Towns and Guide",
+      "path": "packs/journal",
+      "type": "JournalEntry",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Don't Get Forked",
+      "sorting": "m",
+      "packs": ["entities", "tables", "journal"]
+    }
+  ],
   "socket": true,
   "url": "https://github.com/PainHog/DontGetForked",
   "bugs": "https://github.com/PainHog/DontGetForked/issues",

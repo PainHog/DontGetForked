@@ -1,0 +1,32 @@
+{
+  "key": "jekyll-hyde",
+  "name": "Jekyll & Hyde",
+  "system": {
+    "entityKey": "jekyll-hyde",
+    "form": "jekyll",
+    "traits": {
+      "brawn": 4,
+      "nimble": 6,
+      "sly": 8,
+      "charm": 12,
+      "wits": 10
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "doctorsBag",
+    "perk": "practisedHand",
+    "duty": "librarian",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  }
+}
