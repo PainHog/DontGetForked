@@ -81,6 +81,21 @@ test("Turns: dawn comes when the 12th Turn ends; going back undoes it", () => {
   assert.equal(advanceTurn(newRaid(), -1).turn, 1);
 });
 
+test("the hunt starts at the moment of the Limit or dawn, so the Storyteller can stop it", () => {
+  let s = newRaid({ id: "r", difficulty: "easy" });
+  for (let i = 0; i < 11; i++) s = advanceTurn(s, 1);
+  const beforeDawn = s;
+  s = advanceTurn(s, 1);
+  assert.equal(huntDue(s, beforeDawn), "dawn");
+  const stopped = setHunt(setHunt(s, true, "dawn"), false);
+  assert.equal(huntDue(stopped, setHunt(s, true, "dawn")), "", "still dawn, but the Storyteller stopped the hunt");
+  let t = newRaid({ id: "r", difficulty: "easy" });
+  t = recordEvent(t, { eventId: "a", amount: 11, source: "storyteller" });
+  const at = recordEvent(t, { eventId: "b", amount: 2, source: "roll" });
+  assert.equal(huntDue(at, t), "limit");
+  assert.equal(huntDue(recordEvent(at, { eventId: "c", amount: 1, source: "roll" }), at), "", "already at the Limit before this change");
+});
+
 test("the Storyteller's adjust, cancel, restore and undo", () => {
   let s = newRaid({ id: "r" });
   s = recordEvent(s, { eventId: "roll1", amount: 2, source: "roll", label: "the Monster shows" });

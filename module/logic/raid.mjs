@@ -167,10 +167,12 @@ export function setHunt(state, on, cause = "manual") {
 /**
  * Chapter 5: when Suspicion reaches the Limit, or dawn comes, the whole town hunts.
  * Returns the cause ("limit" | "dawn") if the hunt should start now, else "".
+ * Given the state `before` a change, only the moment of reaching the Limit or of
+ * dawn counts, so a Storyteller who stops the hunt by hand isn't overruled.
  */
-export function huntDue(state) {
+export function huntDue(state, before = null) {
   if (state.hunt) return "";
-  if (suspicionOf(state).atLimit) return "limit";
-  if (state.dawn) return "dawn";
+  if (suspicionOf(state).atLimit && !(before && suspicionOf(before).atLimit)) return "limit";
+  if (state.dawn && !(before && before.dawn)) return "dawn";
   return "";
 }

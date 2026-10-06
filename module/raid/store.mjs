@@ -44,7 +44,7 @@ export function mutateRaid(fn) {
     const result = out && out.state ? out.result : undefined;
     let huntCause = "";
     if (setting(SETTINGS.autoHunt)) {
-      huntCause = R.huntDue(state);
+      huntCause = R.huntDue(state, before);
       if (huntCause) state = R.setHunt(state, true, huntCause);
     }
     await game.settings.set(SYSTEM_ID, SETTINGS.raidState, state);
