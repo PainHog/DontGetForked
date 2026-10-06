@@ -1,6 +1,6 @@
 Now: Fine-tuning done: stealing furniture is a real gamble now (it's slow and noisy to carry), and the Werewolf's weakest perk was replaced.
-Next: Chases and the lock-up in the online version, then the premade raids and town maps.
-Number: Design decisions made = 78
+Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere), and chases and the lock-up in the online version.
+Number: Design decisions made = 79
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 93
