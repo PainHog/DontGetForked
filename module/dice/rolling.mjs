@@ -40,7 +40,8 @@ export function abilityChoices(actor, raid = getRaid()) {
     payerName: owner.name,
     own,
     // "while your Weakness is in play, however it came, you can't overdraw" (the chase's timing counts too)
-    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)), overdrewInFlight: !!owner.system.overdrewInFlight },
+    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)), overdrewInFlight: !!owner.system.overdrewInFlight,
+      carrying: (owner.system.carried?.length ?? 0) > 0 || !!owner.system.carryingFurniture }, // V17: a helper is at the same place
   });
   const own = rollAbilities(actor.system).map((a) => entry(a, actor, true));
   // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help
@@ -89,8 +90,17 @@ export function buildInput(actor, values, raid = getRaid()) {
     weakness: !!c?.ok && c.weakness,
     lockup: where.lockup,
     furniture: !!values.furniture,
+    companionCarrying: !!values.companionCarrying,
     turn: raid.turn,
   };
+}
+
+/** V17 Out of Sight: does the roller's Perk ask who carries? Then the dialog has a tick for someone with it. */
+const asksWhoCarries = (actor) => !!DGF.perkRules[actor.system.perk]?.withYou;
+
+/** The tick's start: another Entity in the raid carries loot or furniture (the system can't tell who is where). */
+function someoneElseCarries(actor) {
+  return entities().some((a) => a.id !== actor.id && ((a.system.carried?.length ?? 0) > 0 || a.system.carryingFurniture));
 }
 
 /** The dialog's values from its form. */
@@ -110,6 +120,7 @@ export function readRollForm(form, choices) {
     lockup: on("lockup"),
     group: on("group"),
     furniture: on("furniture"),
+    companionCarrying: on("companionCarrying"),
   };
 }
 
@@ -159,6 +170,7 @@ function dialogContext(actor, values, raid) {
     duty: duty ? { label: t("DGF.Roll.duty", { duty: duty.name, kind: duty.kind }), checked: !!values.duty } : null,
     loud: !!values.loud, watched: !!values.watched, wayOut: !!values.wayOut, chase: !!values.chase,
     lockup: !!values.lockup, furniture: !!values.furniture,
+    companion: asksWhoCarries(actor) ? { checked: !!values.companionCarrying } : null,
     lockupLabel: t(sys.status === "captured" ? "DGF.Roll.lockupSlip" : "DGF.Roll.lockupRescue", { difficulty: lockupDifficulty(raid) }),
     group: where.group ? { checked: !!values.group, label: t("DGF.Roll.group", { label: where.group.label || t("DGF.Group.unnamed") }) } : null,
     exit: DGF.labels[raid.difficulty]?.exit,
@@ -223,6 +235,7 @@ export async function rollEntity(actor, { trait = "", chase = null } = {}) {
     trait: pick, second: raid.hunt || actor.system.carryingFurniture ? "monster" : "mask",
     difficulty: DGF.difficulty.standard, abilities: [], chase: raid.hunt || inChase,
     lockup: captive, group: awaitsRoll(raid.group, actor.id),
+    companionCarrying: asksWhoCarries(actor) && someoneElseCarries(actor),
   };
   for (let i = 0; i < 5; i++) {
     const answer = await promptRoll(actor, values);
@@ -294,6 +307,7 @@ export async function performRoll(actor, values) {
     traitFace: res.traitFace, secondFace: res.secondFace, total: res.total, band: res.band, critical: res.critical,
     showed: res.showed, show: res.show, hiddenShow: res.hiddenShow, triggers: res.triggers, suspicion: res.suspicion,
     suspicionLabel: top.join(","), caught: res.caught, troubleUnwatched: res.troubleUnwatched, unseen: res.unseen,
+    outOfSight: plan.caughtOnlyCarrying, carryingBy: plan.carryingBy, carryingName: plan.carryingName,
     formShift: res.formShift, formTo, chargeBack: res.chargeBack, costs: res.costs,
     autoCharges, chargesBefore: before, chargesAfter: after, helpersPaid: !helpersOwe,
     applied: false, cancelled: false, cost: "", skipTurn: 0, dropped: "",

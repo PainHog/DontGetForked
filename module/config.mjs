@@ -309,7 +309,7 @@ DGF.perkRules = Object.freeze({
   patienceOfAges: Object.freeze({ noCost: "loseTurn" }), // “Lose a Turn” is never your Cost.
   keeperOfTreasures: Object.freeze({ noCost: "drop" }), // “Drop an item” is never your Cost.
   shortcut: Object.freeze({ exitEase: 2 }), // The way out is 2 easier when you roll it.
-  outOfSight: Object.freeze({ caughtOnlyCarrying: true }), // Trouble gets you caught only while you carry loot or furniture.
+  outOfSight: Object.freeze({ caughtOnlyCarrying: true, withYou: true }), // V17: Trouble gets you caught only while you or anyone with you carries loot or furniture.
   lightStep: Object.freeze({ loud: 0 }), // The loud way costs you no Suspicion.
   rattle: Object.freeze({ monsterShows: 1 }), // The Monster showing on your roll is Suspicion +1, not +2.
   wiseWoman: Object.freeze({ trait: "wits", noCost: "loseTurn" }), // A Cost on your Wits roll is never “lose a Turn”.

@@ -32,6 +32,7 @@
  *   weakness,  // the chase brings this Entity's Weakness now (its timing, C3)
  *   lockup,    // "slip" (a captive slipping free) | "rescue" (beating the lock-up) | ""
  *   furniture, // the furniture's extra obstacle (B2: 2 harder than rolled, at most 12)
+ *   companionCarrying, // V17 (Out of Sight): someone with the roller carries loot or furniture (the dialog's tick)
  *   turn,      // the raid's Turn (slipping free: once per Turn, from the Turn after the capture)
  * }
  * Errors and warnings are codes (with data) for the UI to word.
@@ -159,6 +160,16 @@ export function buildRollPlan(input) {
   });
   const overdraw = !hunt && payments.some((p) => p.overdraw > 0);
 
+  // V17 Out of Sight: Trouble gets you caught only while you or anyone with you carries loot or furniture. The
+  // roller's own carrying counts by itself; a helper on this roll is at the same place; anyone else is the dialog's tick.
+  let carryingBy = "", carryingName = "";
+  if (P.caughtOnlyCarrying) {
+    const helper = P.withYou ? abilities.find((a) => !isOwn(a) && a.payer?.carrying) : null;
+    if (carriesLoot || carryingFurniture) carryingBy = "self";
+    else if (helper) { carryingBy = "helper"; carryingName = helper.payerName ?? ""; }
+    else if (P.withYou && input.companionCarrying) carryingBy = "companion";
+  }
+
   const forms = formsOf(sys.entityKey);
   return {
     ok: errors.length === 0,
@@ -199,7 +210,9 @@ export function buildRollPlan(input) {
     formMargin: forms.length > 1 && sys.form === forms[0] ? (P.formMargin ?? 1) : null,
     monsterAmount: P.monsterShows ?? DGF.suspicion.monsterShows,
     caughtOnlyCarrying: !!P.caughtOnlyCarrying,
-    carrying: carriesLoot || carryingFurniture,
+    carrying: carriesLoot || carryingFurniture || !!carryingBy,
+    carryingBy,
+    carryingName,
     carriesLoot,
     consumeSmaller: sys.nextRollSmaller ?? 0,
     perk: sys.perk ?? "",
@@ -240,7 +253,7 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
     suspicion,
     caught,
     troubleUnwatched: base.band === "trouble" && !plan.watched && !plan.chase && plan.lockup !== "slip",
-    unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but carrying nothing
+    unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but nobody there carries anything
     formShift: plan.formMargin !== null && monster && margin >= plan.formMargin,
     chargeBack: base.critical && !plan.chase, // in a chase a Critical moves the Lead instead
     costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip", wayOut: plan.wayOut }),

@@ -200,6 +200,36 @@ test("Perks that bend a roll", () => {
   assert.equal(plan(roller("dracula"), { wayOut: false, difficulty: 8, partyPerks: ["fetch"] }).difficulty, 8);
 });
 
+test("V17 Out of Sight: caught only while you or anyone with you carries loot or furniture; the card says which", () => {
+  const inv = roller("invisible");
+  const trouble = (p) => resolvePlannedRoll(p, 1, 1);
+  // nobody carries: unseen
+  const alone = plan(inv, { watched: true });
+  assert.equal(trouble(alone).caught, false);
+  assert.equal(alone.carryingBy, "");
+  // he carries: seen (his own carrying counts by itself, tick or not)
+  const own = plan(roller("invisible", { carried: [{ name: "a top hat" }] }), { watched: true });
+  assert.equal(trouble(own).caught, true);
+  assert.equal(own.carryingBy, "self");
+  assert.equal(plan(roller("invisible", { carryingFurniture: true }), { watched: true }).carryingBy, "self");
+  // someone with him carries (the dialog's tick): seen
+  const withYou = plan(inv, { watched: true, companionCarrying: true });
+  assert.equal(trouble(withYou).caught, true);
+  assert.equal(withYou.carryingBy, "companion");
+  assert.equal(trouble(withYou).unseen, false);
+  // a helper at the same place who carries counts the same
+  const hedge = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch", payerName: "A Witch", payer: { charges: 3, carrying: true } };
+  const helped = plan(inv, { watched: true, abilities: [hedge] });
+  assert.equal(trouble(helped).caught, true);
+  assert.equal(helped.carryingBy, "helper");
+  assert.equal(helped.carryingName, "A Witch");
+  assert.equal(plan(inv, { watched: true, abilities: [{ ...hedge, payer: { charges: 3, carrying: false } }] }).carryingBy, "");
+  // without Out of Sight the tick changes nothing: Trouble where watched is caught anyway
+  const drac = plan(roller("dracula"), { watched: true, companionCarrying: true });
+  assert.equal(trouble(drac).caught, true);
+  assert.equal(drac.carryingBy, "");
+});
+
 test("Jekyll becomes Hyde when the Monster shows on his roll (Steady Nerves: by 2+), even unseen", () => {
   const jh = roller("jekyll-hyde");
   const p = plan(jh, { trait: "brawn", second: "monster" }); // Jekyll's Brawn d4

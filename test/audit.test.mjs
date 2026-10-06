@@ -324,6 +324,46 @@ test("a helped roll made while no Storyteller was connected charges the helper w
   await settle();
 });
 
+test("V17 Out of Sight at the table: the roll dialog's tick for someone with him who carries, ticked when another in the raid carries; the card says which", async () => {
+  const inv = await asUser(GM, () => api.createEntity("invisible", { ownerId: BEN.id })); // Out of Sight is his default Perk
+  await settle();
+  // nobody else carries: the tick is there, unticked
+  let content = "";
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => api.roll(inv, { trait: "sly" }));
+  await settle();
+  assert.match(content, /name="companionCarrying"/);
+  assert.doesNotMatch(content, /name="companionCarrying" checked/);
+  // the Witch carries loot: ticked to start with
+  await asUser(ANN, () => witch.update({ "system.carried": [{ name: "a jar of honey" }] }));
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => api.roll(inv, { trait: "sly" }));
+  await settle();
+  assert.match(content, /name="companionCarrying" checked/);
+  // Trouble where watched, with the tick: caught, and the card says why
+  const lastRoll = () => game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1);
+  await rollAs(BEN, inv, { trait: "sly", second: "mask", difficulty: 12, watched: true, companionCarrying: true }, [1, 1]);
+  let card = cardOf(lastRoll());
+  assert.equal(card.caught, true);
+  assert.equal(card.carryingBy, "companion");
+  assert.match(lastRoll().content, /someone with him carries loot or furniture/i);
+  await op(GM, OPS.chaseEnd, { outcome: "dropped" });
+  await settle();
+  // without the tick: unseen, no chase
+  await rollAs(BEN, inv, { trait: "sly", second: "mask", difficulty: 12, watched: true }, [1, 1]);
+  card = cardOf(lastRoll());
+  assert.equal(card.caught, false);
+  assert.equal(card.unseen, true);
+  // other Entities' dialogs have no such tick
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(ANN, () => api.roll(witch, { trait: "sly" }));
+  await settle();
+  assert.doesNotMatch(content, /companionCarrying/);
+  await asUser(ANN, () => witch.update({ "system.carried": [] }));
+  await asUser(GM, () => inv.delete());
+  await settle();
+});
+
 test("the roll dialog's furniture tick and the furniture switch say what they do", () => {
   const lang = JSON.parse(readFileSync(join(ROOT, "lang/en.json"), "utf8"));
   // a premade town prints the furniture's obstacle already 2 harder (Chapter 9): the tick must not add it twice

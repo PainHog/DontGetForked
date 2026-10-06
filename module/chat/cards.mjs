@@ -99,6 +99,8 @@ function rollContext(card) {
     suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: join((card.triggers ?? []).filter((x) => x.amount === card.suspicion).map((x) => trigger(x.key))) }) : "",
     suspicionStatus: card.suspicion > 0 ? status : "",
     caughtNote: card.caught ? t("DGF.Card.caught") : card.unseen ? t("DGF.Card.unseen") : card.troubleUnwatched ? t("DGF.Card.unwatched") : "",
+    // V17 Out of Sight: who made him visible (his own load, a helper's, or someone with him)
+    seenNote: card.caught && card.outOfSight && card.carryingBy ? t(`DGF.Card.seen.${card.carryingBy}`, { name: card.carryingName ?? "" }) : "",
     flags: join([card.loud ? t("DGF.Card.loud") : "", card.watched ? t("DGF.Card.watched") : "", card.wayOut ? t("DGF.Card.wayOut") : "", card.chase ? t("DGF.Card.chase") : "",
       card.lockup ? t(`DGF.Card.lockup.${card.lockup}`) : "", card.furniture ? t("DGF.Card.furniture") : "", card.groupId ? t("DGF.Card.group") : ""]),
     chaseNote: card.chaseId ? t("DGF.Card.chaseRound", { round: card.chaseRound, ground: card.groundName ?? "", move: card.leadMove > 0 ? `+${card.leadMove}` : `${card.leadMove}` })
