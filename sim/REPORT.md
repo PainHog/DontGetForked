@@ -1,4 +1,4 @@
-# Don't Get Forked — simulator report: P0 — The rules as decided (through B6, 2026-10-06) with the current numbers (core rules 1.21)
+# Don't Get Forked — simulator report: P0 — The rules as decided (through B6, 2026-10-06) with the current numbers (core rules 1.23)
 
 Command: `node sim/run.mjs`
 
