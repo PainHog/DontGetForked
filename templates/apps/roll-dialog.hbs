@@ -30,6 +30,9 @@
     <label class="dgf-check"><input type="checkbox" name="watched"{{#if watched}} checked{{/if}}> {{localize "DGF.Roll.watched"}}</label>
     <label class="dgf-check"><input type="checkbox" name="wayOut"{{#if wayOut}} checked{{/if}}> {{wayOutLabel}}</label>
     <label class="dgf-check"><input type="checkbox" name="chase"{{#if chase}} checked{{/if}}> {{localize "DGF.Roll.chase"}}</label>
+    <label class="dgf-check"><input type="checkbox" name="lockup"{{#if lockup}} checked{{/if}}> {{lockupLabel}}</label>
+    <label class="dgf-check"><input type="checkbox" name="furniture"{{#if furniture}} checked{{/if}}> {{localize "DGF.Roll.furniture"}}</label>
+    {{#if group}}<label class="dgf-check"><input type="checkbox" name="group"{{#if group.checked}} checked{{/if}}> {{group.label}}</label>{{/if}}
   </fieldset>
   {{#each problems}}<p class="dgf-notice dgf-problem">{{this}}</p>{{/each}}
   {{#if showOdds}}<p class="dgf-odds">{{odds}}</p>{{/if}}

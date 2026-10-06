@@ -103,6 +103,7 @@ function outcomeFacts(chase) {
 
 /** Inside every raid write, after the save: the chase cards (start, each round's Lead, the end). */
 async function announceChase(before, state) {
+  if (state.raidId !== before.raidId) return; // a new raid: nothing to say about the last one's chase
   const c = state.chase, b = before.chase;
   if (b && C.isRunning(b) && (!c || c.id !== b.id)) await postCard(chaseFacts({ ...b, outcome: "ended" }, state, { event: "end" }));
   if (!c) return;

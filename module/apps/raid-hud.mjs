@@ -2,10 +2,12 @@
  * DON'T GET FORKED — the Raid HUD (ApplicationV2)
  * -----------------------------------------------
  * A small window everyone sees: Suspicion against the Limit, the Turn (and
- * dawn), and whether the whole town hunts. The Storyteller also gets the
- * controls: Suspicion +1 / −1, undo, cancel or restore any event, next or
- * previous Turn, start or stop the hunt, and a new raid. Every control is a GM
- * operation (module/raid/store.mjs); players only read.
+ * dawn), and whether the whole town hunts; the open group check, who is held at
+ * the lock-up, the shopping list and, at the end, how the year went. The
+ * Storyteller also gets the controls: Suspicion +1 / −1, undo, cancel or
+ * restore any event, next or previous Turn, start or stop the hunt, a new raid,
+ * a group check, a Tell check, the shopping list, the chase tracker, freeing a
+ * captive and ending the raid. Every control is a GM operation; players only read.
  */
 import { SYSTEM_ID, SETTINGS, OPS } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -14,6 +16,11 @@ import { runOp } from "../net/gm-ops.mjs";
 import { getRaid } from "../raid/store.mjs";
 import { setting } from "../settings.mjs";
 import { t } from "../helpers/i18n.mjs";
+import { entities } from "../raid/chase-flow.mjs";
+import { isCaptive } from "../logic/lockup.mjs";
+import { groupWaiting } from "../logic/checks.mjs";
+import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog } from "./raid-dialogs.mjs";
+import { openChaseTracker } from "./chase-tracker.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -34,6 +41,13 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       prevTurn: RaidHud.#onTurn(-1),
       toggleHunt: RaidHud.#onToggleHunt,
       newRaid: RaidHud.#onNewRaid,
+      groupCheck: () => groupCheckDialog(),
+      closeGroup: () => runOp(OPS.raidGroup, { action: "close" }),
+      tellCheck: () => tellCheckDialog(),
+      shoppingList: () => shoppingListDialog(),
+      openChase: () => openChaseTracker(),
+      endRaid: () => yearDialog(),
+      freeCaptive: RaidHud.#onFree,
     },
   };
 
@@ -67,7 +81,24 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       events,
       hasEvents: events.length > 0,
       labels: R.LABELS.map((k) => ({ key: k, label: t(`DGF.Label.${k}`), selected: k === v.difficulty })),
+      group: state.group?.open ? {
+        label: state.group.label || t("DGF.Group.unnamed"),
+        waiting: groupWaiting(state.group).map((m) => m.name).join(", "),
+      } : null,
+      groupsOn: setting(SETTINGS.autoGroupChecks),
+      captives: entities().filter((a) => isCaptive(a.system)).map((a) => ({
+        actorId: a.id, name: a.name,
+        since: a.system.capturedTurn ? t("DGF.Raid.heldSince", { turn: a.system.capturedTurn }) : "",
+      })),
+      lockup: v.lockup,
+      list: state.list.map((it) => ({ name: it.name, essential: it.essential })),
+      chase: state.chase && !state.chase.outcome ? t("DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape }) : "",
+      over: v.over ? t("DGF.Raid.over", { result: t(`DGF.Result.${v.over.result}`) }) : "",
     };
+  }
+
+  static async #onFree(event, target) {
+    return runOp(OPS.lockupSet, { actorId: target.dataset.actorId, captured: false });
   }
 
   static #onAdjust(delta) {

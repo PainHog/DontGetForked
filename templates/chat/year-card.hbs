@@ -1,0 +1,8 @@
+<div class="dont-get-forked dgf-card dgf-card-year dgf-year-{{result}}">
+  <header class="dgf-card-head"><h3>{{headline}}</h3></header>
+  {{#if summary}}<p class="dgf-card-meta">{{summary}}</p>{{/if}}
+  {{#if furniture}}<p class="dgf-card-meta">{{furniture}}</p>{{/if}}
+  {{#if left}}<p class="dgf-card-caught">{{left}}</p>{{/if}}
+  {{#if missing}}<p class="dgf-card-meta">{{missing}}</p>{{/if}}
+  <div class="dgf-epilogue">{{#each lines}}<p>{{this}}</p>{{/each}}</div>
+</div>

@@ -27,6 +27,7 @@
  *   chase,     // a chase roll (a local chase; every roll once the hunt is on)
  *   hunt,      // the whole town hunts (Suspicion stops, the Mask is off)
  *   chaseTraits, // in a chase the tracker runs: the traits this member may roll this round (module/logic/chase.mjs)
+ *   chaseBlocked, // in that chase but it can't roll now: "noGround" | "alreadyRolled"
  *   weakness,  // the chase brings this Entity's Weakness now (its timing, C3)
  *   lockup,    // "slip" (a captive slipping free) | "rescue" (beating the lock-up) | ""
  *   furniture, // the furniture's extra obstacle (B2: 2 harder than rolled, at most 12)
@@ -88,6 +89,7 @@ export function buildRollPlan(input) {
   }
   // A chase the tracker runs: the ground (plus Wall-Crawler's or Fly by Night's trait) says what works this round.
   const chaseTraits = Array.isArray(input.chaseTraits) ? input.chaseTraits : null;
+  if (input.chaseBlocked) errors.push({ code: input.chaseBlocked }); // in the chase, but not now: "noGround" (the ground isn't rolled yet) or "alreadyRolled" (this round)
   if (chase && chaseTraits && !opener && !chaseTraits.includes(called)) errors.push({ code: "notOnGround", traits: chaseTraits });
   const loud = listed ? !opener && listed.loud.includes(called) : !!input.loud;
 

@@ -7,6 +7,20 @@
   <div class="dgf-hud-row"><span class="dgf-hud-turn">{{turnLine}}</span><span class="dgf-hud-diff">{{label}}</span></div>
   {{#if atLimit}}{{#unless hunt}}<p class="dgf-hud-alert">{{localize "DGF.Raid.atLimit"}}</p>{{/unless}}{{/if}}
   {{#if hunt}}<p class="dgf-hud-alert dgf-hud-hunt">{{huntLine}}</p>{{/if}}
+  {{#if over}}<p class="dgf-hud-alert dgf-hud-over">{{over}}</p>{{/if}}
+  {{#if chase}}<p class="dgf-hud-chase"><button type="button" class="dgf-link" data-action="openChase">{{chase}}</button></p>{{/if}}
+  {{#if group}}<p class="dgf-hud-group">{{localize "DGF.Raid.groupOpen" label=group.label}}{{#if group.waiting}} — {{localize "DGF.Raid.groupWaiting" names=group.waiting}}{{/if}}{{#if isGM}} <button type="button" class="dgf-link" data-action="closeGroup">{{localize "DGF.Raid.closeGroup"}}</button>{{/if}}</p>{{/if}}
+  {{#if captives.length}}
+  <div class="dgf-hud-lockup">
+    <span class="dgf-hud-label">{{localize "DGF.Raid.lockup" difficulty=lockup}}</span>
+    <ul>{{#each captives}}<li data-actor-id="{{actorId}}">{{name}}{{#if since}} <span class="dgf-hint">{{since}}</span>{{/if}}{{#if ../isGM}} <button type="button" class="dgf-link" data-action="freeCaptive" data-actor-id="{{actorId}}">{{localize "DGF.Raid.free"}}</button>{{/if}}</li>{{/each}}</ul>
+  </div>
+  {{/if}}
+  {{#if list.length}}
+  <details class="dgf-hud-list"><summary>{{localize "DGF.Raid.listCount" n=list.length}}</summary>
+    <ul>{{#each list}}<li>{{name}}{{#if essential}} <em>({{localize "DGF.List.essential"}})</em>{{/if}}</li>{{/each}}</ul>
+  </details>
+  {{/if}}
   {{#if isGM}}
   <div class="dgf-hud-controls">
     <button type="button" data-action="suspicionUp" data-tooltip="{{localize "DGF.Raid.up"}}">+1</button>
@@ -29,6 +43,15 @@
     {{/each}}
   </ol>
   {{/if}}
-  <div class="dgf-hud-controls"><button type="button" data-action="newRaid">{{localize "DGF.Raid.newRaid"}}</button></div>
+  <div class="dgf-hud-controls dgf-wrap">
+    {{#if groupsOn}}<button type="button" data-action="groupCheck">{{localize "DGF.Raid.groupCheck"}}</button>{{/if}}
+    <button type="button" data-action="tellCheck">{{localize "DGF.Raid.tellCheck"}}</button>
+    <button type="button" data-action="openChase">{{localize "DGF.Raid.chase"}}</button>
+  </div>
+  <div class="dgf-hud-controls dgf-wrap">
+    <button type="button" data-action="shoppingList">{{localize "DGF.Raid.list"}}</button>
+    <button type="button" data-action="endRaid">{{localize "DGF.Raid.endRaid"}}</button>
+    <button type="button" data-action="newRaid">{{localize "DGF.Raid.newRaid"}}</button>
+  </div>
   {{/if}}
 </div>

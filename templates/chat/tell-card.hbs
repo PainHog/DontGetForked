@@ -1,0 +1,9 @@
+<div class="dont-get-forked dgf-card dgf-card-tell{{#if goesOff}} dgf-tell-off{{/if}}">
+  <header class="dgf-card-head"><h3>{{headline}}</h3></header>
+  <p class="dgf-card-meta">{{arriving}}</p>
+  <p>{{dice}}{{#if second}} <span class="dgf-card-note">{{second}}</span>{{/if}}</p>
+  <p class="dgf-card-band">{{result}}</p>
+  {{#if tellText}}<p class="dgf-card-monster">{{tellText}}</p>{{/if}}
+  {{#if suspicionLine}}<p class="dgf-card-suspicion">{{suspicionLine}} <span class="dgf-card-status">{{suspicionStatus}}</span></p>{{/if}}
+  <div class="dgf-card-actions"></div>
+</div>

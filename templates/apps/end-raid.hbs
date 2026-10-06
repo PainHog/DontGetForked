@@ -1,0 +1,21 @@
+<div class="dont-get-forked dgf-dialog dgf-end-raid">
+  <p>{{localize "DGF.Year.intro"}}</p>
+  {{#unless hasList}}<p class="dgf-hint">{{localize "DGF.Year.noList"}}</p>{{/unless}}
+  <table class="dgf-year-table">
+    <thead><tr><th>{{localize "DGF.Year.item"}}</th><th>{{localize "DGF.Year.kind"}}</th><th>{{localize "DGF.List.essential"}}</th><th>{{localize "DGF.Year.home"}}</th></tr></thead>
+    <tbody>
+      {{#each rows}}
+      <tr>
+        <td><input type="text" name="name.{{i}}" value="{{name}}"></td>
+        <td><select name="duty.{{i}}">{{#each duties}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select></td>
+        <td><input type="checkbox" name="essential.{{i}}"{{#if essential}} checked{{/if}}></td>
+        <td><input type="checkbox" name="home.{{i}}"{{#if home}} checked{{/if}}></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <label class="dgf-check"><input type="checkbox" name="furnitureHome"{{#if furnitureHome}} checked{{/if}}> {{localize "DGF.Year.furnitureHome"}}</label>
+  <label>{{localize "DGF.Year.leftBehind"}} <input type="number" name="leftBehind" value="{{leftBehind}}" min="0" step="1"></label>
+  {{#if leftNames}}<p class="dgf-hint">{{localize "DGF.Year.heldNow" names=leftNames}}</p>{{/if}}
+  <label class="dgf-check"><input type="checkbox" name="forked"{{#if forked}} checked{{/if}}> {{localize "DGF.Year.forked"}}</label>
+</div>

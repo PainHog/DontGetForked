@@ -16,8 +16,10 @@ import { rollAbilities, otherForm, diceFor, payFor, draughtPlan } from "../logic
 import { runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
+import { chaseRollContext, chaseWeakness, lockupDifficulty } from "../raid/chase-flow.mjs";
+import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
 import { postCard } from "../chat/cards.mjs";
-import { t, traitLabel, dieLabel, planText } from "../helpers/i18n.mjs";
+import { t, traitLabel, dieLabel, planText, traitList } from "../helpers/i18n.mjs";
 
 const DIALOG_TEMPLATE = `systems/${SYSTEM_ID}/templates/apps/roll-dialog.hbs`;
 const plain = (v) => JSON.parse(JSON.stringify(v ?? {}));
@@ -29,36 +31,63 @@ const isEntity = (a) => a?.type === ACTOR_TYPES.entity;
  * Every ability that could go on this actor's roll: its own (signature and Gift),
  * then the other Entities' (helping costs the helper's charge, Chapter 3).
  */
-export function abilityChoices(actor) {
+export function abilityChoices(actor, raid = getRaid()) {
   const entry = (a, owner, own) => ({
     ...a,
     id: `ability:${owner.id}:${a.slot}`,
     payerId: owner.id,
     payerName: owner.name,
     own,
-    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay },
+    // "while your Weakness is in play, however it came, you can't overdraw" (the chase's timing counts too)
+    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)) },
   });
   const own = rollAbilities(actor.system).map((a) => entry(a, actor, true));
-  const helpers = game.actors.filter((a) => isEntity(a) && a.id !== actor.id && a.system.entityKey)
+  // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help
+  const flight = raid.hunt && raid.chase && !raid.chase.outcome && raid.chase.kind === "final" ? new Set(raid.chase.members.map((m) => m.actorId)) : null;
+  const helpers = game.actors.filter((a) => isEntity(a) && a.id !== actor.id && a.system.entityKey && (!flight || flight.has(a.id)))
     .flatMap((h) => rollAbilities(h.system).filter((a) => a.effect !== "open").map((a) => entry(a, h, false)));
   return [...own, ...helpers];
+}
+
+/**
+ * Where this roll is, from the raid: the chase this Entity is in (its round, the ground,
+ * the mob, its Weakness), the lock-up (a captive slips free, anyone else rescues), the
+ * open group check. Plain data for the dialog and the card.
+ */
+export function rollSituation(actor, values, raid = getRaid()) {
+  const chase = values.chase ? chaseRollContext(actor, raid) : null;
+  const lockup = values.lockup ? (actor.system.status === "captured" ? "slip" : "rescue") : "";
+  const group = values.group && awaitsRoll(raid.group, actor.id) ? raid.group : null;
+  return { chase, lockup, group };
 }
 
 /** The roll plan's input from the dialog's values (see module/logic/roll-plan.mjs). */
 export function buildInput(actor, values, raid = getRaid()) {
   const chosen = new Set(values.abilities ?? []);
+  const where = rollSituation(actor, values, raid);
+  const c = where.chase;
+  let difficulty = values.difficulty;
+  if (values.wayOut) difficulty = DGF.labels[raid.difficulty]?.exit ?? values.difficulty; // the way out: the label's exit Difficulty
+  else if (where.lockup) difficulty = lockupDifficulty(raid); // the lock-up: the label's lock-up Difficulty
+  else if (c?.ok) difficulty = c.difficulty; // a chase: the mob's Difficulty
   return {
     roller: { id: actor.id, system: plain(actor.system) },
     trait: values.trait,
     second: values.second,
-    difficulty: values.wayOut ? (DGF.labels[raid.difficulty]?.exit ?? values.difficulty) : values.difficulty, // the way out: the label's exit Difficulty
-    abilities: abilityChoices(actor).filter((a) => chosen.has(a.id)),
-    duty: !!values.duty,
+    difficulty,
+    abilities: abilityChoices(actor, raid).filter((a) => chosen.has(a.id)),
+    duty: !!values.duty && !c,
     loud: !!values.loud,
     watched: !!values.watched,
     wayOut: !!values.wayOut,
     chase: !!values.chase,
     hunt: raid.hunt,
+    chaseTraits: c?.ok ? c.traits : null,
+    chaseBlocked: c && !c.ok ? c.reason : "",
+    weakness: !!c?.ok && c.weakness,
+    lockup: where.lockup,
+    furniture: !!values.furniture,
+    turn: raid.turn,
   };
 }
 
@@ -76,6 +105,9 @@ export function readRollForm(form, choices) {
     watched: on("watched"),
     wayOut: on("wayOut"),
     chase: on("chase"),
+    lockup: on("lockup"),
+    group: on("group"),
+    furniture: on("furniture"),
   };
 }
 
@@ -100,6 +132,13 @@ function dialogContext(actor, values, raid) {
   if (sys.skipTurn && sys.skipTurn === raid.turn && !raid.dawn) notices.push(t("DGF.Roll.notice.skipTurn", { turn: raid.turn }));
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
   if (sys.status === "captured") notices.push(t("DGF.Roll.notice.captured"));
+  const where = rollSituation(actor, { ...values, chase: true, lockup: true, group: true }, raid);
+  const c = where.chase;
+  if (c?.ok) {
+    const ground = DGF.chaseTable[c.ground.face - 1]?.name ?? "";
+    notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));
+    if (c.weakness) notices.push(t("DGF.Roll.notice.chaseWeakness"));
+  } else if (c) notices.push(t(`DGF.Plan.${c.reason}`));
   const describe = (a) => ({
     id: a.id, name: a.name, helper: a.payerName, charges: a.payer.charges,
     effectText: t(`DGF.Effect.${a.effect}`, { trait: traitLabel(a.trait) }),
@@ -116,6 +155,9 @@ function dialogContext(actor, values, raid) {
     hasHelpers: choices.some((a) => !a.own),
     duty: duty ? { label: t("DGF.Roll.duty", { duty: duty.name, kind: duty.kind }), checked: !!values.duty } : null,
     loud: !!values.loud, watched: !!values.watched, wayOut: !!values.wayOut, chase: !!values.chase,
+    lockup: !!values.lockup, furniture: !!values.furniture,
+    lockupLabel: t(sys.status === "captured" ? "DGF.Roll.lockupSlip" : "DGF.Roll.lockupRescue", { difficulty: lockupDifficulty(raid) }),
+    group: where.group ? { checked: !!values.group, label: t("DGF.Roll.group", { label: where.group.label || t("DGF.Group.unnamed") }) } : null,
     exit: DGF.labels[raid.difficulty]?.exit,
     wayOutLabel: t("DGF.Roll.wayOut", { difficulty: DGF.labels[raid.difficulty]?.exit }),
     notices,
@@ -164,13 +206,20 @@ export async function promptRoll(actor, values) {
 /* -------------------------------------------------------- roll -- */
 
 /** Open the dialog for a trait and roll (asking again if the choices break a rule). */
-export async function rollEntity(actor, { trait = "brawn" } = {}) {
+export async function rollEntity(actor, { trait = "", chase = null } = {}) {
   if (!isEntity(actor) || !actor.system.entityKey) return null;
   if (!actor.isOwner) { ui.notifications.warn(t("DGF.Notify.notOwner")); return null; }
   const raid = getRaid();
+  // where the Entity is: in a chase (its round), held at the lock-up, in an open group check
+  const inChase = chase ?? !!chaseRollContext(actor, raid);
+  const captive = actor.system.status === "captured";
+  const ctx = inChase ? chaseRollContext(actor, raid) : null;
+  const best = (list) => [...list].sort((a, b) => (actor.system.traits[b] ?? 0) - (actor.system.traits[a] ?? 0))[0];
+  const pick = trait || (ctx?.ok ? best(ctx.traits) : captive ? best(DGF.lockup.slip.quiet) : "brawn");
   let values = {
-    trait, second: raid.hunt || actor.system.carryingFurniture ? "monster" : "mask",
-    difficulty: DGF.difficulty.standard, abilities: [], chase: raid.hunt,
+    trait: pick, second: raid.hunt || actor.system.carryingFurniture ? "monster" : "mask",
+    difficulty: DGF.difficulty.standard, abilities: [], chase: raid.hunt || inChase,
+    lockup: captive, group: awaitsRoll(raid.group, actor.id),
   };
   for (let i = 0; i < 5; i++) {
     const answer = await promptRoll(actor, values);
@@ -219,8 +268,17 @@ export async function performRoll(actor, values) {
   if (Object.keys(update).length) await actor.update(update);
 
   const top = res.triggers.filter((x) => x.amount === res.suspicion).map((x) => x.key);
+  const where = rollSituation(actor, values, raid);
+  const chaseCtx = where.chase?.ok && plan.tracked ? where.chase : null;
+  const groupId = where.group && setting(SETTINGS.autoGroupChecks) ? where.group.id : "";
   const card = {
-    v: 1, kind: CARD.roll, raidId: raid.raidId, eventId: `roll:${foundry.utils.randomID()}`,
+    v: 1, kind: CARD.roll, raidId: raid.raidId, eventId: groupId ? groupEventId(groupId) : `roll:${foundry.utils.randomID()}`,
+    groupId, lockup: plan.lockup, furniture: plan.furniture,
+    chaseId: chaseCtx?.chaseId ?? "", chaseRound: chaseCtx?.round ?? 0, chaseKind: chaseCtx?.kind ?? "",
+    groundName: chaseCtx ? DGF.chaseTable[chaseCtx.ground.face - 1]?.name ?? "" : "",
+    chaseShared: !!chaseCtx && (chaseCtx.kind === "final" || (raid.chase?.members?.length ?? 0) > 1),
+    leadMove: res.leadMove, freed: res.freed, rescued: res.rescued, slipTrouble: res.slipTrouble, wayOutBeaten: res.wayOutBeaten,
+    chaseStarted: "", freedNames: [],
     actorId: actor.id, actorName: actor.name, userId: game.user.id, turn: raid.turn,
     calledTrait: plan.calledTrait, trait: plan.trait, baseDie: plan.baseDie, traitDie: plan.traitDie,
     second: plan.second, secondDie: plan.secondDie, baseDifficulty: plan.baseDifficulty, difficulty: plan.difficulty,
@@ -237,7 +295,11 @@ export async function performRoll(actor, values) {
     applied: false, cancelled: false, cost: "", skipTurn: 0, dropped: "",
   };
   const message = await postCard(card, { speaker: ChatMessage.getSpeaker({ actor }), rolls: [traitRoll, secondRoll] });
-  if (res.suspicion > 0 && !plan.hunt && setting(SETTINGS.autoSuspicion)) await runOp(OPS.raidApplyCard, { messageId: message.id });
+  // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) goes to the GM whole;
+  // any other roll only for its Suspicion
+  const tracked = card.groupId || card.chaseId || card.lockup || card.caught || card.wayOutBeaten;
+  if (tracked) await runOp(OPS.raidRoll, { messageId: message.id });
+  else if (res.suspicion > 0 && !plan.hunt && setting(SETTINGS.autoSuspicion)) await runOp(OPS.raidApplyCard, { messageId: message.id });
   Hooks.callAll(HOOKS.rollResolved, message, card);
   return { ok: true, message, card, plan, result: res };
 }

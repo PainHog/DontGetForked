@@ -36,6 +36,11 @@ const lastMessage = () => game.messages.at(-1);
 const cardOf = (m) => m.getFlag(SYSTEM_ID, "card");
 const setSetting = (key, value) => asUser(GM, () => game.settings.set(SYSTEM_ID, key, value));
 
+// This session checks slice 1 (the hunt without its chase): the chase automation is off here;
+// test/night.test.mjs runs slice 2 (chases, the lock-up, group and Tell checks, the year).
+await setSetting(SETTINGS.autoChase, false);
+await settle();
+
 /** A scripted DialogV2 answer: press `action` with these form values. */
 const press = (action, values = {}) => (options) => {
   const b = options.buttons?.find((x) => x.action === action);

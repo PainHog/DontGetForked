@@ -1,0 +1,53 @@
+<div class="dgf-chase-body">
+  {{#if hasChase}}
+  <header class="dgf-chase-head">
+    <h3>{{kindLabel}}</h3>
+    <p class="dgf-hint">{{causeLabel}}{{#if running}} · {{roundLine}}{{/if}}</p>
+  </header>
+  <div class="dgf-lead" data-lead="{{lead}}" data-escape="{{escape}}">
+    {{#each pips}}<span class="dgf-lead-pip{{#if here}} dgf-here{{/if}}{{#if end}} dgf-end{{/if}}">{{n}}</span>{{/each}}
+  </div>
+  <p class="dgf-center">{{leadLine}}</p>
+  {{#if running}}
+  {{#if mobLine}}<p class="dgf-center"><strong>{{mobLine}}</strong></p>{{/if}}
+  <p class="dgf-chase-ground">{{groundLine}}{{#if groundText}} <em>{{groundText}}</em>{{/if}}</p>
+  {{/if}}
+  {{#if outcome}}<p class="dgf-chase-outcome">{{outcome}}</p>{{/if}}
+  <ul class="dgf-chase-members">
+    {{#each members}}
+    <li class="dgf-chase-member" data-actor-id="{{actorId}}">
+      <span class="dgf-member-name">{{name}}</span>
+      {{#if traits}}<span class="dgf-member-traits">{{traits}}</span>{{/if}}
+      {{#if weakness}}<span class="dgf-member-weak" data-tooltip="{{localize "DGF.Chase.weaknessTip"}}">{{weaknessName}}</span>{{/if}}
+      {{#if rolled}}<span class="dgf-member-rolled">{{rolled}}</span>{{/if}}
+      {{#if canRoll}}<button type="button" data-action="rollFor" data-actor-id="{{actorId}}">{{localize "DGF.Chase.roll"}}</button>{{/if}}
+      {{#if ../isGM}}{{#if ../running}}<button type="button" class="dgf-link" data-action="removeMember" data-actor-id="{{actorId}}" aria-label="{{localize "DGF.Chase.remove"}}">×</button>{{/if}}{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{#if waiting}}<p class="dgf-hint">{{localize "DGF.Chase.waiting" names=waiting}}</p>{{/if}}
+  {{#if running}}{{#if shared}}<p class="dgf-hint">{{localize "DGF.Chase.majorityHint"}}</p>{{/if}}{{/if}}
+  {{#if history.length}}<ol class="dgf-chase-history">{{#each history}}<li>{{text}}</li>{{/each}}</ol>{{/if}}
+  {{#if isGM}}{{#if running}}
+  <div class="dgf-hud-controls">
+    <button type="button" data-action="rollGround">{{localize "DGF.Chase.rollGround"}}</button>
+    <button type="button" data-action="resolveRound"{{#unless roundDone}} disabled{{/unless}}>{{localize "DGF.Chase.resolve"}}</button>
+  </div>
+  <div class="dgf-hud-controls">
+    <button type="button" data-action="leadUp">{{localize "DGF.Chase.leadUp"}}</button>
+    <button type="button" data-action="leadDown">{{localize "DGF.Chase.leadDown"}}</button>
+  </div>
+  <div class="dgf-hud-controls">
+    <button type="button" data-action="escaped">{{localize "DGF.Chase.escaped"}}</button>
+    <button type="button" data-action="cornered">{{localize "DGF.Chase.cornered"}}</button>
+    <button type="button" data-action="dropChase">{{localize "DGF.Chase.drop"}}</button>
+  </div>
+  {{#if addable.length}}
+  <div class="dgf-hud-controls dgf-wrap">{{#each addable}}<button type="button" data-action="addMember" data-actor-id="{{actorId}}">+ {{name}}</button>{{/each}}</div>
+  {{/if}}
+  {{/if}}{{/if}}
+  {{else}}
+  <p class="dgf-empty">{{localize "DGF.Chase.none"}}</p>
+  {{/if}}
+  {{#if canStartFlight}}<div class="dgf-hud-controls"><button type="button" data-action="startFlight">{{localize "DGF.Chase.startFlight"}}</button></div>{{/if}}
+</div>

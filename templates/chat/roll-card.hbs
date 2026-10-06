@@ -15,6 +15,11 @@
   {{#if formNote}}<p class="dgf-card-form">{{formNote}}</p>{{/if}}
   {{#if suspicionLine}}<p class="dgf-card-suspicion" data-suspicion="{{suspicion}}">{{suspicionLine}} <span class="dgf-card-status">{{suspicionStatus}}</span></p>{{/if}}
   {{#if caughtNote}}<p class="dgf-card-caught">{{caughtNote}}</p>{{/if}}
+  {{#if chaseStartedNote}}<p class="dgf-card-note">{{chaseStartedNote}}</p>{{/if}}
+  {{#if chaseNote}}<p class="dgf-card-chase">{{chaseNote}}</p>{{/if}}
+  {{#if lockupNote}}<p class="dgf-card-lockup">{{lockupNote}}</p>{{/if}}
+  {{#if freedNote}}<p class="dgf-card-lockup">{{freedNote}}</p>{{/if}}
+  {{#if wayOutNote}}<p class="dgf-card-lockup">{{wayOutNote}}</p>{{/if}}
   {{#if costChosen}}<p class="dgf-card-cost">{{localize "DGF.Card.costLabel"}} <strong>{{costChosen}}</strong>{{#if costDetail}} ({{costDetail}}){{/if}}</p>{{/if}}
   {{#if costPending}}<p class="dgf-card-cost dgf-pending">{{localize "DGF.Card.costPending"}} {{costList}}</p>{{/if}}
   {{#if costNone}}<p class="dgf-card-cost">{{localize "DGF.Card.noCost"}}</p>{{/if}}

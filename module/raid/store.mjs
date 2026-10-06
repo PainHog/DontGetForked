@@ -19,6 +19,7 @@ import * as R from "../logic/raid.mjs";
 import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { cardOf, updateCard, postCard, setRaidIdReader } from "../chat/cards.mjs";
+import { newRaidUpdate } from "../logic/lockup.mjs";
 
 /** The raid as every client sees it now. */
 export function getRaid() {
@@ -214,10 +215,17 @@ export function registerRaidOps() {
     },
   });
 
+  // Next / previous Turn. B2: while furniture is carried in town, the Turn's end raises Suspicion by 1 (autoFurniture).
   registerOp(OPS.raidTurn, {
     gmOnly: true,
     apply: async ({ delta = 1 }) => {
-      const { state } = await mutateRaid((s) => R.advanceTurn(s, Math.sign(Number(delta)) || 1));
+      const step = Math.sign(Number(delta)) || 1;
+      const carriers = setting(SETTINGS.autoFurniture)
+        ? game.actors.filter((a) => isEntity(a) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name)
+        : [];
+      const { state } = await mutateRaid((s) => (step > 0
+        ? R.advanceTurn(R.endOfTurnFurniture(s, carriers), 1)
+        : R.advanceTurn(R.undoEndOfTurnFurniture(s), -1)));
       return { ok: true, turn: state.turn, dawn: state.dawn };
     },
   });
@@ -235,6 +243,13 @@ export function registerRaidOps() {
     apply: async ({ difficulty = "standard" }) => {
       if (!R.LABELS.includes(difficulty)) return { ok: false, reason: "badDifficulty" };
       const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty }));
+      // a new raid is a new year: everyone is free, charges refill, the last raid's marks go (setting resetOnNewRaid)
+      if (setting(SETTINGS.resetOnNewRaid)) {
+        for (const actor of game.actors.filter((a) => isEntity(a) && a.system.entityKey)) {
+          const update = Object.fromEntries(Object.entries(newRaidUpdate(actor.system)).map(([k, v]) => [`system.${k}`, v]));
+          await actor.update(update);
+        }
+      }
       return { ok: true, raidId: state.raidId };
     },
   });
