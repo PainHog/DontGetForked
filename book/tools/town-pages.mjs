@@ -71,7 +71,7 @@ let stale = [];
 towns.forEach((t, i) => {
   const re = new RegExp(`(<!-- town:${t.key} [^>]*-->)[\\s\\S]*?(<!-- /town:${t.key} -->)`);
   if (!re.test(html)) throw new Error(`32-ch09.html has no <!-- town:${t.key} … --> … <!-- /town:${t.key} --> markers`);
-  html = html.replace(re, (_, a, b) => `${a}\n${townBlock(t, { newPage: i > 0 })}\n${b}`);
+  html = html.replace(re, (_, a, b) => `${a}\n${townBlock(t, { newPage: !!t.map?.newPage })}\n${b}`); // layout: which towns start a page
   const svg = townMap(t);
   let old = "";
   try { old = readFileSync(mapFile(t.key), "utf8"); } catch {}

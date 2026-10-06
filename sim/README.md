@@ -123,4 +123,6 @@ package’s rule switches.
 | `notes.mjs` | Rule gaps found while building the simulator; what is and isn't modelled |
 | `run.mjs` | CLI → `REPORT.md` / `REPORT-<package>.md` |
 | `tune.mjs` | Searches label numbers toward the targets (a proposal tool, not a decision) |
+| `premade.mjs` | The premade towns of Chapter 9 (C21), read from `book/src/towns.json` through `book/tools/towns.mjs`, built into the same shape `makeTown` returns |
+| `premade-check.mjs` | Plays each premade town as printed against its label's targets |
 | `FINDINGS.md` | The first simulation's findings in plain words |

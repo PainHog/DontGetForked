@@ -158,7 +158,7 @@ export function townMap(town) {
     parts.roadInk.push(`<path d="${d}" fill="none" stroke="${C.ink}" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>`);
     parts.roadFill.push(`<path d="${d}" fill="none" stroke="${C.light}" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round"/>`);
   };
-  const places = town.locations.map((l) => ({ ...l.map, n: l.n, name: cap(l.place), watched: [...l.waysIn, ...l.then].some((o) => o.watched) || !!l.furniture?.obstacle.watched, furniture: !!l.furniture }));
+  const places = town.locations.map((l) => ({ ...l.map, n: l.n, name: cap(l.place), watched: [...l.waysIn, ...l.then].some((o) => o.watched), furniture: !!l.furniture }));
   places.forEach((p, i) => lane([p.x, p.y], (i % 2 ? 1 : -1) * 0.08));
   lane([M.lockup.x, M.lockup.y], 0.06);
   lane(gate, -0.05);

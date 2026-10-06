@@ -169,3 +169,19 @@ Measured with the B1 numbers. Switches added: `furnitureRule` noisySlow / slowHa
 **A Ghost's Already Dead** losing two Turns instead of one changes nothing measurable; A Ghost stays at +2.7 and the Witch's Broomstick at +2.7–2.8, just over the ±2.5 target (they have ranged 2.3–2.8 across runs).
 
 **Decided (B2):** `furnitureRule: "noisySlowHard"` and `fetchRule: "flight"` are now the defaults.
+
+## Premade towns (C21)
+
+The three towns of Chapter 9 are kept in one file, `book/src/towns.json`; `book/tools/towns.mjs` checks them against Chapter 8's rules (the list, places, obstacle table, Difficulties a label's d20 can roll, the ceiling on Difficulty 12, the furniture 2 harder, two ways in with different quiet traits), the book's town pages and maps are generated from it, and `sim/premade.mjs` plays the same towns. `node sim/premade-check.mjs [runs] [towns…] [--seed n]` plays each town as printed with random parties of 3, 4 and 5 Entities (approved roster, default rules, policies and numbers).
+
+| Town (2,000 raids per party size, seed 1) | Win (target) | Forked (target) | Win, 3 · 4 · 5 | Forked, 3 · 4 · 5 | Captures | Goes for the furniture |
+|---|---|---|---|---|---|---|
+| Puddlecombe, Easy (12 obstacles, mean Difficulty 8.0, 5 watched) | 90.1% (87–93%) | 0.3% (0–2%) | 87.0 · 90.3 · 93.0 | 0.3 · 0.3 · 0.1 | 0.14 | 13.5% |
+| Thistlewick, Standard (15 obstacles, mean 8.1, 7 watched, 2 essentials) | 76.3% (72–78%) | 6.4% (3–7%) | 72.3 · 77.8 · 78.9 | 7.4 · 5.8 · 5.9 | 0.24 | 53.3% |
+| Gallowsmere, Hard (18 obstacles, mean 9.4, 12 watched) | 56.9% (55–60%) | 8.5% (8–12%) | 53.1 · 58.8 · 58.8 | 10.4 · 8.3 · 6.7 | 0.37 | 0% |
+
+Re-run at 3,000 raids per party size with seed 7: 90.1 / 0.5%, 76.9 / 6.1%, 55.5 / 9.5%; Gallowsmere with seeds 3 and 11: 56.0 / 9.1%, 55.6 / 8.7%. Every town stays inside its targets; Gallowsmere sits about a point above the bottom of both of its bands (an easier printer's back room would centre its win rate at about 58% but bring forked down to about 8.5%).
+
+How they were tuned (counts and Difficulties only, all within the rules): the first drafts played 94.7% (Easy), 65.3% (Standard) and 55.9% / 7.9% forked (Hard). Puddlecombe got a watched second obstacle at the market garden (the night watchman) and a watched trapdoor; Thistlewick lost the seed merchant's third obstacle (a Difficulty-12 drainpipe) and two Difficulty-10 watched obstacles became 8; Gallowsmere's strongbox went from 12 to 10 and three ways in became watched. What moves a fixed town most is where the watched marks sit: a watched obstacle the party must cross (the second or third) costs far more than a watched way in, which a party can go round.
+
+Two things worth knowing: the simulated parties go for Gallowsmere's suit of armour in none of the raids (it stands at the first essential, with too little of the night left to carry it), and at Thistlewick half the parties try for the gilt mirror and 40% of raids end in a Grand Year.

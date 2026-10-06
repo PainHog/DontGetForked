@@ -3,7 +3,7 @@
  * printed by random parties of 3, 4 and 5 Entities (the approved roster, default
  * rules and policies, the approved numbers), the same parties and dice streams as
  * the rolled-town runs.
- *   node sim/premade-check.mjs [runs per party size] [town keys…]
+ *   node sim/premade-check.mjs [runs per party size] [town keys…] [--seed n]
  */
 import { runConfig, metrics, SIZES } from "./run.mjs";
 import { defaults, NUMBERS, TARGETS } from "./params.mjs";
@@ -24,15 +24,18 @@ export function checkTown(key, { runs = 2000, params = defaults(), numbers = NUM
 }
 
 if (process.argv[1]?.endsWith("premade-check.mjs")) {
-  const runs = Number(process.argv[2] ?? 2000);
-  const keys = process.argv.slice(3).length ? process.argv.slice(3) : PREMADE.map((t) => t.key);
+  const args = process.argv.slice(2);
+  const si = args.indexOf("--seed");
+  const seed = si >= 0 ? Number(args.splice(si, 2)[1]) : 1;
+  const runs = Number(args[0] ?? 2000);
+  const keys = args.slice(1).length ? args.slice(1) : PREMADE.map((t) => t.key);
   const pct = (x) => `${(100 * x).toFixed(1)}%`;
   const band = ([lo, hi]) => `${(100 * lo).toFixed(0)}–${(100 * hi).toFixed(0)}%`;
-  console.log(`${runs} raids per party size (3, 4, 5 Entities); default rules, policies and numbers.`);
+  console.log(`${runs} raids per party size (3, 4, 5 Entities), seed ${seed}; default rules, policies and numbers.`);
   console.log("| Town | Win (target) | Forked (target) | Win with 3 · 4 · 5 | Forked with 3 · 4 · 5 | Captures | Grand Year | Went for the furniture | Suspicion at end | Trouble |");
   console.log("|---|---|---|---|---|---|---|---|---|---|");
   for (const key of keys) {
-    const { town: t, M, C, ok, bySize } = checkTown(key, { runs });
+    const { town: t, M, C, ok, bySize } = checkTown(key, { runs, seed });
     const s = t.stats;
     console.log(`| ${t.name} (${t.labelName}; ${s.obstacles} obstacles, mean ${s.mean.toFixed(2)}, ${s.watched} watched)${ok ? "" : " ✗"} | ${pct(C.win)} (${band(TARGETS.win[t.label])}) | ${pct(C.forked)} (${band(TARGETS.forked[t.label])}) | ${SIZES.map((n) => pct(bySize[n].win)).join(" · ")} | ${SIZES.map((n) => pct(bySize[n].forked)).join(" · ")} | ${C.captures.toFixed(2)} | ${pct(C.grand)} | ${pct(M.furniture.went)} | ${C.susp.toFixed(1)} | ${pct(M.rolls.trouble)} |`);
   }
