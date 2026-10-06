@@ -29,12 +29,13 @@
  *   chaseTraits, // in a chase the tracker runs: the traits this member may roll this round (module/logic/chase.mjs)
  *   weakness,  // the chase brings this Entity's Weakness now (its timing, C3)
  *   lockup,    // "slip" (a captive slipping free) | "rescue" (beating the lock-up) | ""
+ *   furniture, // the furniture's extra obstacle (B2: 2 harder than rolled, at most 12)
  *   turn,      // the raid's Turn (slipping free: once per Turn, from the Turn after the capture)
  * }
  * Errors and warnings are codes (with data) for the UI to word.
  */
 import { DGF } from "../config.mjs";
-import { stepUp, stepDown, resolveRoll, leadMove } from "./rules.mjs";
+import { stepUp, stepDown, resolveRoll, leadMove, furnitureObstacleDifficulty } from "./rules.mjs";
 import { formsOf, payFor, TRAITS } from "./entity.mjs";
 import { slipProblems, slipFrees, rescueFrees } from "./lockup.mjs";
 
@@ -120,9 +121,15 @@ export function buildRollPlan(input) {
     if (r.under) warnings.push({ code: "stepLost" });
   } else errors.push({ code: "badDie", trait, die: baseDie });
 
-  // Difficulty: the way out (Shortcut: 2 easier), an opened approach (2 lower).
+  // Difficulty: the furniture's extra obstacle (2 harder, at most 12), the way out (Shortcut: 2 easier), an opened approach (2 lower).
   const diffParts = [];
   let difficulty = baseDifficulty;
+  const furniture = !!input.furniture && !mode && !chase;
+  if (furniture) {
+    const harder = furnitureObstacleDifficulty(difficulty) - difficulty;
+    difficulty += harder;
+    if (harder) diffParts.push({ key: "furniture", n: harder });
+  }
   if (input.wayOut && P.exitEase) { difficulty -= P.exitEase; diffParts.push({ key: "shortcut", n: -P.exitEase }); }
   if (opener) { difficulty -= DGF.openApproachEase; diffParts.push({ key: "open", n: -DGF.openApproachEase }); }
 
@@ -170,6 +177,7 @@ export function buildRollPlan(input) {
     wayOut: mode === "wayOut",
     lockup: mode === "slip" || mode === "rescue" ? mode : "",
     tracked: !!chaseTraits,
+    furniture,
     weakness: weakness && chase,
     duty: !!input.duty,
     chase,

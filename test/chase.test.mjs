@@ -454,3 +454,49 @@ test("the lock-up in the roll plan: a captive's one roll is slipping free; rescu
   assert.ok(plan(roller("witch"), { lockup: "rescue", trait: "sly", hunt: true }).errors.some((e) => e.code === "lockupInHunt"));
   assert.deepEqual(costOptions({ band: "cost", trait: "sly", slip: true }), []);
 });
+
+/* --------------------------------------------------------- B2: furniture -- */
+
+test("B2: the furniture's extra obstacle is 2 harder than rolled, at most 12", async () => {
+  const { furnitureObstacleDifficulty } = await import("../module/logic/rules.mjs");
+  assert.equal(furnitureObstacleDifficulty(6), 8);
+  assert.equal(furnitureObstacleDifficulty(10), 12);
+  assert.equal(furnitureObstacleDifficulty(12), 12);
+  const p = plan(roller("creature"), { trait: "brawn", difficulty: 8, furniture: true });
+  assert.equal(p.difficulty, 10);
+  assert.deepEqual(p.diffParts, [{ key: "furniture", n: 2 }]);
+  const capped = plan(roller("creature"), { trait: "brawn", difficulty: 12, furniture: true });
+  assert.equal(capped.difficulty, 12);
+  assert.deepEqual(capped.diffParts, []);
+  // an approach of its own still takes 2 off the (harder) obstacle
+  const drac = roller("dracula");
+  assert.equal(plan(drac, { trait: "sly", difficulty: 8, furniture: true, abilities: [own(drac, "signature")] }).difficulty, 8);
+});
+
+test("B2: while furniture is carried, Suspicion rises by 1 at the end of each Turn (its own event per Turn)", async () => {
+  const { endOfTurnFurniture, undoEndOfTurnFurniture, advanceTurn, eventsOf } = await import("../module/logic/raid.mjs");
+  let s = newRaid({ id: "r" });
+  s = endOfTurnFurniture(s, []);
+  assert.equal(suspicionOf(s).value, 0, "nothing carried, nothing raised");
+  s = advanceTurn(endOfTurnFurniture(s, ["Frankenstein’s Creature"]), 1); // Turn 1 ends
+  s = advanceTurn(endOfTurnFurniture(s, ["Frankenstein’s Creature"]), 1); // Turn 2 ends
+  assert.equal(s.turn, 3);
+  assert.equal(suspicionOf(s).value, 2);
+  assert.deepEqual(eventsOf(s).map((e) => [e.eventId, e.source]), [["furniture:2", "furniture"], ["furniture:1", "furniture"]]);
+  // the Storyteller steps back a Turn: Turn 2 hadn't ended; ending it again counts once
+  s = advanceTurn(undoEndOfTurnFurniture(s), -1);
+  assert.equal(s.turn, 2);
+  assert.equal(suspicionOf(s).value, 1);
+  s = advanceTurn(endOfTurnFurniture(s, ["x"]), 1);
+  assert.equal(suspicionOf(s).value, 2);
+  assert.equal(s.ledger.length, 2);
+  // the last Turn ends (dawn): it counts; after dawn there are no more Turns
+  for (let i = s.turn; i < 12; i++) s = advanceTurn(s, 1);
+  s = advanceTurn(endOfTurnFurniture(s, ["x"]), 1);
+  assert.equal(s.dawn, true);
+  assert.equal(suspicionOf(s).value, 3);
+  assert.equal(endOfTurnFurniture(s, ["x"]), s);
+  s = advanceTurn(undoEndOfTurnFurniture(s), -1);
+  assert.equal(s.dawn, false);
+  assert.equal(suspicionOf(s).value, 2);
+});

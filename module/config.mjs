@@ -360,7 +360,10 @@ DGF.effects = Object.freeze(["raise", "switch", "hidden", "open"]);
 DGF.openApproachEase = 2;
 
 /** CORE-RULES Suspicion: what raises it (one roll raises it once, by its biggest trigger). */
-DGF.suspicion = Object.freeze({ trouble: 1, monsterShows: 2, tell: 1, overdraw: 2, loud: 1, cost: 1 });
+DGF.suspicion = Object.freeze({ trouble: 1, monsterShows: 2, tell: 1, overdraw: 2, loud: 1, cost: 1, furniture: 1 });
+
+/** B2 (Chapters 4, 5 and 8): the furniture's extra obstacle is 2 harder than rolled (at most 12); carrying a piece raises Suspicion each Turn (DGF.suspicion.furniture). */
+DGF.furnitureObstacle = Object.freeze({ harder: 2, max: 12 });
 
 /** P8 + Grand Year: the year's results, worst to best (Forked stands apart). */
 DGF.results = Object.freeze(["bust", "partial", "win", "grand"]);

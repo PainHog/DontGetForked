@@ -37,6 +37,7 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.autoLockup, true);
   toggle(SETTINGS.autoGroupChecks, true);
   toggle(SETTINGS.autoYear, true);
+  toggle(SETTINGS.autoFurniture, true);
   toggle(SETTINGS.resetOnNewRaid, true);
   toggle(SETTINGS.chaseTracker, true);
 

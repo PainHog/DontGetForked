@@ -101,6 +101,12 @@ export function rollOdds(traitDie, secondDie, difficulty, { monster = false, hid
   return out;
 }
 
+/** B2: the furniture's extra obstacle is 2 harder than rolled, at most 12. */
+export function furnitureObstacleDifficulty(rolled) {
+  const F = DGF.furnitureObstacle;
+  return Math.min(F.max, rolled + F.harder);
+}
+
 /** S10: "open an approach" rolls the ability's trait at 2 lower Difficulty. */
 export function openApproachDifficulty(difficulty) {
   return difficulty - DGF.openApproachEase;

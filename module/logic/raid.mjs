@@ -224,3 +224,27 @@ export function setList(state, list) {
 export function endRaid(state, { result }) {
   return { ...state, over: { result, turn: state.turn }, chase: state.chase && !state.chase.outcome ? { ...state.chase, outcome: "dropped" } : state.chase, group: state.group ? { ...state.group, open: false } : null };
 }
+
+/** The Suspicion event for carried furniture at the end of a Turn (B2: its own event each Turn). */
+export function furnitureEventId(turn) {
+  return `furniture:${turn}`;
+}
+
+/**
+ * B2 (Chapter 4, Carrying): while a piece of furniture is carried in town, Suspicion rises by 1
+ * at the end of each Turn. Call with the state before the Turn moves on and the carriers' names;
+ * a Turn ended again (after the Storyteller stepped back) counts its event again, never twice.
+ */
+export function endOfTurnFurniture(state, carriers = []) {
+  if (!carriers.length || state.dawn || state.over) return state;
+  const eventId = furnitureEventId(state.turn);
+  if (state.ledger.some((e) => e.eventId === eventId)) return restore(state, eventId);
+  return recordEvent(state, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: "furniture", actorName: carriers.join(", ") });
+}
+
+/** The Storyteller steps a Turn back: the Turn that ended didn't end after all, so its furniture event stops counting. */
+export function undoEndOfTurnFurniture(state) {
+  const turn = state.dawn ? state.turn : state.turn - 1;
+  const eventId = furnitureEventId(turn);
+  return state.ledger.some((e) => e.eventId === eventId) ? cancel(state, eventId) : state;
+}

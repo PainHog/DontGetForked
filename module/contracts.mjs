@@ -31,6 +31,7 @@ export const SETTINGS = Object.freeze({
   autoLockup: "autoLockup",                   // world: capture, slipping free and rescue change the Entities by themselves
   autoGroupChecks: "autoGroupChecks",         // world: a group check's rolls share one Suspicion rise; its caught flee together
   autoYear: "autoYear",                       // world: the end of the raid offers (or, when forked, posts) how the year went
+  autoFurniture: "autoFurniture",             // world: carried furniture raises Suspicion at the end of each Turn
   resetOnNewRaid: "resetOnNewRaid",           // world: a new raid frees the Entities, refills charges, clears marks
   chaseTracker: "chaseTracker",               // world: open the chase tracker for everyone when a chase starts
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
