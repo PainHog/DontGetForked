@@ -71,6 +71,14 @@ test("Perks in a chase: Wall-Crawler and Fly by Night add a trait; Night Runner 
   assert.equal(newChase({ id: "n", members: [member("w", "werewolf")] }).lead, 2, "Night Runner is the Werewolf's default Perk");
   assert.equal(newChase({ id: "n", members: [member("w", "werewolf", { perk: "fetch" })] }).lead, 1);
   assert.equal(newChase({ id: "n", kind: "final", cause: "limit", members: [member("w", "werewolf")] }).lead, 2, "only the local chase");
+  // a Perk that sets the final flight's starting Lead (if the book has one), only in the flight
+  const flightPerk = Object.entries(DGF.perkRules).find(([, r]) => r.finalLead);
+  if (flightPerk) {
+    const owner = DGF.entities.find((e) => e.perks.some((p) => p.key === flightPerk[0]));
+    const m = member("x", owner.key, { perk: flightPerk[0] });
+    assert.equal(newChase({ id: "f", kind: "final", cause: "limit", members: [member("a", "dracula"), m] }).lead, flightPerk[1].finalLead);
+    assert.equal(newChase({ id: "l", members: [{ ...m, perk: flightPerk[0] }] }).lead, 1);
+  }
   const curse = newChase({ id: "m", members: [member("m", "mummy", { perk: "fearTheCurse" })] });
   assert.equal(mobDifficulty(curse, { suspicion: 4 }), 11);
   assert.equal(mobDifficulty(newChase({ id: "m", kind: "final", cause: "limit", members: curse.members }), { label: "hard" }), 11, "not in the final flight");

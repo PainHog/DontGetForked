@@ -28,6 +28,8 @@ export class EntityData extends foundry.abstract.TypeDataModel {
       perk: key(),                              // the chosen Perk's key
       duty: key(),                              // the Castle Duty's key (DGF.duties)
       status: new f.StringField({ required: true, blank: false, initial: "active", choices: [...DGF.statuses] }),
+      capturedTurn: count(0),                   // the Turn it was captured (0 = not held); it may slip free from the next
+      slipTurn: count(0),                       // the last Turn it tried to slip free (once per Turn)
       carried: new f.ArrayField(new f.SchemaField({ name: new f.StringField({ required: true, blank: false, initial: "?" }) })),
       carryingFurniture: new f.BooleanField({ initial: false }),
       nextRollSmaller: count(0),                // a Cost: the next roll's trait die one size smaller (each)

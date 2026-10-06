@@ -35,12 +35,10 @@ export function memberOf({ id, name = "", system = {} }) {
   return { actorId: id, name, entityKey: system.entityKey ?? "", perk: system.perk ?? "", timing: e?.weakness?.timing ?? "soon" };
 }
 
-/** Does any member of this chase have a Perk with this rule? */
-const anyPerk = (chase, rule) => chase.members.some((m) => perkRule(m.perk)[rule]);
-
 /**
  * A new chase. Local: Lead 1, escape at 4 (Night Runner: starts at Lead 2).
  * Final flight: Lead 2, escape at 6; a flight that dawn started brings the Dawn Weaknesses.
+ * A Perk with a starting Lead for the flight (DGF.perkRules finalLead) works the same way.
  */
 export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "" }) {
   if (!CHASE_KINDS.includes(kind)) throw new Error(`unknown chase kind: ${kind}`);
@@ -54,10 +52,9 @@ export function newChase({ id, kind = "local", cause = "caught", members = [], t
     escape: kind === "final" ? L.finalEscape : L.localEscape,
     round: 1, mob: null, ground: null, rolls: {}, history: [], outcome: "",
   };
-  if (kind === "local") {
-    const nightRunner = Math.max(0, ...chase.members.map((m) => perkRule(m.perk).localLead ?? 0));
-    chase.lead = Math.max(chase.lead, nightRunner);
-  }
+  // Night Runner: "your local chase starts at Lead 2"; a final-flight Perk (finalLead) the same way for the flight.
+  const perkLead = Math.max(0, ...chase.members.map((m) => perkRule(m.perk)[kind === "final" ? "finalLead" : "localLead"] ?? 0));
+  chase.lead = Math.max(chase.lead, perkLead);
   chase.start = chase.lead;
   return chase;
 }

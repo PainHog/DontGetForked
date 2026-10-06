@@ -55,6 +55,8 @@ export function entitySystem(key, { upgrades = 0 } = {}) {
     perk: defaultKey(e.perks),
     duty: e.duty,
     status: "active",
+    capturedTurn: 0,
+    slipTurn: 0,
     carried: [],
     carryingFurniture: false,
     nextRollSmaller: 0,

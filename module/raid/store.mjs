@@ -6,11 +6,12 @@
  * write at a time (a promise queue), each write a pure function of the last
  * state. Players change it by asking the GM (runOp → the operations below).
  * When it changes, every client fires HOOKS.raidChanged (and suspicionChanged /
- * huntStarted) and refreshes its HUD.
+ * huntStarted, chaseChanged / chaseEnded) and refreshes its HUD and chase tracker.
  *
- * TODO(slice 2): local chases and the final flight (the Lead track, the chase
- * table, the majority rule), the lock-up and rescues, group checks sharing one
- * Suspicion event, Tell checks on arriving at watched locations.
+ * Slice 2 rides on every write: other parts register a `transform` (state →
+ * state, run inside the write, e.g. the hunt starting the final flight) and a
+ * `followUp` (run after the write is saved, e.g. rolling the ground, capturing
+ * the cornered) with onRaidMutation() — see module/raid/chase-flow.mjs.
  */
 import { SYSTEM_ID, SETTINGS, OPS, HOOKS, CARD, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -30,6 +31,16 @@ export function raidView() {
 }
 
 let queue = Promise.resolve();
+const transforms = []; // (state, before) → state, inside each write
+const followUps = []; // async (state, before), after each write is saved
+const announcers = []; // async (before, state), inside each write, after the save
+
+/** Register automation that rides on every raid write (see the header). */
+export function onRaidMutation({ transform, followUp, announce } = {}) {
+  if (transform) transforms.push(transform);
+  if (followUp) followUps.push(followUp);
+  if (announce) announcers.push(announce);
+}
 
 /**
  * GM only: change the raid with a pure function (state → state, or { state, result }).
@@ -47,11 +58,18 @@ export function mutateRaid(fn) {
       huntCause = R.huntDue(state, before);
       if (huntCause) state = R.setHunt(state, true, huntCause);
     }
+    for (const t of transforms) state = t(state, before);
+    if (state === before) return { state, before, result, unchanged: true };
     await game.settings.set(SYSTEM_ID, SETTINGS.raidState, state);
     await announceChanges(before, state, huntCause);
+    for (const a of announcers) await a(before, state);
     return { state, before, result };
   });
   queue = job.catch(() => {});
+  job.then(({ state, before, unchanged }) => {
+    if (unchanged) return;
+    for (const f of followUps) Promise.resolve().then(() => f(state, before)).catch((err) => console.error("Don't Get Forked | raid follow-up failed", err));
+  }, () => {});
   return job;
 }
 
@@ -86,7 +104,13 @@ export function onRaidChange(value, { refresh = () => {} } = {}) {
   const now = R.suspicionOf(state).value, was = R.suspicionOf(prev).value;
   if (now !== was) Hooks.callAll(HOOKS.suspicionChanged, now, was);
   if (state.hunt && !prev.hunt) Hooks.callAll(HOOKS.huntStarted, state);
-  refresh(state);
+  if (JSON.stringify(state.chase) !== JSON.stringify(prev.chase)) {
+    Hooks.callAll(HOOKS.chaseChanged, state.chase, prev.chase);
+    const c = state.chase, p = prev.chase;
+    if (p && p.id !== c?.id && !p.outcome) Hooks.callAll(HOOKS.chaseEnded, { ...p, outcome: "ended" }); // replaced while running (the Limit)
+    if (c?.outcome && !(p && p.id === c.id && p.outcome)) Hooks.callAll(HOOKS.chaseEnded, c);
+  }
+  refresh(state, prev);
 }
 
 /* ------------------------------------------------- GM operations -- */
@@ -109,7 +133,7 @@ export function registerRaidOps() {
     apply: async ({ messageId }) => {
       const message = game.messages.get(messageId);
       const card = cardOf(message);
-      if (!card || (card.kind !== CARD.roll && card.kind !== CARD.ability)) return { ok: false, reason: "notACard" };
+      if (!card || ![CARD.roll, CARD.ability, CARD.tell].includes(card.kind)) return { ok: false, reason: "notACard" };
       const raid = getRaid();
       if (card.raidId !== raid.raidId) return { ok: false, reason: "otherRaid" };
       if (card.cancelled) return { ok: false, reason: "cancelled" };
@@ -132,6 +156,8 @@ export function registerRaidOps() {
       if (card?.kind !== CARD.roll || card.band !== "cost") return { ok: false, reason: "notACost" };
       if (card.cost) return { ok: false, reason: "alreadyChosen" };
       if (!(card.costs ?? []).includes(choice)) return { ok: false, reason: "notAllowed" };
+      // a group check's rolls rise once, by the biggest: a Suspicion +1 the group already raised costs nothing (T10)
+      if (choice === "suspicion" && card.groupId && R.eventAmount(getRaid(), card.eventId) >= DGF.suspicion.cost) return { ok: false, reason: "costsNothing" };
       const actor = game.actors.get(card.actorId);
       const patch = { cost: choice };
       if (setting(SETTINGS.autoCosts)) {
@@ -245,11 +271,11 @@ export async function reconcile() {
   if (!isActiveGM() || !setting(SETTINGS.autoSuspicion)) return 0;
   const raid = getRaid();
   if (!raid.raidId) return 0;
-  const known = new Set(raid.ledger.map((e) => e.eventId));
+  const known = new Set(raid.ledger.map((e) => e.messageId).filter(Boolean));
   const todo = game.messages.contents.slice(-100).filter((m) => {
     const c = cardOf(m);
-    return c && (c.kind === CARD.roll || c.kind === CARD.ability) && c.raidId === raid.raidId
-      && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(c.eventId);
+    return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId
+      && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);
   });
   for (const m of todo) await runOp(OPS.raidApplyCard, { messageId: m.id });
   return todo.length;

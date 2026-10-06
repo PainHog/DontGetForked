@@ -33,6 +33,12 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.autoCosts, true);
   toggle(SETTINGS.autoHunt, true);
   toggle(SETTINGS.hudVisible, true, { onChange: (v) => onHudChange(v) });
+  toggle(SETTINGS.autoChase, true);
+  toggle(SETTINGS.autoLockup, true);
+  toggle(SETTINGS.autoGroupChecks, true);
+  toggle(SETTINGS.autoYear, true);
+  toggle(SETTINGS.resetOnNewRaid, true);
+  toggle(SETTINGS.chaseTracker, true);
 
   // Per player.
   reg(SETTINGS.showOdds, {

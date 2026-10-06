@@ -27,6 +27,12 @@ export const SETTINGS = Object.freeze({
   autoCosts: "autoCosts",                     // world: a Cost the Storyteller picks applies itself
   autoHunt: "autoHunt",                       // world: the hunt starts by itself at the Limit or at dawn
   hudVisible: "hudVisible",                   // world: show the Raid HUD to everyone
+  autoChase: "autoChase",                     // world: chases run themselves (start, the ground, the Lead, the end)
+  autoLockup: "autoLockup",                   // world: capture, slipping free and rescue change the Entities by themselves
+  autoGroupChecks: "autoGroupChecks",         // world: a group check's rolls share one Suspicion rise; its caught flee together
+  autoYear: "autoYear",                       // world: the end of the raid offers (or, when forked, posts) how the year went
+  resetOnNewRaid: "resetOnNewRaid",           // world: a new raid frees the Entities, refills charges, clears marks
+  chaseTracker: "chaseTracker",               // world: open the chase tracker for everyone when a chase starts
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
 });
 
@@ -34,7 +40,10 @@ export const SETTINGS = Object.freeze({
 export const CARD = Object.freeze({
   roll: "roll",       // an Entity's roll (dice, band, the Monster, Suspicion, Costs)
   ability: "ability", // a charge spent outside a roll (the sheet), or the Draught
-  raid: "raid"        // the raid's announcements (new raid, dawn, the hunt)
+  raid: "raid",       // the raid's announcements (new raid, dawn, the hunt, group checks)
+  chase: "chase",     // a chase: its start, the ground, each round's Lead, the end and what it cost
+  tell: "tell",       // a Tell check (the d6, whose Tell, Suspicion +1)
+  year: "year"        // how the year went: the result and the epilogue
 });
 
 /** GM-authoritative operation names (module/net/gm-ops.mjs). */
@@ -47,7 +56,19 @@ export const OPS = Object.freeze({
   raidTurn: "raid.turn",                 // GM: next / previous Turn (dawn after the last)
   raidHunt: "raid.hunt",                 // GM: start or stop the hunt by hand
   raidReset: "raid.reset",               // GM: a new raid at a difficulty
-  actorSpendCharges: "actor.spendCharges" // anyone: a helper's charges for an ability on someone else's roll
+  actorSpendCharges: "actor.spendCharges", // anyone: a helper's charges for an ability on someone else's roll
+  raidRoll: "raid.roll",                 // anyone: a roll card's Suspicion, group check, chase, capture and lock-up effects
+  raidGroup: "raid.group",               // GM: open or close a group check
+  raidTell: "raid.tell",                 // GM: a Tell check for the Entities arriving at a watched location
+  raidList: "raid.list",                 // GM: roll, set or clear the shopping list
+  raidEnd: "raid.end",                   // GM: how the year went (the end of the raid)
+  chaseStart: "chase.start",             // GM: start a local chase from a caught card, or the final flight, by hand
+  chaseGround: "chase.ground",           // GM: roll the ground for the round
+  chaseResolve: "chase.resolve",         // GM: move the Lead by the round's rolls
+  chaseLead: "chase.lead",               // GM: Lead +1 / −1 by hand
+  chaseEnd: "chase.end",                 // GM: end the chase by hand (escaped, cornered, called off)
+  chaseMember: "chase.member",           // GM: add an Entity to the chase or take it out
+  lockupSet: "lockup.set"                // GM: capture or free an Entity by hand
 });
 
 /** Hooks this system fires (other modules may listen). */
@@ -55,5 +76,8 @@ export const HOOKS = Object.freeze({
   rollResolved: "dontGetForked.rollResolved",         // (message, card) on the roller's client
   raidChanged: "dontGetForked.raidChanged",           // (state, previous) on every client
   suspicionChanged: "dontGetForked.suspicionChanged", // (value, previous) on every client
-  huntStarted: "dontGetForked.huntStarted"            // (state) on every client
+  huntStarted: "dontGetForked.huntStarted",           // (state) on every client
+  chaseChanged: "dontGetForked.chaseChanged",         // (chase, previous) on every client
+  chaseEnded: "dontGetForked.chaseEnded",             // (chase) on every client, once its outcome is known
+  yearDecided: "dontGetForked.yearDecided"            // (year) on the Storyteller's client, when the year card is posted
 });
