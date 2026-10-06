@@ -316,7 +316,31 @@ DGF.perkRules = Object.freeze({
   practisedHand: Object.freeze({ freeDraughtTo: "jekyll" }), // Changing back to Jekyll costs no charge.
   steadyNerves: Object.freeze({ formMargin: 2 }), // Hyde takes over only if the Monster beats your trait die by 2 or more.
   bruteStrength: Object.freeze({ form: "hyde", carryNimble: false }), // As Hyde, carrying doesn’t make your Nimble smaller.
+  // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs):
+  wallCrawler: Object.freeze({ chaseTrait: "nimble" }), // In a chase you can always roll Nimble.
+  flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
+  nightRunner: Object.freeze({ localLead: 2 }), // Your local chase starts at Lead 2.
+  fearTheCurse: Object.freeze({ localMobEase: 1 }), // The mob in your local chase is 1 easier.
+  alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured.
+  builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
+  hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep what you carry.
+  familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive, a Tell check goes off only if a second d6 also rolls 4–6.
 });
+
+/** Chapter 4, Getting Out: the way out is one watched obstacle — Sly or Nimble, or Brawn the loud way. */
+DGF.wayOut = Object.freeze({ quiet: Object.freeze(["sly", "nimble"]), loud: Object.freeze(["brawn"]) });
+
+/**
+ * Chapter 6, Captured: the lock-up. Rescue: Sly, or Brawn the loud way, always watched, at the lock-up
+ * Difficulty. Slipping free: Sly or Nimble, or Brawn the loud way, at the lock-up Difficulty (T8).
+ */
+DGF.lockup = Object.freeze({
+  rescue: Object.freeze({ quiet: Object.freeze(["sly"]), loud: Object.freeze(["brawn"]) }),
+  slip: Object.freeze({ quiet: Object.freeze(["sly", "nimble"]), loud: Object.freeze(["brawn"]) }),
+});
+
+/** Chapter 6: how a chase ends. "ended": the Limit came during a local chase (it joins the final flight); "dropped": the Storyteller called it off. */
+DGF.chaseOutcomes = Object.freeze(["escaped", "cornered", "ended", "dropped"]);
 
 /** P3: the four Costs the Storyteller picks from, in the book's order. */
 DGF.costs = Object.freeze(["suspicion", "drop", "loseTurn", "smaller"]);
