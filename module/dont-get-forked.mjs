@@ -59,6 +59,17 @@ Hooks.once("init", function () {
   registerCheckOps();
   setYearOpener(() => yearDialog());
 
+  // The HUD lists who is held at the lock-up and the tracker shows whose Weakness is in play: they follow the
+  // Entities as well as the raid. Only a change that shows there re-renders them (not every actor update).
+  const SHOWN = ["status", "capturedTurn", "weaknessInPlay", "entityKey"];
+  const onEntityChange = (actor, diff) => {
+    if (actor?.type !== ACTOR_TYPES.entity) return;
+    if (diff && !("name" in diff) && !SHOWN.some((k) => diff.system && k in diff.system)) return;
+    const raid = getRaid();
+    Promise.all([refreshHud(), refreshChaseTracker(raid, raid)]).catch((err) => console.error("Don't Get Forked | refresh failed", err));
+  };
+  Hooks.on("updateActor", onEntityChange);
+  Hooks.on("deleteActor", (actor) => onEntityChange(actor, null));
   Hooks.on("renderChatMessageHTML", onRenderChatMessage);
   Hooks.on("renderActorDirectory", onRenderActorDirectory);
   // An Entity made any other way (the sidebar's Create Actor, an import) also gets a linked token.

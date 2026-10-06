@@ -315,7 +315,7 @@ export async function performRoll(actor, values) {
 async function confirmOverdraw(actor, pay) {
   return foundry.applications.api.DialogV2.confirm({
     window: { title: t("DGF.Overdraw.title") },
-    content: `<p>${t(pay.weakness ? "DGF.Overdraw.weakness" : "DGF.Overdraw.suspicion", { name: actor.name, n: DGF.suspicion.overdraw })}</p>`,
+    content: `<p>${t(pay.weakness ? "DGF.Overdraw.weakness" : "DGF.Overdraw.suspicion", { name: foundry.utils.escapeHTML(actor.name), n: DGF.suspicion.overdraw })}</p>`,
     rejectClose: false,
   });
 }

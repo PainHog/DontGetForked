@@ -36,6 +36,23 @@ async function ask({ title, content, okLabel, read }) {
   return answer && typeof answer === "object" ? answer : null;
 }
 
+/**
+ * Why an operation was refused, in words: its own (`prefix.reason`) if lang/en.json has them, else a general line;
+ * "" when runOp has already said so (no Storyteller connected, or the request was lost).
+ */
+export function refusalText(prefix, reason) {
+  if (["noGM", "failed"].includes(reason)) return "";
+  const key = `${prefix}.${reason}`;
+  return game.i18n.has(key) ? t(key) : t("DGF.Notify.refused");
+}
+
+/** Tell the Storyteller why a dialog's operation was refused (nothing when it worked). */
+function sayRefused(prefix, result) {
+  const text = result?.ok === false ? refusalText(prefix, result.reason) : "";
+  if (text) ui.notifications.warn(text);
+  return result;
+}
+
 /** The free Entities as checkboxes (all ticked to start with). */
 const freeEntities = () => entities().filter((a) => !isCaptive(a.system)).map((a) => ({ id: a.id, name: a.name, checked: true }));
 
@@ -49,7 +66,7 @@ export async function groupCheckDialog() {
     read: (form) => ({ members: list.filter((e) => ticked(form, `entity.${e.id}`)).map((e) => e.id), label: String(field(form, "place")?.value ?? "").trim() }),
   });
   if (!answer) return null;
-  return runOp(OPS.raidGroup, { action: "open", ...answer });
+  return sayRefused("DGF.Group.refused", await runOp(OPS.raidGroup, { action: "open", ...answer }));
 }
 
 /** A Tell check: who is arriving at which watched location. */
@@ -66,9 +83,7 @@ export async function tellCheckDialog() {
     read: (form) => ({ arriving: list.filter((e) => ticked(form, `entity.${e.id}`)).map((e) => e.id), place: String(field(form, "place")?.value ?? "").trim() }),
   });
   if (!answer) return null;
-  const result = await runOp(OPS.raidTell, answer);
-  if (result?.ok === false) ui.notifications.warn(t(`DGF.Tell.refused.${result.reason}`));
-  return result;
+  return sayRefused("DGF.Tell.refused", await runOp(OPS.raidTell, answer));
 }
 
 /** The shopping list: roll it on the d66 table (how many essentials: the label's, or on Standard a die roll, F16), or clear it. */
@@ -119,7 +134,5 @@ export async function yearDialog() {
     }),
   });
   if (!answer) return null;
-  const result = await runOp(OPS.raidEnd, answer);
-  if (result?.ok === false) ui.notifications.warn(t(`DGF.Year.refused.${result.reason}`));
-  return result;
+  return sayRefused("DGF.Year.refused", await runOp(OPS.raidEnd, answer));
 }

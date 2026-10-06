@@ -93,15 +93,18 @@ export function buildRollPlan(input) {
   if (input.chaseBlocked) errors.push({ code: input.chaseBlocked }); // in the chase, but not now: "noGround" (the ground isn't rolled yet) or "alreadyRolled" (this round)
   // V2: "use the ability's trait instead" works in a chase too, replacing the ground's traits
   if (chase && chaseTraits && !changers.length && !chaseTraits.includes(called)) errors.push({ code: "notOnGround", traits: chaseTraits });
-  const loud = listed ? !opener && listed.loud.includes(called) : !!input.loud;
+  // Chapter 5: "a trait the obstacle lists as loud is loud however you came to roll it" (a switch ability included)
+  const loud = listed ? !opener && listed.loud.includes(trait) : !!input.loud;
 
   // The second die. Once the hunt is on the Mask is off; carriers can't use the Mask.
   let second = input.second === "monster" ? "monster" : "mask";
   if (second === "mask" && hunt) { second = "monster"; warnings.push({ code: "maskOffHunt" }); }
   else if (second === "mask" && carryingFurniture) { second = "monster"; warnings.push({ code: "maskCarrying" }); }
 
-  // At most one raise per roll, from any source, Castle Duty included (R2).
-  const raiseSources = abilities.filter((a) => a.effect === "raise").length + (input.duty ? 1 : 0);
+  // At most one raise per roll, from any source, Castle Duty included (R2). The Duty's edge is "not in a chase"
+  // (Chapter 2, F19): not in a local chase, not once the hunt is on, whether or not the tracker runs the chase.
+  const duty = !!input.duty && !chase;
+  const raiseSources = abilities.filter((a) => a.effect === "raise").length + (duty ? 1 : 0);
   if (raiseSources > 1) errors.push({ code: "tooManyRaises" });
   const raises = Math.min(1, raiseSources);
 
@@ -185,7 +188,7 @@ export function buildRollPlan(input) {
     tracked: !!chaseTraits,
     furniture,
     weakness: weakness && chase,
-    duty: !!input.duty,
+    duty,
     chase,
     hunt,
     abilities,
@@ -240,7 +243,7 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
     unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but carrying nothing
     formShift: plan.formMargin !== null && monster && margin >= plan.formMargin,
     chargeBack: base.critical && !plan.chase, // in a chase a Critical moves the Lead instead
-    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip" }),
+    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip", wayOut: plan.wayOut }),
     leadMove: plan.chase ? leadMove(base) : 0, // one Entity's move; a shared Lead moves by the majority rule (module/logic/chase.mjs)
     freed: plan.lockup === "slip" && slipFrees(base.band, plan.perk), // only a Success frees you (Built to Last: a Cost too)
     slipTrouble: plan.lockup === "slip" && base.band === "trouble", // Suspicion rises, but no chase starts
@@ -253,11 +256,12 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
  * P3 + T10: the Costs the Storyteller may pick on a Cost result. Never one that
  * costs nothing right then: no Suspicion +1 the roll already raised (or once the
  * hunt is on); "drop an item" only if the roller carries loot; in a chase a Cost
- * costs nothing more; slipping free from the lock-up, a Cost does nothing. Perks remove options (Old Money, Patience of Ages, Keeper
+ * costs nothing more; slipping free from the lock-up, a Cost does nothing; at the
+ * way out a Cost gets everyone out, free (Chapter 4, T4). Perks remove options (Old Money, Patience of Ages, Keeper
  * of Treasures, Wise Woman). "A lost Turn when nothing waits" is the Storyteller's call.
  */
-export function costOptions({ band, trait, perk = "", suspicion = 0, carriesLoot = false, chase = false, hunt = false, slip = false }) {
-  if (band !== "cost" || chase || slip) return []; // slipping free: a Cost does nothing
+export function costOptions({ band, trait, perk = "", suspicion = 0, carriesLoot = false, chase = false, hunt = false, slip = false, wayOut = false }) {
+  if (band !== "cost" || chase || slip || wayOut) return []; // slipping free: a Cost does nothing; the way out: free
   const P = perkRule(perk);
   const ruledOut = (c) => P.noCost === c && (!P.trait || P.trait === trait);
   return DGF.costs.filter((c) => {

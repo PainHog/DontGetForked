@@ -466,17 +466,25 @@ test("every automation can be switched off", async () => {
 
 test("a retried request applies once; only the active GM's client acts on a query", async () => {
   const { handleQuery } = await import("../module/net/gm-ops.mjs");
+  const { User } = await import("../tools/fake-foundry.mjs");
+  // a second Storyteller, connected but not the active GM: its requests travel to the active GM's client
+  const AST = new User({ id: "astUser000000000", name: "Assistant", isGM: true });
+  game.users.push(AST);
   const v = raid().value;
-  const payload = { op: OPS.raidAdjust, args: { delta: 1 }, userId: GM.id, requestId: "retry-0000000001" };
+  const payload = { op: OPS.raidAdjust, args: { delta: 1 }, userId: AST.id, requestId: "retry-0000000001" };
   await asUser(GM, () => handleQuery(payload));
   await asUser(GM, () => handleQuery(payload));
   await settle();
   assert.equal(raid().value, v + 1);
   assert.deepEqual(await asUser(ANN, () => handleQuery({ ...payload, requestId: "retry-0000000002" })), { ok: false, reason: "notActiveGM" });
-  assert.deepEqual(await asUser(GM, () => handleQuery({ op: "raid.nonsense", args: {}, userId: GM.id })), { ok: false, reason: "unknownOp" });
+  assert.deepEqual(await asUser(GM, () => handleQuery({ op: "raid.nonsense", args: {}, userId: AST.id })), { ok: false, reason: "unknownOp" });
+  // the active GM never asks itself over the wire: a request claiming to be from it is refused
+  assert.deepEqual(await asUser(GM, () => handleQuery({ ...payload, userId: GM.id, requestId: "retry-0000000003" })), { ok: false, reason: "spoofed" });
   await asUser(GM, () => api.runOp(OPS.raidUndo, {}));
   await settle();
   assert.equal(raid().value, v);
+  AST.active = false;
+  game.users.splice(game.users.indexOf(AST), 1);
 });
 
 test("the session left no errors, no missing words and no unanswered dialogs", () => {

@@ -26,6 +26,22 @@ export function cardOf(message) {
   return message?.getFlag?.(FLAG, "card") ?? message?.flags?.[FLAG]?.card ?? null;
 }
 
+/**
+ * Was this card posted by a Storyteller, or by an owner of the Entity it is about? Players post their own roll
+ * cards, and a card's facts are whatever its poster wrote, so the GM operations that act on a card (its Suspicion,
+ * its chase, the lock-up, the way out) act only on a card whose Entity its poster owns. The message's author is set
+ * by Foundry's server, never by the request: v13 User#query handlers don't receive the sender (Heisty lesson).
+ */
+export function postedByOwner(message) {
+  const card = cardOf(message);
+  const authorId = typeof message?.author === "string" ? message.author : message?.author?.id ?? message?._source?.author;
+  const author = game.users?.get(authorId);
+  if (!card || !author) return false;
+  if (author.isGM) return true;
+  const actor = card.actorId ? game.actors?.get(card.actorId) : null;
+  return !!actor && actor.testUserPermission(author, "OWNER");
+}
+
 /** The current raid's id, read lazily (avoids an import cycle with the store). */
 let raidIdReader = () => "";
 export function setRaidIdReader(fn) { raidIdReader = fn; }
@@ -229,7 +245,9 @@ export async function postCard(card, { speaker, rolls } = {}) {
     data.rolls = rolls;
     if (CONFIG.sounds?.dice) data.sound = CONFIG.sounds.dice;
   }
-  ChatMessage.applyRollMode?.(data, game.settings.get("core", "rollMode"));
+  // the roller's roll mode (public, private, blind) is for its own dice; the raid's announcements (a new raid, the
+  // hunt, a chase's ground and Lead, the lock-up, a Tell, the year) are for everyone, whatever the Storyteller's mode
+  if ([CARD.roll, CARD.ability].includes(card.kind)) ChatMessage.applyRollMode?.(data, game.settings.get("core", "rollMode"));
   return ChatMessage.create(data);
 }
 
@@ -260,7 +278,8 @@ function button(label, dataset, onClick) {
 export function gmButtons(card, currentRaidId, eventAmount = 0) {
   const out = [];
   if (!card) return out;
-  if (card.kind === CARD.roll && card.band === "cost" && !card.cost) {
+  // a Cost belongs to its raid: an old card's Cost would mark the Entity in the new one
+  if (card.kind === CARD.roll && card.band === "cost" && !card.cost && card.raidId === currentRaidId) {
     for (const c of card.costs ?? []) {
       // a group check rises once, by its biggest trigger: a Suspicion +1 it already raised would cost nothing (T10)
       if (c === "suspicion" && card.groupId && eventAmount >= 1) continue;
@@ -287,7 +306,7 @@ async function pickDropped(message, card) {
   const answer = await foundry.applications.api.DialogV2.wait({
     window: { title: t("DGF.Cost.drop") },
     classes: ["dont-get-forked"],
-    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Card.whichItem", { name: card.actorName })}</p><select name="item">${options}</select></div>`,
+    content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Card.whichItem", { name: foundry.utils.escapeHTML(card.actorName ?? "") })}</p><select name="item">${options}</select></div>`,
     buttons: [
       { action: "ok", label: t("DGF.Cost.drop"), default: true, callback: (event, btn) => Number(btn.form.elements.namedItem("item")?.value ?? 0) },
       { action: "cancel", label: t("DGF.Dialog.cancel") },

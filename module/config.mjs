@@ -387,7 +387,7 @@ DGF.epilogue = Object.freeze({
   }),
 });
 
-/** S9 / S10 starting numbers, retuned in B1 (2026-10-06): lists 4 / 5 / 5, Standard Limit 12, Hard way out 10. */
+/** S9 / S10 starting numbers, retuned in B1 (lists 4 / 5 / 5, Hard way out 10) and B3 (Easy and Standard Limits 11, flights escaping at 5). */
 DGF.charges = 3;
 DGF.turns = 12;
 DGF.lead = Object.freeze({ localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 });

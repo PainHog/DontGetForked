@@ -32,6 +32,14 @@ jobs:
         with:
           node-version: "22"
 
+      # Nothing ships that the checks haven't passed: the manifest, the packs against
+      # their source, the templates, and every test (as CI runs them).
+      - name: Install dev dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Validate and test
+        run: npm run check
+
       - name: Resolve version
         id: vars
         run: |
@@ -47,12 +55,13 @@ jobs:
           VERSION: ${{ steps.vars.outputs.version }}
 
       # Only what Foundry needs ships: the manifest, module/, styles/, templates/,
-      # lang/, assets/ (if any), compiled packs/, LICENSE and README.
+      # lang/, assets/ (if any), compiled packs/, LICENSE and README. The working
+      # notes (AGENTS.md, PORTAL.md, TESTING.md, docs/) stay in the repository.
       - name: Build system.zip
         run: |
           zip -r system.zip . \
             -x ".git/*" -x ".github/*" -x ".gitignore" -x "node_modules/*" -x "*.zip" \
-            -x "package.json" -x "package-lock.json" -x "AGENTS.md" \
+            -x "package.json" -x "package-lock.json" -x "AGENTS.md" -x "PORTAL.md" -x "TESTING.md" \
             -x "tools/*" -x "test/*" -x "packs/_source/*" -x "*/.gitkeep" \
             -x "book/*" -x "sim/*" -x "docs/*" \
             -x "packs/*/LOCK" -x "packs/*/LOG" -x "packs/*/LOG.old"

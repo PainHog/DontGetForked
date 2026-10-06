@@ -18,7 +18,7 @@ import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
-import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader } from "../chat/cards.mjs";
+import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, postedByOwner } from "../chat/cards.mjs";
 import { newRaidUpdate } from "../logic/lockup.mjs";
 
 /** The raid as every client sees it now. */
@@ -136,6 +136,7 @@ export function registerRaidOps() {
       const message = game.messages.get(messageId);
       const card = cardOf(message);
       if (!card || ![CARD.roll, CARD.ability, CARD.tell].includes(card.kind)) return { ok: false, reason: "notACard" };
+      if (!postedByOwner(message)) return { ok: false, reason: "notTheirs" }; // a card about someone else's Entity
       const raid = getRaid();
       if (card.raidId !== raid.raidId) return { ok: false, reason: "otherRaid" };
       if (card.cancelled) return { ok: false, reason: "cancelled" };
@@ -156,6 +157,7 @@ export function registerRaidOps() {
       const message = game.messages.get(messageId);
       const card = cardOf(message);
       if (card?.kind !== CARD.roll || card.band !== "cost") return { ok: false, reason: "notACost" };
+      if (card.raidId !== getRaid().raidId) return { ok: false, reason: "otherRaid" }; // the last raid's card
       if (card.cost) return { ok: false, reason: "alreadyChosen" };
       if (!(card.costs ?? []).includes(choice)) return { ok: false, reason: "notAllowed" };
       // a group check's rolls rise once, by the biggest: a Suspicion +1 the group already raised costs nothing (T10)
@@ -163,7 +165,7 @@ export function registerRaidOps() {
       const actor = game.actors.get(card.actorId);
       const patch = { cost: choice };
       if (setting(SETTINGS.autoCosts)) {
-        if (choice === "suspicion" && card.raidId === getRaid().raidId) {
+        if (choice === "suspicion") {
           await mutateRaid((s) => R.recordEvent(s, { eventId: card.eventId, amount: DGF.suspicion.cost, source: "cost", label: "cost", actorName: card.actorName ?? "", messageId }));
           Object.assign(patch, { suspicion: Math.max(card.suspicion ?? 0, DGF.suspicion.cost), triggers: [...(card.triggers ?? []), { key: "cost", amount: DGF.suspicion.cost }], applied: true });
         } else if (choice === "smaller" && isEntity(actor)) {
@@ -320,7 +322,8 @@ export async function seedRaid() {
  * (its card has Suspicion, isn't applied or cancelled, and its event isn't in the ledger).
  */
 export async function reconcile() {
-  if (!isActiveGM() || !setting(SETTINGS.autoSuspicion)) return 0;
+  if (!isActiveGM()) return 0;
+  const autoSuspicion = setting(SETTINGS.autoSuspicion);
   const raid = getRaid();
   if (!raid.raidId) return 0;
   const known = new Set(raid.ledger.map((e) => e.messageId).filter(Boolean));
@@ -328,7 +331,8 @@ export async function reconcile() {
   // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) that the GM never saw
   const tracked = (c) => c.kind === CARD.roll && (c.groupId || c.chaseId || c.lockup || c.caught || c.wayOutBeaten);
   const unseen = recent.filter((m) => { const c = cardOf(m); return c && tracked(c) && c.raidId === raid.raidId && !c.gmSeen; });
-  const todo = recent.filter((m) => {
+  // a roll the raid follows is reconciled whatever the switches (raid.roll reads them); its Suspicion only with autoSuspicion
+  const todo = !autoSuspicion ? [] : recent.filter((m) => {
     const c = cardOf(m);
     return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId && !unseen.includes(m)
       && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);

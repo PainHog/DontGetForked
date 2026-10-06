@@ -100,7 +100,7 @@ export function groundOn(face) {
 }
 
 /**
- * The mob's Difficulty. Local: 10 plus half the Suspicion, at most 12, checked each
+ * The mob's Difficulty. Local: 8 plus half the Suspicion (B3), at most 12, checked each
  * round (Fear the Curse, fleeing alone: 1 easier). Final flight: the town's label, whatever the party's size.
  */
 export function mobDifficulty(chase, { suspicion = 0, label = "standard" } = {}) {

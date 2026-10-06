@@ -56,7 +56,8 @@ test("lang/en.json has every literal key the code and templates use, and no key 
   const used = new Set();
   for (const src of Object.values(code)) for (const m of src.matchAll(/["'`](DGF\.[A-Za-z0-9_.]+?)["'`]/g)) used.add(m[1]);
   for (const src of Object.values(templates)) for (const m of src.matchAll(/localize\s+"([^"]+)"/g)) used.add(m[1]);
-  const missing = [...used].filter((k) => !(k in lang));
+  // a literal is a key, or the prefix of keys the code completes at run time ("DGF.Tell.refused" + "." + reason)
+  const missing = [...used].filter((k) => !(k in lang) && !Object.keys(lang).some((o) => o.startsWith(`${k}.`)));
   assert.deepEqual(missing, []);
   // Foundry expands dotted keys: "A.B" and "A.B.C" can't both exist
   const keys = Object.keys(lang);

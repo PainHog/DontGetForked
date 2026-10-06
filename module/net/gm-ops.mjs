@@ -11,6 +11,12 @@
  * carries `userId` and each operation checks what that user may do (gmOnly ops
  * refuse non-GM users). Each request has a `requestId`; the GM remembers the last
  * 200 so a retry never applies twice.
+ *
+ * A request off the wire (User#query or the socket) can't prove who sent it, so the
+ * active GM refuses the claims that can only be false: to come from itself (the
+ * active GM runs its own operations here, never over the wire) or from a user who
+ * isn't connected. Operations that act on a chat card check the card's author, which
+ * Foundry's server sets (module/chat/cards.mjs postedByOwner).
  */
 import { QUERY, SOCKET } from "../contracts.mjs";
 import { t } from "../helpers/i18n.mjs";
@@ -60,9 +66,17 @@ export async function runOp(op, args = {}) {
   }
 }
 
+/** A request that came over the wire: refuse a sender it can't have (see the header). */
+function spoofed(userId) {
+  if (!userId || userId === game.user?.id) return true; // the active GM never asks itself over the wire
+  const user = game.users.get(userId);
+  return !!user && user.active === false; // nobody who isn't connected sends anything
+}
+
 /** CONFIG.queries handler (runs on the client the query was sent to). */
 export async function handleQuery(data) {
   if (!isActiveGM()) return { ok: false, reason: "notActiveGM" };
+  if (spoofed(data?.userId)) return { ok: false, reason: "spoofed" };
   return execute(data ?? {});
 }
 
@@ -101,7 +115,7 @@ function viaSocket(payload) {
 async function onSocket(msg) {
   if (!msg || typeof msg !== "object") return;
   if (msg.type === "request" && isActiveGM()) {
-    const result = await execute(msg);
+    const result = spoofed(msg.userId) ? { ok: false, reason: "spoofed" } : await execute(msg);
     game.socket.emit(SOCKET, { type: "reply", requestId: msg.requestId, to: msg.userId, result });
   } else if (msg.type === "reply" && msg.to === game.user?.id) {
     pending.get(msg.requestId)?.(msg.result);

@@ -27,7 +27,7 @@ import { groupRecord, groupDone, closeGroup, groupCaught } from "../logic/checks
 import { registerOp, isActiveGM } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid, mutateRaid, onRaidMutation } from "./store.mjs";
-import { cardOf, updateCard, postCard } from "../chat/cards.mjs";
+import { cardOf, updateCard, postCard, postedByOwner } from "../chat/cards.mjs";
 
 const isEntity = (actor) => actor?.type === ACTOR_TYPES.entity;
 const randomID = () => foundry.utils.randomID();
@@ -313,6 +313,7 @@ export function registerChaseOps() {
       const message = game.messages.get(messageId);
       const card = cardOf(message);
       if (card?.kind !== CARD.roll) return { ok: false, reason: "notARoll" };
+      if (!postedByOwner(message)) return { ok: false, reason: "notTheirs" }; // a card about someone else's Entity
       const raid = getRaid();
       if (card.raidId !== raid.raidId) return { ok: false, reason: "otherRaid" };
       const autoSusp = setting(SETTINGS.autoSuspicion) && card.suspicion > 0 && !card.hunt && !card.cancelled;
