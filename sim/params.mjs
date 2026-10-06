@@ -209,6 +209,12 @@ export const PARAMS = {
     doc: "each = P4 literally: every Entity has a roll each Turn, so several can try the same obstacle in one Turn; one = only one Entity may try a given obstacle each Turn.",
     ref: "CORE-RULES P4 (gap G12)",
   },
+  planTime: {
+    kind: "policy", default: "perObstacle", values: ["perObstacle", "perTurn"],
+    title: "How the players count the Turns a location will take",
+    doc: "perObstacle = a Turn for each obstacle left (as if one Entity rolled a Turn; cautious near dawn); perTurn = the obstacles left shared among the Entities there, at least one Turn (each can take on the next obstacle the same Turn, Chapter 4).",
+    ref: "player policy (the audit follow-up: how crude is together-play?)",
+  },
   monsterPolicy: {
     kind: "policy", default: "smart", values: ["smart", "mask", "monster"],
     title: "When players choose the Monster die",

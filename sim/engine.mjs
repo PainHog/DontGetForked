@@ -182,7 +182,7 @@ function releaseClaim(S, g, loc) {
 
 function needFor(S, g, loc) {
   const carrying = g.members.some((m) => m.status === "active" && m.furniture);
-  return (g.at === loc ? 0 : carrying ? 2 : 1) + loc.obstacles.filter((o) => !o.cleared).length;
+  return (g.at === loc ? 0 : carrying ? 2 : 1) + workTurns(S, loc, g.members.filter((m) => m.status === "active").length);
 }
 
 /** How well the group's best Entity likes a location's next obstacle (either way in). */
@@ -338,8 +338,18 @@ function turnsLeft(S) {
 // ---------------------------------------------------------------- the plan (player policy)
 
 function locationNeed(S, loc) {
+  return (S.at === loc ? 0 : 1) + workTurns(S, loc, active(S).length);
+}
+
+/**
+ * planTime (policy): the Turns the players expect a location's obstacles left to take. "perObstacle" = one each (as if
+ * one Entity rolled a Turn); "perTurn" = shared among the Entities there, at least one (each can take on the next
+ * obstacle in the same Turn, Chapter 4).
+ */
+function workTurns(S, loc, n) {
   const left = loc.obstacles.filter((o) => !o.cleared).length;
-  return (S.at === loc ? 0 : 1) + left;
+  if (S.P.planTime !== "perTurn" || left === 0) return left;
+  return Math.max(1, Math.ceil(left / Math.max(1, n)));
 }
 
 /**
