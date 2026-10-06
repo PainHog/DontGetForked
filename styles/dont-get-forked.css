@@ -134,5 +134,61 @@
 .dont-get-forked .dgf-ev button { flex: 0 0 auto; width: auto; font-size: 0.85em; line-height: 1.4; min-height: 0; padding: 0 0.4em; }
 .dont-get-forked .dgf-ev.dgf-cancelled .dgf-ev-amount, .dont-get-forked .dgf-ev.dgf-cancelled .dgf-ev-text { text-decoration: line-through; color: var(--dgf-ink-soft); }
 
+.dont-get-forked .dgf-hud-controls.dgf-wrap { flex-wrap: wrap; }
+.dont-get-forked .dgf-hud-controls.dgf-wrap button { flex: 1 1 30%; }
+.dont-get-forked .dgf-hud-over { color: var(--dgf-dark-deep); }
+.dont-get-forked .dgf-hud-chase, .dont-get-forked .dgf-hud-group { margin: 0.25em 0; font-size: 0.9em; }
+.dont-get-forked .dgf-hud-chase .dgf-link { font-weight: bold; color: var(--dgf-alarm); }
+.dont-get-forked .dgf-hud-lockup { border-top: 1px dotted var(--dgf-paper-edge); margin-top: 0.3em; padding-top: 0.2em; font-size: 0.9em; }
+.dont-get-forked .dgf-hud-lockup ul, .dont-get-forked .dgf-hud-list ul { margin: 0.1em 0 0.2em; padding-left: 1.2em; }
+.dont-get-forked .dgf-hud-list { font-size: 0.85em; margin: 0.3em 0; }
+.dont-get-forked .dgf-hud-list summary { cursor: pointer; font-variant: small-caps; }
+
+/* ------------------------------------------------------ the chase tracker -- */
+
+.dont-get-forked.dgf-chase-tracker .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); padding: 0.5em 0.7em; }
+.dont-get-forked .dgf-chase-head h3 { margin: 0; font-variant: small-caps; border: none; color: var(--dgf-dark-deep); }
+.dont-get-forked .dgf-chase-head .dgf-hint { margin: 0 0 0.3em; }
+.dont-get-forked .dgf-lead { display: flex; gap: 3px; margin: 0.3em 0; }
+.dont-get-forked .dgf-lead-pip { flex: 1; text-align: center; border: 1px solid var(--dgf-paper-edge); background: #fff; font-size: 0.85em; line-height: 1.6; }
+.dont-get-forked .dgf-lead-pip.dgf-end { background: var(--dgf-paper-2); font-weight: bold; }
+.dont-get-forked .dgf-lead-pip.dgf-here { background: var(--dgf-alarm); border-color: var(--dgf-alarm); color: #fff; font-weight: bold; }
+.dont-get-forked .dgf-chase-ground { margin: 0.3em 0; }
+.dont-get-forked .dgf-chase-ground em { color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-chase-outcome { text-align: center; font-weight: bold; font-variant: small-caps; font-size: 1.1em; color: var(--dgf-dark-deep); }
+.dont-get-forked .dgf-chase-members { list-style: none; padding: 0; margin: 0.4em 0; border-top: 1px dotted var(--dgf-paper-edge); }
+.dont-get-forked .dgf-chase-member { display: flex; flex-wrap: wrap; gap: 0.4em; align-items: center; padding: 0.2em 0; border-bottom: 1px dotted var(--dgf-paper-edge); }
+.dont-get-forked .dgf-member-name { font-weight: bold; flex: 1 1 auto; }
+.dont-get-forked .dgf-member-traits { font-size: 0.85em; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-member-weak { font-size: 0.8em; color: var(--dgf-alarm); border: 1px solid var(--dgf-alarm); border-radius: 3px; padding: 0 0.3em; }
+.dont-get-forked .dgf-member-rolled { font-size: 0.85em; font-variant: small-caps; }
+.dont-get-forked .dgf-chase-member button { flex: 0 0 auto; width: auto; font-size: 0.85em; line-height: 1.4; min-height: 0; padding: 0 0.5em; }
+.dont-get-forked .dgf-chase-history { font-size: 0.8em; color: var(--dgf-ink-soft); margin: 0.3em 0; padding-left: 1.4em; }
+
+/* --------------------------------------------- chase, Tell and year cards -- */
+
+.dont-get-forked.dgf-card-chase { border-top-color: var(--dgf-warn); }
+.dont-get-forked.dgf-card-final { border-top-color: var(--dgf-alarm); background: #f3e6e4; }
+.dont-get-forked.dgf-outcome-escaped { border-top-color: var(--dgf-good); }
+.dont-get-forked .dgf-chase-rolls { margin: 0.2em 0; padding-left: 1.2em; font-size: 0.9em; }
+.dont-get-forked .dgf-chase-move { font-weight: bold; text-align: center; }
+.dont-get-forked .dgf-card-chaseline, .dont-get-forked .dgf-card-lockup { font-style: italic; color: var(--dgf-dark-deep); }
+.dont-get-forked.dgf-card-tell { border-top-color: var(--dgf-accent); }
+.dont-get-forked.dgf-card-tell.dgf-tell-off { border-top-color: var(--dgf-alarm); }
+.dont-get-forked.dgf-card-year { border-top-color: var(--dgf-dark); }
+.dont-get-forked.dgf-year-grand, .dont-get-forked.dgf-year-win { border-top-color: var(--dgf-good); }
+.dont-get-forked.dgf-year-forked { border-top-color: var(--dgf-alarm); background: #f3e6e4; }
+.dont-get-forked .dgf-epilogue { border-top: 1px dotted var(--dgf-paper-edge); margin-top: 0.3em; padding-top: 0.2em; font-style: italic; }
+.dont-get-forked .dgf-list { margin: 0.2em 0; padding-left: 1.2em; font-size: 0.9em; text-align: left; }
+
+/* -------------------------------------------- the Storyteller's raid forms -- */
+
+.dont-get-forked.dgf-raid-dialog .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); }
+.dont-get-forked .dgf-year-table { width: 100%; border-collapse: collapse; margin: 0.4em 0; font-size: 0.9em; }
+.dont-get-forked .dgf-year-table th { font-variant: small-caps; text-align: left; border-bottom: 1px solid var(--dgf-paper-edge); }
+.dont-get-forked .dgf-year-table td { padding: 0.1em 0.2em; }
+.dont-get-forked .dgf-year-table input[type="text"] { width: 100%; }
+.dont-get-forked .dgf-pick-entities input[type="text"], .dont-get-forked .dgf-end-raid input[type="number"] { width: auto; }
+
 /* The Actors sidebar button (inside core's directory, so scoped by its own class). */
 .dgf-new-entity { flex: 1 1 100%; }

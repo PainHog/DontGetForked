@@ -206,6 +206,12 @@ async function consequences(chase, state) {
 async function chaseFollowUp(state, before) {
   const c = state.chase, b = before.chase;
   if (c?.outcome && !(b && b.id === c.id && b.outcome)) await consequences(c, state);
+  // the whole town hunts, but everyone is held at the lock-up: nobody flees, the raid is over
+  if (isActiveGM() && state.hunt && !before.hunt && !state.over && setting(SETTINGS.autoChase) && setting(SETTINGS.autoYear)
+    && !(C.isRunning(c) && c.kind === "final") && !partyForFlight().length && entities().length) {
+    const { promptHome } = await import("./raid-checks.mjs");
+    await promptHome("nobody");
+  }
   await driveChase();
 }
 

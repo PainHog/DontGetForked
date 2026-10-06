@@ -286,6 +286,7 @@
   "DGF.RaidCard.home.text": "{how} Storyteller: say what came home.",
   "DGF.RaidCard.home.flight": "The party outran the mob: home with the goods.",
   "DGF.RaidCard.home.wayOut": "The party is out of town.",
+  "DGF.RaidCard.home.nobody": "The whole town hunts, but nobody is free to flee.",
   "DGF.RaidCard.home.left": "Left behind at the lock-up: {names}.",
   "DGF.Chase.title": "The Chase",
   "DGF.Chase.kind.local": "A local chase",
