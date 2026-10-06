@@ -3,7 +3,7 @@ Next: A few rules questions from the latest playtest, then Richard's first two-p
 Number: Design decisions made = 83
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 140
+Number: Automated checks passing = 151
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -51,6 +51,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
 - [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
 - [x] Online version, part 2: chases and the lock-up
+- [x] Online version: ready-made monsters, tables and towns to drag in
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)

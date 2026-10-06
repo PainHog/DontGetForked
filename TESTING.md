@@ -1,6 +1,6 @@
-# Testing the Foundry system in real Foundry — slices 1 and 2
+# Testing the Foundry system in real Foundry — slices 1 and 2, and the compendiums
 
-The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45. Dice are random, so some steps say "roll until…".
+The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15. Dice are random, so some steps say "roll until…".
 
 **What slice 1 covers:** the Entity sheets, the roll dialog and roll cards, charges and abilities, Costs, Jekyll & Hyde's change of form, and the Raid HUD (Suspicion, the Limit, the Turns, dawn and the hunt).
 **What slice 2 covers:** chases (the local chase and the final flight, with the chase tracker: the Lead, the ground, the mob, Weaknesses, the majority rule), the lock-up (capture, slipping free, rescue, left behind), group checks (one Suspicion rise), Tell checks, carried furniture's Suspicion, the shopping list and how the year went.
@@ -173,6 +173,21 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 1. **Ann** has no buttons on the chase tracker except **Roll** for her own Entity, no Group/Tell/List/End buttons on the Raid window, and no buttons on chase, Tell or year cards.
 2. *(Optional)* In Ann's console: `game.dontGetForked.runOp("chase.lead", { delta: 1 })` → `{ ok: false, reason: "gmOnly" }`; nothing changes.
 3. **GM:** close the GM tab; **Ann** rolls Trouble with *Watched*: a warning that the Storyteller isn't connected, no chase. **GM** logs back in: the chase starts by itself within a few seconds.
+
+## 19. The compendiums
+
+1. **GM:** the Compendium Packs sidebar has a folder **Don't Get Forked** with three packs: **The Entities** (8), **Random Tables** (8) and **Towns and Guide** (4). **Ann** sees The Entities and Random Tables, but not Towns and Guide (it's the Storyteller's).
+2. **GM:** drag **A Ghost** from The Entities into the Actors sidebar. Its sheet is what **New Entity** makes: **Brawn d4 · Nimble d12 · Sly d10 · Charm d8 · Wits d6**, **Charges 3 / 3**, Gift *Chill (default)*, Perk *Spectral (default)*, Castle Duty *Butler (default)*, Weakness *Cold Iron*, Tell *Cold Spot*. Right-click it → **Configure Ownership** → Ann: *Owner*; Ann can now roll it. (Unlike New Entity, a dragged Entity starts hidden from the other players until you set its ownership.) Delete it afterwards.
+3. **GM:** open **Random Tables** → **The Obstacle Table (d20)** and press **Roll** (if the compendium copy won't roll, drag the table into the Roll Tables sidebar first and roll that). The chat shows the d20 and the obstacle in bold with its two ways under it, e.g. **A locked front door**, *Quiet way: Sly (pick the lock)*, *Loud way: Brawn (kick it in)*; a group obstacle says *(group)*. The words match the book's table in Chapter 8.
+4. Roll **The Shopping List (d66)**: the card's dice show two d6 and a total like **34** (3 for the kind, 4 for the item), and the result reads *Books and paper: ink and sealing wax*, with where in town it's found.
+5. Roll each of the others once: **Castle Duties**, **The Chase Table** (with its *Traits that work*), **Lantern Night: Local Customs**, **The Furniture** (with its size) and the two **Villagers** tables. Each result is the book's row. Note how the cards look in your theme.
+6. **GM:** open **Towns and Guide** → **Puddlecombe (Easy)**: three pages.
+   - *Puddlecombe*: the custom, the 4-item list (the cheese essential), the stuffed bear at the tavern cellar, the two villagers, **Easy: Suspicion Limit 11 · the way out 6 · the lock-up 10 · the final flight: mob 10, escape at Lead 5**, and a macro.
+   - *Locations*: the location key, row for row the book's Chapter 9 table (the furniture's guard dog at 10).
+   - *Map*: the town's map (an eye on each watched location, a star at the furniture). Check that it shows, and how it looks in your theme.
+   Glance at **Thistlewick (Standard)** and **Gallowsmere (Hard)** the same way.
+7. **GM:** Raid HUD → **New raid** → *Easy*. Copy the code from Puddlecombe's page into a new macro of type **script** and run it: both Raid windows get a **The shopping list (4)** line with the four items, the cheese marked essential. **End the raid** lists them in the year form (cancel it).
+8. **GM:** open **How to Run a Raid in Foundry**: three short pages (before, during and after the raid). Every button it names is where it says, and its list of switches matches Configure Settings.
 
 ## What to send back
 
