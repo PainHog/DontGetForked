@@ -863,7 +863,13 @@ function weakNow(S, m, was, round) {
 }
 
 /** DESIGN Chase (Lead track) + Two kinds of chase: a local chase; cornered = captured. */
+/** A local chase, with its length and the Suspicion it raised kept as histograms ("hist local …"). */
 function localChase(S, m) {
+  const s0 = S.susp, t = { r: 0 };
+  try { return localChaseBody(S, m, t); } finally { S.rec.count(`hist local rounds ${t.r}`); S.rec.count(`hist local susp ${S.susp - s0}`); }
+}
+
+function localChaseBody(S, m, t) {
   const N = S.N;
   S.rec.count("local chases");
   let weak = weakStart(S, m, false);
@@ -871,6 +877,7 @@ function localChase(S, m) {
   const curse = hasPerk(m, "fearTheCurse") ? 1 : 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   for (let round = 0; round < N.maxChaseRounds; round++) {
+    t.r = round + 1;
     const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion)) - curse;
     const options = chaseGround(S);
     weak = weakNow(S, m, weak, round);
@@ -908,7 +915,7 @@ function groupChase(S, group) {
     const ground = chaseGround(S);
     for (const m of group) weak.set(m, weakNow(S, m, weak.get(m), round));
     const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
-    lead += majorityMove(results, critW);
+    lead += majorityMove(results, critW, S.P.finalMove ?? "majority");
     if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
     if (lead <= 0 && S.P.corneredAtLimit === "captured") {
       for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); }
@@ -1009,11 +1016,12 @@ function finalFlight(S, trigger) {
       fury = Math.min(N.furyCap, fury + add);
       S.rec.count("fury", fury - before);
     }
-    lead += majorityMove(results, critW);
+    lead += majorityMove(results, critW, S.P.finalMove ?? "majority");
     if (lead >= (S.L.finalEscape ?? N.lead.finalEscape)) { // a label may set its own escape
       for (const m of fleeing) m.status = "home";
       S.rec.count("final flight escaped");
       S.rec.count("final flight rounds", round + 1);
+      S.rec.count(`hist final ${round + 1}`);
       return;
     }
     if (lead <= 0) {
@@ -1021,6 +1029,7 @@ function finalFlight(S, trigger) {
       S.forked = true;
       S.rec.count("forked");
       S.rec.count("final flight rounds", round + 1);
+      S.rec.count(`hist final ${round + 1}`);
       return;
     }
   }

@@ -53,6 +53,12 @@ export const PARAMS = {
     doc: "weakness = the rule since S1 (CORE-RULES 0.3); free = draft 0.2 as written: nothing stops it, and +2 Suspicion means nothing in the final flight; forbidden = no overdraw in the final flight; weakness = you may overdraw, but your Weakness is in play for the rest of the flight (once per Entity); fury = whatever would raise Suspicion raises the mob's Difficulty instead (once per round, by the biggest trigger, at most +furyCap); once = as weakness, and each Entity may overdraw at most once per flight (PT4 M1 candidate).",
     ref: "CORE-RULES 0.3 Chases (S1); gap G4 in draft 0.2",
   },
+  finalMove: {
+    kind: "rule", default: "majority", values: ["majority", "margin2", "net"],
+    title: "How a shared Lead moves each round (the majority rule: final flights and shared local chases)",
+    doc: "majority = 1 toward whichever side has more (Successes vs Trouble), none on a tie (decided 2026-10-04); margin2 = as majority, but winning by 2 or more moves it 2; net = it moves by the whole difference (candidates for PT5's long Hard flights).",
+    ref: "DESIGN 2026-10-04 (majority rule); PT5",
+  },
   openEase: {
     kind: "rule", default: 2, values: [2, 1],
     title: "How much lower an opened approach's Difficulty is (S10: 2)",

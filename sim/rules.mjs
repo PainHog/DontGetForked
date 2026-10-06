@@ -106,14 +106,18 @@ export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, 
  * outnumbers successes it falls 1, otherwise no change. `critWeight` lets a
  * Critical count as more than one success (the Critical's effect is still open).
  */
-export function majorityMove(results, critWeight = 1) {
+export function majorityMove(results, critWeight = 1, rule = "majority") {
   let up = 0;
   let down = 0;
   for (const r of results) {
     if (r.band === "success") up += r.critical ? critWeight : 1;
     else if (r.band === "trouble") down += 1;
   }
-  return up > down ? 1 : down > up ? -1 : 0;
+  const d = up - down;
+  // finalMove candidates (PT5): margin2 = winning by 2 or more moves the Lead 2; net = the Lead moves by the whole difference.
+  if (rule === "margin2") return d >= 2 ? 2 : d <= -2 ? -2 : Math.sign(d);
+  if (rule === "net") return d;
+  return Math.sign(d);
 }
 
 /** One Entity's Lead change in a local chase: Success +1, Cost no change, Trouble −1. */
