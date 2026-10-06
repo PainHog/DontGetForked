@@ -101,7 +101,7 @@ let idCounter = 0;
 const randomID = (n = 16) => {
   idCounter++;
   const base = `id${idCounter.toString(36)}`;
-  return (base + "x".repeat(16)).slice(0, n);
+  return (base + "X".repeat(16)).slice(0, n); // pad with "X": never a base-36 digit, so ids never collide
 };
 const escapeHTML = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#x27;" }[c]));
 

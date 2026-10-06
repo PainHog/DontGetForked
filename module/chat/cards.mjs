@@ -61,6 +61,7 @@ function rollContext(card) {
     difficulty: card.difficulty,
     diffNote: join(diffNotes),
     stepNote: join(stepNotes),
+    warnNote: join((card.warnings ?? []).map((code) => t(`DGF.Plan.${code}`))),
     band: card.band,
     bandLabel: t(`DGF.Band.${card.band}`),
     critical: !!card.critical,

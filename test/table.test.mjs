@@ -208,6 +208,10 @@ test("abilities: a helper's charge is spent by the GM, the roller's own by itsel
   await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, [witchHedge]: true }, [4, 4]);
   assert.equal(cardOf(lastMessage()).traitDie, 12);
   assert.equal(witch.system.charges.value, 2, "spent one, got one back");
+  // a raise on a d12 is lost, and the card says so
+  await rollAs(ANN, witch, { trait: "wits", second: "mask", difficulty: 8, [witchHedge]: true }, [7, 2]);
+  assert.match(lastMessage().content, /A d12 can(&#x27;|')t go higher: the raise is lost/);
+  await asUser(ANN, () => witch.update({ "system.charges.value": 2 }));
 
   // at most one raise per roll: Hedge Spell + Castle Duty is refused, then rolled without the Duty
   diceQueue.push(9, 1);
