@@ -64,12 +64,12 @@ let witch, dracula, jekyll;
 test("boot: settings registered, a raid seeded, the HUD shows the Storyteller's controls", () => {
   for (const key of Object.values(SETTINGS)) assert.ok(game.settings.settings.has(`${SYSTEM_ID}.${key}`), `setting ${key} registered`);
   assert.ok(raid().raidId, "the GM seeded a raid");
-  assert.equal(raid().limit, 13);
+  assert.equal(raid().limit, 12);
   assert.equal(raid().turn, 1);
   const hud = currentHud();
   assert.ok(hud?.rendered, "the GM's HUD is open");
   assert.match(hud.renderedParts.body, /data-action="suspicionUp"/);
-  assert.match(hud.renderedParts.body, /data-value="0" data-limit="13"/);
+  assert.match(hud.renderedParts.body, /data-value="0" data-limit="12"/);
   assert.deepEqual(log.errors, []);
 });
 
@@ -145,7 +145,7 @@ test("a player rolls: dialog → dice → card; the GM's client applies the Susp
   assert.deepEqual(buttonLabels(msg, GM), ["Cancel Suspicion"]);
   // the HUD on a player's client
   const hud = await asUser(ANN, () => openHud());
-  assert.match(hud.renderedParts.body, /data-value="2" data-limit="13"/);
+  assert.match(hud.renderedParts.body, /data-value="2" data-limit="12"/);
   assert.doesNotMatch(hud.renderedParts.body, /suspicionUp/, "no controls for players");
 });
 

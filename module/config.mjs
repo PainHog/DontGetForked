@@ -359,13 +359,13 @@ DGF.epilogue = Object.freeze({
   }),
 });
 
-/** S9 / S10 starting numbers (CORE-RULES, Starting numbers). */
+/** S9 / S10 starting numbers, retuned in B1 (2026-10-06): lists 4 / 5 / 5, Standard Limit 12, Hard way out 10. */
 DGF.charges = 3;
 DGF.turns = 12;
 DGF.lead = Object.freeze({ localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 });
 DGF.localMob = Object.freeze({ base: 10, perSuspicion: 0.5, max: 12 });
 DGF.labels = Object.freeze({
-  easy: Object.freeze({ items: 3, essentials: [1], limit: 12, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  standard: Object.freeze({ items: 4, essentials: [1, 2], limit: 13, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  hard: Object.freeze({ items: 4, essentials: [2], limit: 15, exit: 8, finalMob: 11, lockup: 12, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
+  easy: Object.freeze({ items: 4, essentials: [1], limit: 12, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 12, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, exit: 10, finalMob: 11, lockup: 12, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
 });

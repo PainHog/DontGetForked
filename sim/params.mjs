@@ -267,17 +267,17 @@ export const NUMBERS = {
   labels: {
     // S9 (approved 2026-10-04); Limits raised in S10. `difficulty` is the share of each Difficulty among a label's obstacles.
     easy: {
-      items: 3, essentials: [1], limit: 12, turns: 12, finalMob: 10, lockup: 10, exit: 6,
+      items: 4, essentials: [1], limit: 12, turns: 12, finalMob: 10, lockup: 10, exit: 6, // B1: 4 items (was 3)
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 4, essentials: [1, 2], limit: 13, turns: 12, finalMob: 11, lockup: 10, exit: 8,
+      items: 5, essentials: [1, 2], limit: 12, turns: 12, finalMob: 11, lockup: 10, exit: 8, // B1: 5 items, Limit 12 (were 4, 13)
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 4, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 12, exit: 8,
+      items: 5, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 12, exit: 10, // B1: 5 items, way out 10 (were 4, 8)
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },

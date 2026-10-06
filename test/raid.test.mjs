@@ -11,7 +11,7 @@ import {
 import { foldSuspicion } from "../module/logic/suspicion.mjs";
 
 test("a new raid: the Limit by difficulty, 12 Turns, nothing raised", () => {
-  for (const [label, n] of [["easy", 12], ["standard", 13], ["hard", 15]]) {
+  for (const [label, n] of [["easy", 12], ["standard", 12], ["hard", 15]]) {
     const s = newRaid({ id: "r1", difficulty: label });
     assert.equal(s.limit, n);
     assert.equal(s.limit, DGF.labels[label].limit);
@@ -27,7 +27,7 @@ test("normalize fills a missing or partial stored state", () => {
   const s = normalizeRaid({});
   assert.equal(s.raidId, "");
   assert.equal(s.difficulty, "standard");
-  assert.equal(s.limit, 13);
+  assert.equal(s.limit, 12);
   const t = normalizeRaid({ raidId: "x", difficulty: "hard", turn: 5, ledger: [{ eventId: "a", amount: 1, source: "roll" }] });
   assert.equal(t.limit, 15);
   assert.equal(t.turn, 5);
