@@ -182,6 +182,122 @@ At 10 of 15 with the armour to carry, the party drops the bacon: the two essenti
 
 ---
 
+## 7. Play log: drills
+
+Flights: every Entity rolls the Monster d10 (the Mask is off) against mob 11; the Lead starts at 2 and the party escapes at 6 (Hard). "S – T" counts Successes (a Critical as two) against Trouble; the Majority Rule moves the Lead 1 toward the side with more, or 2 if it leads by two or more. Each round's dice are the ground roll and then two dice per Entity, rolled one at a time in the order listed (S5). Default picks unless said; I chose each drill's start, and every roll after it is real.
+
+### 7.1 Drill a: two Hard final flights from the Limit
+
+**a1. Hard, 3 Entities** (R176–R179: the Invisible Man, the Mummy, R178 a repeat, the Creature; R180 unused). A Limit flight, 1 charge each. All three are Soon. The Invisible Man's charge can do nothing in a flight (Unseen hides a Monster when Suspicion has stopped; Through the Gap opens an approach, "Never in a chase"), and holding it he can't overdraw.
+
+| Round | Ground | Invisible Man | Mummy | Creature | S – T | Lead |
+|---|---|---|---|---|---|---|
+| 1 | R181 = 5 parade | Sly d12: 7 + 1 = 8 T | **Ancient Lore** (1 → 0): Wits d12: 7 + 2 = 9 C | **Brute Force** (1 → 0): Brawn d12: 6 + 7 = 13 S | 1 – 1 | 2 |
+| 2 | R188 = 5 parade | Sly d12: 2 + 7 = 9 C | Ancient Lore **overdrawn** on its own roll: Wits d12: 3 + 8 = 11 S | Brute Force **overdrawn** on its own roll: Brawn d12: 2 + 2 = 4 T | 1 – 1 | 2 |
+| 3 | R195 = 3 market stalls (every Weakness in play) | Nimble d8 → d6 (Flour): 3 + 9 = 12 S | Brawn d10 → d8 (Loose Thread): 5 + 10 = 15 S | Brawn d12 → d10 (Fire): 3 + 4 = 7 T | 2 – 1 | 3 |
+| 4 | R202 = 6 dead end | Wits d8: 4 + 7 = 11 S | Wits d10: 4 + 10 = 14 S | Brawn d10: 2 + 8 = 10 C | 2 – 0 | **5** (+2) |
+| 5 | R209 = 6 dead end | Wits d8: 4 + 4 = 8 T | Wits d10: 10 + 2 = 12 S | Brawn d10: 9 + 4 = 13 S | 2 – 1 | **6: escaped** |
+
+**Escaped in 5 rounds** (35 dice: 5 grounds and 30). Both round-2 overdraws were free: on its own roll, a Soon Entity's Weakness "from your own next roll" starts in round 3, when it comes anyway (PT5 m8, kept). The Invisible Man's charge went unspent.
+
+**a2. Hard, 5 Entities** (R216–R222: the Mummy, the Witch, J&H, R219 a repeat, the Werewolf, R221 a repeat, the Creature; R223 unused). A Limit flight, 1 charge each, J&H as Jekyll. All five are Soon. The plan every party in PT5–PT7 found: spend every charge in round 1, then overdraw on your own roll in round 2, free.
+
+| Round | Ground | Mummy | Witch | J&H | Werewolf | Creature | S – T | Lead |
+|---|---|---|---|---|---|---|---|---|
+| 1 | R224 = 2 back alleys | **Ancient Lore** (1 → 0): Wits d12: 10 + 1 = 11 S | Sly d10 → d12 (**Hedge Spell**, 1 → 0): 1 + 1 = 2 T | Jekyll Sly d8 → d10 (**Doctor's Bag**, 1 → 0): 9 + 4 = 13 S | Nimble d12: 7 + 7 = 14, **Critical** | **Brute Force** (1 → 0): Brawn d12: 12 + 2 = 14 S | 5 – 1 | **4** (+2) |
+| 2 | R235 = 4 rooftops | Wits d12: 3 + 7 = 10 C | Wits d12: 6 + 7 = 13 S | Jekyll Wits d10 → d12 (Doctor's Bag **overdrawn**, own roll): 11 + 10 = 21 S | Nimble d12: 12 + 8 = 20 S | Brute Force **overdrawn**, own roll: Brawn d12: 3 + 7 = 10 C | 3 – 0 | **6: escaped** (+2) |
+
+**Escaped in 2 rounds** (22 dice). The Witch's, the Mummy's and the Werewolf's overdraws were never needed (their Wits or Nimble was already a d12 on the rooftops).
+
+### 7.2 Drill b: a lone local chase at Suspicion 11 on Hard
+
+**Start (chosen):** Gallowsmere, Turn 8, Suspicion 11 of 15 after the Trouble that caught her. The Entity was rolled (R292 = 3): **the Mummy** (default picks: Ancient Lore, Patience of Ages; A Loose Thread, Soon), caught at the silversmith's guard dog with the silver spoons, 1 charge. Alone, Lead 1, escape at 4; the mob is 8 + 5 = 13, **held at 12** (the cap applies from Suspicion 8). With the Mask, the Mummy's best die on most grounds makes 12 less than half the time, so she lets the Monster out.
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R293 = 3 market stalls | **Ancient Lore** (1 → 0): Wits d12, Monster: 54 / 16 / 30% against Brawn d10's 45 / 19 / 36% | 11 + 8 | 19 vs 12 | Success | 2 | 11 |
+| 2 | R296 = 1 square (Charm d8, Sly d6) | Ancient Lore **overdrawn** (Suspicion +2): Wits d12, Monster: 54 / 16 / 30% against Charm d8's 35 / 20 / 45%. The spoons are an essential | 3 + 1 | 4 vs 12 | Trouble (one roll, one rise: the overdraw's +2) | 1 | 13 |
+| 3 | R299 = 5 parade (Charm d8 → d6, Sly d6 → d4: Loose Thread) | Overdrawn again (+2: the Limit). At Lead 1, Charm d6 and the Monster avoids Trouble 45% of the time; Wits d10 and the Monster 64%, and with Suspicion at 15 any result short of Trouble ends the chase into the flight | 4 + 2 | 6 vs 12 | **Trouble: cornered** | 0 | **15: the Limit** |
+
+"If the Limit comes during a local chase, that chase ends at once and those Entities join the flight; anyone the same round cornered is captured first and stays behind." The Mummy is **captured** and held at the lock-up; the town takes back the spoons; the rest of the party flees in the final flight without her. **3 rounds, 9 dice, Suspicion 11 → 15.** The text answered every step at once. Exact odds from the book's numbers (best die per ground, the Monster, no charges, the mob held at 12): a lone Mummy escapes such a chase **20%** of the time (2% with the Mask); a lone Werewolf 22% (46% with Night Runner's Lead 2); a lone Ghost with Cold Iron 22%.
+
+### 7.3 Drill c: an overdraw on a friend's roll, then the overdrawer's own roll the same round
+
+**Start (chosen):** a Hard Limit flight with **the Witch** (chosen, 0 charges) and three rolled Entities (R246–R255, with the Witch's and repeated numbers rerolled): **Jekyll & Hyde** (as Jekyll), **the Mummy**, **Dracula**. Everyone at 0 charges. Dracula's Garlic is Always, so he is at one size smaller from round 1 and can never overdraw. The order of rolling within a round is the party's (S5); for the drill the Witch helps first and rolls last.
+
+| Round | Ground | Dracula | J&H | Mummy | Witch | S – T | Lead |
+|---|---|---|---|---|---|---|---|
+| 1 | R256 = 6 dead end | Brawn d8 → d6 (Garlic) → **d8: the Witch overdraws Hedge Spell** on his roll: 2 + 10 = 12 S | Jekyll Wits d10: 7 + 4 = 11 S | Wits d12: 3 + 5 = 8 T | Wits d12 → **d10**: her Weakness (Rowan) is in play "from your own next roll (even later the same round)": 4 + 6 = 10 C | 2 – 1 | 3 |
+| 2 | R265 = 4 rooftops | Nimble d10 → d8: 7 + 6 = 13 S | Wits d10 → d12 (Doctor's Bag **overdrawn**, own roll): 2 + 2 = 4 T | Wits d12: 1 + 4 = 5 T | Wits d10 (Rowan): 4 + 8 = 12 S | 2 – 2 | 3 |
+| 3 | R274 = 2 back alleys (every Weakness in play) | Nimble d8: 8 + 4 = 12 S | Jekyll Sly d8 → d6: 6 + 5 = 11 S | Sly d6 → d4: 4 + 7 = 11 S | Sly d10 → d8: 8 + 10 = 18 S | 4 – 0 | **5** (+2) |
+| 4 | R283 = 1 square | Charm d12 → d10: 10 + 5 = 15 S | Jekyll Charm d12 → d10: 10 + 1 = 11 S | Charm d8 → d6: 3 + 10 = 13 S | Sly d10 → d8: 6 + 2 = 8 T | 3 – 1 | **6: escaped** |
+
+**Escaped in 4 rounds** (36 dice). The new sentence read cleanly: the Witch's own roll later in round 1 took her Weakness, and so did round 2. The trade, exact from the book's numbers (the Monster against 11): Dracula's Brawn d6 → d8 moved his roll from 35 / 20 / 45% (Success / Cost / Trouble) to 45 / 20 / 35%, once; the Witch's Wits d12 → d10 moved hers from 63 / 14 / 23% to 55 / 17 / 28%, in rounds 1 and 2. Had she rolled first, the overdraw would have cost her round 2 only; nothing in the book says she can't (finding m1).
+
+### 7.4 Drill d: the furniture abandoned for good mid-raid
+
+**Start (chosen):** Gallowsmere, main line A's party with its picks, the start of **Turn 5**, Suspicion **11**. In hand: the lock (the Ghost), the paper (the Invisible Man), the bandages (the Creature). The Creature beat the tailor's trapdoor on Turn 4, took the suit of armour and set it down there at once (the +1 at the end of Turn 4 is in the 11). The silversmith's window is beaten; its guard dog (watched) and strongbox remain, and the spoons are an essential. Positions: the Werewolf and the Invisible Man at the silversmith; the Ghost and the Creature at the tailor with the armour. Charges: Werewolf 1, Creature 1, Ghost 1, Invisible Man 2.
+
+**The decision.** The armour costs +1 at the end of every Turn ("even set down"). With two obstacles still between the party and an essential, a 2-Turn carry back, a Tell check at the way out still to come and a Limit of 15, keeping it would put the noise alone at 14 by the end of Turn 7. The party **abandons the armour for good** at the start of Turn 5, before anyone acts. The book gives no procedure, so I ruled (S6): the party declares it, at any time; the piece makes no more noise from that Turn's end on; it can't be taken again ("for good").
+
+| Turn | Roll | Who / where | Choice and why | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|---|
+| 5 | R302–R303 | Werewolf, silversmith (guard dog, Charm / Nimble loud, 8, watched) | Nimble d12 the loud way, Mask | 1 + 4 | 5 vs 8 | **Trouble**, caught (one rise: +1) | 12 |
+
+**The Werewolf's local chase** (Shortcut, not Night Runner: Lead 1, escape 4; mob 8 + 6 = 14, held at **12**; Hounds from round 3):
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R304 = 1 square (Sly d6, Charm d4) | Sly d6, **Good Dog** (1 → 0) | 3 + 8 (shows, hidden) | 11 vs 12 | Cost | 1 | 12 |
+| 2 | R307 = 2 back alleys | Nimble d12, Monster (54 / 16 / 30%; the Mask 38 / 17 / 46%) | 12 + 4 | 16 vs 12 | Success | 2 | 12 |
+| 3 | R310 = 4 rooftops | Nimble d12 → d10 (Hounds), Monster | 1 + 9 (shows) | 10 vs 12 | Cost | 2 | 14 |
+| 4 | R313 = 5 parade (Sly d6 → d4) | Sly d4, Mask: with the Monster any show or Trouble brings the Limit; with the Mask only a 4 + 6 (a Cost) keeps it off | 2 + 3 | 5 vs 12 | Trouble | 1 | **15: the Limit** |
+
+The Limit comes during the chase and he isn't cornered (Lead 1), so the chase ends and he joins the flight. The abandoned armour played no further part: the Turn never ended, so the ruling on its last +1 never had to be applied.
+
+**The final flight** (Hard, 4 Entities; the Ghost is Always (Cold Iron) and can never overdraw; the Invisible Man's 2 charges can do nothing):
+
+| Round | Ground | Werewolf | Creature | Ghost | Invisible Man | S – T | Lead |
+|---|---|---|---|---|---|---|---|
+| 1 | R316 = 3 market stalls | Nimble d12: 11 + 6 = 17 S | Brawn d12: 10 + 7 = 17 S | Nimble d12 → d10 (Cold Iron): 6 + 4 = 10 C | Nimble d8 → d10 (**the Ghost's Chill**, 1 → 0): 5 + 8 = 13 S | 3 – 0 | **4** (+2) |
+| 2 | R325 = 5 parade | Brawn d10 in place of the ground's traits: **the Creature's Brute Force, overdrawn after the Creature's own roll** (free: his Weakness comes from his next roll, in round 3): 10 + 4 = 14 S | **Brute Force** (1 → 0): Brawn d12: 10 + 2 = 12 S | Sly d10 → d8: 2 + 7 = 9 C | Sly d12: 4 + 3 = 7 T | 2 – 1 | 5 |
+| 3 | R334 = 2 back alleys (every Weakness in play) | Nimble d10: 10 + 9 = 19 S | Nimble d8 → d6: 4 + 6 = 10 C | Nimble d10: 4 + 1 = 5 T | Sly d10: 9 + 4 = 13 S | 2 – 1 | **6: escaped** |
+
+**Escaped in 3 rounds** (27 dice), home with the lock, the paper and the bandages: **Partial** (an essential missing; 3 of 5 home), nobody left behind. "The castle gets by, just. Someone has to sleep in the draughty tower." Then "Dinner is served on old coffin lids." and "Turnip soup every night until spring." The Werewolf rolled Brawn on a parade through a friend's switch: V2 on a friend's roll read cleanly again.
+
+### 7.5 Drill e: a raid's lookups from the At the Table page alone (main line B)
+
+I ran main line B's lookups from the At the Table page, the Entity sheets and the town table. The page carried the roll and its results, the Mask and the Monster, the Cost options, the Suspicion triggers (the loud way, a Tell, furniture each Turn), "One roll, one rise", the Duty raise, group obstacles, "Carrying: moves take two Turns", the way out's traits and "one roll for all", the results and every Hard number. I still had to open a chapter for these (the first two are building the town, which the page doesn't claim to cover):
+
+1. **Building the town** (Chapter 8's Rolling a Town and its tables): outside the page's scope; listed for completeness.
+2. **A face for a watched obstacle** (the villager tables, Chapter 8): the same.
+3. **Whether a location is watched** when only its other way in is (the schoolhouse and the seed merchant, Turn 1): "It's watched if any obstacle is, either way in" is only in Chapter 4.
+4. **Whose Tell** when two arrive together (the bookseller, Turn 1): only in Chapter 5.
+5. **Choosing a Cost** (J&H, Turn 2): "never a Cost that costs nothing right then" and "'drop an item' … never what this roll wins" are only in Chapter 3.
+6. **Through the Wall at the back room** (the Ghost, Turn 2): that an approach can be opened only where the obstacle doesn't list the trait is only in Chapter 3.
+7. **Getting the item by passing the last obstacle** (Spectral, Turn 2): "beat or pass the last and it's in your hand" is only in Chapter 4.
+8. **A Cost's smaller die meeting the Duty's raise** (the Werewolf, Turn 3): "Raises and steps down cancel out" is only in Chapter 3; the page and the sheet have "One raise per roll" and the d4 floor.
+9. **Handing loot over** (the cake, Turn 4): "Loot has no limit; hand it over free in the same place" is only in Chapter 4.
+10. **The furniture's obstacle** (Turns 4–5): when it may be tried ("Once that location's loot is in hand, whoever is past all its obstacles…") and how many carry a Bulky piece, and what carrying does to a carrier, are only in Chapter 4.
+11. **The way out**: that everyone not captured must be there, that it is watched, and that its Tell check comes when anyone first comes back to it are only in Chapters 4 and 5.
+12. **Two ways in, keep to one**: only in Chapters 4 and 9.
+
+From the drills, two more: **when an overdraw's Weakness starts** (drill c; the page and the sheet say "or your Weakness once the hunt is on (once per flight)" but not "from your own next roll (even later the same round)"), and **what happens when the Limit comes during a local chase** (drills b and d; Chapter 5). Items 3–12 are the same gaps PT6 listed (its m4); none was added to the page. Finding m4.
+
+### 7.6 Drill f (extra): Already Dead cornered below the Limit
+
+**Start (chosen):** Gallowsmere, Turn 6, Suspicion 9: **a Ghost with the Already Dead Perk** (otherwise default: Chill, Butler; Cold Iron, Always) caught alone at the smithy's watchman, holding the lock. Lead 1, escape 4, mob 8 + 4 = 12. 1 charge. Cornered, Already Dead only costs it a Turn, so it plays the Mask to keep Suspicion down once its charge is gone.
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R343 = 1 square | Sly d10 → d8 (Cold Iron) → d10 (**Chill**, 1 → 0), Monster | 10 + 7 | 17 vs 12 | Success | 2 | 9 |
+| 2 | R346 = 6 dead end (Brawn d4, Wits d6 → d4) | Wits d4, Mask | 1 + 2 | 3 vs 12 | Trouble | 1 | 10 |
+| 3 | R349 = 4 rooftops | Nimble d12 → d10, Mask | 3 + 5 | 8 vs 12 | Trouble: **cornered** | 0 | 11 |
+
+"Cornered in a local chase, you're back where you were caught and lose your next Turn instead of being captured." The Ghost is back before the watchman with the lock (not captured, so the town takes nothing) and loses Turn 7. PT6's w3 is answered by the text as it stands. 3 rounds, 9 dice.
+
+---
+
 ## 10. Roll appendix
 
 Every roll in order, as logged when rolled (`Math.random`, one die per line). Labels are the log's own shorthand: "A" and "B" are the main lines; a1–a2, b, c, d and e are the drills; "IM" is the Invisible Man, "J&H" Jekyll & Hyde; "T5" is Turn 5 and "r3" round 3.
@@ -363,3 +479,179 @@ Every roll in order, as logged when rolled (`Math.random`, one die per line). La
 | R173 | B T5 IM Monster (Unseen) | d10 = 8 |
 | R174 | B T7 Werewolf way out Nimble | d12 = 8 |
 | R175 | B T7 Werewolf Monster | d10 = 2 |
+| R176 | a1 party pick 1 | d8 = 5 |
+| R177 | a1 party pick 2 | d8 = 3 |
+| R178 | a1 party pick 3 | d8 = 5 |
+| R179 | a1 party spare 1 | d8 = 2 |
+| R180 | a1 party spare 2 | d8 = 4 |
+| R181 | a1 r1 ground | d6 = 5 |
+| R182 | a1 r1 IM Sly | d12 = 7 |
+| R183 | a1 r1 IM Monster | d10 = 1 |
+| R184 | a1 r1 Mummy Wits (Ancient Lore) | d12 = 7 |
+| R185 | a1 r1 Mummy Monster | d10 = 2 |
+| R186 | a1 r1 Creature Brawn (Brute Force) | d12 = 6 |
+| R187 | a1 r1 Creature Monster | d10 = 7 |
+| R188 | a1 r2 ground | d6 = 5 |
+| R189 | a1 r2 IM Sly | d12 = 2 |
+| R190 | a1 r2 IM Monster | d10 = 7 |
+| R191 | a1 r2 Mummy Wits (Ancient Lore overdrawn) | d12 = 3 |
+| R192 | a1 r2 Mummy Monster | d10 = 8 |
+| R193 | a1 r2 Creature Brawn (Brute Force overdrawn) | d12 = 2 |
+| R194 | a1 r2 Creature Monster | d10 = 2 |
+| R195 | a1 r3 ground | d6 = 3 |
+| R196 | a1 r3 IM Nimble (d8 Flour->d6) | d6 = 3 |
+| R197 | a1 r3 IM Monster | d10 = 9 |
+| R198 | a1 r3 Mummy Brawn (d10 Thread->d8) | d8 = 5 |
+| R199 | a1 r3 Mummy Monster | d10 = 10 |
+| R200 | a1 r3 Creature Brawn (d12 Fire->d10) | d10 = 3 |
+| R201 | a1 r3 Creature Monster | d10 = 4 |
+| R202 | a1 r4 ground | d6 = 6 |
+| R203 | a1 r4 IM Wits (d10->d8) | d8 = 4 |
+| R204 | a1 r4 IM Monster | d10 = 7 |
+| R205 | a1 r4 Mummy Wits (d12->d10) | d10 = 4 |
+| R206 | a1 r4 Mummy Monster | d10 = 10 |
+| R207 | a1 r4 Creature Brawn (d12->d10) | d10 = 2 |
+| R208 | a1 r4 Creature Monster | d10 = 8 |
+| R209 | a1 r5 ground | d6 = 6 |
+| R210 | a1 r5 IM Wits (d10->d8) | d8 = 4 |
+| R211 | a1 r5 IM Monster | d10 = 4 |
+| R212 | a1 r5 Mummy Wits (d12->d10) | d10 = 10 |
+| R213 | a1 r5 Mummy Monster | d10 = 2 |
+| R214 | a1 r5 Creature Brawn (d12->d10) | d10 = 9 |
+| R215 | a1 r5 Creature Monster | d10 = 4 |
+| R216 | a2 party pick 1 | d8 = 3 |
+| R217 | a2 party pick 2 | d8 = 7 |
+| R218 | a2 party pick 3 | d8 = 8 |
+| R219 | a2 party pick 4 | d8 = 3 |
+| R220 | a2 party pick 5 | d8 = 4 |
+| R221 | a2 party spare 1 | d8 = 4 |
+| R222 | a2 party spare 2 | d8 = 2 |
+| R223 | a2 party spare 3 | d8 = 1 |
+| R224 | a2 r1 ground | d6 = 2 |
+| R225 | a2 r1 Mummy Wits (Ancient Lore) | d12 = 10 |
+| R226 | a2 r1 Mummy Monster | d10 = 1 |
+| R227 | a2 r1 Witch Sly (Hedge Spell d10->d12) | d12 = 1 |
+| R228 | a2 r1 Witch Monster | d10 = 1 |
+| R229 | a2 r1 J&H Jekyll Sly (Doctor's Bag d8->d10) | d10 = 9 |
+| R230 | a2 r1 J&H Monster | d10 = 4 |
+| R231 | a2 r1 Werewolf Nimble | d12 = 7 |
+| R232 | a2 r1 Werewolf Monster | d10 = 7 |
+| R233 | a2 r1 Creature Brawn (Brute Force) | d12 = 12 |
+| R234 | a2 r1 Creature Monster | d10 = 2 |
+| R235 | a2 r2 ground | d6 = 4 |
+| R236 | a2 r2 Mummy Wits | d12 = 3 |
+| R237 | a2 r2 Mummy Monster | d10 = 7 |
+| R238 | a2 r2 Witch Wits | d12 = 6 |
+| R239 | a2 r2 Witch Monster | d10 = 7 |
+| R240 | a2 r2 J&H Jekyll Wits (Doctor's Bag overdrawn d10->d12) | d12 = 11 |
+| R241 | a2 r2 J&H Monster | d10 = 10 |
+| R242 | a2 r2 Werewolf Nimble | d12 = 12 |
+| R243 | a2 r2 Werewolf Monster | d10 = 8 |
+| R244 | a2 r2 Creature Brawn (Brute Force overdrawn) | d12 = 3 |
+| R245 | a2 r2 Creature Monster | d10 = 7 |
+| R246 | c party pick 1 (Witch chosen; 7 rerolled) | d8 = 8 |
+| R247 | c party pick 2 | d8 = 7 |
+| R248 | c party pick 3 | d8 = 7 |
+| R249 | c party spare 1 | d8 = 8 |
+| R250 | c party spare 2 | d8 = 3 |
+| R251 | c party spare 3 | d8 = 7 |
+| R252 | c party spare 4 | d8 = 8 |
+| R253 | c party spare 5 | d8 = 8 |
+| R254 | c party spare 6 | d8 = 7 |
+| R255 | c party spare 7 | d8 = 1 |
+| R256 | c r1 ground | d6 = 6 |
+| R257 | c r1 Dracula Brawn (d8 Garlic d6, Witch's Hedge Spell overdrawn d8) | d8 = 2 |
+| R258 | c r1 Dracula Monster | d10 = 10 |
+| R259 | c r1 J&H Jekyll Wits | d10 = 7 |
+| R260 | c r1 J&H Monster | d10 = 4 |
+| R261 | c r1 Mummy Wits | d12 = 3 |
+| R262 | c r1 Mummy Monster | d10 = 5 |
+| R263 | c r1 Witch Wits (d12, Rowan from overdraw d10) | d10 = 4 |
+| R264 | c r1 Witch Monster | d10 = 6 |
+| R265 | c r2 ground | d6 = 4 |
+| R266 | c r2 Dracula Nimble (d10 Garlic->d8) | d8 = 7 |
+| R267 | c r2 Dracula Monster | d10 = 6 |
+| R268 | c r2 J&H Jekyll Wits (Doctor's Bag overdrawn d10->d12) | d12 = 2 |
+| R269 | c r2 J&H Monster | d10 = 2 |
+| R270 | c r2 Mummy Wits | d12 = 1 |
+| R271 | c r2 Mummy Monster | d10 = 4 |
+| R272 | c r2 Witch Wits (Rowan d10) | d10 = 4 |
+| R273 | c r2 Witch Monster | d10 = 8 |
+| R274 | c r3 ground | d6 = 2 |
+| R275 | c r3 Dracula Nimble (d8) | d8 = 8 |
+| R276 | c r3 Dracula Monster | d10 = 4 |
+| R277 | c r3 J&H Jekyll Sly (d8->d6) | d6 = 6 |
+| R278 | c r3 J&H Monster | d10 = 5 |
+| R279 | c r3 Mummy Sly (d6->d4) | d4 = 4 |
+| R280 | c r3 Mummy Monster | d10 = 7 |
+| R281 | c r3 Witch Sly (d10->d8) | d8 = 8 |
+| R282 | c r3 Witch Monster | d10 = 10 |
+| R283 | c r4 ground | d6 = 1 |
+| R284 | c r4 Dracula Charm (d12->d10) | d10 = 10 |
+| R285 | c r4 Dracula Monster | d10 = 5 |
+| R286 | c r4 J&H Jekyll Charm (d12->d10) | d10 = 10 |
+| R287 | c r4 J&H Monster | d10 = 1 |
+| R288 | c r4 Mummy Charm (d8->d6) | d6 = 3 |
+| R289 | c r4 Mummy Monster | d10 = 10 |
+| R290 | c r4 Witch Sly (d10->d8) | d8 = 6 |
+| R291 | c r4 Witch Monster | d10 = 2 |
+| R292 | b who is caught | d8 = 3 |
+| R293 | b r1 ground | d6 = 3 |
+| R294 | b r1 Mummy Wits (Ancient Lore) | d12 = 11 |
+| R295 | b r1 Mummy Monster | d10 = 8 |
+| R296 | b r2 ground | d6 = 1 |
+| R297 | b r2 Mummy Wits (Ancient Lore overdrawn, +2) | d12 = 3 |
+| R298 | b r2 Mummy Monster | d10 = 1 |
+| R299 | b r3 ground | d6 = 5 |
+| R300 | b r3 Mummy Wits (Ancient Lore overdrawn +2; Thread d12->d10) | d10 = 4 |
+| R301 | b r3 Mummy Monster | d10 = 2 |
+| R302 | d T5 Werewolf silversmith guard dog Nimble loud | d12 = 1 |
+| R303 | d T5 Werewolf Mask | d6 = 4 |
+| R304 | d T5 Werewolf chase r1 ground | d6 = 1 |
+| R305 | d T5 Werewolf chase r1 Sly | d6 = 3 |
+| R306 | d T5 Werewolf chase r1 Monster (Good Dog) | d10 = 8 |
+| R307 | d T5 Werewolf chase r2 ground | d6 = 2 |
+| R308 | d T5 Werewolf chase r2 Nimble | d12 = 12 |
+| R309 | d T5 Werewolf chase r2 Monster | d10 = 4 |
+| R310 | d T5 Werewolf chase r3 ground | d6 = 4 |
+| R311 | d T5 Werewolf chase r3 Nimble (Hounds d10) | d10 = 1 |
+| R312 | d T5 Werewolf chase r3 Monster | d10 = 9 |
+| R313 | d T5 Werewolf chase r4 ground | d6 = 5 |
+| R314 | d T5 Werewolf chase r4 Sly (d6 Hounds->d4) | d4 = 2 |
+| R315 | d T5 Werewolf chase r4 Mask | d6 = 3 |
+| R316 | d flight r1 ground | d6 = 3 |
+| R317 | d flight r1 Werewolf Nimble | d12 = 11 |
+| R318 | d flight r1 Werewolf Monster | d10 = 6 |
+| R319 | d flight r1 Creature Brawn | d12 = 10 |
+| R320 | d flight r1 Creature Monster | d10 = 7 |
+| R321 | d flight r1 Ghost Nimble (d12 Cold Iron->d10) | d10 = 6 |
+| R322 | d flight r1 Ghost Monster | d10 = 4 |
+| R323 | d flight r1 IM Nimble (d8, Ghost's Chill->d10) | d10 = 5 |
+| R324 | d flight r1 IM Monster | d10 = 8 |
+| R325 | d flight r2 ground | d6 = 5 |
+| R326 | d flight r2 Creature Brawn (Brute Force, last charge) | d12 = 10 |
+| R327 | d flight r2 Creature Monster | d10 = 2 |
+| R328 | d flight r2 Werewolf Brawn (Creature's Brute Force overdrawn, after his roll) | d10 = 10 |
+| R329 | d flight r2 Werewolf Monster | d10 = 4 |
+| R330 | d flight r2 Ghost Sly (d10 Cold Iron->d8) | d8 = 2 |
+| R331 | d flight r2 Ghost Monster | d10 = 7 |
+| R332 | d flight r2 IM Sly | d12 = 4 |
+| R333 | d flight r2 IM Monster | d10 = 3 |
+| R334 | d flight r3 ground | d6 = 2 |
+| R335 | d flight r3 Werewolf Nimble (d12->d10) | d10 = 10 |
+| R336 | d flight r3 Werewolf Monster | d10 = 9 |
+| R337 | d flight r3 Creature Nimble (d8->d6) | d6 = 4 |
+| R338 | d flight r3 Creature Monster | d10 = 6 |
+| R339 | d flight r3 Ghost Nimble (d12->d10) | d10 = 4 |
+| R340 | d flight r3 Ghost Monster | d10 = 1 |
+| R341 | d flight r3 IM Sly (d12->d10) | d10 = 9 |
+| R342 | d flight r3 IM Monster | d10 = 4 |
+| R343 | f Ghost chase r1 ground | d6 = 1 |
+| R344 | f Ghost chase r1 Sly (d10 Cold Iron d8, Chill d10) | d10 = 10 |
+| R345 | f Ghost chase r1 Monster | d10 = 7 |
+| R346 | f Ghost chase r2 ground | d6 = 6 |
+| R347 | f Ghost chase r2 Wits (d6 Cold Iron->d4) | d4 = 1 |
+| R348 | f Ghost chase r2 Mask | d6 = 2 |
+| R349 | f Ghost chase r3 ground | d6 = 4 |
+| R350 | f Ghost chase r3 Nimble (d12 Cold Iron->d10) | d10 = 3 |
+| R351 | f Ghost chase r3 Mask | d6 = 5 |
