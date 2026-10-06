@@ -1,0 +1,54 @@
+/**
+ * DON'T GET FORKED — the Entity actor's data (TypeDataModel)
+ * ----------------------------------------------------------
+ * One of the eight premade Entities (rulebook Chapter 2) as a player's actor:
+ * its five trait dice, charges, its three picks, Jekyll & Hyde's form, its
+ * status in the raid, what it carries, and the few marks the rules leave on
+ * it (a Cost's smaller die or lost Turn, a Weakness in play). Everything else
+ * (signature, Gift and Perk text, Weakness, Tell) is read from the book's data
+ * by key (module/logic/entity.mjs), so it can't drift from the book.
+ * New Entities are filled with the book's defaults by entitySystem(key).
+ */
+import { DGF } from "../config.mjs";
+import { entityView, rollAbilities } from "../logic/entity.mjs";
+
+const f = foundry.data.fields;
+const die = (initial) => new f.NumberField({ required: true, nullable: false, integer: true, initial, choices: [...DGF.dieSteps] });
+const count = (initial = 0) => new f.NumberField({ required: true, nullable: false, integer: true, min: 0, initial });
+const key = () => new f.StringField({ required: true, blank: true, initial: "" });
+
+export class EntityData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      entityKey: key(),                         // which of the eight (DGF.entities); "" until chosen
+      form: key(),                              // Jekyll & Hyde: "jekyll" | "hyde"; "" for the others
+      traits: new f.SchemaField(Object.fromEntries(DGF.traits.map((tr) => [tr, die(4)]))),
+      charges: new f.SchemaField({ value: count(DGF.charges), start: count(DGF.charges) }),
+      gift: key(),                              // the chosen Gift version's key
+      perk: key(),                              // the chosen Perk's key
+      duty: key(),                              // the Castle Duty's key (DGF.duties)
+      status: new f.StringField({ required: true, blank: false, initial: "active", choices: [...DGF.statuses] }),
+      carried: new f.ArrayField(new f.SchemaField({ name: new f.StringField({ required: true, blank: false, initial: "?" }) })),
+      carryingFurniture: new f.BooleanField({ initial: false }),
+      nextRollSmaller: count(0),                // a Cost: the next roll's trait die one size smaller (each)
+      skipTurn: count(0),                       // a Cost: the Turn this Entity loses (0 = none)
+      weaknessInPlay: new f.BooleanField({ initial: false }),
+      notes: new f.StringField({ required: true, blank: true, initial: "" }),
+    };
+  }
+
+  /** The book's data for this Entity and its picks (null until an Entity is chosen). */
+  get view() {
+    return entityView(this);
+  }
+
+  /** The abilities it can spend on a roll (signature and Gift). */
+  get abilities() {
+    return rollAbilities(this);
+  }
+
+  /** It carries loot (small items) — "drop an item" needs this; Out of Sight checks it. */
+  get carriesLoot() {
+    return (this.carried?.length ?? 0) > 0;
+  }
+}

@@ -13,6 +13,12 @@
  *  - documents: Actors (with the system's data models and derived data), Items,
  *    ChatMessages — players may write only what they own (actors) or authored
  *    (messages); creating actors and writing world settings are GM-only;
+ *  - data models: foundry.data.fields (String/Number/Boolean/Schema/Array/Object…)
+ *    fill each field's `initial` value and VALIDATE every create and update
+ *    (type, choices, integer, min/max, blank), throwing like Foundry does;
+ *  - localization from lang/en.json (game.i18n and the {{localize}} helper);
+ *    keys that don't exist are collected in log.missingI18n;
+ *  - the system socket: game.socket.emit delivers to every OTHER connected client;
  *  - User#query (CONFIG.queries handlers called as (data, {timeout}) on the
  *    target user's client, data JSON-cloned like the wire);
  *  - dice ("NdF" formulas) from a scripted queue (then a seeded generator), so
@@ -35,7 +41,7 @@ const SYSTEM_ID = JSON.parse(readFileSync(join(ROOT, "system.json"), "utf8")).id
 
 /* ------------------------------------------------------------------ state -- */
 
-export const log = { errors: [], warnings: [], infos: [], rolls: [], dialogs: [], emits: [], work: 0 };
+export const log = { errors: [], warnings: [], infos: [], rolls: [], dialogs: [], emits: [], missingI18n: [], work: 0 };
 const als = new AsyncLocalStorage();
 let defaultUser = null;
 
@@ -259,8 +265,29 @@ function recordError(where, err) {
 
 /* ------------------------------------------------------- Handlebars -- */
 
+/* --------------------------------------------------------- i18n -- */
+
+const LANG = (() => {
+  const manifest = JSON.parse(readFileSync(join(ROOT, "system.json"), "utf8"));
+  const en = (manifest.languages ?? []).find(l => l.lang === "en");
+  return en ? JSON.parse(readFileSync(join(ROOT, en.path), "utf8")) : {};
+})();
+function localize(key) {
+  const k = String(key ?? "");
+  if (Object.hasOwn(LANG, k)) return LANG[k];
+  if (!log.missingI18n.includes(k)) log.missingI18n.push(k);
+  return k;
+}
+function format(key, data = {}) {
+  return localize(key).replace(/{([^}]+)}/g, (m, name) => (Object.hasOwn(data, name) ? String(data[name]) : m));
+}
+export const i18n = { localize, format, has: k => Object.hasOwn(LANG, k), lang: "en", translations: LANG };
+
 const Handlebars = HandlebarsLib.create();
-Handlebars.registerHelper("localize", s => String(s ?? ""));
+Handlebars.registerHelper("localize", (key, options) => {
+  const hash = options?.hash ?? {};
+  return Object.keys(hash).length ? format(key, hash) : localize(key);
+});
 const templateCache = new Map();
 async function renderTemplate(path, data) {
   touch();
@@ -348,6 +375,113 @@ class ClientSettings {
   }
 }
 
+/* --------------------------------------------------------- Data models -- */
+
+/** A small stand-in for foundry.data.fields: initial values and validation only. */
+class DataField {
+  constructor(options = {}) { this.options = { ...options }; }
+  get nullable() { return !!this.options.nullable; }
+  getInitialValue() { const i = this.options.initial; return typeof i === "function" ? i() : clone(i); }
+  _typeError(value) { return null; } // subclasses: a message if the value is the wrong kind
+  validate(value, path, errors) {
+    if (value === undefined) { if (this.options.required) errors.push(`${path}: required`); return; }
+    if (value === null) { if (!this.nullable) errors.push(`${path}: may not be null`); return; }
+    const e = this._typeError(value, path, errors);
+    if (e) errors.push(`${path}: ${e} (got ${JSON.stringify(value)})`);
+  }
+  _choiceError(value) {
+    let c = this.options.choices;
+    if (!c) return null;
+    if (typeof c === "function") c = c();
+    const keys = Array.isArray(c) ? c.map(String) : Object.keys(c);
+    return keys.includes(String(value)) ? null : `not one of ${keys.join(", ")}`;
+  }
+}
+class StringField extends DataField {
+  _typeError(v) {
+    if (typeof v !== "string") return "must be a string";
+    if (v === "") return this.options.blank === false ? "may not be blank" : null;
+    return this._choiceError(v);
+  }
+}
+class HTMLField extends StringField {}
+class FilePathField extends StringField {}
+class NumberField extends DataField {
+  _typeError(v) {
+    if (typeof v !== "number" || !Number.isFinite(v)) return "must be a finite number";
+    if (this.options.integer && !Number.isInteger(v)) return "must be an integer";
+    if (this.options.min !== undefined && v < this.options.min) return `must be at least ${this.options.min}`;
+    if (this.options.max !== undefined && v > this.options.max) return `must be at most ${this.options.max}`;
+    return this._choiceError(v);
+  }
+}
+class BooleanField extends DataField {
+  getInitialValue() { return "initial" in this.options ? super.getInitialValue() : false; }
+  _typeError(v) { return typeof v === "boolean" ? null : "must be true or false"; }
+}
+class ObjectField extends DataField {
+  getInitialValue() { return "initial" in this.options ? super.getInitialValue() : {}; }
+  _typeError(v) { return isObj(v) ? null : "must be an object"; }
+}
+class SchemaField extends DataField {
+  constructor(fields = {}, options = {}) { super(options); this.fields = fields; }
+  getInitialValue() {
+    if ("initial" in this.options) return super.getInitialValue();
+    const out = {};
+    for (const [k, f] of Object.entries(this.fields)) { const v = f.getInitialValue(); if (v !== undefined) out[k] = v; }
+    return out;
+  }
+  /** Fill missing keys with their initial values (in place). */
+  fill(data) {
+    for (const [k, f] of Object.entries(this.fields)) {
+      if (data[k] === undefined) { const v = f.getInitialValue(); if (v !== undefined) data[k] = v; }
+      else if (f instanceof SchemaField && isObj(data[k])) f.fill(data[k]);
+      else if (f instanceof ArrayField && Array.isArray(data[k]) && f.element instanceof SchemaField) data[k].forEach(x => isObj(x) && f.element.fill(x));
+    }
+    return data;
+  }
+  _typeError(v, path, errors) {
+    if (!isObj(v)) return "must be an object";
+    for (const [k, f] of Object.entries(this.fields)) f.validate(v[k], `${path}.${k}`, errors);
+    return null;
+  }
+}
+class ArrayField extends DataField {
+  constructor(element, options = {}) { super(options); this.element = element; }
+  getInitialValue() { return "initial" in this.options ? super.getInitialValue() : []; }
+  _typeError(v, path, errors) {
+    if (!Array.isArray(v)) return "must be an array";
+    v.forEach((x, i) => this.element?.validate(x, `${path}.${i}`, errors));
+    return null;
+  }
+}
+class SetField extends ArrayField {}
+const FIELDS = { DataField, StringField, HTMLField, FilePathField, NumberField, BooleanField, ObjectField, SchemaField, ArrayField, SetField };
+const fields = new Proxy(FIELDS, { get: (t, k) => t[k] ?? DataField });
+
+class TypeDataModel {
+  static defineSchema() { return {}; }
+  static get schema() {
+    if (!Object.hasOwn(this, "_fakeSchema")) Object.defineProperty(this, "_fakeSchema", { value: new SchemaField(this.defineSchema()), configurable: true });
+    return this._fakeSchema;
+  }
+}
+
+/** Fill a document's system data from its data model and validate it (throws like Foundry). */
+function modelFor(documentName, type) { return CONFIG?.[documentName]?.dataModels?.[type] ?? null; }
+function fillSystem(documentName, type, system) {
+  const Model = modelFor(documentName, type);
+  if (Model?.schema instanceof SchemaField) Model.schema.fill(system);
+  return system;
+}
+function validateSystem(documentName, type, system, name) {
+  const Model = modelFor(documentName, type);
+  if (!(Model?.schema instanceof SchemaField)) return;
+  const errors = [];
+  Model.schema.validate(system, "system", errors);
+  if (errors.length) throw new Error(`${documentName} "${name}" failed data validation: ${errors.join("; ")}`);
+}
+
 /* ---------------------------------------------------------- Documents -- */
 
 const OWNER = 3;
@@ -420,7 +554,7 @@ export class Actor extends BaseDocument {
     this.img = data.img ?? "icons/svg/mystery-man.svg";
     this.flags = clone(data.flags ?? {});
     this.ownership = clone(data.ownership ?? { default: 0 });
-    this.system = clone(data.system ?? {});
+    this.system = fillSystem("Actor", data.type, clone(data.system ?? {}));
     this.items = new Collection();
     const IC = CONFIG.Item.documentClass ?? Item;
     for (const i of data.items ?? []) this.items.push(new IC(i, { parent: this }));
@@ -446,6 +580,9 @@ export class Actor extends BaseDocument {
   async update(changes, options = {}) {
     touch();
     if (!this.isOwner) throw new Error(`${game.user.name} lacks permission to update Actor ${this.name}`);
+    const candidate = this.toObject();
+    applyUpdate(candidate, changes);
+    validateSystem("Actor", this.type, candidate.system, this.name);
     const diff = applyUpdate(this, changes);
     this.prepareData();
     broadcast("updateActor", this, diff, options, game.user.id);
@@ -468,6 +605,7 @@ export class Actor extends BaseDocument {
     if (!game.user?.isGM) throw new Error(`${game.user?.name} lacks permission to create an Actor`);
     const AC = CONFIG.Actor.documentClass ?? Actor;
     const actor = new AC(clone(data));
+    validateSystem("Actor", actor.type, actor.toObject().system, actor.name);
     game.actors.push(actor);
     broadcast("createActor", actor, {}, game.user.id);
     return actor;
@@ -685,11 +823,27 @@ export function installFoundry({ users = [] } = {}) {
     scenes: { viewed: null },
     packs: new Map(),
     combat: null,
-    i18n: { localize: s => s, format: s => s },
+    i18n,
     socket: {
       _listeners: new Map(),
       on(name, fn) { (this._listeners.get(name) ?? this._listeners.set(name, []).get(name)).push(fn); },
-      emit(name, payload) { touch(); log.emits.push({ name, payload: clone(payload), from: game.user?.id }); }
+      /** Delivered to every OTHER connected client's listeners (as Foundry does), after a tick. */
+      emit(name, payload) {
+        touch();
+        const from = game.user;
+        log.emits.push({ name, payload: clone(payload), from: from?.id });
+        setImmediate(() => {
+          touch();
+          for (const u of game.users.filter(x => x.active && x.id !== from?.id)) {
+            for (const fn of this._listeners.get(name) ?? []) {
+              asUser(u, () => {
+                try { const r = fn(clone(payload)); if (r?.catch) r.catch(err => recordError(`socket ${name}`, err)); }
+                catch (err) { recordError(`socket ${name}`, err); }
+              });
+            }
+          }
+        });
+      }
     }
   };
   globalThis.Hooks = Hooks;
@@ -730,13 +884,13 @@ export function installFoundry({ users = [] } = {}) {
       randomID, deepClone: clone, duplicate: clone, getProperty, setProperty, hasProperty, mergeObject: (a, b) => mergeObject(a, b),
       expandObject, isNewerVersion, escapeHTML, debounce: fn => fn
     },
-    abstract: { TypeDataModel: class { static defineSchema() { return {}; } } },
-    data: { fields: new Proxy({}, { get: () => class { constructor(...a) { this.args = a; } } }) },
+    abstract: { TypeDataModel },
+    data: { fields },
     applications: {
       api: { ApplicationV2, HandlebarsApplicationMixin, DialogV2, DocumentSheetV2 },
       sheets: { ActorSheetV2, ItemSheetV2 },
       apps: { DocumentSheetConfig: { registerSheet() {}, unregisterSheet() {} } },
-      handlebars: { renderTemplate },
+      handlebars: { renderTemplate, loadTemplates: async () => {} },
       instances,
       ux: { TextEditor: { implementation: { enrichHTML: async s => String(s ?? ""), getDragEventData: () => null } } }
     }
