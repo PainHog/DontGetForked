@@ -59,6 +59,12 @@ export const PARAMS = {
     doc: "carried = every Turn it's carried, both Turns of a move and waiting Turns included (as written); moving = only the Turns it moves (PT5 m9 candidate: a piece set down makes no noise). (Before PT5, together-play counted one per two-Turn move and no waiting Turns; pairs and singles already counted every Turn.)",
     ref: "DESIGN B2; PT5 m9",
   },
+  spectralRule: {
+    kind: "rule", default: "any", values: ["any", "noLoot"],
+    title: "A Ghost's Spectral: past group obstacles without rolling",
+    doc: "any = as written; noLoot = not while carrying loot or furniture, like Through the Wall (candidate after B7: A Ghost the largest outlier).",
+    ref: "DESIGN C8; sim/FINDINGS.md after B7",
+  },
   mesmeriseRule: {
     kind: "rule", default: "watched", values: ["watched", "any"],
     title: "Dracula's Mesmerise (C2; B7 2026-10-06: watched)",

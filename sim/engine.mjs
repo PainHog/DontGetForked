@@ -531,7 +531,7 @@ function workLocation(S, loc) {
       const cap = S.P.groupRule === "best3" ? 3 : S.P.groupRule === "best4" ? 4 : Infinity;
       const need = Math.min(cap, past().length);
       const passedNow = () => past().filter((m) => ob.passed.has(m.id)).length;
-      for (const m of avail) if (hasPerk(m, "spectral")) ob.passed.add(m.id); // drifts past without rolling
+      for (const m of avail) if (hasPerk(m, "spectral") && !(S.P.spectralRule === "noLoot" && (m.items.length || m.furniture))) ob.passed.add(m.id); // drifts past without rolling (candidate: not while carrying)
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id));
       if (cap < Infinity) rollers = rollers.map((m) => ({ m, v: planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value })).sort((a, b) => b.v - a.v).slice(0, need - passedNow()).map((x) => x.m);
