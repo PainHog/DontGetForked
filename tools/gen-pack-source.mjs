@@ -246,7 +246,7 @@ function guideDoc() {
     `<ol>`,
     `<li><strong>The Entities.</strong> In the Actors sidebar, ${B("DGF.Create.button")} makes one of the eight with the book’s dice and marked defaults, for the player you pick, and lets the party see each other’s sheets. The same eight are in the compendium <strong>${esc(packLabel("entities"))}</strong>, to drag into the world; then give the player ownership (Configure Ownership). Change the Gift, Perk and Castle Duty on the sheet.</li>`,
     `<li><strong>The town.</strong> Run one of the three premade towns in this compendium (Chapter 9), or build one with the book’s tables in the <strong>${esc(packLabel("tables"))}</strong> compendium (Chapter 8).</li>`,
-    `<li><strong>A new raid.</strong> Press ${B("DGF.Raid.newRaid")} and pick the town’s difficulty: Suspicion goes back to 0, the Turn to 1, and the Limit is the difficulty’s. With <em>${esc(L("DGF.Settings.resetOnNewRaid.Name"))}</em> on, every Entity is free again and its charges refill.</li>`,
+    `<li><strong>A new raid.</strong> Press ${B("DGF.Raid.newRaid")} and pick the town’s difficulty: Suspicion goes back to 0, the Turn to 1, and the Limit is the difficulty’s. With <em>${esc(L("DGF.Settings.resetOnNewRaid.Name"))}</em> on, every Entity in the raid is free again and its charges refill.</li>`,
     `<li><strong>The shopping list.</strong> For a rolled town, ${B("DGF.Raid.list")} → ${B("DGF.List.roll")} rolls it; a premade town’s page has a macro that puts its list on the HUD.</li>`,
     `</ol>`,
   ].join("\n");

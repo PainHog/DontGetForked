@@ -24,7 +24,7 @@
   --paper-light: #faf9f6;   /* lightest fill (example boxes, sheet fields) */
   --ink: #161618;           /* body text, linework */
   --ink-soft: #5a5a5e;      /* captions, quiet text */
-  --footer: #85847f;        /* running footer */
+  --footer: #6b6a65;        /* running footer (4.8:1 on the paper) */
   --accent: #7a7f88;        /* rules, list markers, borders */
   --accent-deep: #555a63;   /* labels on light */
   --accent-bright: #e4e6ea; /* labels on dark */
@@ -57,7 +57,8 @@
 @page part  { margin: 0; background: var(--dark-deep); @bottom-center { content: none; } }
 @page toc   { @bottom-center { content: none; } }
 
-html { background: var(--paper); }
+/* no background on html: @page paints every page, and an html background drew a paper
+   hairline down the right and bottom edges of the dark full-bleed pages */
 body {
   margin: 0;
   font-family: var(--text);
@@ -106,7 +107,7 @@ figure.art svg { display: block; width: 100%; height: auto; }
 /* scrim under the lettering (text-shadow would be printed as duplicate text) */
 .cover::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3.4in; z-index: 1;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--dark-deep) 78%, transparent), color-mix(in srgb, var(--dark-deep) 45%, transparent) 70%, transparent);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--dark-deep) 85%, transparent), color-mix(in srgb, var(--dark-deep) 70%, transparent) 70%, transparent);
 }
 .cover::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.3in; z-index: 1;
@@ -295,6 +296,16 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
 .tbl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--paper-2) 55%, transparent); }
 .tbl tr { break-inside: avoid; }
 .tbl td:first-child { font-weight: 700; color: var(--dark-deep); }
+/* a row label (th scope="row") looks like a first cell */
+.tbl tbody th {
+  background: none; color: var(--dark-deep);
+  font: 700 9pt/1.28 var(--sans); letter-spacing: 0; text-transform: none;
+  text-align: left; vertical-align: top; padding: 0.04in 0.06in;
+  border-top: 1px solid color-mix(in srgb, var(--paper-edge) 70%, transparent);
+}
+.tbl tbody tr:nth-child(even) th { background: color-mix(in srgb, var(--paper-2) 55%, transparent); }
+/* text for screen readers only (an empty header cell's name) */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .tbl td.num, .tbl th.num { text-align: center; white-space: nowrap; }
 /* a chapter whose tables must share one page: a hair less row padding */
 .tight-tables .tbl td { padding-top: 0.028in; padding-bottom: 0.028in; }
@@ -311,6 +322,8 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
   border-top: 1.5px solid var(--paper-edge);
 }
 .entry h3 { margin-top: 0.02in; }
+/* an Entity's name (an h4 under "The Eight"), set like a section heading */
+.entry h4.name { margin: 0.02in 0 0.05in; font: 800 13.5pt/1.15 var(--display); letter-spacing: 0; text-transform: none; color: var(--dark); }
 .entry p.dice { margin: 0.02in 0 0.04in; font-size: 0.92em; break-after: avoid; }
 .entry p.sig { margin: 0 0 0.04in; }
 .entry p.pick { margin: 0.02in 0 0.04in; }
@@ -397,7 +410,7 @@ figure.map { break-inside: avoid; margin: 0.06in 0 0.1in; }
 figure.map figcaption, figure.diagram figcaption { font: italic 8.6pt/1.3 var(--sans); color: var(--ink-soft); margin-top: 0.04in; }
 figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
 
-.chapter p.span-all, .chapter aside.span-all { column-span: all; }
+.chapter p.span-all, .chapter aside.span-all, .chapter div.span-all { column-span: all; }
 
 .signoff {
   column-span: all;
@@ -549,7 +562,7 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .town-key td { padding-top: 0.017in; padding-bottom: 0.017in; }
 .town-key td:first-child { font-weight: 600; }
 .town-key td.num { font-weight: 700; }
-.town-key tr.loc td { background: var(--paper-2); font: 800 8.2pt/1.2 var(--sans); color: var(--dark-deep); border-top: 1.5px solid var(--paper-edge); padding-top: 0.022in; padding-bottom: 0.012in; }
+.town-key tr.loc th, .town-key tr.loc td { background: var(--paper-2); font: 800 8.2pt/1.2 var(--sans); color: var(--dark-deep); border-top: 1.5px solid var(--paper-edge); padding-top: 0.022in; padding-bottom: 0.012in; }
 .town-key tr.loc .kind { font-weight: 500; color: var(--ink-soft); }
 .town-key .loc-n {
   display: inline-block; min-width: 0.15in; margin-right: 0.07in; padding: 0 0.02in; border-radius: 0.1in;
@@ -572,7 +585,7 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .sheet.ref { font-size: 9.6pt; line-height: 1.32; }
 .ref-cols { columns: 2; column-gap: 0.28in; }
 .ref-block { break-inside: avoid; margin: 0 0 0.1in; }
-.ref-block h4 { margin: 0 0 0.03in; font: 800 9pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--alarm); }
+.ref-block h3 { margin: 0 0 0.03in; font: 800 9pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--alarm); }
 .ref-block p, .ref-block ul { margin: 0 0 0.04in; }
 .ref-block ul { padding-left: 0.16in; }
 .ref-block li { margin: 0 0 0.02in; }

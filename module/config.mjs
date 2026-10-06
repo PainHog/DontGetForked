@@ -102,7 +102,7 @@ DGF.entities = Object.freeze([
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
   },
-  { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden", text: "roll the Monster die without risking Suspicion. When the monster shows, there’s nothing to see." },
+  { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden", text: "roll the Monster die without risking Suspicion. When the Monster shows, there’s nothing to see." },
     gift: {
       name: "A Scientist’s Tricks",
       versions: [
@@ -113,7 +113,7 @@ DGF.entities = Object.freeze([
     },
     perks: [
       { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you carry loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
-      { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep what you carry." },
+      { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep the loot you carry (not furniture)." },
       { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
     ],
     weakness: { name: "Flour", timing: "soon", text: "Someone throws a bag of flour, and there he is." },
@@ -185,7 +185,7 @@ DGF.duties = Object.freeze([
   { key: "cook", name: "Cook", kind: "food and drink", where: "the baker, the butcher, the tavern cellar", role: "keeps the castle fed and knows every kitchen door" },
   { key: "gardener", name: "Gardener", kind: "plants and seeds", where: "the market garden, the florist, the seed merchant", role: "knows what grows where, and what’s poisonous" },
   { key: "librarian", name: "Librarian", kind: "books and paper", where: "the bookseller, the printer, the schoolhouse", role: "reads the town’s notices and signs" },
-  { key: "butler", name: "Butler", kind: "silver, china and linen", where: "the silversmith, the china shop", role: "knows how fine houses run, and where they keep the good spoons" },
+  { key: "butler", name: "Butler", kind: "silver, china and linen", where: "the silversmith, the china shop, the laundry", role: "knows how fine houses run, and where they keep the good spoons" },
   { key: "handyman", name: "Handyman", kind: "tools and hardware", where: "the smithy, the ironmonger, the carpenter", role: "knows how locks and hinges work" },
   { key: "tailor", name: "Tailor", kind: "cloth and costumes", where: "the draper, the tailor, the hatter", role: "keeps everyone’s disguises in one piece" },
 ].map((d) => Object.freeze(d)));
@@ -324,7 +324,7 @@ DGF.perkRules = Object.freeze({
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob in your local chase is 1 easier.
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
-  hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep what you carry.
+  hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep the loot you carry (not furniture: V16).
   familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive, a Tell check goes off only if a second d6 also rolls 4–6.
 });
 

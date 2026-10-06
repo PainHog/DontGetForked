@@ -30,7 +30,7 @@
     },
     {
       "key": "butler",
-      "description": "<p><strong>Butler</strong></p><p>Shops for: silver, china and linen<br>Where in town: the silversmith, the china shop<br>At the castle: knows how fine houses run, and where they keep the good spoons</p>",
+      "description": "<p><strong>Butler</strong></p><p>Shops for: silver, china and linen<br>Where in town: the silversmith, the china shop, the laundry<br>At the castle: knows how fine houses run, and where they keep the good spoons</p>",
       "range": [
         4,
         4

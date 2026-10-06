@@ -18,7 +18,7 @@
   "crop": [
    0.045,
    0.12,
-   0.955,
+   0.948,
    1
   ],
   "width": 1600,
@@ -30,7 +30,7 @@
   "url": "https://upload.wikimedia.org/wikipedia/commons/5/51/Dorpje_aan_het_water%2C_bij_maanlicht%2C_RP-P-1995-419.jpg",
   "crop": [
    0.045,
-   0.255,
+   0.33,
    0.83,
    1
   ],
@@ -56,7 +56,7 @@
   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/RitrattoMuseoFerranteImperato.jpg",
   "crop": [
    0.02,
-   0.0708,
+   0.2,
    0.98,
    1
   ],
@@ -108,7 +108,7 @@
   "url": "https://upload.wikimedia.org/wikipedia/commons/1/12/F%C3%A9lix_Vallotton%2C_La_Manifestation_%28The_Demonstration%29%2C_1893%2C_NGA_42211.jpg",
   "crop": [
    0.3,
-   0.2786,
+   0.262,
    0.955,
    1
   ],
@@ -159,9 +159,9 @@
   "name": "back-moonrise",
   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Samuel_Palmer%2C_The_Rising_Moon%2C_1857%2C_NGA_119976.jpg",
   "crop": [
-   0.2,
-   0.1,
-   0.915,
+   0.205,
+   0.108,
+   0.91,
    1
   ],
   "width": 1300,
@@ -214,15 +214,19 @@
    0.74
   ],
   "width": 900,
-  "quality": 70
+  "quality": 70,
+  "cutoff": [
+   1,
+   35
+  ]
  },
  {
   "name": "spot-windmill",
   "url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Landschap_met_molen_bij_maanlicht%2C_RP-P-BI-6653.jpg",
   "crop": [
    0.05,
-   0.08,
-   0.955,
+   0.09,
+   0.935,
    0.87
   ],
   "width": 900,
@@ -314,15 +318,23 @@
   "name": "mummy-revealed",
   "url": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg",
   "crop": [
-   0.2,
+   0.13,
    0.0,
-   0.82,
+   0.75,
    1
   ],
   "aspect": 0.85,
   "width": 640,
   "quality": 70,
-  "source_file": "mummy-revealed-1.jpg"
+  "source_file": "mummy-revealed-1.jpg",
+  "erase": [
+   [
+    0,
+    0,
+    1,
+    0.022
+   ]
+  ]
  },
  {
   "name": "werewolf-costume",
@@ -392,7 +404,7 @@
   "name": "ghost-costume",
   "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Hammersmith_Ghost.PNG",
   "crop": [
-   0.0,
+   0.17,
    0.04,
    1.0,
    1

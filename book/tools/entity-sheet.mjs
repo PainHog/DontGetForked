@@ -16,7 +16,7 @@ const effect = (v) => ({
 })[v.effect];
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
 /** House style after a colon: lower-case the first word, unless it's a name (Hyde, a trait, Suspicion …). */
-const NAMES = new Set(["Hyde", "Jekyll", "Brawn", "Nimble", "Sly", "Charm", "Wits", "Suspicion", "Turn"]);
+const NAMES = new Set(["Hyde", "Jekyll", "Brawn", "Nimble", "Sly", "Charm", "Wits", "Suspicion", "Turn", "Trouble"]);
 const lowerFirst = (t) => t.replace(/^([“"]?)(\p{Lu}[\p{Ll}’']*)/u, (m, q, w) => (NAMES.has(w) ? m : q + w[0].toLowerCase() + w.slice(1)));
 
 export function sheetHtml(e) {

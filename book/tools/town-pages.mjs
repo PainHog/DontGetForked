@@ -32,13 +32,15 @@ function townBlock(t, { newPage }) {
   const host = L.find((l) => l.furniture);
   const list = L.map((l) => `<li>${l.essential ? `<strong>${cap(l.item)}</strong> (essential)` : cap(l.item)}</li>`).join("");
   const villagers = t.villagers.map((v) => `${low(v.who)} (${low(v.doing)})`).join("; ");
-  const rows = [];
+  // one <tbody> per location, headed by its name (a row-group header, so a screen reader ties each obstacle to its location)
+  const groups = [];
   for (const l of L) {
-    rows.push(`<tr class="loc"><td colspan="4"><span class="loc-n">${l.n}</span>${cap(l.place)}: ${l.item} <span class="kind">(${l.kindName})</span>${l.essential ? " · <strong>essential</strong>" : ""}</td></tr>`);
+    const rows = [`<tr class="loc"><th colspan="4" scope="rowgroup"><span class="loc-n">${l.n}</span>${cap(l.place)}: ${l.item} <span class="kind">(${l.kindName})</span>${l.essential ? " · <strong>essential</strong>" : ""}</th></tr>`];
     rows.push(obstacleRow("Way in", l.waysIn[0]));
     rows.push(obstacleRow("or", l.waysIn[1]));
     for (const o of l.then) rows.push(obstacleRow("Then", o));
     if (l.furniture) rows.push(obstacleRow("Furniture", l.furniture.obstacle, "furn"));
+    groups.push(`<tbody>\n${rows.join("\n")}\n</tbody>`);
   }
   return `<div class="town${newPage ? " new-page" : ""}" id="town-${t.key}">
 <div class="town-head"><p class="town-label">${t.labelName}</p><h3>${t.name}</h3>
@@ -57,9 +59,7 @@ function townBlock(t, { newPage }) {
 <table class="tbl town-key">
 <colgroup><col class="c-ob"><col class="c-quiet"><col class="c-loud"><col class="c-d"></colgroup>
 <thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th class="num">Difficulty</th></tr></thead>
-<tbody>
-${rows.join("\n")}
-</tbody>
+${groups.join("\n")}
 </table>
 </div>`;
 }

@@ -244,7 +244,11 @@ export function townMap(town) {
   }
 
   const body = [...parts.ground, ...parts.edge, ...parts.roadInk, ...parts.roadFill, ...parts.fabric, ...parts.marks, ...labelSvg].join("\n");
-  const title = `Map of ${town.name}: ${town.locations.map((l) => `${l.n} ${l.place}`).join(", ")}, the lock-up and the way out`;
+  // the map's alt text: its places, then what the eyes and the star mark
+  const watched = town.locations.filter((l) => [...l.waysIn, ...l.then].some((o) => o.watched));
+  const host = town.locations.find((l) => l.furniture);
+  const eyes = watched.length === town.locations.length ? "Every location is watched" : watched.length ? `Watched: ${watched.map((l) => `${l.n} ${l.place}`).join(", ")}` : "No location is watched";
+  const title = `Map of ${town.name}: ${town.locations.map((l) => `${l.n} ${l.place}`).join(", ")}, the lock-up and the way out. ${eyes}; the star marks the furniture, at ${host.place}.`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="map-${town.key}-title">\n<title id="map-${town.key}-title">${esc(title)}</title>\n${body}\n</svg>\n`;
 }
 

@@ -280,7 +280,7 @@
           "out": [300, 428],
           "label": [326, 376]
         },
-        "lockup": { "x": 300, "y": 315, "label": "below" },
+        "lockup": { "x": 215, "y": 345, "label": "below" },
         "cottages": 48,
         "trees": 6,
         "newPage": false

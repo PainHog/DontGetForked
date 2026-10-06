@@ -80,7 +80,7 @@ function loadArt(name) {
     const buf = readFileSync(file);
     const { w, h } = rasterSize(buf);
     const mime = file.endsWith(".png") ? "image/png" : "image/jpeg";
-    svg = `<svg role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><image width="${w}" height="${h}" href="data:${mime};base64,${buf.toString("base64")}"/></svg>`;
+    svg = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><image width="${w}" height="${h}" href="data:${mime};base64,${buf.toString("base64")}"/></svg>`;
   } else if (file) {
     svg = readFileSync(file, "utf8")
       .replace(/<\?xml[^>]*\?>/g, "")
@@ -94,9 +94,11 @@ function loadArt(name) {
       svg = svg
         .replaceAll(`id="${id}"`, `id="${nid}"`)
         .replaceAll(`url(#${id})`, `url(#${nid})`)
-        .replaceAll(`href="#${id}"`, `href="#${nid}"`);
+        .replaceAll(`href="#${id}"`, `href="#${nid}"`)
+        .replaceAll(`aria-labelledby="${id}"`, `aria-labelledby="${nid}"`)
+        .replaceAll(`aria-describedby="${id}"`, `aria-describedby="${nid}"`);
     }
-    svg = svg.replace(/<svg\b/, `<svg role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet"`);
+    svg = svg.replace(/<svg\b/, `<svg preserveAspectRatio="xMidYMid meet"`);
   } else {
     const msg = `missing art: ${name}.svg`;
     if (!DRAFT) throw new Error(`${msg} (use --draft to build with placeholders)`);
@@ -107,12 +109,26 @@ function loadArt(name) {
   return svg;
 }
 
+/**
+ * Each picture's accessibility: a figure with data-alt="…" (the portraits, the cover) is an
+ * image with that text; a piece that names itself (the maps: role="img" and a <title>) keeps
+ * its own; anything else is decoration (chapter headers, part pages, spots), hidden on the
+ * figure itself so the tagged PDF writes no empty Figure for it.
+ */
 function inlineArt(html) {
   return html.replace(
     /<figure\b([^>]*?)\bdata-art="([^"]+)"([^>]*)>([\s\S]*?)<\/figure>/g,
     (_, pre, name, post, inner) => {
       const caption = (inner.match(/<figcaption[\s\S]*?<\/figcaption>/) ?? [""])[0];
-      return `<figure${pre}data-art="${name}"${post}>${loadArt(name)}${caption}</figure>`;
+      const alt = (`${pre} ${post}`.match(/\bdata-alt="([^"]*)"/) ?? [])[1];
+      let svg = loadArt(name);
+      let hidden = "";
+      if (alt) svg = svg.replace(/<svg\b/, `<svg role="img" aria-label="${alt}"`);
+      else if (!/^<svg\b[^>]*\brole="img"/.test(svg)) {
+        svg = svg.replace(/<svg\b/, `<svg aria-hidden="true"`);
+        hidden = ` aria-hidden="true"`;
+      }
+      return `<figure${pre}data-art="${name}"${post}${hidden}>${svg}${caption}</figure>`;
     });
 }
 

@@ -10,6 +10,8 @@ Reads book/art/stand-in/manifest.json, one entry per piece:
     "width": 2000,                   # output width in pixels (height follows the crop)
     "erase": [[x0, y0, x1, y1]],     # optional: patches of the result (fractions) painted the scan's paper tone,
                                      #   for a collector's stamp on blank paper; never over the drawing
+    "cutoff": 1,                     # optional: % clipped at each end when levelling, or [dark, light] (a higher
+                                     #   light figure whitens faint show-through from the back of the page)
     "ink": "#161618", "paper": "#f2f1ee" }   # optional duotone ends (default: the book's)
 
 Each scan is downloaded once into a cache outside the repository, cropped, turned into
@@ -66,7 +68,8 @@ def prep(entry):
     if im.width > out_w:
         im = im.resize((out_w, round(im.height * out_w / im.width)), Image.LANCZOS)
     # Level: the scan's paper goes to white, its ink to black (1% clipped at each end).
-    im = ImageOps.autocontrast(im, cutoff=entry.get("cutoff", 1))
+    cutoff = entry.get("cutoff", 1)
+    im = ImageOps.autocontrast(im, cutoff=tuple(cutoff) if isinstance(cutoff, list) else cutoff)
     # Two-tone from the book's ink to its paper colour.
     paper = hex_rgb(entry.get("paper", "#f2f1ee"))
     im = ImageOps.colorize(im, black=hex_rgb(entry.get("ink", "#161618")), white=paper)

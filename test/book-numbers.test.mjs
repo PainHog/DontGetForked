@@ -296,7 +296,7 @@ test("the Castle Duties table (Chapter 2) is DGF.duties", () => {
 /** Each Entity's entry in Chapter 2, as the reader's text of its parts. */
 const ENTRIES = [...chapter(CH.ch2).matchAll(/<article class="entry" id="entity-(\d+)">([\s\S]*?)<\/article>/g)].map((m) => ({
   n: Number(m[1]),
-  name: plain(m[2].match(/<h3>([\s\S]*?)<\/h3>/)[1]),
+  name: plain(m[2].match(/<h4 class="name">([\s\S]*?)<\/h4>/)[1]),
   dice: [...m[2].matchAll(/<p class="dice">([\s\S]*?)<\/p>/g)].map((d) => plain(d[1])),
   paras: [...m[2].matchAll(/<p class="(?:sig|pick)">([\s\S]*?)<\/p>/g)].map((d) => plain(d[1])),
 }));
@@ -346,20 +346,11 @@ test("each Entity's Gift, Perks, Castle Duty, Weakness and Tell (Chapter 2) are 
   }
 });
 
-const SIGNATURE_DIFFERS = new Set(["witch"]); // BA-03: the config's Hedge Spell has "(in a local chase, only hers)", the book's entry hasn't
-
 test("each signature ability (Chapter 2) is DGF.entities' signature, and does its standard effect", () => {
   for (const [i, e] of DGF.entities.entries()) {
-    if (SIGNATURE_DIFFERS.has(e.key)) continue;
     assert.ok(ENTRIES[i].paras.includes(`${e.signature.name} (signature): ${e.signature.text}`), `${e.key}: signature`);
   }
   for (const e of DGF.entities) assert.ok(e.signature.text.startsWith(effectText(e.signature)), `${e.key}: the signature's text starts with its effect (${e.signature.effect})`);
-});
-
-test("the Witch's Hedge Spell says the same in the book and the config (BA-03)", { todo: "BA-03: book lacks “(in a local chase, only hers)”" }, () => {
-  const e = DGF.entities.find((x) => x.key === "witch");
-  const i = DGF.entities.indexOf(e);
-  assert.ok(ENTRIES[i].paras.includes(`${e.signature.name} (signature): ${e.signature.text}`));
 });
 
 test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
@@ -442,6 +433,11 @@ test("the shopping table (Chapter 8) is DGF.shoppingTable, its kinds and places 
   }));
 });
 
+test("every kind has three places, and Chapter 8 says how to place a list (V15)", () => {
+  for (const d of DGF.duties) assert.equal(d.where.split(", ").length, 3, `${d.name}: three places, so a d3 always lands on one`);
+  says(TXT.ch8, "a d3 or pick, one item per place; if a kind has more items than places, two may share a place", "Chapter 8, Rolling a Town");
+});
+
 test("the villagers (Chapter 8) are DGF.villagers", () => {
   assert.deepEqual(tableAfter(CH.ch8, "The Villagers"), DGF.villagers.who.map((w, i) => [`${i + 1}`, w, DGF.villagers.doing[i]]));
 });
@@ -498,7 +494,9 @@ test("Chapter 9's towns are book/src/towns.json, built from the tables, with the
       assert.ok(count >= 1 && count <= 3, `${t.key}: ${l.place} has 1–3 obstacles`);
     }
     const map = read(`book/art/map-${t.key}.svg`).match(/<title[^>]*>([^<]*)<\/title>/)[1];
-    assert.equal(map, `Map of ${t.name}: ${t.locations.map((l, n) => `${n + 1} ${l.place}`).join(", ")}, the lock-up and the way out`, `${t.key}: the map's title names its locations`);
+    const eyes = t.locations.every((l) => [...l.waysIn, ...l.then].some((o) => o.watched)) ? "Every location is watched" : null;
+    assert.ok(eyes, `${t.key}: every location is watched (the map title's wording assumes it)`);
+    assert.equal(map, `Map of ${t.name}: ${t.locations.map((l, n) => `${n + 1} ${l.place}`).join(", ")}, the lock-up and the way out. ${eyes}; the star marks the furniture, at ${t.locations[at].place}.`, `${t.key}: the map's title (its alt text) names its locations, the eyes and the star`);
   }
 });
 
@@ -509,7 +507,7 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   // the dice, in the order the comment under the example records them (rolled for real)
   const comment = ex.match(/<!-- Every die above was rolled for real[\s\S]*?-->/);
   assert.ok(comment, "the example records its dice");
-  says(comment[0].replace(/\s+/g, " "), "Tell checks d6 2, 1; Werewolf d12 10 + Mask 4; Witch d10 1 + Monster 4; chase ground d6 6, Witch d12 12 + Monster 3; ground 6, d12 2 + Monster 9; ground 5, d10 5 + Monster 7; Dracula d8 7 + Mask 2; creature d10 5 + Mask 2; Witch d10 7 + Monster 4; Tell check d6 4; whose (1–3 Dracula, 4–6 the creature) d6 6", "the example's dice comment");
+  says(comment[0].replace(/\s+/g, " "), "Tell checks d6 2, 1; Werewolf d12 10 + Mask 4; Witch d10 1 + Monster 4; chase ground d6 6, Witch d12 12 + Monster 3; ground 6, d12 2 + Monster 9; ground 5, d10 5 + Monster 7; Dracula d8 7 + Mask 2; Creature d10 5 + Mask 2; Witch d10 7 + Monster 4; Tell check d6 4; whose (1–3 Dracula, 4–6 the Creature) d6 6", "the example's dice comment");
   assert.ok(html.indexOf("<h3>An Example of Play</h3>") > html.indexOf('id="town-thistlewick"'), "the example follows Thistlewick");
 
   const town = TOWNS.find((t) => t.key === "thistlewick");
@@ -575,7 +573,7 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   const door = ob(loc("china"), "frontDoor");
   const dracSly = raise(E.dracula.dice.sly, +1);
   r = { t: 7, s: 2, d: door.difficulty };
-  says(text, `Sly d${E.dracula.dice.sly}, a d${dracSly} with his Butler duty, ${r.t} + ${r.s} = ${r.t + r.s} against ${r.d}`, "Turn 2, the china shop");
+  says(text, `Sly d${E.dracula.dice.sly}, a d${dracSly} with his Butler Duty, ${r.t} + ${r.s} = ${r.t + r.s} against ${r.d}`, "Turn 2, the china shop");
   assert.equal(band(r.t + r.s, r.d), "success");
   const back = ob(loc("china"), "backRoom");
   r = { t: 5, s: 2, d: back.difficulty };
@@ -595,7 +593,7 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   assert.ok([...loc("ironmonger").waysIn, ...loc("ironmonger").then].some((o) => o.watched), "the ironmonger is watched");
   assert.ok(tellGoesOff(4), "a Tell check of 4 goes off");
   suspicion += DGF.suspicion.tell;
-  says(text, `the Tell check is a 4, and a second roll picks the creature, who stands a head above the crowd. Suspicion ${suspicion}.`, "Turn 3");
+  says(text, `the Tell check is a 4, and a second roll picks the Creature, who stands a head above the crowd. Suspicion ${suspicion}.`, "Turn 3");
   says(text, `Three Turns gone, ${WORD[DGF.turns - 3]} to go.`, "Turn 3");
   says(text, `Suspicion is ${suspicion} of ${Lb.limit}`, "Turn 3");
   assert.ok(suspicion < Lb.limit, "the hunt hasn't started");
@@ -618,6 +616,7 @@ test("docs/CORE-RULES.md's Starting numbers table is DGF.labels", () => {
   assert.deepEqual(row("Lock-up Difficulty"), LABELS.map((k) => `${L[k].lockup}`));
 });
 
-test("docs/CORE-RULES.md's chase summary gives the final flight's escape by label (BA-21)", { todo: "BA-21: CORE-RULES Chases still says “[S9: 4 local, 6 final]”" }, () => {
-  assert.ok(!read("docs/CORE-RULES.md").includes("[S9: 4 local, 6 final]"));
+test("docs/CORE-RULES.md's chase summary gives the escape numbers by label (BA-21)", () => {
+  says(read("docs/CORE-RULES.md"), `Reach the escape number [S9, B3: ${DGF.lead.localEscape} in a local chase; in the final flight ${L.easy.finalEscape} on Easy and Standard, ${L.hard.finalEscape} on Hard]`, "CORE-RULES, Chases");
+  assert.equal(L.easy.finalEscape, L.standard.finalEscape);
 });

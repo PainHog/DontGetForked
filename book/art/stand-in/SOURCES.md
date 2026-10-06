@@ -20,7 +20,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Samuel Palmer (British, 1805-1881); 1879 (etching for Milton's Il Penseroso)
 - **Source:** https://commons.wikimedia.org/wiki/File:Samuel_Palmer_-_The_Lonely_Tower_-_Google_Art_Project_(2397075).jpg
 - **Licence:** Public domain (PD-Art|PD-old-100-1923|deathyear=1881). Palmer died 1881; published 1879; PD-Art.
-- **Audit:** Ruined tower on its hill, trees rooted on the slope, crescent moon on the horizon. No figures in the crop.
+- **Audit:** Ruined tower on its hill, trees rooted on the slope, crescent moon on the horizon. The bottom edge cuts, deliberately, the top of a reclining shepherd's hat (bottom left) and a small ox-wain on the horizon by the moon: the scene continues out of frame (book audit BA-34; raising the crop loses the moon). The plate's border and paper at the right edge are cropped off (BA-33, 2026-10-06).
 
 ## part2-village: Part Two title page
 
@@ -28,7 +28,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Carl Bloch (Danish, 1834-1890); 1881
 - **Source:** https://commons.wikimedia.org/wiki/File:Dorpje_aan_het_water,_bij_maanlicht,_RP-P-1995-419.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1890.
-- **Audit:** Houses on the shore, moon in the sky. No figures. Signature cropped off.
+- **Audit:** Houses standing on the shore, a church spire and a cottage in the distance. No figures. Re-cropped lower on 2026-10-06 (book audit BA-46) so the whole village shows on its shore; the moon is now above the frame. Signature cropped off.
 
 ## ch01-castle: Chapter 1 header
 
@@ -44,7 +44,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Anonymous engraver for Ferrante Imperato; Dell'Historia Naturale, Naples, 1599
 - **Source:** https://commons.wikimedia.org/wiki/File:RitrattoMuseoFerranteImperato.jpg
 - **Licence:** Public domain (PD-art|PD-old-100). Published 1599; PD-art.
-- **Audit:** Specimens are fixed to the vaulted ceiling and shelves as in a real cabinet; shelving and a stuffed bird cut by the frame edge, deliberately. The visitors of the original are cropped out.
+- **Audit:** Re-cropped lower on 2026-10-06 (book audit BA-37): the strip now shows the room — the vault and its wall with the specimens fixed to it, the window, the shelves with stuffed birds and books — so the specimens read as mounted, not floating. A visitor's pointer runs out of the bottom edge (held below the frame) and a sawfish's bill leans on the shelving; the shelving is cut by the frame edges, deliberately. The visitors of the original are cropped out.
 
 ## ch03-dice: Chapter 3 header
 
@@ -76,7 +76,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Félix Vallotton (Swiss-French, 1865-1925); 1893
 - **Source:** https://commons.wikimedia.org/wiki/File:F%C3%A9lix_Vallotton,_La_Manifestation_(The_Demonstration),_1893,_NGA_42211.jpg
 - **Licence:** CC0 (CC0). Vallotton died 1925 (PD-old-100 from 2026); published 1893; National Gallery of Art scan, CC0.
-- **Audit:** Running figures caught mid-stride (Vallotton's style: solid black shapes); heads and feet cut by the frame edge, deliberately. The fallen figure and the flying hat of the original are cropped out.
+- **Audit:** Running figures caught mid-stride (Vallotton's style: solid black shapes, no ground drawn); heads and feet cut by the frame edge, deliberately. The fallen figure and the flying hat of the original are cropped out (the bottom raised slightly on 2026-10-06 so no fragment of the fallen figure shows, book audit BA-44).
 
 ## ch07-dawn: Chapter 7 header
 
@@ -108,7 +108,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Samuel Palmer (British, 1805-1881); 1857 (Etching Club)
 - **Source:** https://commons.wikimedia.org/wiki/File:Samuel_Palmer,_The_Rising_Moon,_1857,_NGA_119976.jpg
 - **Licence:** CC0 (CC0). Palmer died 1881; National Gallery of Art scan, CC0.
-- **Audit:** Sheep lying in the field, a figure standing, cypresses and moon. Signature cropped off.
+- **Audit:** Sheep lying in the field, a figure standing, cypresses and moon. Signature, plate edge and paper margins cropped off (narrowed on 2026-10-06, book audit BA-38).
 
 ## spot-watchman: Spot (Chapter 5 end)
 
@@ -132,7 +132,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Jacobus Ludovicus Cornet (Dutch, 1815-1882); 1825-1882
 - **Source:** https://commons.wikimedia.org/wiki/File:Lantaarn,_RP-P-BI-6405X.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1882.
-- **Audit:** A lantern standing on a ledge in a dark room; the ledge is visible under it.
+- **Audit:** A lantern standing on a ledge in a dark room; the ledge is visible under it, but not what holds the ledge (lost in the dark; book audit BA-43, accepted for a stand-in).
 
 ## spot-owl: Spot (Chapter 2 end)
 
@@ -140,7 +140,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Thomas Bewick (British, 1753-1828); A History of British Birds, vol. 1, 1797 (scan from the 1847 edition)
 - **Source:** https://commons.wikimedia.org/wiki/File:Bewick_Thomas_Barn_Owl_Tyto_alba.png
 - **Licence:** Public domain (PD-old-auto-expired|deathyear=1828). Bewick died 1828; PD-old-auto-expired.
-- **Audit:** Owl perched on a stump, talons gripping the bark; stump rooted, leaves attached to branches. Two eyes, two feet. Printed caption cropped off.
+- **Audit:** Owl perched on a stump, talons gripping the bark; stump rooted, leaves attached to branches. Two eyes, two feet. Printed caption cropped off. The text printed on the back of the page showed through faintly; the levelling now clips the lightest 35% to paper (`cutoff` in the manifest, 2026-10-06, book audit BA-35), which removes it and keeps the engraving.
 
 ## spot-windmill: Spot (Chapter 6 end)
 
@@ -148,7 +148,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Johannes van Cuylenburgh (Dutch, c.1772-1841); 1803-1841
 - **Source:** https://commons.wikimedia.org/wiki/File:Landschap_met_molen_bij_maanlicht,_RP-P-BI-6653.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1841.
-- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects.
+- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects. Plate margin at the top and right cropped off (2026-10-06, book audit BA-39).
 
 ## spot-bonfire: Spot (Chapter 8 end)
 
@@ -176,7 +176,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Anonymous engraver, for Charles Malo's Almanach des Spectacles (Paris, Louis Janet); 1821 (role created 1820, Théâtre de la Porte Saint-Martin)
 - **Source:** https://commons.wikimedia.org/wiki/File:Philippe-Am%C3%A9d%C3%A9e_Roustan_dans_le_r%C3%B4le_de_Lord_Ruthwen.jpg
 - **Licence:** Public domain (PD-anon-70-EU). Anonymous work published 1821 (205 years old, over the 150-year bar for unknown artists); Commons tags it PD-anon-70-EU.
-- **Audit:** The actor stands on the stage floor, both feet down; sword hung from his belt, plumed hat on his head. Character: two eyes (profile, one visible), two arms (right pointing, five fingers; left on hip), two legs. The plate's printed border shows at the left edge; the caption is cropped off.
+- **Audit:** The actor stands on the stage floor, both feet down; sword hung from his belt, plumed hat on his head. Character: two eyes (profile, one visible), two arms (right pointing, five fingers; left on hip), two legs. The plate's printed border rules and paper margins show at both sides (book audit BA-40: cropping inside them cuts the feet at this frame's shape, and an erase leaves a visible seam, so they stay until the illustrator's art); the caption is cropped off.
 
 ### creature-costume: Frankenstein’s Creature, in costume
 
@@ -185,7 +185,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Source:** https://commons.wikimedia.org/wiki/File:Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout,_1825_De_Reuse_Familie_(titel_op_object),_BI-B-FM-117-12.jpg (prepared from Commons' 1920 px rendition)
 - **Licence:** CC0 (Rijksmuseum Amsterdam scan released CC0), checked 2026-10-06; artist died 1869, published 1825.
 - **Replaces** (2026-10-06): Pietro Longhi's *Il gigante Magrat* (Ca' Rezzonico, Venice), because Italian law lets state museums charge for commercial reproductions of works they hold, even out of copyright.
-- **Audit:** Three festival giants standing on the cobbles, their skirts reaching the ground; a fifer (fife held to his mouth) and a drummer (drum hung at his side, sticks in hand) standing at their feet, two legs each, both feet down. Faces turned to us show two eyes. The other two giants and the printed caption are cropped off.
+- **Audit:** Three festival giants standing on the cobbles, their skirts reaching the ground; a fifer (fife held to his mouth) and a drummer (drum hung at his side, sticks in hand) standing at their feet, two legs each, both feet down. Faces turned to us show two eyes. The other two giants and the printed caption are cropped off. A fold line in the scan runs down through the left giant (book audit BA-41; an erase would cut the drawing, so it stays until the illustrator's art).
 
 ### creature-revealed: Frankenstein’s Creature, revealed
 
@@ -210,7 +210,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Martin van Maële (1863-1926); 1906 (French edition of Conan Doyle's 'Lot No. 249', Société d'Édition et de Publications)
 - **Source:** https://commons.wikimedia.org/wiki/File:Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg
 - **Licence:** Public domain (CC-PD-Mark, PD-old-95-expired). Artist died 1926; published 1906; Commons: PD-old-95-expired.
-- **Audit:** The mummy sits up in its sarcophagus, both hands on the rim; a hieroglyph frieze on the sarcophagus; a bird-headed statue standing behind. Character: two eyes, two arms, head-wrapping on. Low-resolution scan: reference only. Not the film look.
+- **Audit:** The mummy sits up in its sarcophagus, both hands on the rim; a hieroglyph frieze on the sarcophagus; a bird-headed statue standing behind, and another statue cut by the left edge, deliberately. Character: two eyes, two arms (re-cropped on 2026-10-06 so the right arm shows whole from shoulder to the hand on the rim, and the printed rule along the top erased; book audit BA-42), head-wrapping on. Low-resolution scan: reference only. Not the film look.
 
 ### werewolf-costume: the Werewolf, in costume
 
@@ -242,7 +242,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Ludvík Strimpl (1880-1937); 1912 (cover of 'L'Homme invisible', Calmann-Lévy, Nouvelle Collection illustrée)
 - **Source:** https://commons.wikimedia.org/wiki/File:Wells_Strimpl_-_L%27homme_invisible.jpg
 - **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark). Artist died 1937; published 1912; Commons: PD-old-80-expired / PD-Art.
-- **Audit:** A skeleton crouches on a ledge by a window, hands and feet on the ledge, in a beam of light. Character: two arms, two legs, the skull turned away. Nothing floats.
+- **Audit:** A skeleton crouches on a ledge by a window in a beam of light, its pelvis and one foot on the ledge, the other leg hanging over it, its hands reaching out into the light. Character: two arms, two legs, the skull turned away. Nothing floats.
 
 ### ghost-costume: a Ghost, in costume
 
@@ -250,7 +250,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Anonymous engraver, Kirby's Wonderful and Scientific Museum, vol. II (London); 1804
 - **Source:** https://commons.wikimedia.org/wiki/File:Hammersmith_Ghost.PNG
 - **Licence:** Public domain (Author died more than 100 years ago public domain images, CC-PD-Mark). Anonymous work published 1804 (222 years old); Commons: author died more than 100 years ago.
-- **Audit:** A man under a white sheet, holding it up over his head, face peeping out; a door on its hinges with a bolt at the right, a lattice fence at the left, moon and clouds in the sky. The sheet runs out of the frame at the bottom.
+- **Audit:** A man under a white sheet, holding it up over his head, face peeping out; a door on its hinges with a bolt at the right, clouds in the sky. The sheet runs out of the frame at the bottom and the left. Re-cropped on 2026-10-06 (book audit BA-36) to drop a lattice fence at the left that had no posts in the frame and read as floating.
 
 ### ghost-revealed: a Ghost, revealed
 
@@ -266,7 +266,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Alice B. Woodward (1862-1951); 1897 (Hamish Hendry, 'Red Apple and Silver Bells', Blackie)
 - **Source:** https://commons.wikimedia.org/wiki/File:Page_10_of_%27Red_Apple_and_Silver_Bells._A_book_of_verse_for_children_..._Illustrated_by_A._B._Woodward%27_(11149264234).jpg
 - **Licence:** Public domain (Author died more than 70 years ago public domain images, CC-PD-Mark). Artist died 1951 (before 1955), published 1897; Commons: author died more than 70 years ago (British Library scan).
-- **Audit:** A child dressed as a witch (pointed hat, cloak) holds a tall staff topped with a ball, a large moon disc behind her; she runs out of the frame at the bottom. Character: two eyes, two hands on the staff.
+- **Audit:** A child dressed as a witch (pointed hat, cloak) holds a tall staff topped with a ball, a large moon disc behind her; she runs out of the frame at the bottom. Character: two eyes, one hand on the staff, the other at her cloak.
 
 ### witch-revealed: a Witch, revealed
 
