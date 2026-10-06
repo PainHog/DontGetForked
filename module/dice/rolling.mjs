@@ -153,10 +153,14 @@ function dialogContext(actor, values, raid) {
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));
     if (c.weakness) notices.push(t("DGF.Roll.notice.chaseWeakness"));
   } else if (c) notices.push(t(`DGF.Plan.${c.reason}`));
+  // B7: an approach only where someone's watching (Mesmerise) isn't offered until Watched, the way out or the lock-up is ticked
+  const watchedHere = !!(values.watched || values.wayOut || values.lockup);
   const describe = (a) => ({
     id: a.id, name: a.name, helper: a.payerName, charges: a.payer.charges,
-    effectText: t(`DGF.Effect.${a.effect}`, { trait: traitLabel(a.trait) }),
-    checked: chosen.has(a.id),
+    effectText: a.watchedOnly ? t("DGF.Effect.openWatched", { trait: traitLabel(a.trait) }) : t(`DGF.Effect.${a.effect}`, { trait: traitLabel(a.trait) }),
+    watchedOnly: !!a.watchedOnly,
+    disabled: !!a.watchedOnly && !watchedHere,
+    checked: chosen.has(a.id) && !(a.watchedOnly && !watchedHere),
   });
   const plan = buildRollPlan(buildInput(actor, values, raid));
   return {
@@ -191,6 +195,13 @@ function liveOdds(actor, raid, choices) {
       const out = root?.querySelector?.(".dgf-odds");
       if (!form || !out) return;
       const update = () => {
+        // B7: Mesmerise is on offer only while Watched, the way out or the lock-up is ticked
+        const named = (n) => form.elements?.namedItem?.(n);
+        const watchedHere = ["watched", "wayOut", "lockup"].some((n) => named(n)?.checked);
+        for (const box of root.querySelectorAll?.("input[data-watched-only]") ?? []) {
+          box.disabled = !watchedHere;
+          if (!watchedHere) box.checked = false;
+        }
         try { out.textContent = oddsLine(buildRollPlan(buildInput(actor, readRollForm(form, choices), raid))); } catch (err) { /* keep the last line */ }
       };
       root.addEventListener("change", update);

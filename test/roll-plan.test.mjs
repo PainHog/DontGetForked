@@ -86,13 +86,13 @@ test("abilities: raise, switch, hidden, open; at most one raise per roll, Castle
   p = plan(drac, { abilities: [bat] });
   assert.equal(p.trait, "nimble");
   assert.equal(p.traitDie, 10);
-  const mesmerise = ownAbility(drac, "signature"); // open with Charm
-  p = plan(drac, { abilities: [mesmerise], difficulty: 10 });
+  const mesmerise = ownAbility(drac, "signature"); // open with Charm, where someone's watching (B7)
+  p = plan(drac, { abilities: [mesmerise], difficulty: 10, watched: true });
   assert.equal(p.trait, "charm");
   assert.equal(p.difficulty, 8);
   assert.equal(p.open, true);
-  assert.deepEqual(plan(drac, { abilities: [mesmerise, bat] }).errors.map((e) => e.code), ["twoTraits"]);
-  assert.ok(plan(drac, { abilities: [mesmerise], chase: true }).errors.some((e) => e.code === "openInChase"));
+  assert.deepEqual(plan(drac, { abilities: [mesmerise, bat], watched: true }).errors.map((e) => e.code), ["twoTraits"]);
+  assert.ok(plan(drac, { abilities: [mesmerise], chase: true, watched: true }).errors.some((e) => e.code === "openInChase"));
 
   const wolf = roller("werewolf");
   p = plan(wolf, { abilities: [ownAbility(wolf, "signature")], second: "monster" }); // Good Dog
@@ -228,6 +228,26 @@ test("V17 Out of Sight: caught only while you or anyone with you carries loot or
   const drac = plan(roller("dracula"), { watched: true, companionCarrying: true });
   assert.equal(trouble(drac).caught, true);
   assert.equal(drac.carryingBy, "");
+});
+
+test("B7: Mesmerise opens an approach only where someone's watching (the way out and the lock-up always are)", () => {
+  const drac = roller("dracula");
+  const mes = ownAbility(drac, "signature");
+  assert.equal(mes.name, "Mesmerise");
+  const unwatched = plan(drac, { trait: "sly", abilities: [mes] });
+  assert.equal(unwatched.ok, false);
+  assert.ok(unwatched.errors.some((e) => e.code === "openNotWatched" && e.name === "Mesmerise"));
+  const watched = plan(drac, { trait: "sly", watched: true, abilities: [mes] });
+  assert.equal(watched.ok, true);
+  assert.equal(watched.trait, "charm");
+  assert.equal(watched.difficulty, 6, "2 lower");
+  assert.equal(plan(drac, { trait: "sly", wayOut: true, abilities: [mes] }).ok, true, "the way out is always watched");
+  assert.equal(plan(drac, { trait: "sly", lockup: "rescue", difficulty: 10, abilities: [mes] }).ok, true, "so is the lock-up");
+  const held = roller("dracula", { status: "captured", capturedTurn: 1 });
+  assert.equal(plan(held, { trait: "sly", lockup: "slip", turn: 2, difficulty: 10, abilities: [ownAbility(held, "signature")] }).ok, true, "slipping free (U1)");
+  // the other approaches of their own don't need a watcher
+  const creature = roller("creature");
+  assert.equal(plan(creature, { trait: "sly", abilities: [ownAbility(creature, "gift")] }).ok, true, "Mountain Stride");
 });
 
 test("Jekyll becomes Hyde when the Monster shows on his roll (Steady Nerves: by 2+), even unseen", () => {

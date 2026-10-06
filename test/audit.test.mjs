@@ -364,6 +364,26 @@ test("V17 Out of Sight at the table: the roll dialog's tick for someone with him
   await settle();
 });
 
+test("B7 at the table: the roll dialog offers Mesmerise only where someone's watching; refused otherwise", async () => {
+  const { promptRoll } = await import("../module/dice/rolling.mjs");
+  const mes = `ability:${dracula.id}:signature`;
+  const box = (html) => html.match(new RegExp(`<input type="checkbox" name="${mes}"[^>]*>`))?.[0] ?? "";
+  let content = "";
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 8, abilities: [] }));
+  assert.match(box(content), /disabled/, "unwatched: not offered");
+  assert.match(content, /where someone’s watching|where someone's watching/);
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 8, abilities: [], watched: true }));
+  assert.doesNotMatch(box(content), /disabled/, "watched: offered");
+  // ticked anyway (a macro, or a stale form): the roll is refused with words
+  dialogResponders.push(press("roll", { trait: "sly", second: "mask", difficulty: 8, [mes]: true }), press("cancel"));
+  const before = log.warnings.length;
+  await asUser(BEN, () => api.roll(dracula, { trait: "sly" }));
+  await settle();
+  assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only where someone/.test(w)));
+});
+
 test("the roll dialog's furniture tick and the furniture switch say what they do", () => {
   const lang = JSON.parse(readFileSync(join(ROOT, "lang/en.json"), "utf8"));
   // a premade town prints the furniture's obstacle already 2 harder (Chapter 9): the tick must not add it twice

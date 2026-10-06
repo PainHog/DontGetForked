@@ -13,7 +13,7 @@
   </div>
   <fieldset>
     <legend>{{localize "DGF.Roll.abilities"}}</legend>
-    {{#each own}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{/each}}
+    {{#each own}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}{{#if disabled}} disabled{{/if}}{{#if watchedOnly}} data-watched-only{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{/each}}
     {{#unless own.length}}<p class="dgf-hint">{{localize "DGF.Roll.noAbilities"}}</p>{{/unless}}
     <p class="dgf-hint">{{localize "DGF.Roll.abilityHint"}}</p>
   </fieldset>

@@ -34,7 +34,7 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Gifts, Perks, Weaknesses and Tells: C3–C9 (rulebook Chapter 2).
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", text: "open an approach with Charm where someone’s watching. He bends a mind with a look." },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", watchedOnly: true, text: "open an approach with Charm where someone’s watching. He bends a mind with a look." },
     gift: {
       name: "Shape of the Night",
       versions: [

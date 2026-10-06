@@ -382,7 +382,7 @@ const plan = (r, opts = {}) => buildRollPlan({ roller: r, trait: "sly", second: 
 const own = (r, slot) => {
   const e = DGF.entities.find((x) => x.key === r.system.entityKey);
   const a = slot === "signature" ? e.signature : e.gift.versions.find((v) => v.key === r.system.gift);
-  return { slot, name: a.name, effect: a.effect, trait: a.trait ?? null, noLoot: !!a.noLoot, payerId: r.id, payerName: "Me", payer: { charges: r.system.charges.value, weaknessInPlay: !!r.system.weaknessInPlay } };
+  return { slot, name: a.name, effect: a.effect, trait: a.trait ?? null, noLoot: !!a.noLoot, watchedOnly: !!a.watchedOnly, payerId: r.id, payerName: "Me", payer: { charges: r.system.charges.value, weaknessInPlay: !!r.system.weaknessInPlay } };
 };
 
 test("a chase roll the tracker runs: only the ground's traits; the Weakness in play steps the die down and blocks overdraw in the flight", () => {
@@ -485,7 +485,7 @@ test("B2: the furniture's extra obstacle is 2 harder than rolled, at most 12", a
   assert.deepEqual(capped.diffParts, []);
   // an approach of its own still takes 2 off the (harder) obstacle
   const drac = roller("dracula");
-  assert.equal(plan(drac, { trait: "sly", difficulty: 8, furniture: true, abilities: [own(drac, "signature")] }).difficulty, 8);
+  assert.equal(plan(drac, { trait: "sly", difficulty: 8, furniture: true, watched: true, abilities: [own(drac, "signature")] }).difficulty, 8);
 });
 
 test("B2: while furniture is carried, Suspicion rises by 1 at the end of each Turn (its own event per Turn)", async () => {

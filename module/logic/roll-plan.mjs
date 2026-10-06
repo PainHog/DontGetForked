@@ -18,7 +18,7 @@
  *   trait,                              // the trait the obstacle calls for
  *   second,                             // "mask" | "monster"
  *   difficulty,                         // the obstacle's Difficulty (or the way out's)
- *   abilities: [{ payerId, payerName, slot, name, effect, trait, noLoot,
+ *   abilities: [{ payerId, payerName, slot, name, effect, trait, noLoot, watchedOnly,
  *                 payer: { charges, weaknessInPlay } }],   // spent before the roll
  *   duty,      // at a location whose list item is the roller's Castle Duty kind
  *   loud,      // taking the loud way
@@ -80,6 +80,8 @@ export function buildRollPlan(input) {
   // Where the roll is: the way out (Chapter 4) or the lock-up (Chapter 6) list their own traits.
   const mode = input.wayOut ? "wayOut" : input.lockup === "slip" ? "slip" : input.lockup === "rescue" ? "rescue" : "";
   const listed = mode === "wayOut" ? DGF.wayOut : mode ? DGF.lockup[mode] : null;
+  // B7: Mesmerise opens an approach only where someone's watching (the way out and the lock-up always are)
+  if (opener?.watchedOnly && !input.watched && !mode) errors.push({ code: "openNotWatched", name: opener.name });
   const captive = sys.status === "captured";
   if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free
   if (mode === "slip") for (const code of slipProblems(sys, { turn: Number(input.turn) || 0 })) errors.push({ code });

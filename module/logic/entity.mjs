@@ -78,7 +78,7 @@ export function rollAbilities(system) {
   const out = [];
   const sig = e.signature;
   if (DGF.effects.includes(sig.effect)) {
-    out.push({ slot: "signature", name: sig.name, effect: sig.effect, trait: sig.trait ?? null, noLoot: !!sig.noLoot });
+    out.push({ slot: "signature", name: sig.name, effect: sig.effect, trait: sig.trait ?? null, noLoot: !!sig.noLoot, watchedOnly: !!sig.watchedOnly });
   }
   const gift = e.gift.versions.find((v) => v.key === system.gift) ?? e.gift.versions.find((v) => v.default);
   if (gift && DGF.effects.includes(gift.effect)) {
