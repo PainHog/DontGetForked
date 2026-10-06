@@ -1,6 +1,6 @@
 Now: The online version now runs a whole night: chases with the mob on your heels, the lock-up and rescues, group and tell checks, and how the year went at the end.
 Next: Three ready-to-play towns with maps (Puddlecombe, Thistlewick and Gallowsmere), and Richard's first two-player try of the online version.
-Number: Design decisions made = 79
+Number: Design decisions made = 80
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 133

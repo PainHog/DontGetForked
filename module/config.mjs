@@ -80,7 +80,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost.", default: true },
       { key: "keeperOfTreasures", name: "Keeper of Treasures", text: "“Drop an item” is never your Cost." },
-      { key: "fearTheCurse", name: "Fear the Curse", text: "The mob in your local chase is 1 easier: nobody wants to get too close." },
+      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob in your local chase is 1 easier: nobody wants to get too close." },
     ],
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
@@ -95,7 +95,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "nightRunner", name: "Night Runner", text: "Your local chase starts at Lead 2.", default: true },
+      { key: "nightRunner", name: "Night Runner", text: "When you flee alone, your local chase starts at Lead 2.", default: true },
       { key: "shortcut", name: "Shortcut", text: "The way out is 2 easier when you roll it." },
       { key: "fetch", name: "Fetch", text: "While you’re in the final flight, it starts at Lead 3: you know the way home." },
     ],
@@ -320,8 +320,8 @@ DGF.perkRules = Object.freeze({
   // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs):
   wallCrawler: Object.freeze({ chaseTrait: "nimble" }), // In a chase you can always roll Nimble.
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
-  nightRunner: Object.freeze({ localLead: 2 }), // Your local chase starts at Lead 2.
-  fearTheCurse: Object.freeze({ localMobEase: 1 }), // The mob in your local chase is 1 easier.
+  nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
+  fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob in your local chase is 1 easier.
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured.
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep what you carry.
