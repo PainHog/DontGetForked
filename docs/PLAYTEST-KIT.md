@@ -4,7 +4,7 @@ For Richard's first playtest with real people. It adds no rules: everything at t
 
 ## Before the session
 
-- **Players:** 3 or 4 is the sweet spot for a first test (the book allows 1–5), plus you as Storyteller.
+- **Players:** 3 or 4 is the sweet spot for a first test (the book allows 3–5), plus you as Storyteller.
 - **Time:** 2–3 hours: about 20 minutes to pick Entities, then one raid. A second raid if there's time, on a harder town.
 - **Print:** an **Entity Sheet** per player (page 26), an **At the Table** page per player (page 27), and the town's page from **Chapter 9** (pages 23–25) for you.
 - **Dice:** a d4, d6, d8, d10 and d12 per player (the d6 is the Mask, the d10 the Monster); a d20 for you. Counters or a sheet for Suspicion, the Turn and the Lead.
