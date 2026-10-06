@@ -123,7 +123,7 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 | chaseTable = "placeholder" (content) | 92% (-0.5) | 76% (+0.1) | 56% (-0.2) | 9.0% | 0.35 | 27% |
 | chaseTable = "B" (content) | 93% (+0.9) | 78% (+2.0) | 59% (+3.4) | 5.1% | 0.34 | 28% |
 | chaseTable = "C" (content) | 92% (+0.3) | 76% (+0.4) | 58% (+1.6) | 7.4% | 0.35 | 27% |
-| partyPolicy = "together" (policy) | 90% (-2.4) | 36% (-40.1) | 16% (-40.1) | 7.1% | 0.31 | 28% |
+| partyPolicy = "together" (policy) | 92% (-0.5) | 57% (-18.8) | 39% (-17.0) | 10.5% | 0.34 | 23% |
 | partyPolicy = "singles" (policy) | 90% (-2.2) | 76% (-0.5) | 55% (-1.5) | 10.1% | 0.36 | 28% |
 | captiveItems = "kept" (rule) | 92% (+0.3) | 77% (+0.9) | 57% (+0.9) | 9.3% | 0.36 | 27% |
 | multiCaught = "separate" (rule) | 92% (+0.0) | 76% (+0.0) | 56% (+0.0) | 9.3% | 0.36 | 27% |
@@ -160,8 +160,15 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 | groupRule = "best3" (rule) | 92% (+0.4) | 76% (+0.1) | 56% (+0.3) | 9.5% | 0.37 | 27% |
 | groupRule = "best4" (rule) | 92% (+0.4) | 76% (+0.1) | 56% (+0.3) | 9.5% | 0.37 | 27% |
 | tellScope = "entity" (rule) | 92% (-0.3) | 73% (-3.3) | 54% (-1.7) | 9.8% | 0.36 | 28% |
+| openedRule = "othersMayFollow" (rule) | 92% (+0.2) | 75% (-1.3) | 54% (-1.7) | 9.3% | 0.36 | 27% |
 | exitTries = "each" (rule) | 92% (+0.0) | 76% (+0.0) | 56% (+0.1) | 9.2% | 0.36 | 27% |
 | triesPerTurn = "one" (rule) | 92% (+0.1) | 76% (+0.2) | 57% (+0.6) | 9.5% | 0.36 | 27% |
+| planTime = "perObstacle" (policy) | 92% (+0.0) | 76% (+0.0) | 56% (+0.0) | 9.3% | 0.36 | 27% |
+| planTime = "perTurn" (policy) | 92% (-0.2) | 75% (-0.9) | 54% (-1.6) | 10.9% | 0.37 | 27% |
+| openPolicy = "greedy" (policy) | 92% (+0.0) | 76% (+0.0) | 56% (+0.0) | 9.3% | 0.36 | 27% |
+| openPolicy = "last" (policy) | 91% (-1.3) | 72% (-3.8) | 54% (-1.9) | 9.7% | 0.37 | 25% |
+| groupPolicy = "all" (policy) | 92% (+0.0) | 76% (+0.0) | 56% (+0.0) | 9.3% | 0.36 | 27% |
+| groupPolicy = "best2" (policy) | 92% (+0.0) | 76% (-0.1) | 56% (-0.2) | 9.3% | 0.36 | 27% |
 | monsterPolicy = "mask" (policy) | 90% (-1.8) | 72% (-4.1) | 42% (-14.2) | 6.0% | 0.82 | 88% |
 | monsterPolicy = "monster" (policy) | 88% (-4.1) | 60% (-16.4) | 52% (-4.1) | 13.1% | 0.29 | 0% |
 | caughtWeight = 0.4 (policy) | 90% (-1.9) | 75% (-1.3) | 56% (-0.5) | 9.1% | 0.40 | 29% |
@@ -169,6 +176,10 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 | chargePolicy = "hoard" (policy) | 85% (-6.6) | 61% (-15.2) | 42% (-14.4) | 9.6% | 0.40 | 31% |
 | furniturePolicy = "never" (policy) | 94% (+1.5) | 77% (+0.5) | 57% (+0.6) | 8.7% | 0.35 | 29% |
 | furniturePolicy = "always" (policy) | 90% (-2.3) | 63% (-13.1) | 46% (-10.2) | 15.0% | 0.37 | 22% |
+| outOfSightRule = "place" (content) | 92% (-0.2) | 76% (-0.3) | 55% (-0.6) | 9.5% | 0.36 | 27% |
+| outOfSightRule = "half" (content) | 92% (-0.1) | 76% (-0.5) | 57% (+0.5) | 9.1% | 0.36 | 27% |
+| outOfSightRule = "handed" (content) | 92% (-0.1) | 76% (-0.3) | 56% (-0.3) | 9.3% | 0.36 | 27% |
+| outOfSightRule = "handedSmart" (content) | 92% (+0.2) | 76% (-0.1) | 56% (+0.1) | 9.1% | 0.36 | 27% |
 | roster = "placeholder" (content) | 92% (-0.1) | 76% (-0.4) | 55% (-0.9) | 9.5% | 0.39 | 32% |
 | roster = "proposed" (content) | 92% (+0.0) | 76% (+0.0) | 56% (+0.0) | 9.3% | 0.36 | 27% |
 | dutyEdge = false (content) | 92% (-0.1) | 76% (-0.3) | 55% (-0.9) | 9.5% | 0.37 | 27% |
