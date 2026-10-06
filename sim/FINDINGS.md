@@ -236,7 +236,7 @@ Full report (2,000 raids per label and party size): every win and forked target 
 
 Tried: an opened approach 1 lower instead of 2 (`openEase: 1`, 1,500 raids): wins fall to 90.2 / 70.9 / 50.7% (Standard and Hard below target), forked rises to 0.5 / 5.8 / 10.2%, and the spread stays −2.6 to +3.1. Not adopted; the rule stays at 2. Recommendation for Richard: no further change until real playtests show an option that feels too strong or too weak at the table.
 
-## PT5's questions: long flights, runaway local chases, furniture noise (2026-10-06, for B6 and V1–V8)
+## PT5's questions: long flights, runaway local chases, furniture noise (2026-10-06, for B6 and V1–V9)
 
 New: chase-length histograms (`hist local rounds`, `hist local susp`, `hist final` in the recorder) and switches `finalMove`, `chaseSusp: capN`, `furnitureNoise`.
 
