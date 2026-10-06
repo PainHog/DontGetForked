@@ -150,7 +150,7 @@ export const PARAMS = {
     ref: "DESIGN Captured",
   },
   furnitureRule: {
-    kind: "rule", default: "noisySlowHard", values: ["noisySlowHard", "slow", "base", "hardLoc", "noisy", "both", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"],
+    kind: "rule", default: "noisySlowHard", values: ["noisySlowHard", "slow", "base", "hardLoc", "noisy", "both", "noisySlow", "slowHard", "slowWatched"],
     title: "What makes furniture risky (S7 slow; B2 2026-10-06: noisySlowHard is the rule)",
     doc: "base = carrying only (no Mask, Nimble one size smaller); hardLoc = the furniture's location is 2 harder; noisy = +1 Suspicion at the end of each Turn a piece is carried in town; both = hardLoc + noisy; slow = while carrying, a move takes two Turns; noisySlow = noisy + slow; slowHard = slow, and the furniture's extra obstacle is 2 harder (B2 candidate); slowWatched = slow, and the furniture's extra obstacle is always watched (B2 candidate); noisySlowHard = noisy + slow + the extra obstacle 2 harder (B2 candidate).",
     ref: "DESIGN Furniture; S7",
