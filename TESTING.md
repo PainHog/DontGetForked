@@ -42,6 +42,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 4. **GM** sees a **Cancel Suspicion** button on cards that raised Suspicion; **Ann** sees no buttons.
 5. Roll again with *Watched* ticked until you get Trouble: the card says **Caught! Someone was watching: a local chase starts (Chapter 6)** (with chases switched off, the GM's card offers **Start the local chase**; section 12 runs the chase). Unticked, Trouble says *Nobody was watching: no chase.*
 6. Tick *The way out of town*: the dialog's line says Difficulty 8 for Standard; the card says "against 8" and "the way out".
+   - Fetch (B5): make a **Werewolf** (any player) and set its Perk to *Fetch*. Ann ticks the way out again: Difficulty **7**, and the card adds *1 easier (Fetch)*. Set the Werewolf's Status to *Captured*: back to 8. Set it back to *Active* (or delete it) before section 4.
 
 ## 4. Costs
 
