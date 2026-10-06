@@ -212,7 +212,7 @@ export const PARAMS = {
   roster: {
     kind: "content", default: "approved", values: ["approved", "placeholder", "proposed"],
     title: "Which Entities",
-    doc: "approved = the real roster's dice (C1) and signature abilities (C2), with placeholder Gifts and Weakness types; placeholder = the anonymous E1–E8; proposed = approved plus the Gifts, Perks and Weakness timings proposed for the current interview question.",
+    doc: "approved = the real roster from module/config.mjs (dice C1, signatures C2, Gifts, Perks and Weakness timings); placeholder = the anonymous E1–E8; proposed = approved plus the Gifts, Perks and Weakness timings proposed for the current interview question.",
     ref: "DESIGN Decisions log (C1); module/config.mjs DGF.entities",
   },
   dutyEdge: {

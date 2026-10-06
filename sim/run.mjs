@@ -200,10 +200,10 @@ function sweepRow(name, M, B) {
 
 export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, runs, sweepRuns, out, packages, furniture }) {
   const lines = [];
-  lines.push(`# Don't Get Forked — simulator report: ${pkg} (rough, core rules draft 0.2)`, "");
+  lines.push(`# Don't Get Forked — simulator report: ${pkg} (core rules 1.19)`, "");
   lines.push(`Command: \`${cmd}\``, "");
   lines.push(`${runs} raids per label × party size (3, 4, 5 Entities) for the package table and the detail below; ${sweepRuns} for the presets and sweeps. Same seed → same report.`, "");
-  lines.push("**Everything here runs on placeholder content** (eight anonymous Entities, generated towns, placeholder Gifts, Duties, Weaknesses and Tells; see `sim/entities.mjs`). The numbers measure the core rules and the numbers in `sim/params.mjs`, not the finished game.", "");
+  lines.push("**The Entities are the approved roster** (dice, signatures, Gifts, Perks and Weakness timings read from `module/config.mjs`); towns are rolled with the book's town tables (`sim/town.mjs`). Players follow the policies in `sim/params.mjs`, which are simpler than real play.", "");
 
   if (packages) {
     lines.push("## Packages", "");
@@ -252,7 +252,7 @@ export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, r
     [sweepRow("baseline", baseM, baseM), ...Object.entries(presets).map(([k, M]) => sweepRow(k, M, baseM))]), "");
 
   lines.push("## Sweeps: what each judgement call is worth", "");
-  lines.push("Win rate (points vs the baseline at the same run count). Rules first, then player policies, then placeholder content.", "");
+  lines.push("Win rate (points vs the baseline at the same run count). Rules first, then player policies, then content.", "");
   const sw = [];
   for (const s of sweeps) sw.push(sweepRow(`${s.key} = ${JSON.stringify(s.value)}${s.key in PARAMS ? ` (${PARAMS[s.key].kind})` : ""}`, s.M, s.B));
   lines.push(table(["Variant", "Easy win", "Standard win", "Hard win", "Hard forked", "Hard captures", "Mask"], sw), "");

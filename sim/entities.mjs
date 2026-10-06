@@ -58,8 +58,8 @@ export const ROSTER = buildRoster();
 
 /**
  * The real roster's dice (C1, approved 2026-10-05), read from the Foundry config
- * so the book, the system and the simulator share one table. Gifts and Weakness
- * types are still placeholders (Dracula's Weakness is placeholder sunlight-type).
+ * so the book, the system and the simulator share one table. buildApproved() then
+ * overlays the approved signatures, Gifts, Perks and Weakness timings.
  */
 const APPROVED = DGF.entities.map((e) => [e.name, e.dice, e.key === "dracula" ? "sunlight" : "mob"]);
 
