@@ -14,7 +14,8 @@
  *             tells,   // the Tell checks made: [{ id, place, turn, goesOff, actorId, name }]
  *             list,    // the shopping list: [{ name, duty, essential }]
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
- *             furnitureLost } // F15: a carrier was captured: the piece is gone for the night
+ *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night
+ *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
  * 12th Turn ends), Chapter 5 (the Limit by difficulty; one roll, one rise; at the
@@ -48,6 +49,7 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     list: [],
     over: null,
     furnitureLost: false,
+    endedChase: null,
   };
 }
 
@@ -73,6 +75,7 @@ export function normalizeRaid(stored) {
     list: Array.isArray(s.list) ? s.list : [],
     over: s.over && typeof s.over === "object" ? s.over : null,
     furnitureLost: !!s.furnitureLost,
+    endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
 }
 

@@ -264,7 +264,7 @@ export function registerRaidOps() {
       const spent = setting(SETTINGS.autoCharges) ? Math.min(value, Math.max(0, Math.trunc(Number(count)) || 0)) : 0;
       const update = {};
       if (spent) update["system.charges.value"] = value - spent;
-      if (weakness) update["system.weaknessInPlay"] = true;
+      if (weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
       if (Object.keys(update).length) await actor.update(update);
       return { ok: true, spent };
     },

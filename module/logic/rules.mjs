@@ -238,15 +238,14 @@ export function tellGoesOff(face) {
 }
 
 /**
- * C3: is a Weakness in play this chase round (1-based)? "always" from round 1,
- * "soon" from round 3, "dawn" only in a final flight that dawn started. An
- * overdraw in the final flight puts any Weakness in play (S1), passed as `overdrawn`.
+ * C3 (B3: the Dawn timing was dropped): is a Weakness in play this chase round (1-based)?
+ * "always" from round 1, "soon" from round 3. An overdraw in the final flight puts
+ * any Weakness in play (S1), passed as `overdrawn`.
  */
-export function weaknessInPlay({ timing, round, final = false, byDawn = false, overdrawn = false }) {
+export function weaknessInPlay({ timing, round, overdrawn = false }) {
   if (overdrawn) return true;
   if (timing === "always") return true;
   if (timing === "soon") return round >= DGF.weaknessSoonRound;
-  if (timing === "dawn") return final && byDawn;
   throw new Error(`unknown Weakness timing: ${timing}`);
 }
 

@@ -141,13 +141,13 @@ export function buildRollPlan(input) {
   // Charges: one per ability, before the roll; at zero, overdraw (Suspicion +2, or the Weakness once the hunt is on).
   const byPayer = new Map();
   for (const a of abilities) {
-    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, weaknessInPlay: !!a.payer?.weaknessInPlay || (isOwn(a) && weakness && chase) };
+    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, weaknessInPlay: !!a.payer?.weaknessInPlay || (isOwn(a) && weakness && chase), overdrewInFlight: !!a.payer?.overdrewInFlight };
     p.uses += 1;
     byPayer.set(a.payerId, p);
   }
   const payments = [...byPayer.values()].map((p) => {
-    const pay = payFor({ charges: p.charges, uses: p.uses, hunt, weaknessInPlay: p.weaknessInPlay });
-    if (!pay.allowed) errors.push({ code: "overdrawWeakness", name: p.payerName });
+    const pay = payFor({ charges: p.charges, uses: p.uses, hunt, weaknessInPlay: p.weaknessInPlay, overdrewInFlight: p.overdrewInFlight });
+    if (!pay.allowed) errors.push({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: p.payerName }); // B3: once per flight
     return { ...p, ...pay };
   });
   const overdraw = !hunt && payments.some((p) => p.overdraw > 0);

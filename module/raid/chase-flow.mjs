@@ -57,19 +57,28 @@ export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (C.isRunning(state.chase)) return { state, started: false, reason: "chaseRunning" };
   const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter(isEntity).map(memberFor);
   if (!members.length) return { state, started: false, reason: "nobody" };
-  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where });
+  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty });
   return { state: R.setChase(state, chase), started: true, chase };
 }
 
-/** The final flight: everyone who isn't captured flees together. */
+/**
+ * The final flight: everyone who isn't captured flees together. A local chase still running
+ * ends at once and its Entities join the flight — except anyone the same round cornered:
+ * captured first, they stay behind (B3; the capture itself is a follow-up, see consequences()).
+ */
 export function startFinal(state, cause = "manual") {
   if (state.over) return { state, started: false, reason: "raidOver" };
   if (C.isRunning(state.chase) && state.chase.kind === "final") return { state, started: false, reason: "chaseRunning" };
   let s = state;
-  if (C.limitEndsLocal(s.chase)) s = R.setChase(s, C.endChase(s.chase, "ended"));
-  const members = partyForFlight();
+  let behind = [];
+  if (C.limitEndsLocal(s.chase)) {
+    const out = C.endLocalAtLimit(s.chase);
+    s = { ...R.setChase(s, out.chase), endedChase: out.chase };
+    behind = out.staysBehind;
+  }
+  const members = partyForFlight().filter((m) => !behind.includes(m.actorId));
   if (!members.length) return { state: s, started: false, reason: "nobody" };
-  const chase = C.newChase({ id: randomID(), kind: "final", cause, members, turn: s.turn });
+  const chase = C.newChase({ id: randomID(), kind: "final", cause, members, turn: s.turn, label: s.difficulty });
   return { state: R.setChase(s, chase), started: true, chase };
 }
 
@@ -102,18 +111,28 @@ function outcomeFacts(chase) {
 }
 
 /** Inside every raid write, after the save: the chase cards (start, each round's Lead, the end). */
+/** A round's card facts from a chase's last history entry. */
+function roundFacts(chase, state) {
+  const h = chase.history.at(-1);
+  return chaseFacts(chase, state, { event: "round", round: h.round, mob: h.mob, ground: C.groundOn(h.face), move: h.move, rolls: h.rolls.map((r) => ({ name: r.name, band: r.band, critical: r.critical })), ...outcomeFacts(chase) });
+}
+
 async function announceChase(before, state) {
   if (state.raidId !== before.raidId) return; // a new raid: nothing to say about the last one's chase
   const c = state.chase, b = before.chase;
-  if (b && C.isRunning(b) && (!c || c.id !== b.id)) await postCard(chaseFacts({ ...b, outcome: "ended" }, state, { event: "end" }));
+  const ended = state.endedChase && state.endedChase.id !== before.endedChase?.id ? state.endedChase : null;
+  if (ended && b?.id === ended.id) {
+    // the Limit ended a local chase: its last round (if the Limit's roll completed it), else its end
+    if (ended.history.length > b.history.length) await postCard(roundFacts(ended, state));
+    else await postCard(chaseFacts(ended, state, { event: "end" }));
+  } else if (b && C.isRunning(b) && (!c || c.id !== b.id)) await postCard(chaseFacts({ ...b, outcome: "ended" }, state, { event: "end" }));
   if (!c) return;
   if (!b || b.id !== c.id) {
     await postCard(chaseFacts(c, state, { event: "start" }));
     return;
   }
   if (c.history.length > b.history.length) {
-    const h = c.history.at(-1);
-    await postCard(chaseFacts(c, state, { event: "round", round: h.round, mob: h.mob, ground: C.groundOn(h.face), move: h.move, rolls: h.rolls.map((r) => ({ name: r.name, band: r.band, critical: r.critical })), ...outcomeFacts(c) }));
+    await postCard(roundFacts(c, state));
   } else if (c.outcome && !b.outcome) {
     await postCard(chaseFacts(c, state, { event: "end", ...outcomeFacts(c) }));
   }
@@ -202,10 +221,10 @@ async function consequences(chase, state) {
     if (fates.length) await postCard(chaseFacts(chase, state, { event: "captured", fates }));
   }
   if (chase.kind === "final" && ["escaped", "cornered", "dropped"].includes(chase.outcome) && setting(SETTINGS.autoChase)) {
-    // the Weakness an overdraw brought lasts to the end of the flight
+    // the Weakness an overdraw brought lasts to the end of the flight; so does the one overdraw it allows (B3)
     for (const m of chase.members) {
       const actor = game.actors.get(m.actorId);
-      if (isEntity(actor) && actor.system.weaknessInPlay) await actor.update({ "system.weaknessInPlay": false });
+      if (isEntity(actor) && (actor.system.weaknessInPlay || actor.system.overdrewInFlight)) await actor.update({ "system.weaknessInPlay": false, "system.overdrewInFlight": false });
     }
   }
   if (chase.kind === "final" && setting(SETTINGS.autoYear)) {
@@ -218,6 +237,9 @@ async function consequences(chase, state) {
 /** After every raid write: a newly ended chase's consequences, then the chase's next automatic step. */
 async function chaseFollowUp(state, before) {
   const c = state.chase, b = before.chase;
+  // B3: a local chase the Limit ended in a round that cornered them: they are captured first
+  const ended = state.endedChase;
+  if (ended && ended.id !== before.endedChase?.id && ended.outcome === "cornered") await consequences(ended, state);
   if (c?.outcome && !(b && b.id === c.id && b.outcome)) await consequences(c, state);
   // the whole town hunts, but everyone is held at the lock-up: nobody flees, the raid is over
   if (isActiveGM() && state.hunt && !before.hunt && !state.over && setting(SETTINGS.autoChase) && setting(SETTINGS.autoYear)

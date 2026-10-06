@@ -52,9 +52,11 @@ test("R6 and die steps", () => {
 
 test("S10, S9 and the chase rules", () => {
   assert.equal(openApproachDifficulty(10), 8);
-  assert.equal(localMobDifficulty(0), 10);
-  assert.equal(localMobDifficulty(3), 11);
-  assert.equal(localMobDifficulty(9), 12);
+  assert.equal(localMobDifficulty(0), 8); // B3: 8 + half the Suspicion, at most 12
+  assert.equal(localMobDifficulty(3), 9);
+  assert.equal(localMobDifficulty(5), 10);
+  assert.equal(localMobDifficulty(8), 12);
+  assert.equal(localMobDifficulty(11), 12);
   assert.equal(leadMove({ band: "success", critical: true }), 2);
   assert.equal(leadMove({ band: "cost" }), 0);
   assert.equal(majorityMove([{ band: "success" }, { band: "trouble" }, { band: "trouble" }]), -1);
@@ -119,9 +121,8 @@ test("C4 Tells go off on 4-6; C3 Weakness timings", () => {
   assert.equal(weaknessInPlay({ timing: "always", round: 1 }), true);
   assert.equal(weaknessInPlay({ timing: "soon", round: 2 }), false);
   assert.equal(weaknessInPlay({ timing: "soon", round: 3 }), true);
-  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: true, byDawn: false }), false);
-  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: true, byDawn: true }), true);
-  assert.equal(weaknessInPlay({ timing: "dawn", round: 1, final: false }), false);
+  assert.throws(() => weaknessInPlay({ timing: "dawn", round: 1 }), /unknown Weakness timing/, "B3: the Dawn timing was dropped");
+  assert.deepEqual([...DGF.weaknessTimings], ["always", "soon"]);
   assert.equal(weaknessInPlay({ timing: "soon", round: 1, overdrawn: true }), true);
 });
 

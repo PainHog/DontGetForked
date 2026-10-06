@@ -23,32 +23,34 @@ const member = (id, key, patch) => memberOf(entity(id, key, patch));
 
 /* ------------------------------------------------------------------ chases -- */
 
-test("a local chase: Lead 1, escape at 4; the mob is 10 + half the Suspicion (at most 12), checked each round", () => {
+test("a local chase: Lead 1, escape at 4; the mob is 8 + half the Suspicion (at most 12), checked each round", () => {
   const c = newChase({ id: "c1", members: [member("a", "dracula")] });
   assert.equal(c.kind, "local");
   assert.equal(c.lead, 1);
   assert.equal(c.escape, 4);
   assert.equal(c.round, 1);
-  assert.equal(mobDifficulty(c, { suspicion: 0 }), 10);
-  assert.equal(mobDifficulty(c, { suspicion: 5 }), 12);
+  assert.equal(mobDifficulty(c, { suspicion: 0 }), 8);
+  assert.equal(mobDifficulty(c, { suspicion: 5 }), 10);
+  assert.equal(mobDifficulty(c, { suspicion: 8 }), 12);
   assert.equal(mobDifficulty(c, { suspicion: 11 }), 12);
   const r = startRound(c, { face: 3, suspicion: 3 });
-  assert.equal(r.mob, 11);
+  assert.equal(r.mob, 9);
   assert.deepEqual(r.ground, { face: 3, key: "marketStalls", traits: ["brawn", "nimble"] });
   assert.throws(() => newChase({ id: "x", kind: "car" }));
 });
 
-test("the final flight: Lead 2, escape at 6, the mob set by the label whatever the party's size", () => {
-  const party = [member("a", "dracula"), member("b", "witch"), member("c", "ghost"), member("d", "mummy"), member("e", "werewolf")];
-  for (const label of ["easy", "standard", "hard"]) {
-    const c = newChase({ id: "f", kind: "final", cause: "limit", members: party });
+test("the final flight: Lead 2, escape at the label's number (B3: 5 Easy and Standard, 6 Hard), the mob set by the label whatever the party's size", () => {
+  const party = [member("a", "dracula"), member("b", "witch"), member("c", "ghost"), member("d", "mummy")];
+  for (const [label, escape] of [["easy", 5], ["standard", 5], ["hard", 6]]) {
+    const c = newChase({ id: "f", kind: "final", cause: "limit", members: party, label });
     assert.equal(c.lead, 2);
-    assert.equal(c.escape, 6);
+    assert.equal(c.escape, escape);
+    assert.equal(c.escape, DGF.labels[label].finalEscape);
     assert.equal(mobDifficulty(c, { suspicion: 12, label }), DGF.labels[label].finalMob);
     assert.equal(mobDifficulty({ ...c, members: party.slice(0, 1) }, { label }), DGF.labels[label].finalMob);
   }
-  assert.equal(newChase({ id: "f", kind: "final", cause: "dawn", members: party }).byDawn, true);
-  assert.equal(newChase({ id: "f", kind: "final", cause: "limit", members: party }).byDawn, false);
+  assert.equal(newChase({ id: "f", kind: "final", cause: "dawn", members: party, label: "easy" }).cause, "dawn", "dawn still starts a final flight");
+  assert.equal(newChase({ id: "l", members: party, label: "hard" }).escape, 4, "a local chase escapes at 4 everywhere");
 });
 
 test("the chase table: one roll for everyone; each row's traits, always one that isn't Nimble", () => {
@@ -80,11 +82,11 @@ test("Perks in a chase: Wall-Crawler and Fly by Night add a trait; Night Runner 
     assert.equal(newChase({ id: "l", members: [{ ...m, perk: flightPerk[0] }] }).lead, 1);
   }
   const curse = newChase({ id: "m", members: [member("m", "mummy", { perk: "fearTheCurse" })] });
-  assert.equal(mobDifficulty(curse, { suspicion: 4 }), 11);
+  assert.equal(mobDifficulty(curse, { suspicion: 4 }), 9);
   assert.equal(mobDifficulty(newChase({ id: "m", kind: "final", cause: "limit", members: curse.members }), { label: "hard" }), 11, "not in the final flight");
 });
 
-test("the Weakness: Always from round 1, Soon from round 3, Dawn only in a flight dawn started; an overdraw puts it in play in the flight", () => {
+test("the Weakness: Always from round 1, Soon from round 3 (B3: no Dawn timing); an overdraw puts it in play in the flight", () => {
   const drac = member("d", "dracula"); // Garlic, Always
   const crea = member("c", "creature"); // Fire, Soon
   const local = newChase({ id: "l", members: [drac, crea] });
@@ -92,10 +94,9 @@ test("the Weakness: Always from round 1, Soon from round 3, Dawn only in a fligh
   assert.equal(weaknessFor(local, "c"), false);
   assert.equal(weaknessFor({ ...local, round: 2 }, "c"), false);
   assert.equal(weaknessFor({ ...local, round: 3 }, "c"), true);
-  const sunny = { ...crea, timing: "dawn" }; // no Entity has a Dawn Weakness yet: the timing still works
-  assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "dawn", members: [sunny] }), "c"), true);
-  assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "limit", members: [sunny] }), "c"), false);
-  assert.equal(weaknessFor(newChase({ id: "l", members: [sunny] }), "c"), false);
+  assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "dawn", members: [crea] }), "c"), false, "a flight dawn started brings nothing extra");
+  assert.ok(DGF.entities.every((e) => DGF.weaknessTimings.includes(e.weakness.timing)));
+  assert.throws(() => weaknessFor(newChase({ id: "x", members: [{ ...crea, timing: "dawn" }] }), "c"), /unknown Weakness timing/);
   assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "limit", members: [crea] }), "c", { overdrawn: true }), true);
   assert.equal(weaknessFor(local, "c", { overdrawn: true }), false, "overdraw costs the Weakness only once the hunt is on");
   assert.equal(weaknessFor(local, "nobody"), false);
@@ -109,7 +110,7 @@ test("rollContext: what a member rolls this round, or why it can't", () => {
   c = startRound(c, { face: 4, suspicion: 2 });
   const ctx = rollContext(c, "a");
   assert.equal(ctx.ok, true);
-  assert.equal(ctx.difficulty, 11);
+  assert.equal(ctx.difficulty, 9);
   assert.deepEqual(ctx.traits, ["nimble", "wits"]);
   assert.equal(ctx.weakness, true);
   c = recordRoll(c, "a", { messageId: "m1", round: 1, band: "success" }).chase;
@@ -229,8 +230,8 @@ test("slipping free: once per Turn, from the Turn after the capture; only a Succ
 });
 
 test("a new raid frees everyone, refills the charges (castle upgrades included) and clears the last raid's marks", () => {
-  const u = newRaidUpdate({ ...entitySystem("witch", { upgrades: 1 }), status: "captured", skipTurn: 4, nextRollSmaller: 1, weaknessInPlay: true, charges: { value: 0, start: 4 } });
-  assert.deepEqual(u, { status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, "charges.value": 4 });
+  const u = newRaidUpdate({ ...entitySystem("witch", { upgrades: 1 }), status: "captured", skipTurn: 4, nextRollSmaller: 1, weaknessInPlay: true, overdrewInFlight: true, charges: { value: 0, start: 4 } });
+  assert.deepEqual(u, { status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false, "charges.value": 4 });
 });
 
 /* ---------------------------------------------------- group and Tell checks -- */
@@ -525,10 +526,10 @@ test("F14: Night Runner and Fear the Curse work only for an Entity fleeing alone
   const curse = member("m", "mummy", { perk: "fearTheCurse" });
   assert.equal(newChase({ id: "a", members: [runner] }).lead, 2);
   assert.equal(newChase({ id: "b", members: [runner, member("d", "dracula")] }).lead, 1);
-  assert.equal(mobDifficulty(newChase({ id: "c", members: [curse] }), { suspicion: 0 }), 9);
-  assert.equal(mobDifficulty(newChase({ id: "d", members: [curse, runner] }), { suspicion: 0 }), 10);
+  assert.equal(mobDifficulty(newChase({ id: "c", members: [curse] }), { suspicion: 0 }), 7);
+  assert.equal(mobDifficulty(newChase({ id: "d", members: [curse, runner] }), { suspicion: 0 }), 8);
   // the Storyteller takes the other one out: now it flees alone, and the mob is easier from the next round
-  assert.equal(mobDifficulty(removeMember(newChase({ id: "e", members: [curse, runner] }), "w"), { suspicion: 0 }), 9);
+  assert.equal(mobDifficulty(removeMember(newChase({ id: "e", members: [curse, runner] }), "w"), { suspicion: 0 }), 7);
 });
 
 test("F15: a captured carrier's furniture is lost for the night: it can't come home", async () => {
@@ -557,4 +558,50 @@ test("F16: essentials: Easy one, Hard two; on Standard any die: odd one, even tw
   }
   assert.equal(essentialsFor("standard", 19), 1);
   assert.equal(essentialsFor("standard", 20), 2);
+});
+
+/* ------------------------------------------------- B3 (after playtest PT4) -- */
+
+test("B3: cornered in the round the Limit comes: captured first (Already Dead loses its Turn instead); otherwise the chase just ends", async () => {
+  const { endLocalAtLimit } = await import("../module/logic/chase.mjs");
+  // one Entity, its round complete and cornered: it stays behind
+  let solo = startRound(newChase({ id: "a", members: [member("d", "dracula")] }), { face: 1 });
+  solo = recordRoll(solo, "d", { messageId: "m", band: "trouble" }).chase;
+  let out = endLocalAtLimit(solo);
+  assert.equal(out.chase.outcome, "cornered");
+  assert.deepEqual(out.staysBehind, ["d"]);
+  // Already Dead isn't captured: it loses its next Turn and isn't left behind
+  let ghost = startRound(newChase({ id: "b", members: [member("g", "ghost", { perk: "alreadyDead" })] }), { face: 1 });
+  ghost = recordRoll(ghost, "g", { messageId: "m", band: "trouble" }).chase;
+  out = endLocalAtLimit(ghost);
+  assert.equal(out.chase.outcome, "cornered");
+  assert.deepEqual(out.staysBehind, []);
+  // a shared chase whose round isn't complete: it ends at once, nobody is cornered
+  let shared = startRound(newChase({ id: "c", members: [member("d", "dracula"), member("w", "witch")] }), { face: 1 });
+  shared = recordRoll(shared, "d", { messageId: "m", band: "trouble" }).chase;
+  out = endLocalAtLimit({ ...shared, lead: 1 });
+  assert.equal(out.chase.outcome, "ended");
+  assert.deepEqual(out.staysBehind, []);
+  // a round that doesn't corner: ended (or clear)
+  let ok = startRound(newChase({ id: "e", members: [member("d", "dracula")] }), { face: 1 });
+  ok = recordRoll(ok, "d", { messageId: "m", band: "cost" }).chase;
+  assert.equal(endLocalAtLimit(ok).chase.outcome, "ended");
+  assert.equal(endLocalAtLimit(endChase(ok, "escaped")).chase.outcome, "escaped", "a chase already over is left alone");
+});
+
+test("B3: overdraw in the final flight at most once per Entity per flight (refused in the roll plan)", () => {
+  const broke = roller("dracula", { charges: { value: 0, start: 3 }, overdrewInFlight: true });
+  const gift = own(broke, "gift");
+  const once = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [{ ...gift, payer: { charges: 0, weaknessInPlay: false, overdrewInFlight: true } }] });
+  assert.ok(once.errors.some((e) => e.code === "overdrawOnce"));
+  const fresh = roller("dracula", { charges: { value: 0, start: 3 } });
+  const sig = own(fresh, "signature");
+  const two = plan(fresh, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [own(fresh, "gift"), { ...sig, effect: "hidden" }] });
+  assert.ok(two.errors.some((e) => e.code === "overdrawOnce"), "two abilities at no charges is two overdraws");
+  const first = plan(fresh, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [own(fresh, "gift")] });
+  assert.equal(first.ok, true);
+  assert.equal(first.payments[0].weakness, true);
+  // before the hunt there is no such limit (overdraw is Suspicion +2)
+  const local = plan(fresh, { trait: "charm", abilities: [own(fresh, "gift"), { ...sig, effect: "hidden" }] });
+  assert.equal(local.errors.some((e) => e.code === "overdrawOnce"), false);
 });

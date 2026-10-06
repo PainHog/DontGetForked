@@ -10,8 +10,8 @@ import {
 } from "../module/logic/raid.mjs";
 import { foldSuspicion } from "../module/logic/suspicion.mjs";
 
-test("a new raid: the Limit by difficulty, 12 Turns, nothing raised", () => {
-  for (const [label, n] of [["easy", 12], ["standard", 12], ["hard", 15]]) {
+test("a new raid: the Limit by difficulty (11 / 11 / 15), 12 Turns, nothing raised", () => {
+  for (const [label, n] of [["easy", 11], ["standard", 11], ["hard", 15]]) { // B3: Easy and Standard 11
     const s = newRaid({ id: "r1", difficulty: label });
     assert.equal(s.limit, n);
     assert.equal(s.limit, DGF.labels[label].limit);
@@ -27,7 +27,7 @@ test("normalize fills a missing or partial stored state", () => {
   const s = normalizeRaid({});
   assert.equal(s.raidId, "");
   assert.equal(s.difficulty, "standard");
-  assert.equal(s.limit, 12);
+  assert.equal(s.limit, 11);
   const t = normalizeRaid({ raidId: "x", difficulty: "hard", turn: 5, ledger: [{ eventId: "a", amount: 1, source: "roll" }] });
   assert.equal(t.limit, 15);
   assert.equal(t.turn, 5);
@@ -49,18 +49,22 @@ test("one roll, one rise: entries of one event apply only the biggest; a retry n
 });
 
 test("the track never goes past the Limit; reaching it starts the hunt; then Suspicion stops", () => {
-  let s = newRaid({ id: "r", difficulty: "easy" }); // Limit 12
-  for (let i = 0; i < 6; i++) s = recordEvent(s, { eventId: `e${i}`, amount: 2, source: "roll" });
-  assert.equal(suspicionOf(s).value, 12);
+  let s = newRaid({ id: "r", difficulty: "easy" }); // Limit 11 (B3)
+  for (let i = 0; i < 5; i++) s = recordEvent(s, { eventId: `e${i}`, amount: 2, source: "roll" });
+  assert.equal(suspicionOf(s).value, 10);
+  assert.equal(huntDue(s), "");
+  s = recordEvent(s, { eventId: "e5", amount: 2, source: "roll" });
+  assert.equal(suspicionOf(s).value, 11);
+  assert.equal(suspicionOf(s).lost, 1);
   assert.equal(huntDue(s), "limit");
   s = recordEvent(s, { eventId: "e6", amount: 2, source: "roll" });
-  assert.equal(suspicionOf(s).value, 12);
-  assert.equal(suspicionOf(s).lost, 2);
+  assert.equal(suspicionOf(s).value, 11);
+  assert.equal(suspicionOf(s).lost, 3);
   s = setHunt(s, true, "limit");
   assert.equal(huntDue(s), "");
   s = recordEvent(s, { eventId: "e7", amount: 2, source: "roll" });
   assert.equal(s.ledger.at(-1).hunt, true);
-  assert.equal(suspicionOf(s).value, 12);
+  assert.equal(suspicionOf(s).value, 11);
   assert.equal(raidView(s).huntCause, "limit");
 });
 
@@ -90,7 +94,7 @@ test("the hunt starts at the moment of the Limit or dawn, so the Storyteller can
   const stopped = setHunt(setHunt(s, true, "dawn"), false);
   assert.equal(huntDue(stopped, setHunt(s, true, "dawn")), "", "still dawn, but the Storyteller stopped the hunt");
   let t = newRaid({ id: "r", difficulty: "easy" });
-  t = recordEvent(t, { eventId: "a", amount: 11, source: "storyteller" });
+  t = recordEvent(t, { eventId: "a", amount: 10, source: "storyteller" }); // one short of the Limit (11)
   const at = recordEvent(t, { eventId: "b", amount: 2, source: "roll" });
   assert.equal(huntDue(at, t), "limit");
   assert.equal(huntDue(recordEvent(at, { eventId: "c", amount: 1, source: "roll" }), at), "", "already at the Limit before this change");

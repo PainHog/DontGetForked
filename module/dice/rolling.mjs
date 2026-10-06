@@ -40,7 +40,7 @@ export function abilityChoices(actor, raid = getRaid()) {
     payerName: owner.name,
     own,
     // "while your Weakness is in play, however it came, you can't overdraw" (the chase's timing counts too)
-    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)) },
+    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)), overdrewInFlight: !!owner.system.overdrewInFlight },
   });
   const own = rollAbilities(actor.system).map((a) => entry(a, actor, true));
   // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help
@@ -259,7 +259,7 @@ export async function performRoll(actor, values) {
     after = chargesAfter({ value: before, start: sys.charges.start, spent: own?.spend ?? 0, chargeBack: res.chargeBack });
     if (after !== before) update["system.charges.value"] = after;
   }
-  if (own?.weakness) update["system.weaknessInPlay"] = true;
+  if (own?.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
   if (plan.consumeSmaller) update["system.nextRollSmaller"] = 0;
   let formTo = "";
   if (res.formShift && setting(SETTINGS.autoForm)) {
@@ -335,13 +335,13 @@ export async function spendCharge(actor) {
   if (!isEntity(actor) || !actor.isOwner) return null;
   const raid = getRaid();
   const sys = actor.system;
-  const pay = payFor({ charges: sys.charges.value, uses: 1, hunt: raid.hunt, weaknessInPlay: sys.weaknessInPlay });
-  if (!pay.allowed) { ui.notifications.warn(planText({ code: "overdrawWeakness", name: actor.name })); return null; }
+  const pay = payFor({ charges: sys.charges.value, uses: 1, hunt: raid.hunt, weaknessInPlay: sys.weaknessInPlay || (raid.hunt && chaseWeakness(actor.id, raid)), overdrewInFlight: sys.overdrewInFlight });
+  if (!pay.allowed) { ui.notifications.warn(planText({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
   if (pay.overdraw && !(await confirmOverdraw(actor, pay))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const update = {};
   if (autoCharges && pay.spend) update["system.charges.value"] = sys.charges.value - pay.spend;
-  if (pay.weakness) update["system.weaknessInPlay"] = true;
+  if (pay.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; }
   const before = sys.charges.value;
   if (Object.keys(update).length) await actor.update(update);
   return postAbilityCard(actor, { action: "spend", spend: pay.spend, overdraw: pay.overdraw, suspicion: pay.suspicion, weakness: pay.weakness, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
@@ -353,13 +353,13 @@ export async function drinkDraught(actor) {
   const raid = getRaid();
   const plan = draughtPlan(actor.system, { hunt: raid.hunt });
   if (!plan) return null;
-  if (!plan.allowed) { ui.notifications.warn(planText({ code: "overdrawWeakness", name: actor.name })); return null; }
+  if (!plan.allowed) { ui.notifications.warn(planText({ code: plan.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
   if (plan.overdraw && !(await confirmOverdraw(actor, plan))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const before = actor.system.charges.value;
   const update = { "system.form": plan.to, "system.traits": plan.traits };
   if (autoCharges && plan.spend) update["system.charges.value"] = before - plan.spend;
-  if (plan.weakness) update["system.weaknessInPlay"] = true;
+  if (plan.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; }
   await actor.update(update);
   return postAbilityCard(actor, { action: "draught", name: actor.system.view?.signature?.name ?? "", formFrom: plan.from, formTo: plan.to, cost: plan.cost, spend: plan.spend, overdraw: plan.overdraw, suspicion: plan.suspicion, weakness: plan.weakness, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
 }

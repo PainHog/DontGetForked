@@ -16,7 +16,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 
 ## 1. The world loads
 
-- **GM:** a small **The Raid** window (top left): *Suspicion 0 / 12*, a row of 12 empty boxes, *Turn 1 of 12 · Standard*, and buttons (+1, −1, Undo, ◀ Turn, Next Turn ▶, Start the hunt; Group check, Tell check, Chase; Shopping list, End the raid, New raid). The chat shows **A new raid** (Standard: Suspicion 0 of 12, 12 Turns until dawn) the first time the world loads.
+- **GM:** a small **The Raid** window (top left): *Suspicion 0 / 11*, a row of 11 empty boxes, *Turn 1 of 12 · Standard*, and buttons (+1, −1, Undo, ◀ Turn, Next Turn ▶, Start the hunt; Group check, Tell check, Chase; Shopping list, End the raid, New raid). The chat shows **A new raid** (Standard: Suspicion 0 of 11, 12 Turns until dawn) the first time the world loads.
 - **Ann:** the same window with the numbers but **no buttons**.
 - **GM:** Game Settings → Configure Settings → *Don't Get Forked*: thirteen switches (Raise Suspicion automatically, Spend charges automatically, Jekyll becomes Hyde automatically, Apply the Storyteller's Cost, Start the hunt automatically, Show the Raid HUD, Run chases automatically, Run the lock-up automatically, Group checks, Offer how the year went, Carried furniture raises Suspicion each Turn, A new raid resets the Entities, Open the chase tracker when a chase starts), all on, plus *Show the odds when rolling* (each player's own).
 
@@ -36,7 +36,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 1. **Ann:** on the Witch's sheet, click **Sly d10**. The roll dialog shows: Trait called (Sly), Second die (Mask d6 / Monster d10), Difficulty (6 easy … 12 daunting, 8 selected); her abilities (Hedge Spell, Broomstick); *Help from the others* (Dracula's Bat, "3 left"); the situation (Castle Duty, the loud way, watched, the way out, a chase roll); and an odds line at the bottom.
 2. Change the second die to **Monster d10**: the odds line updates and adds "The Monster shows …%". *(If it doesn't update, note it: the line is meant to follow every change.)*
 3. Click **Roll**. In **both** browsers a card appears: both dice with their faces, the total "against 8", and **Success**, **Cost** or **Trouble**.
-   - If the Monster die rolled higher than the Sly die: *The Monster shows.* and **Suspicion +2 (the Monster shows) — on the track**, and the Raid window shows **2 / 12** in both browsers.
+   - If the Monster die rolled higher than the Sly die: *The Monster shows.* and **Suspicion +2 (the Monster shows) — on the track**, and the Raid window shows **2 / 11** in both browsers.
    - On Trouble with nothing showing: *Suspicion +1 (Trouble)*.
    - Doubles on a Success: *Critical: a spent charge back*.
 4. **GM** sees a **Cancel Suspicion** button on cards that raised Suspicion; **Ann** sees no buttons.
@@ -73,7 +73,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 3. Press **Next Turn ▶** until *Turn 12 of 12*, then once more: **Dawn**. The chat says **The whole town hunts** (Dawn came…) and the window shows it in red.
 4. **Ann** rolls now: the dialog says the Mask is off; the card rolls the Monster whatever was chosen, and raises no Suspicion.
 5. **GM:** **Stop the hunt**, then **◀ Turn**: back to Turn 12, no dawn, no hunt.
-6. **New raid** → *Easy (Limit 12)*: Suspicion 0 / 12, Turn 1, a "A new raid" card. Press **+1** twelve times: at 12 the hunt starts by itself (*Suspicion reached the Limit*); more presses don't go past 12. New raid → Standard again (*Hard* has Limit 15).
+6. **New raid** → *Easy (Limit 11)*: Suspicion 0 / 11, Turn 1, a "A new raid" card. Press **+1** twelve times: at 11 the hunt starts by itself (*Suspicion reached the Limit*); more presses don't go past 11. New raid → Standard again (Limit 11; *Hard* has Limit 15).
 
 ## 8. Who may change what
 
@@ -120,13 +120,15 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 ## 12. A local chase through to capture
 
 1. **GM:** give Dracula an item (*a pair of candlesticks*) before he is caught, if you can, and tick *Carrying furniture* on his sheet (his rolls then use the Monster die, and his Nimble is one size smaller).
-2. When he is caught, **both browsers** open **The Chase** window by itself, and the chat shows **A local chase!** (*Fleeing: Dracula… The Lead starts at 1; clear at 4, cornered at 0*) and **A local chase: round 1**: the ground (one of the six chase-table rows, e.g. *The crowded square: Sly or Charm work*), *The mob: Difficulty 10 + half the Suspicion (at most 12)*, and *The mob has brought their Weakness: Dracula* (Garlic is *Always*).
+2. When he is caught, **both browsers** open **The Chase** window by itself, and the chat shows **A local chase!** (*Fleeing: Dracula… The Lead starts at 1; clear at 4, cornered at 0*) and **A local chase: round 1**: the ground (one of the six chase-table rows, e.g. *The crowded square: Sly or Charm work*), *The mob: Difficulty 8 + half the Suspicion, rounded down (at most 12)*, and *The mob has brought their Weakness: Dracula* (Garlic is *Always*).
    - The tracker shows the Lead track 0–4 with 1 marked, the mob, the ground, Dracula's traits for the round and a red *Garlic* tag. Ann's tracker has **no Roll** button (she doesn't own Dracula) and no controls; the GM's has **Roll**, **Roll the ground**, **Move the Lead** (greyed until everyone has rolled), Lead ±1, Escaped / Cornered / Call it off.
    - The caught card says *The local chase is on* and has no Start button.
 3. **GM:** press **Roll** for Dracula on the tracker. The dialog says *A local chase, round 1: … Roll Sly or Charm against the mob's Difficulty N* and the Weakness notice; the trait is preset to his best allowed trait. Pick a trait the ground doesn't list → refused with *This round the ground lets you roll …*.
 4. Roll: the card shows the trait die **one size smaller** (*One size smaller (the Weakness)*) and *Chase round 1 (…): Lead +1/0/−1*. A card **round 1, the Lead** shows *Lead +1: now 2* (or the move) and the next **round 2** card rolls a new ground. In a local chase, Trouble and the Monster showing still raise Suspicion.
 5. Keep rolling until the Lead reaches 0 (or 4 — then he's clear: *Clear! Back where they were caught, with the Turn used up*; get him caught again and repeat). At 0: **Cornered!**, then **The lock-up**: *Dracula is captured and held at the lock-up. The town takes back what it was carrying: a pair of candlesticks. The furniture it carried is lost for the night.* His sheet: Status *Captured*, the item gone, *Carrying furniture* unticked; both Raid windows say *The furniture is lost for the night* (and at the end of the raid the year form can't count it as home). Both Raid windows: *The lock-up (Difficulty 10): Dracula (since Turn N)*.
 6. **GM:** roll anything for Dracula without *At the lock-up*: refused (*Held at the lock-up: its one roll is slipping free*).
+
+7. **Cornered at the Limit** *(optional, a new raid)*: raise Suspicion to one below the Limit (10 on Standard), get one Entity caught alone, and roll Trouble for it at Lead 1. The same roll brings the Limit: the chat shows that round (**Cornered!**), then **The lock-up** (it is captured first), then **The final flight!** without it.
 
 ## 13. Slipping free and a rescue
 
@@ -143,10 +145,10 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 
 ## 15. The final flight and the year
 
-1. **Ann:** make sure the Witch carries two of the list's items (by name). **GM:** press **+1** until the Limit. *The whole town hunts*, then **The final flight!** (*Fleeing: A Witch, Dracula… Lead 2; clear at 6*) and its round 1 ground, *The mob: Difficulty 11* (Standard; 10 Easy, 11 Hard).
+1. **Ann:** make sure the Witch carries two of the list's items (by name). **GM:** press **+1** until the Limit. *The whole town hunts*, then **The final flight!** (*Fleeing: A Witch, Dracula… Lead 2; clear at 5*; on Hard, clear at 6) and its round 1 ground, *The mob: Difficulty 11* (Standard; 10 Easy, 11 Hard).
 2. Each round **both** roll (the Mask is off: the dialog switches to the Monster). After the second roll, a **round** card applies the **majority rule**: more Successes than Trouble: +1; more Trouble: −1; else 0; *a Critical counts as two Successes*. The trackers show who has rolled.
-3. **Ann:** set the Witch's charges to 0 and roll with Hedge Spell ticked: the card says she *overdraws: its Weakness is in play from its next roll*; from her next roll her die is one size smaller, and she can't overdraw again. (The Witch's Rowan is *Soon*: it also comes in from round 3.)
-4. At Lead 6: **Escaped! Home with the goods.**, then **Out of town** (*The party outran the mob…*) with **How the year went** for the GM only.
+3. **Ann:** set the Witch's charges to 0 and roll with Hedge Spell ticked: the card says she *overdraws: its Weakness is in play from its next roll*; from her next roll her die is one size smaller. Tick Hedge Spell again next round: refused (*has already overdrawn in this flight: once per flight*). (The Witch's Rowan is *Soon*: it also comes in from round 3.)
+4. At Lead 5 (6 on Hard): **Escaped! Home with the goods.**, then **Out of town** (*The party outran the mob…*) with **How the year went** for the GM only.
 5. **GM:** click it. The form lists the shopping list with the items the Witch carries already ticked *Home*, the furniture box, *Entities left behind* (anyone still held). Tick or untick, then **Read the year**: a **How the year went: Win / Partial / …** card with the result's line and one line for each missing kind. The Raid windows say *The raid is over: …*. **End the raid** again says the year is decided.
 
 ## 16. A forked raid

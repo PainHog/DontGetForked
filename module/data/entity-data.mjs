@@ -35,6 +35,7 @@ export class EntityData extends foundry.abstract.TypeDataModel {
       nextRollSmaller: count(0),                // a Cost: the next roll's trait die one size smaller (each)
       skipTurn: count(0),                       // a Cost: the Turn this Entity loses (0 = none)
       weaknessInPlay: new f.BooleanField({ initial: false }),
+      overdrewInFlight: new f.BooleanField({ initial: false }), // B3: overdrawn once in this final flight (no second)
       notes: new f.StringField({ required: true, blank: true, initial: "" }),
     };
   }

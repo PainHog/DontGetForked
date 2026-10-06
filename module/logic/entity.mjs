@@ -62,6 +62,7 @@ export function entitySystem(key, { upgrades = 0 } = {}) {
     nextRollSmaller: 0,
     skipTurn: 0,
     weaknessInPlay: false,
+    overdrewInFlight: false,
     notes: "",
   };
 }
@@ -125,21 +126,23 @@ export function otherForm(key, form) {
  * Charges for using one ability, before you roll (Chapter 3). One charge each;
  * at zero charges you may still use it ("overdraw"): Suspicion +2, or, once the
  * hunt is on, your Weakness is in play from your next roll; while your Weakness
- * is in play you can't overdraw (Chapter 6).
+ * is in play you can't overdraw, and you overdraw at most once per flight (Chapter 6, B3).
  *   uses: how many abilities this Entity pays for now; cost: charges per use (1, or 0 if free)
- * Returns { spend, overdraw, suspicion, weakness, allowed }.
+ *   overdrewInFlight: this Entity has already overdrawn in this final flight
+ * Returns { spend, overdraw, suspicion, weakness, allowed, refusal: "" | "weakness" | "once" }.
  */
-export function payFor({ charges, uses = 1, cost = 1, hunt = false, weaknessInPlay = false }) {
+export function payFor({ charges, uses = 1, cost = 1, hunt = false, weaknessInPlay = false, overdrewInFlight = false }) {
   const owed = Math.max(0, uses * cost);
   const spend = Math.min(owed, Math.max(0, charges));
   const overdraw = owed - spend;
-  const allowed = !(overdraw > 0 && hunt && weaknessInPlay);
+  const refusal = !(overdraw > 0 && hunt) ? "" : overdrewInFlight || overdraw > 1 ? "once" : weaknessInPlay ? "weakness" : "";
   return {
     spend,
     overdraw,
     suspicion: overdraw > 0 && !hunt ? DGF.suspicion.overdraw : 0,
     weakness: overdraw > 0 && hunt,
-    allowed,
+    allowed: !refusal,
+    refusal,
   };
 }
 
@@ -153,7 +156,7 @@ export function draughtPlan(system, { hunt = false } = {}) {
   if (!to) return null;
   const free = DGF.perkRules[system.perk]?.freeDraughtTo === to;
   const cost = free ? 0 : 1;
-  return { from: system.form, to, traits: diceFor(system.entityKey, to), cost, ...payFor({ charges: system.charges?.value ?? 0, uses: 1, cost, hunt, weaknessInPlay: !!system.weaknessInPlay }) };
+  return { from: system.form, to, traits: diceFor(system.entityKey, to), cost, ...payFor({ charges: system.charges?.value ?? 0, uses: 1, cost, hunt, weaknessInPlay: !!system.weaknessInPlay, overdrewInFlight: !!system.overdrewInFlight }) };
 }
 
 /**

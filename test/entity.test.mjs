@@ -95,11 +95,17 @@ test("perk keys are unique across the eight (DGF.perkRules is keyed by them)", (
 });
 
 test("charges and overdraw (Chapter 3, Chapter 6)", () => {
-  assert.deepEqual(payFor({ charges: 2, uses: 1 }), { spend: 1, overdraw: 0, suspicion: 0, weakness: false, allowed: true });
-  assert.deepEqual(payFor({ charges: 1, uses: 2 }), { spend: 1, overdraw: 1, suspicion: 2, weakness: false, allowed: true });
-  assert.deepEqual(payFor({ charges: 0, uses: 1, hunt: true }), { spend: 0, overdraw: 1, suspicion: 0, weakness: true, allowed: true });
+  assert.deepEqual(payFor({ charges: 2, uses: 1 }), { spend: 1, overdraw: 0, suspicion: 0, weakness: false, allowed: true, refusal: "" });
+  assert.deepEqual(payFor({ charges: 1, uses: 2 }), { spend: 1, overdraw: 1, suspicion: 2, weakness: false, allowed: true, refusal: "" });
+  assert.deepEqual(payFor({ charges: 0, uses: 1, hunt: true }), { spend: 0, overdraw: 1, suspicion: 0, weakness: true, allowed: true, refusal: "" });
   assert.equal(payFor({ charges: 0, uses: 1, hunt: true, weaknessInPlay: true }).allowed, false);
-  assert.deepEqual(payFor({ charges: 0, uses: 1, cost: 0 }), { spend: 0, overdraw: 0, suspicion: 0, weakness: false, allowed: true });
+  assert.equal(payFor({ charges: 0, uses: 1, hunt: true, weaknessInPlay: true }).refusal, "weakness");
+  assert.deepEqual(payFor({ charges: 0, uses: 1, cost: 0 }), { spend: 0, overdraw: 0, suspicion: 0, weakness: false, allowed: true, refusal: "" });
+  // B3: in the final flight, overdraw at most once per flight
+  assert.equal(payFor({ charges: 0, uses: 1, hunt: true, overdrewInFlight: true }).refusal, "once");
+  assert.equal(payFor({ charges: 0, uses: 2, hunt: true }).refusal, "once", "two at once is more than once");
+  assert.equal(payFor({ charges: 0, uses: 2 }).allowed, true, "before the hunt, overdraw is Suspicion +2 and has no limit");
+  assert.equal(payFor({ charges: 1, uses: 1, hunt: true, overdrewInFlight: true }).allowed, true, "paying with a charge is no overdraw");
 });
 
 test("party clashes: duplicate Entities and shared Castle Duties", () => {

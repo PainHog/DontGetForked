@@ -83,7 +83,7 @@ export function captivesOf(entities) {
  */
 export function newRaidUpdate(system) {
   return {
-    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false,
+    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false,
     "charges.value": system?.charges?.start ?? DGF.charges,
   };
 }

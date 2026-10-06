@@ -8,7 +8,7 @@
  * records each roll and resolves the round when everyone has rolled.
  *
  *   chase = { id, kind: "local" | "final", cause: "caught" | "limit" | "dawn" | "manual",
- *             byDawn, turn, groupId, where,
+ *             label, turn, groupId, where,
  *             members: [{ actorId, name, entityKey, perk, timing }],
  *             lead, start, escape, round, mob, ground: { face, key, traits } | null,
  *             rolls: { [actorId]: { messageId, band, critical } },
@@ -58,21 +58,26 @@ export function memberOf({ id, name = "", system = {} }) {
   return { actorId: id, name, entityKey: system.entityKey ?? "", perk: system.perk ?? "", timing: e?.weakness?.timing ?? "soon" };
 }
 
+/** B3: the final flight's escape number, by the town's label (5 on Easy and Standard, 6 on Hard). */
+export function finalEscape(label = "standard") {
+  return DGF.labels[label]?.finalEscape ?? DGF.lead.finalEscape;
+}
+
 /**
  * A new chase. Local: Lead 1, escape at 4 (Night Runner, fleeing alone: starts at Lead 2).
- * Final flight: Lead 2, escape at 6; a flight that dawn started brings the Dawn Weaknesses.
- * A Perk with a starting Lead for the flight (DGF.perkRules finalLead) works the same way.
+ * Final flight: Lead 2, escape at the label's number (B3: 5 on Easy and Standard, 6 on Hard);
+ * Fetch: it starts at Lead 3 (DGF.perkRules finalLead).
  */
-export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "" }) {
+export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "", label = "standard" }) {
   if (!CHASE_KINDS.includes(kind)) throw new Error(`unknown chase kind: ${kind}`);
   if (!id) throw new Error("a chase needs an id");
   const L = DGF.lead;
   const chase = {
-    id, kind, cause, byDawn: kind === "final" && cause === "dawn", turn, groupId, where,
+    id, kind, cause, label, turn, groupId, where,
     members: members.map((m) => ({ ...m })),
     lead: kind === "final" ? L.finalStart : L.localStart,
     start: 0,
-    escape: kind === "final" ? L.finalEscape : L.localEscape,
+    escape: kind === "final" ? finalEscape(label) : L.localEscape,
     round: 1, mob: null, ground: null, rolls: {}, history: [], outcome: "",
   };
   // Night Runner: "when you flee alone, your local chase starts at Lead 2" (F14); Fetch: the final flight starts at Lead 3.
@@ -129,13 +134,13 @@ export function traitsFor(chase, actorId) {
 }
 
 /**
- * Is the member's Weakness in play this round? By its timing (C3), or, in the final
- * flight, because it overdrew (`overdrawn`: the Entity's Weakness mark, S1).
+ * Is the member's Weakness in play this round? By its timing (C3: Always, Soon), or, in
+ * the final flight, because it overdrew (`overdrawn`: the Entity's Weakness mark, S1).
  */
 export function weaknessFor(chase, actorId, { overdrawn = false } = {}) {
   const m = memberIn(chase, actorId);
   if (!m) return false;
-  return weaknessInPlay({ timing: m.timing, round: chase.round, final: chase.kind === "final", byDawn: chase.byDawn, overdrawn: overdrawn && chase.kind === "final" });
+  return weaknessInPlay({ timing: m.timing, round: chase.round, overdrawn: overdrawn && chase.kind === "final" });
 }
 
 /**
@@ -254,7 +259,27 @@ export function corneredFates(chase) {
   }));
 }
 
-/** Chapter 5: the Limit came during a local chase: it ends at once (even if the same round cornered them); they join the flight. */
+/** Chapter 5: the Limit came during a local chase: it ends at once and they join the flight. */
 export function limitEndsLocal(chase) {
   return isRunning(chase) && chase.kind === "local";
+}
+
+/**
+ * B3 (Chapter 5, At the Limit): the Limit came during a local chase. It ends at once and
+ * its Entities join the final flight — but if the roll that brought the Limit completed a
+ * round that corners them, they are captured first and stay behind (Already Dead: loses
+ * its next Turn instead, and isn't captured). Returns { chase (the local chase, ended or
+ * cornered), staysBehind: [actorIds captured] }.
+ */
+export function endLocalAtLimit(chase) {
+  if (!limitEndsLocal(chase)) return { chase, staysBehind: [] };
+  if (roundDone(chase)) {
+    const out = resolveRound(chase);
+    if (out.outcome === "cornered") {
+      return { chase: out.chase, staysBehind: corneredFates(out.chase).filter((f) => f.fate === "captured").map((f) => f.actorId) };
+    }
+    if (out.outcome === "escaped") return { chase: out.chase, staysBehind: [] };
+    return { chase: endChase(out.chase, "ended"), staysBehind: [] };
+  }
+  return { chase: endChase(chase, "ended"), staysBehind: [] };
 }
