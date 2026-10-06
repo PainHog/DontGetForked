@@ -1,6 +1,6 @@
 Now: The first full draft of the rulebook is complete: every chapter written, three ready-to-play towns, a printable monster sheet and a one-page rules reference.
 Next: A few rules questions from the latest playtest, then Richard's first two-player try of the online version.
-Number: Design decisions made = 83
+Number: Design decisions made = 84
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 151
@@ -48,7 +48,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Rules chapters drafted
 - [x] First full rulebook draft (with stand-in pictures)
 - [x] Balance pass: win and getting-forked rates on target
-- [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
+- [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk
 - [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
 - [x] Online version, part 2: chases and the lock-up
 - [x] Online version: ready-made monsters, tables and towns to drag in

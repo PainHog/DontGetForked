@@ -119,6 +119,7 @@
   "DGF.Card.smaller.carrying": "One size smaller (carrying)",
   "DGF.Card.smaller.weakness": "One size smaller (the Weakness)",
   "DGF.Card.diff.shortcut": "{n} easier (Shortcut)",
+  "DGF.Card.diff.fetch": "{n} easier (Fetch)",
   "DGF.Card.diff.open": "{n} lower (an approach of its own)",
   "DGF.Card.helpedBy": "{name} ({helper})",
   "DGF.Card.spent": "{name} spends {n}",

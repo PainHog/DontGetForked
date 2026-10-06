@@ -217,3 +217,15 @@ Tried in memory (`sim/run.mjs` now accepts a roster array, so a patched copy can
 **Decided (B4, under Richard's advance approval):** Broomstick opens with Nimble (it fits "in over the rooftops"; the Witch's Nimble is her d4). The rest sit at the edge of the target, within noise, and wait for the playtest.
 
 Other targets now: Hard captures 0.35 per raid (target 0.2–0.3; B3's "cornered at the Limit is captured" adds them back: the same package without it gave 0.28). The Mask is chosen on 22% of all rolls but 36% of the rolls where there's a choice (the final flight forces the Monster); the target ("each on at least a quarter of rolls") is met where there's a choice. A party that always goes for furniture: Grand Year 80% at random towns with the default policy's choices (it only goes when safe).
+
+## The Werewolf's Fetch after B4 (2026-10-06, for B5)
+
+Fetch ("a final flight you're in starts at Lead 3") stayed at −2.9 to −3.3 against the ±2.5 target: since B3, final flights are rarer and shorter, and they rarely turn a raid into a Win. New `fetchRule` values, with `node sim/run.mjs`'s outlier measure (parties with vs without, same label and size):
+
+| Fetch | Seed 1, 1,500 raids per cell | Seed 7, 2,500 raids per cell | Wins E / S / H (seed 7) |
+|---|---|---|---|
+| flight (B2) | −3.1 (Shortcut +1.5, Night Runner +1.5, Werewolf −0.1) | −2.9 (+0.8, +2.2, −0.2) | 92.5 / 74.7 / 56.3 |
+| **flightExit**: also the way out 1 easier for whoever rolls it while the Werewolf is there | **−2.0** (+1.0, +1.0, +0.3) | **−1.8** (+0.2, +1.6, +0.2) | 92.6 / 74.9 / 56.7 |
+| flightLockup: also the lock-up 2 easier when it rolls the rescue | −2.8 | — | — |
+
+**Decided (B5, under Richard's advance approval):** `fetchRule: "flightExit"` is the default. The party leaves together, so "while you're there" means "unless you've been captured".

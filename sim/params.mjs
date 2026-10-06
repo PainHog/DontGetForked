@@ -144,9 +144,9 @@ export const PARAMS = {
     ref: "DESIGN B3; PT4 m29",
   },
   fetchRule: {
-    kind: "rule", default: "flight", values: ["flight", "pickup", "keeper", "carry", "grab", "lockup"],
-    title: "The Werewolf's Fetch (C5; B2 2026-10-06: flight is the rule)",
-    doc: "pickup = picking up a dropped item doesn't cost your action (as written); keeper = \"drop an item\" is never your Cost; carry = carrying furniture doesn't slow your moves; grab = when an Entity beside you is captured, you take what it carried; lockup = the lock-up is 2 easier when you roll the rescue; flight = the final flight starts at Lead +1 while you are in it.",
+    kind: "rule", default: "flightExit", values: ["flightExit", "flight", "pickup", "keeper", "carry", "grab", "lockup", "flightLockup"],
+    title: "The Werewolf's Fetch (C5; B2 2026-10-06: flight; B5 2026-10-06: flightExit is the rule)",
+    doc: "pickup = picking up a dropped item doesn't cost your action (as written); keeper = \"drop an item\" is never your Cost; carry = carrying furniture doesn't slow your moves; grab = when an Entity beside you is captured, you take what it carried; lockup = the lock-up is 2 easier when you roll the rescue; flight = the final flight starts at Lead +1 while you are in it; flightExit = flight, and the way out is 1 easier for whoever rolls it while you are there (B5); flightLockup = flight, and the lock-up is 2 easier when you roll the rescue (tried for B5).",
     ref: "DESIGN C5; B2",
   },
   alreadyDeadTurns: {

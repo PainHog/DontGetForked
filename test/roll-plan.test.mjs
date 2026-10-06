@@ -194,6 +194,10 @@ test("Perks that bend a roll", () => {
   assert.equal(way.difficulty, 6);
   assert.equal(way.watched, true);
   assert.equal(plan(roller("werewolf"), { wayOut: true, difficulty: 8 }).difficulty, 8);
+  // Fetch (B5): the way out is 1 easier for whoever rolls while the Werewolf is there
+  assert.equal(plan(roller("dracula"), { wayOut: true, difficulty: 8, partyPerks: ["fetch"] }).difficulty, 7);
+  assert.equal(plan(roller("werewolf", { perk: "fetch" }), { wayOut: true, difficulty: 8 }).difficulty, 7);
+  assert.equal(plan(roller("dracula"), { wayOut: false, difficulty: 8, partyPerks: ["fetch"] }).difficulty, 8);
 });
 
 test("Jekyll becomes Hyde when the Monster shows on his roll (Steady Nerves: by 2+), even unseen", () => {

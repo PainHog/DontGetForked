@@ -24,6 +24,7 @@
  *   loud,      // taking the loud way
  *   watched,   // the obstacle is watched
  *   wayOut,    // this is the way out of town (always watched; Shortcut)
+ *   partyPerks, // the way out: the Perks of the others there (everyone not captured; Fetch)
  *   chase,     // a chase roll (a local chase; every roll once the hunt is on)
  *   hunt,      // the whole town hunts (Suspicion stops, the Mask is off)
  *   chaseTraits, // in a chase the tracker runs: the traits this member may roll this round (module/logic/chase.mjs)
@@ -123,7 +124,7 @@ export function buildRollPlan(input) {
     if (r.under) warnings.push({ code: "stepLost" });
   } else errors.push({ code: "badDie", trait, die: baseDie });
 
-  // Difficulty: the furniture's extra obstacle (2 harder, at most 12), the way out (Shortcut: 2 easier), an opened approach (2 lower).
+  // Difficulty: the furniture's extra obstacle (2 harder, at most 12), the way out (Shortcut: 2 easier; Fetch: 1 easier), an opened approach (2 lower).
   const diffParts = [];
   let difficulty = baseDifficulty;
   const furniture = !!input.furniture && !mode && !chase;
@@ -133,6 +134,8 @@ export function buildRollPlan(input) {
     if (harder) diffParts.push({ key: "furniture", n: harder });
   }
   if (input.wayOut && P.exitEase) { difficulty -= P.exitEase; diffParts.push({ key: "shortcut", n: -P.exitEase }); }
+  const partyEase = input.wayOut ? Math.max(0, ...[sys.perk, ...(input.partyPerks ?? [])].map((k) => perkRule(k).partyExitEase ?? 0)) : 0;
+  if (partyEase) { difficulty -= partyEase; diffParts.push({ key: "fetch", n: -partyEase }); } // B5: Fetch, for whoever rolls while the Werewolf is there
   if (opener) { difficulty -= DGF.openApproachEase; diffParts.push({ key: "open", n: -DGF.openApproachEase }); }
 
   const hidden = abilities.some((a) => a.effect === "hidden");

@@ -245,7 +245,7 @@ const hereOf = (S) => (S.here ? S.here.filter((m) => m.status === "active") : ac
  *  fearTheCurse  the mob in your local chase is 1 easier
  *  nightRunner   your local chase starts at Lead 2
  *  shortcut      the way out is 2 easier when you roll it
- *  fetch         picking up a dropped item doesn't cost your action
+ *  fetch         a final flight you're in starts at Lead 3; the way out is 1 easier while you're there (B5; fetchRule)
  *  outOfSight    Trouble gets you caught only while you carry loot or furniture
  *  hiddenPockets captured, you keep what you carry
  *  lightStep     the loud way costs you no Suspicion
@@ -580,7 +580,8 @@ function leaveTown(S) {
 function ctxFor(S, m, ob, loc, phase) {
   const helpers = hereOf(S).filter((h) => h !== m); // P7: only Entities at the same location
   return {
-    phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && S.P.fetchRule === "lockup" && hasPerk(m, "fetch") ? 2 : 0), witnessed: ob.witnessed,
+    phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && ["lockup", "flightLockup"].includes(S.P.fetchRule) && hasPerk(m, "fetch") ? 2 : 0)
+      - (loc && loc.id === "exit" && S.P.fetchRule === "flightExit" && [m, ...helpers].some((o) => hasPerk(o, "fetch")) ? 1 : 0), witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false,
   };
 }
@@ -980,7 +981,7 @@ function finalFlight(S, trigger) {
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
   const furyRule = S.P.overdrawAtLimit === "fury";
   let fury = 0; // overdrawAtLimit "fury": what would raise Suspicion makes the mob harder instead
-  let lead = (S.L.finalStart ?? N.lead.finalStart) + (S.P.fetchRule === "flight" && active(S).some((o) => hasPerk(o, "fetch")) ? (S.P.fetchLead ?? 1) : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
+  let lead = (S.L.finalStart ?? N.lead.finalStart) + (["flight", "flightExit", "flightLockup"].includes(S.P.fetchRule) && active(S).some((o) => hasPerk(o, "fetch")) ? (S.P.fetchLead ?? 1) : 0); // a label may set its own starting Lead; B2 candidate: Fetch +1
   for (let round = 0; round < N.maxChaseRounds; round++) {
     const closeIn = N.finalCloseIn > 0 && round + 1 >= N.finalCloseIn ? round + 2 - N.finalCloseIn : 0;
     const mobD = Math.min(Math.max(baseMob, N.finalCloseCap ?? 12), baseMob + closeIn) + fury;

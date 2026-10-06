@@ -16,7 +16,7 @@ import { rollAbilities, otherForm, diceFor, payFor, draughtPlan } from "../logic
 import { runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
-import { chaseRollContext, chaseWeakness, lockupDifficulty } from "../raid/chase-flow.mjs";
+import { chaseRollContext, chaseWeakness, lockupDifficulty, entities } from "../raid/chase-flow.mjs";
 import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
 import { chaseEventId } from "../logic/chase.mjs";
 import { postCard } from "../chat/cards.mjs";
@@ -81,6 +81,7 @@ export function buildInput(actor, values, raid = getRaid()) {
     loud: !!values.loud,
     watched: !!values.watched,
     wayOut: !!values.wayOut,
+    partyPerks: values.wayOut ? entities().filter((a) => a.id !== actor.id && a.system.status !== "captured").map((a) => a.system.perk) : [], // Fetch (B5)
     chase: !!values.chase,
     hunt: raid.hunt,
     chaseTraits: c?.ok ? c.traits : null,
