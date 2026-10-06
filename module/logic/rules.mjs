@@ -120,8 +120,10 @@ export function leadMove(result) {
 }
 
 /**
- * Q8g + S8: a shared Lead (the final flight; several caught by one roll, R4) moves
- * by majority. A Critical counts as two successes.
+ * Q8g + S8 + B6: a shared Lead (the final flight; several caught by one roll, R4) moves
+ * by majority. If Successes outnumber Trouble, it rises by 1, or by 2 if they outnumber it
+ * by two or more; if Trouble outnumbers Successes, it falls the same way; otherwise it
+ * stays. A Critical counts as two Successes.
  */
 export function majorityMove(results) {
   let up = 0;
@@ -130,10 +132,11 @@ export function majorityMove(results) {
     if (r.band === "success") up += r.critical ? 2 : 1;
     else if (r.band === "trouble") down += 1;
   }
-  return up > down ? 1 : down > up ? -1 : 0;
+  const d = up - down;
+  return d >= 2 ? 2 : d <= -2 ? -2 : d;
 }
 
-/** CORE-RULES Chases: the local mob's Difficulty rises with Suspicion (S9: 10 + half, at most 12). */
+/** CORE-RULES Chases: the local mob's Difficulty rises with Suspicion (B3: 8 + half, at most 12). */
 export function localMobDifficulty(suspicion) {
   const M = DGF.localMob;
   return Math.min(M.max, M.base + Math.floor(suspicion * M.perSuspicion));
@@ -161,10 +164,12 @@ export function rollShoppingList({ size, essentials, roll }) {
 /**
  * C15: the epilogue's lines: the result's line, then one line for each kind of
  * item (Castle Duty key) on the list that didn't come home, once per kind, in table order.
+ * After Forked, only the Forked line (m11).
  */
 export function epilogueLines({ result, missingDuties = [] }) {
   const lines = [DGF.epilogue.year[result]];
   if (!lines[0]) throw new Error(`unknown result: ${result}`);
+  if (result === "forked") return lines;
   const missing = new Set(missingDuties);
   for (const d of DGF.duties) if (missing.has(d.key)) lines.push(DGF.epilogue.missing[d.key]);
   return lines;

@@ -153,6 +153,7 @@ function chaseContext(card) {
       return bits.join(" ");
     }
     if (f.fate === "loseTurn") return t("DGF.Chase.fate.loseTurn", { name: f.name, turn: f.skipTurn ?? "" });
+    if (f.fate === "flees") return t("DGF.Chase.fate.flees", { name: f.name });
     return t("DGF.Chase.fate.forked");
   };
   const fates = card.chaseKind === "final" && card.outcome === "cornered" ? [t("DGF.Chase.fate.forked")] : (card.fates ?? []).map(fate);

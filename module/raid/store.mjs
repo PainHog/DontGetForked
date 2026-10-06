@@ -216,19 +216,36 @@ export function registerRaidOps() {
     },
   });
 
-  // Next / previous Turn. B2: while furniture is carried in town, the Turn's end raises Suspicion by 1 (autoFurniture).
+  // Next / previous Turn. B2 + V4: from the Turn the furniture's piece is taken until it leaves town or is
+  // lost, each Turn's end raises Suspicion by 1, even while it is set down (autoFurniture).
   registerOp(OPS.raidTurn, {
     gmOnly: true,
     apply: async ({ delta = 1 }) => {
       const step = Math.sign(Number(delta)) || 1;
-      const carriers = setting(SETTINGS.autoFurniture)
-        ? game.actors.filter((a) => isEntity(a) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name)
-        : [];
+      const auto = setting(SETTINGS.autoFurniture);
+      const carriers = game.actors.filter((a) => isEntity(a) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name);
       const { state } = await mutateRaid((s) => (step > 0
-        ? R.advanceTurn(R.endOfTurnFurniture(s, carriers), 1)
+        ? R.advanceTurn(auto ? R.endOfTurnFurniture(s, carriers) : s, 1)
         : R.advanceTurn(R.undoEndOfTurnFurniture(s), -1)));
       return { ok: true, turn: state.turn, dawn: state.dawn };
     },
+  });
+
+  // GM: the furniture's piece by hand — "inPlay" (taken), "out" (out of town), "lost" (the town took it back), "" (not taken).
+  registerOp(OPS.raidFurniture, {
+    gmOnly: true,
+    apply: async ({ state: furniture }) => {
+      if (!R.FURNITURE_STATES.includes(furniture)) return { ok: false, reason: "badState" };
+      const { state } = await mutateRaid((s) => R.setFurniture(s, furniture));
+      return { ok: true, furniture: state.furniture };
+    },
+  });
+
+  // V4: the moment an Entity first takes the piece, it is in play (and noisy) until it leaves town or is lost.
+  Hooks.on("updateActor", (actor, diff) => {
+    if (!isActiveGM() || !isEntity(actor) || diff?.system?.carryingFurniture !== true || !setting(SETTINGS.autoFurniture)) return;
+    if (getRaid().furniture !== "") return;
+    mutateRaid((s) => R.takeFurniture(s)).catch((err) => console.error("Don't Get Forked | furniture", err));
   });
 
   registerOp(OPS.raidHunt, {

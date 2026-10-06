@@ -249,13 +249,15 @@ export function removeMember(chase, actorId) {
 
 /**
  * What being cornered does to each member. Local chase: captured (Already Dead: loses
- * its next Turn instead). Final flight: the party is forked.
- * Returns [{ actorId, name, fate: "captured" | "loseTurn" | "forked" }].
+ * its next Turn instead; V5: in the round the Limit comes, Already Dead simply joins
+ * the final flight). Final flight: the party is forked.
+ * Returns [{ actorId, name, fate: "captured" | "loseTurn" | "flees" | "forked" }].
  */
 export function corneredFates(chase) {
+  const ghostly = (m) => perkRule(m.perk).corneredLosesTurn;
   return chase.members.map((m) => ({
     actorId: m.actorId, name: m.name,
-    fate: chase.kind === "final" ? "forked" : perkRule(m.perk).corneredLosesTurn ? "loseTurn" : "captured",
+    fate: chase.kind === "final" ? "forked" : ghostly(m) ? (chase.atLimit ? "flees" : "loseTurn") : "captured",
   }));
 }
 
@@ -267,16 +269,17 @@ export function limitEndsLocal(chase) {
 /**
  * B3 (Chapter 5, At the Limit): the Limit came during a local chase. It ends at once and
  * its Entities join the final flight — but if the roll that brought the Limit completed a
- * round that corners them, they are captured first and stay behind (Already Dead: loses
- * its next Turn instead, and isn't captured). Returns { chase (the local chase, ended or
- * cornered), staysBehind: [actorIds captured] }.
+ * round that corners them, they are captured first and stay behind (V5: Already Dead isn't
+ * captured and loses no Turn: it simply joins the flight). Returns { chase (the local chase,
+ * ended or cornered, marked atLimit), staysBehind: [actorIds captured] }.
  */
 export function endLocalAtLimit(chase) {
   if (!limitEndsLocal(chase)) return { chase, staysBehind: [] };
   if (roundDone(chase)) {
     const out = resolveRound(chase);
     if (out.outcome === "cornered") {
-      return { chase: out.chase, staysBehind: corneredFates(out.chase).filter((f) => f.fate === "captured").map((f) => f.actorId) };
+      const cornered = { ...out.chase, atLimit: true };
+      return { chase: cornered, staysBehind: corneredFates(cornered).filter((f) => f.fate === "captured").map((f) => f.actorId) };
     }
     if (out.outcome === "escaped") return { chase: out.chase, staysBehind: [] };
     return { chase: endChase(out.chase, "ended"), staysBehind: [] };

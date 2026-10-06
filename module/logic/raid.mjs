@@ -14,7 +14,8 @@
  *             tells,   // the Tell checks made: [{ id, place, turn, goesOff, actorId, name }]
  *             list,    // the shopping list: [{ name, duty, essential }]
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
- *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night
+ *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
+ *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
  *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
@@ -26,6 +27,8 @@ import { DGF } from "../config.mjs";
 import { foldSuspicion, addEntry, cancelEvent, restoreEvent } from "./suspicion.mjs";
 
 export const RAID_VERSION = 2;
+/** V4: the furniture's piece in this raid. */
+export const FURNITURE_STATES = Object.freeze(["", "inPlay", "out", "lost"]);
 export const LABELS = Object.freeze(Object.keys(DGF.labels));
 
 /** A fresh raid at this difficulty ("easy" | "standard" | "hard"). */
@@ -48,6 +51,7 @@ export function newRaid({ id = "", difficulty = "standard" } = {}) {
     tells: [],
     list: [],
     over: null,
+    furniture: "",
     furnitureLost: false,
     endedChase: null,
   };
@@ -74,7 +78,8 @@ export function normalizeRaid(stored) {
     tells: Array.isArray(s.tells) ? s.tells : [],
     list: Array.isArray(s.list) ? s.list : [],
     over: s.over && typeof s.over === "object" ? s.over : null,
-    furnitureLost: !!s.furnitureLost,
+    furniture: FURNITURE_STATES.includes(s.furniture) ? s.furniture : s.furnitureLost ? "lost" : "",
+    furnitureLost: s.furniture === "lost" || (!FURNITURE_STATES.includes(s.furniture) && !!s.furnitureLost),
     endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
 }
@@ -117,6 +122,7 @@ export function raidView(state) {
     exit: DGF.labels[state.difficulty]?.exit ?? null,
     lockup: DGF.labels[state.difficulty]?.lockup ?? null,
     over: state.over ? { ...state.over } : null,
+    furniture: state.furniture ?? "",
     furnitureLost: !!state.furnitureLost,
   };
 }
@@ -238,15 +244,19 @@ export function furnitureEventId(turn) {
 }
 
 /**
- * B2 (Chapter 4, Carrying): while a piece of furniture is carried in town, Suspicion rises by 1
- * at the end of each Turn. Call with the state before the Turn moves on and the carriers' names;
- * a Turn ended again (after the Storyteller stepped back) counts its event again, never twice.
+ * B2 + V4 (Chapter 4, Carrying): from the Turn the piece is first taken until it leaves town
+ * or the town takes it back, Suspicion rises by 1 at the end of each Turn — even while it is
+ * set down. Call with the state before the Turn moves on and the names of anyone carrying it
+ * now (carrying it marks it taken); a Turn ended again (after the Storyteller stepped back)
+ * counts its event again, never twice.
  */
 export function endOfTurnFurniture(state, carriers = []) {
-  if (!carriers.length || state.dawn || state.over) return state;
-  const eventId = furnitureEventId(state.turn);
-  if (state.ledger.some((e) => e.eventId === eventId)) return restore(state, eventId);
-  return recordEvent(state, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: "furniture", actorName: carriers.join(", ") });
+  if (state.dawn || state.over) return state;
+  let s = carriers.length ? takeFurniture(state) : state;
+  if (s.furniture !== "inPlay") return s;
+  const eventId = furnitureEventId(s.turn);
+  if (s.ledger.some((e) => e.eventId === eventId)) return restore(s, eventId);
+  return recordEvent(s, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: "furniture", actorName: carriers.join(", ") });
 }
 
 /** The Storyteller steps a Turn back: the Turn that ended didn't end after all, so its furniture event stops counting. */
@@ -256,7 +266,23 @@ export function undoEndOfTurnFurniture(state) {
   return state.ledger.some((e) => e.eventId === eventId) ? cancel(state, eventId) : state;
 }
 
+/** The piece's state, set (the Storyteller's hand, or the rules below). */
+export function setFurniture(state, furniture) {
+  if (!FURNITURE_STATES.includes(furniture)) throw new Error(`unknown furniture state: ${furniture}`);
+  return state.furniture === furniture ? state : { ...state, furniture, furnitureLost: furniture === "lost" };
+}
+
 /** F15 (Chapter 6, Captured): a furniture carrier was captured: the piece is gone for the night. */
 export function loseFurniture(state) {
-  return state.furnitureLost ? state : { ...state, furnitureLost: true };
+  return setFurniture(state, "lost");
+}
+
+/** V4: the piece is taken (first picked up): it's in play — noisy each Turn — until it leaves town or is lost. */
+export function takeFurniture(state) {
+  return state.furniture === "" ? setFurniture(state, "inPlay") : state;
+}
+
+/** V4: the piece leaves town with the party (the way out beaten): no more noise. */
+export function furnitureLeaves(state) {
+  return state.furniture === "inPlay" ? setFurniture(state, "out") : state;
 }

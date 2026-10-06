@@ -91,7 +91,8 @@ export function buildRollPlan(input) {
   // A chase the tracker runs: the ground (plus Wall-Crawler's or Fly by Night's trait) says what works this round.
   const chaseTraits = Array.isArray(input.chaseTraits) ? input.chaseTraits : null;
   if (input.chaseBlocked) errors.push({ code: input.chaseBlocked }); // in the chase, but not now: "noGround" (the ground isn't rolled yet) or "alreadyRolled" (this round)
-  if (chase && chaseTraits && !opener && !chaseTraits.includes(called)) errors.push({ code: "notOnGround", traits: chaseTraits });
+  // V2: "use the ability's trait instead" works in a chase too, replacing the ground's traits
+  if (chase && chaseTraits && !changers.length && !chaseTraits.includes(called)) errors.push({ code: "notOnGround", traits: chaseTraits });
   const loud = listed ? !opener && listed.loud.includes(called) : !!input.loud;
 
   // The second die. Once the hunt is on the Mask is off; carriers can't use the Mask.

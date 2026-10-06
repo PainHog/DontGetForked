@@ -130,6 +130,7 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 6. **GM:** roll anything for Dracula without *At the lock-up*: refused (*Held at the lock-up: its one roll is slipping free*).
 
 7. **Cornered at the Limit** *(optional, a new raid)*: raise Suspicion to one below the Limit (10 on Standard), get one Entity caught alone, and roll Trouble for it at Lead 1. The same roll brings the Limit: the chat shows that round (**Cornered!**), then **The lock-up** (it is captured first), then **The final flight!** without it.
+8. **Already Dead at the Limit** *(optional)*: do the same with a **Ghost** whose Perk is *Already Dead*: the round card says it *isn't captured and loses no Turn: it joins the final flight*; its sheet stays Active with no lost Turn, and **The final flight!** lists it with the others.
 
 ## 13. Slipping free and a rescue
 
@@ -142,20 +143,22 @@ Switch *Run chases automatically* back on. **GM:** New raid → *Standard*. You 
 ## 14. Furniture
 
 1. **Ann:** roll Sly with *The furniture's extra obstacle* ticked at Difficulty 10: the card says *against 12* and *2 harder (the furniture's extra obstacle)*. At 12 it stays 12.
-2. **Ann:** tick *Carrying furniture* on the Witch's sheet. **GM:** **Next Turn**: Suspicion +1, and the event list says *carrying furniture*. Untick it, Next Turn: nothing. **◀ Turn** back over a Turn that raised it: the rise is taken back.
+2. **Ann:** tick *Carrying furniture* on the Witch's sheet: both Raid windows say *The furniture is in play: Suspicion +1 at the end of each Turn, even while it's set down*. **GM:** **Next Turn**: Suspicion +1, and the event list says *carrying furniture*. Untick it (she sets it down), Next Turn: **still +1** (the piece is in town). **◀ Turn** back over a Turn that raised it: the rise is taken back.
+3. **GM:** on the furniture line press **out of town**: the line says *The furniture has left town*; Next Turn: nothing. (Press **lost** instead and the line says it is lost for the night; nothing either.) The way out beaten or the final flight escaped also takes it out of town by itself; a carrier captured loses it (section 12).
 
 ## 15. The final flight and the year
 
 1. **Ann:** make sure the Witch carries two of the list's items (by name). **GM:** press **+1** until the Limit. *The whole town hunts*, then **The final flight!** (*Fleeing: A Witch, Dracula… Lead 2; clear at 5*; on Hard, clear at 6) and its round 1 ground, *The mob: Difficulty 11* (Standard; 10 Easy, 11 Hard).
-2. Each round **both** roll (the Mask is off: the dialog switches to the Monster). After the second roll, a **round** card applies the **majority rule**: more Successes than Trouble: +1; more Trouble: −1; else 0; *a Critical counts as two Successes*. The trackers show who has rolled.
+2. Each round **both** roll (the Mask is off: the dialog switches to the Monster). After the second roll, a **round** card applies the **majority rule**: Successes against Trouble (*a Critical counts as two Successes*): one more Success: **+1**; two or more more: **+2**; one more Trouble: **−1**; two or more more: **−2**; a tie: 0. E.g. both Succeed: *Lead +2*; one Success and one Trouble: *Lead 0*. The trackers show who has rolled.
+   - A switch ability (e.g. Dracula's *Bat*: use Nimble instead) works in a chase even when the ground doesn't list its trait, and in the flight a friend's switch can go on your roll; opening an approach is refused in any chase.
 3. **Ann:** set the Witch's charges to 0 and roll with Hedge Spell ticked: the card says she *overdraws: its Weakness is in play from its next roll*; from her next roll her die is one size smaller. Tick Hedge Spell again next round: refused (*has already overdrawn in this flight: once per flight*). (The Witch's Rowan is *Soon*: it also comes in from round 3.)
 4. At Lead 5 (6 on Hard): **Escaped! Home with the goods.**, then **Out of town** (*The party outran the mob…*) with **How the year went** for the GM only.
-5. **GM:** click it. The form lists the shopping list with the items the Witch carries already ticked *Home*, the furniture box, *Entities left behind* (anyone still held). Tick or untick, then **Read the year**: a **How the year went: Win / Partial / …** card with the result's line and one line for each missing kind. The Raid windows say *The raid is over: …*. **End the raid** again says the year is decided.
+5. **GM:** click it. The form lists the shopping list with the items the Witch carries already ticked *Home*, the furniture box, *Entities left behind* (anyone still held). Tick or untick, then **Read the year**: a **How the year went: Win / Partial / …** card with the result's line and one line for each missing kind (after Forked, only the Forked line). The Raid windows say *The raid is over: …*. **End the raid** again says the year is decided.
 
 ## 16. A forked raid
 
 1. **GM:** New raid → *Standard*: everyone Active, charges back to 3. **Shopping list** → roll it (note how the essentials die fell). **Start the hunt**: **The final flight!** (*The Storyteller started it*).
-2. Roll Trouble for both until the Lead reaches 0: **Cornered by the mob!** *Forked: the monsters are killed and the raid is lost.* — and, by itself, **How the year went: Forked**, with the Forked line and one line for each kind on the list.
+2. Roll Trouble for both: two Trouble and no Success move the Lead **−2**, from 2 to 0 in one round: **Cornered by the mob!** *Forked: the monsters are killed and the raid is lost.* — and, by itself, **How the year went: Forked**, with only the Forked line.
 
 ## 17. Running it by hand (switches)
 

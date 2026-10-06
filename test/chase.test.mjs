@@ -156,10 +156,22 @@ test("several caught together, and every final flight: the majority rule (a Crit
   assert.deepEqual(waitingFor(c).map((m) => m.actorId), ["e"]);
   c = recordRoll(c, "e", { messageId: "3", band: "trouble" }).chase;
   assert.equal(roundMove(c), 0, "2 Successes against 2 Trouble");
-  // a party of one in the final flight still moves by the majority rule: a Critical is +1
+  // a party of one in the final flight still moves by the majority rule (B6: a Critical alone is two Successes: +2)
   let f = startRound(newChase({ id: "f", kind: "final", cause: "dawn", members: [member("a", "dracula")] }), { face: 1, label: "hard" });
   f = recordRoll(f, "a", { messageId: "1", band: "success", critical: true }).chase;
-  assert.equal(roundMove(f), 1);
+  assert.equal(roundMove(f), 2);
+  let f1 = startRound(newChase({ id: "f1", kind: "final", cause: "dawn", members: [member("a", "dracula")] }), { face: 1, label: "hard" });
+  f1 = recordRoll(f1, "a", { messageId: "1", band: "success" }).chase;
+  assert.equal(roundMove(f1), 1, "one plain Success: +1");
+  // B6: two caught together, both Succeed: +2 (from Lead 1 to 3)
+  let two = startRound(newChase({ id: "t", members: [member("a", "dracula"), member("b", "witch")] }), { face: 5 });
+  for (const id of ["a", "b"]) two = recordRoll(two, id, { messageId: id, band: "success" }).chase;
+  assert.equal(resolveRound(two).chase.lead, 3);
+  let both = startRound(newChase({ id: "u", members: [member("a", "dracula"), member("b", "witch")] }), { face: 5 });
+  for (const id of ["a", "b"]) both = recordRoll(both, id, { messageId: id, band: "trouble" }).chase;
+  const out = resolveRound(both);
+  assert.equal(out.move, -2);
+  assert.equal(out.outcome, "cornered");
   // shared local Lead: 2 Successes, 1 Trouble → +1
   let s = startRound(newChase({ id: "s", members: [member("a", "dracula"), member("b", "witch"), member("e", "mummy")] }), { face: 5 });
   for (const [id, band] of [["a", "success"], ["b", "success"], ["e", "trouble"]]) s = recordRoll(s, id, { messageId: id, band }).chase;
@@ -314,7 +326,8 @@ test("the year from the list: Win, Grand Year, Partial, Bust, left behind, forke
   assert.equal(y.result, "forked");
   assert.equal(y.itemsHome, 0);
   assert.equal(y.lines[0], DGF.epilogue.year.forked);
-  assert.equal(y.lines.length, 1 + 5);
+  assert.deepEqual(y.lines, [DGF.epilogue.year.forked], "m11: after Forked, only the Forked line");
+  assert.deepEqual(y.missingDuties, []);
   assert.throws(() => yearFromList({ list: [] }), /empty/);
   assert.throws(() => listItem({ name: "x", duty: "astronomer" }));
   // two items of one kind missing: one line for the kind
@@ -562,7 +575,7 @@ test("F16: essentials: Easy one, Hard two; on Standard any die: odd one, even tw
 
 /* ------------------------------------------------- B3 (after playtest PT4) -- */
 
-test("B3: cornered in the round the Limit comes: captured first (Already Dead loses its Turn instead); otherwise the chase just ends", async () => {
+test("B3 + V5: cornered in the round the Limit comes: captured first (Already Dead just joins the flight); otherwise the chase just ends", async () => {
   const { endLocalAtLimit } = await import("../module/logic/chase.mjs");
   // one Entity, its round complete and cornered: it stays behind
   let solo = startRound(newChase({ id: "a", members: [member("d", "dracula")] }), { face: 1 });
@@ -570,12 +583,15 @@ test("B3: cornered in the round the Limit comes: captured first (Already Dead lo
   let out = endLocalAtLimit(solo);
   assert.equal(out.chase.outcome, "cornered");
   assert.deepEqual(out.staysBehind, ["d"]);
-  // Already Dead isn't captured: it loses its next Turn and isn't left behind
+  // V5: Already Dead cornered as the Limit comes isn't captured and loses no Turn: it simply joins the flight
   let ghost = startRound(newChase({ id: "b", members: [member("g", "ghost", { perk: "alreadyDead" })] }), { face: 1 });
   ghost = recordRoll(ghost, "g", { messageId: "m", band: "trouble" }).chase;
   out = endLocalAtLimit(ghost);
   assert.equal(out.chase.outcome, "cornered");
+  assert.equal(out.chase.atLimit, true);
   assert.deepEqual(out.staysBehind, []);
+  assert.deepEqual(corneredFates(out.chase).map((f) => f.fate), ["flees"]);
+  assert.deepEqual(corneredFates(resolveRound(ghost).chase).map((f) => f.fate), ["loseTurn"], "any other round: loses its next Turn");
   // a shared chase whose round isn't complete: it ends at once, nobody is cornered
   let shared = startRound(newChase({ id: "c", members: [member("d", "dracula"), member("w", "witch")] }), { face: 1 });
   shared = recordRoll(shared, "d", { messageId: "m", band: "trouble" }).chase;
@@ -604,4 +620,60 @@ test("B3: overdraw in the final flight at most once per Entity per flight (refus
   // before the hunt there is no such limit (overdraw is Suspicion +2)
   const local = plan(fresh, { trait: "charm", abilities: [own(fresh, "gift"), { ...sig, effect: "hidden" }] });
   assert.equal(local.errors.some((e) => e.code === "overdrawOnce"), false);
+});
+
+/* ----------------------------------------------- B6 and the PT5 rulings -- */
+
+test("V2: a switch ability's trait works in a chase, replacing the ground's traits (local and final); opening an approach never does", () => {
+  const mummy = roller("mummy"); // Ancient Lore: use Wits instead
+  const lore = own(mummy, "signature");
+  const local = plan(mummy, { chase: true, chaseTraits: ["sly", "charm"], trait: "wits", abilities: [lore] });
+  assert.equal(local.ok, true, local.errors.map((e) => e.code).join());
+  assert.equal(local.trait, "wits");
+  assert.equal(local.traitDie, 12);
+  assert.ok(plan(mummy, { chase: true, chaseTraits: ["sly", "charm"], trait: "wits" }).errors.some((e) => e.code === "notOnGround"), "without it, only the ground's traits");
+  // the final flight: a helper's switch on someone else's roll
+  const drac = roller("dracula");
+  const helper = { ...lore, payerId: "mummy", payerName: "The Mummy", payer: { charges: 3, weaknessInPlay: false } };
+  const flight = plan(drac, { chase: true, hunt: true, chaseTraits: ["brawn", "nimble"], trait: "sly", second: "monster", abilities: [helper] });
+  assert.equal(flight.ok, true, flight.errors.map((e) => e.code).join());
+  assert.equal(flight.trait, "wits");
+  assert.ok(plan(drac, { chase: true, chaseTraits: ["brawn", "nimble"], trait: "sly", abilities: [helper] }).errors.some((e) => e.code === "helpInLocalChase"), "in a local chase, only your own roll");
+  assert.ok(plan(drac, { chase: true, chaseTraits: ["brawn", "nimble"], trait: "sly", abilities: [own(drac, "signature")] }).errors.some((e) => e.code === "openInChase"));
+});
+
+test("V4: the furniture is noisy from the Turn it is taken until it leaves town or is lost, even while set down", async () => {
+  const { takeFurniture, furnitureLeaves, loseFurniture, setFurniture, endOfTurnFurniture, advanceTurn } = await import("../module/logic/raid.mjs");
+  let s = newRaid({ id: "r" });
+  assert.equal(s.furniture, "");
+  s = advanceTurn(endOfTurnFurniture(s, []), 1);
+  assert.equal(suspicionOf(s).value, 0, "not taken: no noise");
+  s = advanceTurn(endOfTurnFurniture(s, ["A Witch"]), 1); // carried at a Turn's end: taken
+  assert.equal(s.furniture, "inPlay");
+  assert.equal(suspicionOf(s).value, 1);
+  s = advanceTurn(endOfTurnFurniture(s, []), 1); // set down: still noisy
+  assert.equal(suspicionOf(s).value, 2);
+  s = advanceTurn(endOfTurnFurniture(furnitureLeaves(s), []), 1);
+  assert.equal(s.furniture, "out");
+  assert.equal(suspicionOf(s).value, 2, "out of town: quiet");
+  assert.equal(takeFurniture(s).furniture, "out", "taken only once");
+  let t = takeFurniture(newRaid({ id: "t" }));
+  assert.equal(t.furniture, "inPlay");
+  t = loseFurniture(t);
+  assert.equal(t.furniture, "lost");
+  assert.equal(t.furnitureLost, true);
+  assert.equal(suspicionOf(advanceTurn(endOfTurnFurniture(t, ["x"]), 1)).value, 0, "lost: quiet, whoever ticks it");
+  assert.equal(setFurniture(t, "").furnitureLost, false);
+  assert.throws(() => setFurniture(t, "broken"));
+  assert.equal(normalizeRaid({ furnitureLost: true }).furniture, "lost", "an older state");
+  assert.equal(normalizeRaid({ furniture: "inPlay" }).furniture, "inPlay");
+});
+
+test("M3: a new raid starts Jekyll & Hyde as Jekyll", () => {
+  const hyde = { ...entitySystem("jekyll-hyde"), form: "hyde", traits: { brawn: 12, nimble: 10, sly: 8, charm: 4, wits: 6 } };
+  const u = newRaidUpdate(hyde);
+  assert.equal(u.form, "jekyll");
+  assert.deepEqual(u.traits, DGF.entities.find((e) => e.key === "jekyll-hyde").forms.jekyll);
+  assert.equal(entitySystem("jekyll-hyde").form, "jekyll", "a new Entity starts as Jekyll");
+  assert.equal("form" in newRaidUpdate(entitySystem("witch")), false, "one form: nothing to change");
 });

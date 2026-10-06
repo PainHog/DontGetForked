@@ -61,6 +61,19 @@ test("S10, S9 and the chase rules", () => {
   assert.equal(leadMove({ band: "cost" }), 0);
   assert.equal(majorityMove([{ band: "success" }, { band: "trouble" }, { band: "trouble" }]), -1);
   assert.equal(majorityMove([{ band: "success", critical: true }, { band: "trouble" }, { band: "trouble" }]), 0);
+  // B6: by 2 when one side outnumbers the other by two or more
+  const S = { band: "success" }, C = { band: "success", critical: true }, T = { band: "trouble" }, K = { band: "cost" };
+  assert.equal(majorityMove([S, S]), 2, "2 Successes against 0");
+  assert.equal(majorityMove([S, S, S, T]), 2, "3 against 1");
+  assert.equal(majorityMove([S, S, T]), 1, "2 against 1");
+  assert.equal(majorityMove([C]), 2, "1 Critical against 0");
+  assert.equal(majorityMove([C, K]), 2);
+  assert.equal(majorityMove([T, T]), -2, "0 against 2 Trouble");
+  assert.equal(majorityMove([T, T, T, S]), -2);
+  assert.equal(majorityMove([S, T]), 0, "a tie");
+  assert.equal(majorityMove([C, T, T]), 0, "a Critical against 2 Trouble: a tie");
+  assert.equal(majorityMove([K, K]), 0);
+  assert.equal(majorityMove([S, S, S, S, S]), 2, "never more than 2");
 });
 
 test("exact odds: d8 trait + Mask at Difficulty 8", () => {
@@ -156,6 +169,8 @@ test("C15: the epilogue: the result's line, then each missing kind once, in tabl
   const lines = epilogueLines({ result: "partial", missingDuties: ["tailor", "cook", "tailor"] });
   assert.deepEqual(lines, [DGF.epilogue.year.partial, DGF.epilogue.missing.cook, DGF.epilogue.missing.tailor]);
   assert.throws(() => epilogueLines({ result: "great" }));
+  // m11: after Forked, only the Forked line
+  assert.deepEqual(epilogueLines({ result: "forked", missingDuties: ["cook", "tailor"] }), [DGF.epilogue.year.forked]);
 });
 
 test("C16: six pieces of furniture (four Bulky, two Huge); upgrades capped at three, each one extra charge", () => {

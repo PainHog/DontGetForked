@@ -227,6 +227,7 @@ async function consequences(chase, state) {
       if (isEntity(actor) && (actor.system.weaknessInPlay || actor.system.overdrewInFlight)) await actor.update({ "system.weaknessInPlay": false, "system.overdrewInFlight": false });
     }
   }
+  if (chase.kind === "final" && chase.outcome === "escaped") await mutateRaid((s) => R.furnitureLeaves(s)); // out of town (V4)
   if (chase.kind === "final" && setting(SETTINGS.autoYear)) {
     const { finishForked, promptHome } = await import("./raid-checks.mjs");
     if (chase.outcome === "cornered") await finishForked();
@@ -312,6 +313,8 @@ export function registerChaseOps() {
           s = R.recordEvent(s, { eventId: card.eventId, amount: card.suspicion, source: card.kind, label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId });
           res.suspicion = true;
         }
+        // the way out beaten: the party (and any piece it carries) is out of town: no more furniture noise (V4)
+        if (card.wayOutBeaten) s = R.furnitureLeaves(s);
         // its round in the chase (the Limit may have just ended a local chase: then it no longer counts)
         if (card.chaseId && s.chase?.id === card.chaseId) {
           const r = C.recordRoll(s.chase, card.actorId, { messageId, round: card.chaseRound, band: card.band, critical: card.critical });

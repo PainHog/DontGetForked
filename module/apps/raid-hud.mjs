@@ -48,6 +48,8 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       openChase: () => openChaseTracker(),
       endRaid: () => yearDialog(),
       freeCaptive: RaidHud.#onFree,
+      furnitureLost: () => runOp(OPS.raidFurniture, { state: "lost" }),
+      furnitureOut: () => runOp(OPS.raidFurniture, { state: "out" }),
     },
   };
 
@@ -95,6 +97,8 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       chase: state.chase && !state.chase.outcome ? t("DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape }) : "",
       over: v.over ? t("DGF.Raid.over", { result: t(`DGF.Result.${v.over.result}`) }) : "",
       furnitureLost: v.furnitureLost,
+      furnitureInPlay: v.furniture === "inPlay" && setting(SETTINGS.autoFurniture),
+      furnitureOut: v.furniture === "out",
     };
   }
 

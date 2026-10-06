@@ -56,7 +56,7 @@ export function yearFromList({ list, furnitureHome = false, leftBehind = 0, fork
   const extrasMissing = items.filter((it) => !it.essential && !home(it)).length;
   const lost = Math.max(0, Math.trunc(Number(leftBehind) || 0));
   const result = yearResult({ forked, listSize: items.length, itemsHome, essentialsAllHome, extrasMissing, furnitureHome: !forked && !!furnitureHome, leftBehind: lost });
-  const missingDuties = [...new Set(items.filter((it) => !home(it)).map((it) => it.duty))];
+  const missingDuties = forked ? [] : [...new Set(items.filter((it) => !home(it)).map((it) => it.duty))]; // m11: after Forked, only its line
   return {
     result, lines: epilogueLines({ result, missingDuties }), listSize: items.length, itemsHome, essentialsAllHome,
     extrasMissing, missingDuties, furnitureHome: !forked && !!furnitureHome, leftBehind: forked ? 0 : lost,

@@ -13,6 +13,7 @@
  * way out (the roll plan allows "open an approach" when slipping free).
  */
 import { DGF } from "../config.mjs";
+import { formsOf, diceFor } from "./entity.mjs";
 
 const perkRule = (perk) => DGF.perkRules[perk] ?? {};
 
@@ -80,10 +81,14 @@ export function captivesOf(entities) {
 /**
  * A new raid (a new year): the Entity is free, its charges refill (Chapter 2:
  * charges refill once a year, at the castle) and the marks the last raid left go.
+ * M3: Jekyll & Hyde starts each raid as Jekyll (the first form).
  */
 export function newRaidUpdate(system) {
-  return {
+  const update = {
     status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false,
     "charges.value": system?.charges?.start ?? DGF.charges,
   };
+  const forms = formsOf(system?.entityKey);
+  if (forms.length > 1) Object.assign(update, { form: forms[0], traits: diceFor(system.entityKey, forms[0]) });
+  return update;
 }

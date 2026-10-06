@@ -354,6 +354,9 @@ test("a new raid; the Limit starts the hunt; the track never goes past it", asyn
   await settle();
   assert.equal(raid().limit, 11); // Easy (B3)
   assert.equal(raid().value, 0);
+  assert.equal(jekyll.system.form, "jekyll", "M3: Jekyll & Hyde starts each raid as Jekyll");
+  assert.equal(jekyll.system.traits.charm, 12);
+  assert.equal(jekyll.system.charges.value, 3, "charges refill");
   assert.equal(raid().turn, 1);
   assert.match(lastMessage().content, /A new raid/);
   // an old card belongs to the old raid
@@ -421,9 +424,8 @@ test("every automation can be switched off", async () => {
   assert.equal(witch.system.charges.value, charges);
   await setSetting(SETTINGS.autoCharges, true);
 
-  // Jekyll stays Jekyll; the card says Hyde takes over
-  await asUser(ANN, () => api.drinkDraught(jekyll)); // back to Jekyll (free)
-  await settle();
+  // Jekyll stays Jekyll; the card says Hyde takes over (the new raid above started him as Jekyll: M3)
+  assert.equal(jekyll.system.form, "jekyll");
   await setSetting(SETTINGS.autoForm, false);
   await rollAs(ANN, jekyll, { trait: "brawn", second: "monster", difficulty: 8 }, [1, 6]);
   assert.equal(jekyll.system.form, "jekyll");

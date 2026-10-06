@@ -17,6 +17,8 @@
   </div>
   {{/if}}
   {{#if furnitureLost}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureLost"}}</p>{{/if}}
+  {{#if furnitureOut}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureOut"}}</p>{{/if}}
+  {{#if furnitureInPlay}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureInPlay"}}{{#if isGM}} <button type="button" class="dgf-link" data-action="furnitureOut">{{localize "DGF.Raid.furnitureOutButton"}}</button> <button type="button" class="dgf-link" data-action="furnitureLost">{{localize "DGF.Raid.furnitureLostButton"}}</button>{{/if}}</p>{{/if}}
   {{#if list.length}}
   <details class="dgf-hud-list"><summary>{{localize "DGF.Raid.listCount" n=list.length}}</summary>
     <ul>{{#each list}}<li>{{name}}{{#if essential}} <em>({{localize "DGF.List.essential"}})</em>{{/if}}</li>{{/each}}</ul>
