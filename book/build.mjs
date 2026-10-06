@@ -122,13 +122,27 @@ function inlineArt(html) {
       const caption = (inner.match(/<figcaption[\s\S]*?<\/figcaption>/) ?? [""])[0];
       const alt = (`${pre} ${post}`.match(/\bdata-alt="([^"]*)"/) ?? [])[1];
       let svg = loadArt(name);
-      let hidden = "";
-      if (alt) svg = svg.replace(/<svg\b/, `<svg role="img" aria-label="${alt}"`);
-      else if (!/^<svg\b[^>]*\brole="img"/.test(svg)) {
+      let role = "";
+      // Chromium writes a Figure tag only for an image with content of its own, so the alt text
+      // goes on the figure when it has a caption (the portraits: the caption is in the alt) and
+      // on the picture itself when it hasn't (the cover, the maps), with the bare figure as a group.
+      const own = /^<svg\b[^>]*\brole="img"/.test(svg);
+      const title = own && (() => {
+        const id = (svg.match(/^<svg\b[^>]*\baria-labelledby="([^"]+)"/) ?? [])[1];
+        return id && (svg.match(new RegExp(`<title id="${id}">([^<]*)</title>`)) ?? [])[1];
+      })();
+      const label = alt ?? title;
+      if (label && caption) {
+        role = ` role="img" aria-label="${label}"`;
+        svg = svg.replace(/^<svg\b/, `<svg aria-hidden="true"`);
+      } else if (label) {
+        role = ` role="none"`;
+        svg = svg.replace(/\srole="img"/, "").replace(/\saria-labelledby="[^"]+"/, "").replace(/^<svg\b/, `<svg role="img" aria-label="${label}"`);
+      } else {
         svg = svg.replace(/<svg\b/, `<svg aria-hidden="true"`);
-        hidden = ` aria-hidden="true"`;
+        role = ` aria-hidden="true"`;
       }
-      return `<figure${pre}data-art="${name}"${post}${hidden}>${svg}${caption}</figure>`;
+      return `<figure${pre}data-art="${name}"${post}${role}>${svg}${caption}</figure>`;
     });
 }
 
@@ -435,6 +449,10 @@ try {
   }
   const gaps = Object.entries(p1.ends).filter(([id, v]) => !spots[id] && v.freeIn > 3 && v.freeIn <= TEXT_H_IN - 0.3).map(([id, v]) => `${id} (${v.freeIn.toFixed(1)}in free)`);
   if (gaps.length) console.warn(`  ! large gaps with no spot: ${gaps.join(", ")}`);
+  // every stand-in spot is credited by artist on the credits page, so say when one isn't printed
+  const placed = new Set(Object.values(spots).map((s) => s.art));
+  const unplaced = [...new Set(Object.values(SPOTS).flat())].filter((a) => !placed.has(a));
+  if (unplaced.length) warn.push(`spot art not printed (its artist is still on the credits page): ${unplaced.join(", ")}`);
   for (const w of warn) console.warn(`  ! ${w}`);
 } finally {
   await browser.close();

@@ -158,3 +158,17 @@ Every piece placed in this build (37: the cover, 2 part pages, 9 chapter headers
 | BA-48 | minor | pages 1, 4, 18, 28 of the screen PDF; `book/src/book.css:60` | A 1.3–1.5 pt paper-coloured strip runs down the right edge and along the bottom of all four dark pages: the page paints the dark `@page` background, then the `html` element's paper background, then the section's dark box, which ends 1.3 pt short of the page. The print covers don't have it. | Delete `html { background: var(--paper); }` (the `@page` rule already paints every page) or size `.cover`, `.part` and `.back-cover` to `100vw × 100vh`; rebuild and check the edge pixels. |
 | BA-49 | minor | p17 and p22 | Near-empty pages: p17 holds only the campaign box and the cart spot (bottom 40% blank); p22 holds five short paragraphs and the bonfire spot. | Layout call: keep the campaign box on p16 (e.g. let the missing-kind table split, or shorten the box) and gain the spot elsewhere; tighten Chapter 8 by about ten lines so its advice ends on p21. |
 | BA-50 | nit | p7 | The Castle Duties paragraph sits in the left column with about 2.4 in of empty right column above the full-width table. | Make the paragraph `span-all`, or move the table below the first Entity. |
+
+## Status after the fixes (2026-10-06)
+
+Applied with Richard's standing approval and the coordinator's decisions (V15: the laundry and two items sharing a place; V16: Hidden Pockets keeps loot, not furniture; Chapter 5's "Good results never lower it."). Logged in `book/REVIEW.md` rows 54–58. The book is still 28 pages; the text diff against the pre-audit build shows 38 changed spans, all intended; `npm run check` passes (241 tests, no todos: BA-03 and BA-21 are fixed and their tests are ordinary tests now).
+
+- **Fixed:** BA-01 (V15), BA-03, BA-04–BA-22, BA-23 (the tagged PDF now has 19 Figure tags — the 16 portraits and 3 maps — every one with alt text; decorative art is hidden), BA-24, BA-25, BA-26 (the cover tagline now about 5.6:1), BA-27–BA-30, BA-32–BA-39, BA-42, BA-44–BA-48, BA-50. BA-02 is the coordinator's (DESIGN.md note added).
+- **BA-31:** Chodowiecki stays credited: his watchman spot now prints at the end of Chapter 5 (the chapter has room after the fixes). The build now warns when a credited spot isn't printed.
+- **Left, with reasons:**
+  - The cover picture has no Figure tag: Chromium writes none for the absolutely positioned full-bleed picture (tried with its alt on the figure and on the picture, and with its own stacking context). The cover's text is tagged.
+  - BA-34 (Part One's cut hat and ox-wain): raising the crop loses the moon; recorded in SOURCES as deliberate.
+  - BA-40 (the rules beside Dracula revealed) and BA-41 (the fold in the Creature in costume): a crop cuts the figure and an erase leaves a seam; noted in SOURCES for the illustrator's art.
+  - BA-43 (the lantern's dark ledge): accepted for a stand-in, noted in SOURCES.
+  - BA-49 (p17 holds only the campaign box and the cart spot): moving the box onto p16 would drop a page and break the 28-page count; p22 now ends with five paragraphs and the bonfire spot, as before.
+- **Layout changes made to keep 28 pages:** Chapter 3 drops the die chain after "Raise your trait die one size" and moves "watched as usual" into the open-an-approach sentence, and a Critical gives a charge back "up to your starting number"; Chapter 4's furniture line is shortened ("Once taken, it raises Suspicion … even set down"); At the Table's table sits a little closer to the text.
