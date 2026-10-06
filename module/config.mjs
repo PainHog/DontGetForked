@@ -259,6 +259,12 @@ DGF.obstacleTable = Object.freeze([
   { key: "stalls", name: "A maze of festival stalls", quiet: "wits", group: true },
 ].map((o) => Object.freeze(o)));
 
+/** C19: the villagers (flavour only): a d6 for who it is, a d6 for what they're doing. */
+DGF.villagers = Object.freeze({
+  who: Object.freeze(["The baker’s wife", "The night watchman", "A gang of children", "The vicar", "The mayor, in his best costume", "Old Granny Mott, who has seen it all before"]),
+  doing: Object.freeze(["Looking for a lost cat", "Tipsy from the cider", "Judging the costume contest", "Carrying a lantern and a pitchfork “for the parade”", "Gossiping, loudly", "Practising the bells"]),
+});
+
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },

@@ -1,6 +1,6 @@
-Now: The obstacle table is in: twenty things in the monsters' way, from a guard dog to a muddy yard full of geese, balanced so every monster gets its moments.
-Next: The villager table (who the monsters meet in town), decided with the author.
-Number: Design decisions made = 72
+Now: The villagers are in: who the monsters bump into, from the vicar tipsy on cider to old Granny Mott, who has seen it all before.
+Next: Advice for the Storyteller on running the villagers, the mob and the lock-up, decided with the author.
+Number: Design decisions made = 73
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 
@@ -40,6 +40,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] The furniture and castle upgrades
 - [x] How a rolled town is built
 - [x] The obstacle table
+- [x] The villager table
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [ ] Balance pass in the simulator

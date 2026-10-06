@@ -219,6 +219,13 @@ export function secondWayIn(first, rollD20) {
   return o;
 }
 
+/** C19: a villager from two d6 faces: who it is and what they're doing. */
+export function villagerOn(whoFace, doingFace) {
+  const who = DGF.villagers.who[whoFace - 1], doing = DGF.villagers.doing[doingFace - 1];
+  if (!who || !doing) throw new Error(`no villager for ${whoFace}, ${doingFace}`);
+  return { who, doing };
+}
+
 /** C4: does a Tell check go off? */
 export function tellGoesOff(face) {
   return face >= DGF.tell.goesOffOn;
