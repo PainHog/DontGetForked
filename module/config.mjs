@@ -97,7 +97,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "nightRunner", name: "Night Runner", text: "Your local chase starts at Lead 2.", default: true },
       { key: "shortcut", name: "Shortcut", text: "The way out is 2 easier when you roll it." },
-      { key: "fetch", name: "Fetch", text: "Picking up a dropped item doesn’t cost your action." },
+      { key: "fetch", name: "Fetch", text: "While you’re in the final flight, it starts at Lead 3: you know the way home." },
     ],
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
@@ -316,6 +316,7 @@ DGF.perkRules = Object.freeze({
   practisedHand: Object.freeze({ freeDraughtTo: "jekyll" }), // Changing back to Jekyll costs no charge.
   steadyNerves: Object.freeze({ formMargin: 2 }), // Hyde takes over only if the Monster beats your trait die by 2 or more.
   bruteStrength: Object.freeze({ form: "hyde", carryNimble: false }), // As Hyde, carrying doesn’t make your Nimble smaller.
+  fetch: Object.freeze({ finalLead: 3 }), // B2: while you're in the final flight, it starts at Lead 3.
   // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs):
   wallCrawler: Object.freeze({ chaseTrait: "nimble" }), // In a chase you can always roll Nimble.
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.

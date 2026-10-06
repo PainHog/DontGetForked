@@ -132,14 +132,14 @@ export const PARAMS = {
     ref: "DESIGN Captured",
   },
   furnitureRule: {
-    kind: "rule", default: "slow", values: ["slow", "base", "hardLoc", "noisy", "both", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"],
-    title: "What makes furniture risky (S7: slow is the rule)",
+    kind: "rule", default: "noisySlowHard", values: ["noisySlowHard", "slow", "base", "hardLoc", "noisy", "both", "noisySlow", "slowHard", "slowWatched", "noisySlowHard"],
+    title: "What makes furniture risky (S7 slow; B2 2026-10-06: noisySlowHard is the rule)",
     doc: "base = carrying only (no Mask, Nimble one size smaller); hardLoc = the furniture's location is 2 harder; noisy = +1 Suspicion at the end of each Turn a piece is carried in town; both = hardLoc + noisy; slow = while carrying, a move takes two Turns; noisySlow = noisy + slow; slowHard = slow, and the furniture's extra obstacle is 2 harder (B2 candidate); slowWatched = slow, and the furniture's extra obstacle is always watched (B2 candidate); noisySlowHard = noisy + slow + the extra obstacle 2 harder (B2 candidate).",
     ref: "DESIGN Furniture; S7",
   },
   fetchRule: {
-    kind: "rule", default: "pickup", values: ["pickup", "keeper", "carry", "grab", "lockup", "flight"],
-    title: "The Werewolf's Fetch (C5; B2 candidates)",
+    kind: "rule", default: "flight", values: ["flight", "pickup", "keeper", "carry", "grab", "lockup"],
+    title: "The Werewolf's Fetch (C5; B2 2026-10-06: flight is the rule)",
     doc: "pickup = picking up a dropped item doesn't cost your action (as written); keeper = \"drop an item\" is never your Cost; carry = carrying furniture doesn't slow your moves; grab = when an Entity beside you is captured, you take what it carried; lockup = the lock-up is 2 easier when you roll the rescue; flight = the final flight starts at Lead +1 while you are in it.",
     ref: "DESIGN C5; B2",
   },

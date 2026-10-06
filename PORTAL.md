@@ -1,6 +1,6 @@
-Now: The game is balanced to its targets: longer shopping lists and a tougher way out of Hard towns bring the win rates to about 92% on Easy, 77% on Standard and 58% on Hard.
-Next: Fine-tuning two monsters and the furniture gamble, then chases and the lock-up online, and the premade raids and town maps.
-Number: Design decisions made = 77
+Now: Fine-tuning done: stealing furniture is a real gamble now (it's slow and noisy to carry), and the Werewolf's weakest perk was replaced.
+Next: Chases and the lock-up in the online version, then the premade raids and town maps.
+Number: Design decisions made = 78
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 93
@@ -46,7 +46,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Rules chapters drafted (the monsters, towns and art still to come)
 - [ ] First full rulebook draft
 - [x] Balance pass: win and getting-forked rates on target
-- [ ] Balance fine-tuning: two monsters, the Mask and the furniture gamble
+- [x] Balance fine-tuning: the furniture gamble and the Werewolf's weakest perk (two small gaps left for the playtest)
 - [x] Online version, part 1: monster sheets, dice and the shared Suspicion tracker
 - [ ] Online version, part 2: chases and the lock-up
 - [ ] Foundry system playable

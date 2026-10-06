@@ -167,3 +167,5 @@ Measured with the B1 numbers. Switches added: `furnitureRule` noisySlow / slowHa
 **The Werewolf's Fetch** (−3.2 against its other Perks, which give a head start in every local chase or an easier way out): "drop an item is never your Cost", "carrying doesn't slow you" and "grab a captured companion's loot" all leave it at −3.0 to −3.2 (the situations are too rare). "The final flight starts at Lead +1 while you're in it" brings it to −2.3 (2,500 raids per cell; Hard forked 7.7%).
 
 **A Ghost's Already Dead** losing two Turns instead of one changes nothing measurable; A Ghost stays at +2.7 and the Witch's Broomstick at +2.7–2.8, just over the ±2.5 target (they have ranged 2.3–2.8 across runs).
+
+**Decided (B2):** `furnitureRule: "noisySlowHard"` and `fetchRule: "flight"` are now the defaults.
