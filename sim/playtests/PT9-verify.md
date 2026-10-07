@@ -122,4 +122,91 @@ The draper's way in: the maze (group, Wits 10) would make everyone who wants pas
 
 The main line never needed V21 (nobody was caught with loot, and the Invisible Man rolled his watched obstacle empty-handed), Mesmerise or a shared place; those are drilled in section 6. What it did put through the text: the d3 at five places (one reroll for a taken place), three second ways in rerolled for a repeated quiet trait, the ceiling, a Critical winning back a charge, Practised Hand, a friend's Hedge Spell, the furniture taken and carried, and the way out with a carrier rolling.
 
-*(drills follow)*
+---
+
+## 6. Play log: drills
+
+Default picks unless said; I chose each drill's start, and every roll after it is real. The drills use the main line's town unless said.
+
+### 6.1 Drill a: setting loot down before a watched roll (V21) with Out of Sight
+
+**Start (chosen):** the main town, Turn 4, Suspicion 3. **The Invisible Man** (default: Unseen, Through the Gap, **Out of Sight**, Tailor; Flour, Soon), 3 charges, at the draper, holding **the cape**. A friend has beaten the cart (way B) and gone. Next is the shuttered window (Nimble / Brawn loud, 8, **watched**): Nimble d8 → d10 (Tailor), Mask (65 / 18 / 17). Out of Sight bites only on Trouble, so I restarted each case from this start until a Trouble came.
+
+**a1: alone; he sets the cape down first.** Chapter 3: "A dropped item (drop yours any time) falls where you are; picking it up costs your next action." He drops the cape before the roll, at no cost (S4); it lies at the draper (S6).
+
+| Try | Rolls | Dice | Total | Result |
+|---|---|---|---|---|
+| 1 | R110–R111 | 3 + 4 | 7 vs 8 | Cost. "Drop an item" would cost nothing: he carries nothing (the cape is on the floor, and the top hat is "what this roll wins"). The others all bite; "lose a Turn" would also push back the pick-up |
+| 2 | R112–R113 | 9 + 4 | 13 | Success |
+| 3 | R114–R115 | 9 + 5 | 14 | Success |
+| 4 | R116–R117 | 6 + 6 | 12 | Critical (no spent charge to win back) |
+| 5 | R118–R119 | 10 + 6 | 16 | Success |
+| 6 | R120–R121 | 2 + 5 | 7 | Cost |
+| 7 | R122–R123 | 6 + 6 | 12 | Critical |
+| 8 | R124–R125 | 8 + 2 | 10 | Success |
+| 9 | R126–R127 | 10 + 4 | 14 | Success |
+| 10 | R128–R129 | 3 + 2 | **5 vs 8** | **Trouble**: Suspicion +1 (4). "Trouble gets you caught only while you or anyone in the same place carries loot or furniture": nobody at the draper carries anything, so **he is not caught** |
+
+Played on from try 10: **Turn 5** (R130–R131), the window again with the cape still on the floor (there is no hurry to pick it up while watched rolls remain): 6 + 2 = 8 vs 8, **Success: the top hat**. **Turn 6**: he picks up the cape: that is his action (S5). **Turn 7**: he moves on with both. The trick cost one action and saved a local chase at mob 10. Read cleanly: the drop, the miss without a catch, and the pick-up for an action all come straight from the text. What the text doesn't settle is *when* the pick-up happens (now, skipping the next action, or as the next action), *where* the cape lies (finding m1), and that nothing threatens it while it lies there.
+
+**a2: a friend in the same place still holds loot.** The same start, but the Witch stands at the draper holding the tea service and keeps it (she means to leave next Turn). He drops the cape and rolls:
+
+| Try | Rolls | Dice | Total | Result |
+|---|---|---|---|---|
+| 1 | R132–R133 | 6 + 5 | 11 | Success |
+| 2 | R134–R135 | 7 + 2 | 9 | Success |
+| 3 | R136–R137 | 5 + 3 | 8 | Success |
+| 4 | R138–R139 | 3 + 1 | **4 vs 8** | **Trouble**: Suspicion 4, and "anyone in the same place carries": the Witch's tea service gives him away. **Caught** (only the roller is caught) |
+
+**His local chase** (Lead 1, escape at 4; mob 8 + 2 = **10**; he carries nothing now, so the Mask is open to him; Flour from round 3):
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R140 = 5 festival parade (Charm, Sly) | Sly d12, **Unseen** (3 → 2): 70 / 13 / 18 against the Mask's 54 / 17 / 29; at Lead 1 a Trouble corners | 12 + 4 | 16 vs 10 | Success | 2 | 4 |
+| 2 | R143 = 2 back alleys (Nimble, Sly) | Sly d12, **Unseen** (2 → 1) | 6 + 6 | 12 vs 10 | **Critical**: two Successes: **escaped** | 4 | 4 |
+
+Back before the window, his Turn used up, the cape still on the floor. Read cleanly: "anyone in the same place" (PT8's m1 fix) decided it at once. Had the Witch set the tea service down too, he wouldn't have been caught, and each of them would then owe an action to pick their item up.
+
+### 6.2 Drill b: a Ghost sets loot down to use Spectral; loot on the near side of an obstacle
+
+**Start (chosen):** the main town, Turn 4, Suspicion 3. **A Ghost** (default: Through the Wall, Chill, **Spectral**, Butler; Cold Iron, Always), 3 charges, holding **the tea service** from the silversmith, moves to the tailor (already reached: no Tell check). The party's way in is way B, the maze (group, Wits 6, watched); behind it, the cape; behind the cape, the furniture's crowded shop floor (group, Sly 10) and the suit of armour. Nobody else is there. No rolls are needed: Spectral passes "without rolling, at no action, even in a Turn you move, unless you carry loot or furniture".
+
+| Turn | What the Ghost does | Text | Holding |
+|---|---|---|---|
+| 4 | Moves in. **Drops the tea service** (free, S4): it falls "where you are", before the maze | Ch3, V21 | — |
+| 4 | **Spectral** past the maze (group): the last obstacle, so the cape "is in your hand" | Ch2; Ch4 "beat or pass the last and it's in your hand" | the cape |
+| 4 | **Drops the cape** (free): it falls where the Ghost now is, past the maze | Ch3 | — |
+| 4 | **Spectral** past the furniture's shop floor (group): "whoever is past all its obstacles may take on the extra one, and the piece" | Ch2; Ch4 | — (the armour is its to take) |
+| 5 | **Picks up the tea service**, which lies on the near side of the maze (S6: same place, so the side doesn't matter) | Ch3 "picking it up costs your next action" | the tea service |
+| 6 | **Picks up the cape** (each item its own pick-up, S7) | Ch3 | the tea service, the cape |
+| 7 | Takes the armour (free) and sets off for the way out | Ch4 | both, and the armour |
+
+Without V21 the Ghost needed a friend to hold its loot (PT8 drill b2: alone with the bacon it had to roll, and was captured). Now it needs only actions: two items set down cost two pick-ups, against two group obstacles and two rolls saved. A friend standing by is still better: "hand it over free in the same place", and handed back free.
+
+**The near side.** The tea service was dropped before the maze and the Ghost was past it when it came to pick it up. The book doesn't place anything inside a location: there are obstacles "crossed in order", "whoever is past all its obstacles", and "the same place (a location, the way out or the lock-up)" for helping and handing over. I ruled that "where you are" means the place, so anyone at the tailor, past the maze or not, may pick it up (S6). The other reading, that it lies before the maze, would send the Ghost back across a group obstacle it can only pass empty-handed, and the book has no rule for going back past an obstacle at all. Finding m1.
+
+### 6.3 Drill c: setting loot down once caught, before the chase
+
+"Drop yours any time" has no exception for a chase, and a capture takes only "what you were carrying". So I tried it.
+
+**Start (chosen):** the main town. **The Witch** (default: Hedge Spell, Broomstick, Familiar's Warning, Cook; Rowan, Soon), holding **the tea service and the rose bushes** (an essential), has just been caught on a Trouble at the draper's cart (watched), Suspicion 8 after the catch (mob 8 + 4 = **12**), 1 charge. Before round 1 she **drops both** (S4, S8): they fall at the draper. Lead 1, escape at 4. I meant to run it until a capture came.
+
+**c1** (R146–R160):
+
+| Round | Ground | Roll | Dice | Total vs mob | Result | Lead | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R146 = 2 back alleys | Sly d10 → d12 (**Hedge Spell**, 1 → 0; "in a local chase, only hers"), Monster (54 / 16 / 30) | 10 + 3 | 13 vs 12 | Success | 2 | 8 |
+| 2 | R149 = 2 back alleys | Sly d10, Monster (45 / 19 / 36) | 7 + 1 | 8 vs 12 | Trouble | 1 | 9 |
+| 3 | R152 = 6 dead end (Rowan) | Wits d12 → d10, Monster. Not an overdrawn Hedge Spell: its +2 would bring the Limit | 6 + 6 | 12 vs 12 | **Critical**: two Successes | 3 | 9 |
+| 4 | R155 = 1 crowded square | Sly d10 → d8, Monster | 2 + 2 | 4 vs 12 | Trouble | 2 | 10 |
+| 5 | R158 = 3 market stalls (Brawn d6 → d4, Nimble d4) | Brawn d4, Monster: every result either shows or is Trouble | 2 + 7 (shows) | 9 vs 12 | Trouble and a show: +2, **the Limit** (11) | 1 | 11 |
+
+"If the Limit comes during a local chase, that chase ends at once and those Entities join the flight." Not captured. **The tea service and the roses stay on the draper's floor**: the party flees without them, and Chapter 7 counts only "what came home" (S9).
+
+**c2** (restart; R161–R172): R161 = 1 crowded square, Sly d12 (Hedge Spell), Monster: 7 + 8 = 15, Success and a show (Lead 2, Sus 10). R164 = 4 rooftops, Wits d12, Mask: 9 + 1 = 10, Cost (Lead 2). R167 = 4 rooftops (Rowan), Wits d10, Mask: 10 + 3 = 13, Success (Lead 3). R170 = 2 back alleys, Sly d8, Mask: 5 + 4 = 9, Trouble: Lead 2 and **the Limit** again. A start at Suspicion 8 puts the Limit three points away, and both runs reached it first.
+
+**c3** (a new start, the same but **Suspicion 4** after the catch, mob **10**, no charges; R173–R175): R173 = 4 rooftops: Wits d12, Monster (70 / 13 / 18 against the Mask's 54 / 17 / 29): **5 + 1 = 6 vs 10, Trouble: cornered** (Sus 5). **Captured**, and "the town takes back what you were carrying, furniture included": she carries nothing. The tea service and the rose bushes lie at the draper, where anyone there may pick them up for an action each (S6, S7). Without the drop she'd have lost both, an essential among them: at best a Partial.
+
+So under V21 as written, dropping everything the moment you're caught makes a capture cost no loot, for an action per item later; and the same was already true of furniture ("drop it any time"), which a carrier can also put down to get the Mask and their full Nimble back for the chase. Finding **M1**.
+
+*(drills d–g follow)*
