@@ -1,6 +1,6 @@
 Now: Simulated games with a full table of five players, in all three ready-made towns and a rolled one. They led to one town change (Thistlewick's furniture was too easy to grab) and a batch of clearer wording; the rules are ready for a first real game.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
-Number: Design decisions made = 107
+Number: Design decisions made = 108
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 287
