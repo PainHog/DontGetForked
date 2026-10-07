@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   installFoundry, asUser, settle, diceQueue, dialogResponders, fakeForm, renderMessage, clickButton, log,
 } from "../tools/fake-foundry.mjs";
-import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake, takeFurniture, setFurniture, advanceTurn } from "../module/logic/raid.mjs";
+import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake, takeFurniture, setFurniture, advanceTurn, setHunt, turnMarkApplies, takesThePiece } from "../module/logic/raid.mjs";
 import { newChase, endChase, inLocalChase } from "../module/logic/chase.mjs";
 import { homeFromCarried, yearFromList } from "../module/logic/year.mjs";
 import { carriedChangeRefused } from "../module/logic/lockup.mjs";
@@ -62,6 +62,23 @@ test("V28: nothing handed to a captive; nothing dropped or handed over from a lo
   assert.equal(carriedChangeRefused({ inLocalChase: true, before: both, after: [both[1], both[0]] }), "", "the same items, reordered");
   assert.equal(carriedChangeRefused({ before: both, after: [] }), "", "free and not chased: anything goes");
   assert.equal(carriedChangeRefused({ captive: true, before: rope, after: [{ name: "a coil of rope" }, { name: "a coil of rope" }] }), "captive", "a second of the same counts");
+});
+
+test("a Turn's mark (a lost Turn, a pick-up) is for that Turn's raid rolls: not a chase roll, not once the hunt is on, not at dawn", () => {
+  const s = advanceTurn(newRaid({ id: "r" }), 1); // Turn 2
+  assert.equal(turnMarkApplies(s, 2), true);
+  assert.equal(turnMarkApplies(s, 3), false, "another Turn");
+  assert.equal(turnMarkApplies(s, 0), false, "no mark");
+  assert.equal(turnMarkApplies(s, 2, { chaseRoll: true }), false, "a chase roll isn't one of the Turn's actions");
+  assert.equal(turnMarkApplies(setHunt(s, true, "limit"), 2), false, "once the hunt is on, everyone flees");
+  assert.equal(turnMarkApplies({ ...s, dawn: true }, 2), false);
+});
+
+test("F26: only an Entity in the raid takes the raid's piece", () => {
+  const s = newRaid({ id: "r" });
+  assert.equal(takesThePiece(s, { inRaid: true }), true, "the first take");
+  assert.equal(takesThePiece(s, { inRaid: false }), false, "an Entity outside the raid isn't in town");
+  assert.equal(takesThePiece(takeFurniture(s), { inRaid: true }), false, "already taken");
 });
 
 test("V22: two items from one shared place, carried home together, both count", () => {
@@ -350,6 +367,53 @@ test("V28 at the table: a player can't hand a captive anything, or hand anything
   await asUser(GM, () => witch.update({ "system.carried": [{ name: "a jar of honey" }] }));
   assert.deepEqual(witch.system.carried.map((c) => c.name), ["a jar of honey"]);
   await op(GM, OPS.lockupSet, { actorId: witch.id, captured: false });
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+});
+
+test("the lose-a-Turn notice is for the Entity's raid rolls: a flight roll later that Turn doesn't get it", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(GM, () => witch.update({ "system.skipTurn": raid().turn })); // a Cost: she loses this Turn
+  const dialogOf = async () => {
+    let content = "";
+    dialogResponders.push((options) => { content = options.content; return null; });
+    await asUser(ANN, () => api.roll(witch, { trait: "sly" }));
+    await settle();
+    return content;
+  };
+  assert.match(await dialogOf(), /loses Turn/, "a raid roll this Turn: told");
+  diceQueue.push(1); // the flight's ground
+  await op(GM, OPS.raidHunt, { on: true }); // the Limit, later that Turn
+  await settle();
+  assert.equal(raid().chase?.kind, "final");
+  assert.doesNotMatch(await dialogOf(), /loses Turn/, "everyone flees: the flight's rolls aren't the Turn's action");
+  await op(GM, OPS.raidHunt, { on: false });
+  await asUser(GM, () => witch.update({ "system.skipTurn": 0 }));
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+});
+
+test("an Entity that isn't in this raid ticking Carrying furniture doesn't take the raid's piece", async () => {
+  const wolf = await asUser(GM, () => api.createEntity("werewolf")); // nobody plays it
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  assert.equal(wolf.system.inRaid, false);
+  await asUser(GM, () => wolf.update({ "system.carryingFurniture": true }));
+  await settle();
+  assert.equal(raid().furniture, "", "the town's piece isn't taken");
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true })); // the Witch, in the raid, takes it
+  await settle();
+  assert.equal(raid().furniture, "inPlay");
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  await op(GM, OPS.raidTurn, { delta: 1 });
+  await settle();
+  // set down, then the wolf (still outside the raid) ticks it: no action marked, the piece stays where it is
+  await asUser(GM, () => wolf.update({ "system.carryingFurniture": false }));
+  await asUser(GM, () => wolf.update({ "system.carryingFurniture": true }));
+  await settle();
+  assert.equal(wolf.system.pickedUpTurn, 0, "not in town: it takes nothing back up");
+  await asUser(GM, () => wolf.delete());
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
 });

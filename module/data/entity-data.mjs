@@ -37,7 +37,7 @@ const carriedByAnother = (actor) => !!game.actors?.some?.((a) => a !== actor && 
  * (changed in place); `refuse`: false for a Storyteller.
  */
 function retake(model, sys, { refuse = true } = {}) {
-  if (sys.carryingFurniture !== true || model.carryingFurniture || !model.parent) return;
+  if (sys.carryingFurniture !== true || model.carryingFurniture || !model.parent || model.inRaid === false) return; // F26: outside the raid, not in town
   const raid = currentRaid();
   if (!raid) return;
   if (!isFurnitureRetake(raid, { setDown: !carriedByAnother(model.parent) })) return;

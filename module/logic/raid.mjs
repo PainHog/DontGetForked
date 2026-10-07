@@ -296,6 +296,20 @@ export function isFurnitureRetake(state, { setDown = false } = {}) {
   return state?.furniture === "inPlay" && (setDown || (state.furnitureTakenTurn ?? 0) !== state.turn);
 }
 
+/**
+ * A Turn's mark on an Entity (a lost Turn, a pick-up) speaks to that Turn's own actions: its raid rolls. A chase
+ * roll isn't one of them, nor is any roll once the hunt is on (everyone flees), nor at dawn. Does the mark made for
+ * Turn `markTurn` apply to a roll now?
+ */
+export function turnMarkApplies(state, markTurn, { chaseRoll = false } = {}) {
+  return !!markTurn && markTurn === state?.turn && !state.dawn && !state.hunt && !chaseRoll;
+}
+
+/** F26 + V4: does an Entity ticking "Carrying furniture" take the raid's piece for the first time? Only one in the raid. */
+export function takesThePiece(state, { inRaid = true } = {}) {
+  return !!inRaid && state?.furniture === "";
+}
+
 /** V21: someone picks a dropped item up. Returns { state, item } (item null if it's gone already). */
 export function pickUpLoot(state, dropId) {
   const item = (state.dropped ?? []).find((d) => d.id === dropId) ?? null;

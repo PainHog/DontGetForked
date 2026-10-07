@@ -204,6 +204,12 @@ Today's V21–V28 work in the Foundry system (`git diff 1d72371^..HEAD -- module
 **FA-D9 · Low · The Storyteller taking the piece back up for an Entity marked no action.** The data model skipped every Storyteller write, so a GM ticking *Carrying furniture* for an Entity they play (TESTING.md section 14 has the GM do it for Dracula, and expects the mark) took the piece back up for free, and the Storyteller had to remember the action by hand.
 *Fix:* the action is the Entity's whoever ticks it; in the final flight a Storyteller's tick is still a correction and stands, unmarked (as with V24 and V28). *Test:* "V26: the Storyteller taking the piece back up for an Entity (TESTING.md's GM does it for Dracula) marks its action too; in the flight it's a correction".
 
+**FA-D10 · Low · The roll dialog's "lose a Turn" notice showed on flight rolls too** (the same class as FA-D7). An Entity that lost its Turn to a Cost was told so on every roll that Turn, including the final flight started later that Turn by the Limit, where everyone flees and rolls.
+*Fix:* one pure check for a Turn's marks, `turnMarkApplies` in module/logic/raid.mjs: a lost Turn and a pick-up speak to that Turn's raid rolls only (not a chase roll, not once the hunt is on, not at dawn); the dialog uses it for both. *Tests:* "a Turn's mark (a lost Turn, a pick-up) is for that Turn's raid rolls…" and "the lose-a-Turn notice is for the Entity's raid rolls: a flight roll later that Turn doesn't get it" (test/drop.test.mjs).
+
+**FA-D11 · Low · An Entity outside the raid took the raid's piece (F26).** Ticking *Carrying furniture* on an Entity ticked out of the raid marked the town's piece taken (and so noisy every Turn), through the V4 hook in module/raid/store.mjs, which didn't check the raid.
+*Fix:* `takesThePiece` (module/logic/raid.mjs): only an Entity in the raid takes the piece; outside it, the tick just stays on its own sheet, and it doesn't count as taking a set-down piece back up either (it isn't in town). *Tests:* "F26: only an Entity in the raid takes the raid's piece" and "an Entity that isn't in this raid ticking Carrying furniture doesn't take the raid's piece" (test/drop.test.mjs).
+
 TESTING.md section 14 has the human steps for FA-D1, D2, D4, D8 and D9.
 
 ## Suspected, not proved (not changed)
@@ -212,8 +218,6 @@ TESTING.md section 14 has the human steps for FA-D1, D2, D4, D8 and D9.
 - **Next Turn racing a pick-up** could clear the mark of a pick-up made in the new Turn. Not reproducible on the fake Foundry.
 - **A freed captive "acts again next Turn"**, and an Entity that lost its Turn "skips its next action", yet either can pick up that Turn. The system doesn't record when a captive was freed, and, as with rolls, a second action gets a notice at most, never a refusal.
 - **A cornered Entity with "Run the lock-up automatically" off** can drop or hand over before the Storyteller captures it by hand (its chase has ended). That's by the switch.
-- **Outside today's work, the same class as FA-D7:** the "lose a Turn" notice also shows on a flight roll in that Turn (module/dice/rolling.mjs).
-- **Outside today's work:** an Entity outside the raid ticking *Carrying furniture* marks the raid's piece taken (the V4 hook in module/raid/store.mjs doesn't check the raid).
 
 ## Checked and sound
 

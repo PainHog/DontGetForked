@@ -19,6 +19,7 @@ import { getRaid } from "../raid/store.mjs";
 import { chaseRollContext, chaseWeakness, lockupDifficulty, entities } from "../raid/chase-flow.mjs";
 import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
 import { chaseEventId } from "../logic/chase.mjs";
+import { turnMarkApplies } from "../logic/raid.mjs";
 import { postCard } from "../chat/cards.mjs";
 import { t, traitLabel, dieLabel, planText, traitList } from "../helpers/i18n.mjs";
 
@@ -142,15 +143,16 @@ function dialogContext(actor, values, raid) {
   if (raid.hunt) notices.push(t("DGF.Roll.notice.hunt"));
   if (sys.carryingFurniture) notices.push(t("DGF.Roll.notice.carrying"));
   if (sys.nextRollSmaller > 0) notices.push(t("DGF.Roll.notice.smaller", { n: sys.nextRollSmaller }));
-  if (sys.skipTurn && sys.skipTurn === raid.turn && !raid.dawn) notices.push(t("DGF.Roll.notice.skipTurn", { turn: raid.turn }));
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
   if (sys.status === "captured") notices.push(t("DGF.Roll.notice.captured"));
   if (!isInRaid(sys)) notices.push(t("DGF.Roll.notice.notInRaid"));
   if (raid.group?.open && raid.group.rolls?.[actor.id]?.passed) notices.push(t("DGF.Roll.notice.spectral", { label: raid.group.label || t("DGF.Group.unnamed") })); // V19
   const where = rollSituation(actor, { ...values, chase: true, lockup: true, group: true }, raid);
   const c = where.chase;
-  // V25: rolling again in the Turn it picked up (a chase roll, the final flight's included, isn't one of the Turn's actions)
-  if (sys.pickedUpTurn && sys.pickedUpTurn === raid.turn && !raid.dawn && !raid.hunt && !c?.ok) notices.push(t("DGF.Roll.notice.pickedUp", { items: sys.pickedUp }));
+  // a Turn's marks speak to that Turn's raid rolls (a chase roll, the final flight's included, isn't one of its actions):
+  // a lost Turn (a Cost), and V25 rolling again in the Turn it picked up
+  if (turnMarkApplies(raid, sys.skipTurn, { chaseRoll: !!c?.ok })) notices.push(t("DGF.Roll.notice.skipTurn", { turn: raid.turn }));
+  if (turnMarkApplies(raid, sys.pickedUpTurn, { chaseRoll: !!c?.ok })) notices.push(t("DGF.Roll.notice.pickedUp", { items: sys.pickedUp }));
   if (c?.ok) {
     const ground = DGF.chaseTable[c.ground.face - 1]?.name ?? "";
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));

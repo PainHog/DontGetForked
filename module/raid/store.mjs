@@ -350,7 +350,7 @@ export function registerRaidOps() {
   // V4: the moment an Entity first takes the piece, it is in play (and noisy) until it leaves town or is lost.
   Hooks.on("updateActor", (actor, diff) => {
     if (!isActiveGM() || !isEntity(actor) || diff?.system?.carryingFurniture !== true || !setting(SETTINGS.autoFurniture)) return;
-    if (getRaid().furniture !== "") return;
+    if (!R.takesThePiece(getRaid(), { inRaid: isInRaid(actor.system) })) return; // F26: an Entity outside the raid isn't in town
     mutateRaid((s) => R.takeFurniture(s)).catch((err) => console.error("Don't Get Forked | furniture", err));
   });
 
