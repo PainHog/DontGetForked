@@ -1,5 +1,5 @@
-Now: Simulated games with a full table of five players, in all three ready-made towns and a rolled one. They led to one town change (Thistlewick's furniture was too easy to grab) and a batch of clearer wording; the rules are ready for a first real game.
-Next: Richard's first playtest with real people, and his two-player try of the online version.
+Now: The first version of the online system is published, ready for Richard to install in Foundry and try before the first real game.
+Next: Richard's two-player try of the online version, then the first playtest with real people.
 Number: Design decisions made = 108
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
@@ -58,6 +58,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Full audits of the rulebook, the online version and the simulator, with every confirmed problem fixed
 - [x] Online version keeps track of the optional campaign (castle upgrades) and of who is in each raid
 - [x] Simulated games with a full table of five players, and the tweaks they pointed to
+- [x] First version of the online system published
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
