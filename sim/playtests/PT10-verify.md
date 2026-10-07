@@ -110,3 +110,52 @@ Home with the cake, the tea service and the top hat: a **Partial**. The mirror s
 "When Suspicion reaches the Limit ... the whole town hunts. Every Entity who isn't captured flees together in the final flight." The Witch asks to pick up the tea service "as the Limit comes": **refused**. Picking up is "their action for a Turn", and the Turns are over. The tea service stays at the china shop, and the party flees without an essential: a Partial at best. Had the party moved her first (the order is theirs), it would have been in hand. Under PT9's second reading she could have picked it up at once, skipping a next action that never came; the new text closes that too.
 
 **What b showed.** V25 reads cleanly for the dropper, a friend at the place, two items and the end of the night. One wording gap: "pick items up" for any number at once (**w2**).
+
+### 4.3 Drill c: loot set down at the way out, and at the lock-up by a rescuer: who may pick each up?
+
+**Start (chosen):** Thistlewick, **Turn 8**, Suspicion **5**. A party of three. **Dracula** was captured on Turn 7 and is held at the lock-up (the town took what he carried). **Frankenstein's Creature**, 2 charges, is **alone at the way out** (he came back to it on Turn 7, and its first-return Tell check was made then: nothing), carrying **the top hat and the coil of rope**. **The Witch**, 2 charges, is at the baker with **the wedding cake**. Nobody has reached the lock-up yet.
+
+**c1: the way out.** The Creature means to go to the rescue, and a rescuer's Trouble "gets them caught as usual"; cornered, he'd lose what he carries. So, Turn 8, he **sets the top hat and the rope down at the way out** (free; not in a local chase): "A dropped item stays where you are (the location, **the way out** or the lock-up)". Then he moves to the lock-up, as the Witch does from the baker; they arrive together.
+
+| Turn | Rolls | What | Result |
+|---|---|---|---|
+| 8 | R50, R51 | The lock-up's Tell check: the first time anyone reaches it ("the lock-up does; ... not a captive being brought in"). A d6, and the Witch's Familiar's Warning second d6 | R50 = 2: nothing (R51 = 1, not needed) |
+
+**c2: the lock-up, a rescuer.** Turn 9. The plan: the Witch tries the rescue first, and if she's caught the Creature tries after her ("Several may try the same obstacle in one Turn"). Either may be caught, so neither wants to hold the cake, and handing it over (free) would only move the risk. The Witch **sets the cake down at the lock-up** and rolls.
+
+| Turn | Rolls | Roll | Dice | Total | Result |
+|---|---|---|---|---|---|
+| 9 | R52–R53 | The Witch, the rescue (Sly, or Brawn the loud way, 10, watched): Sly d10 → d12 (**Hedge Spell**, 2 → 1), Mask (54 / 17 / 29) | 5 + 5 | 10 vs 10 | **Critical**: Dracula is free, "at the lock-up, and acts again next Turn"; one spent charge back (1 → 2) |
+
+**Who may pick each up.**
+
+- **The cake, at the lock-up.** Anyone at the lock-up, as their action for a Turn. The Creature hasn't acted in Turn 9, so **he picks it up at once**, as his Turn 9 action. The Witch could from Turn 10. Dracula could from Turn 10 ("acts again next Turn"), not in Turn 9 (S9). Before the rescue, could Dracula have picked it up as a captive? He was "there", and "Anyone there may pick items up" doesn't exclude him; nor does "hand it over free in the same place". I ruled no: a captive is held, Chapter 6 gives a captive one thing to do each Turn (try to slip free), and the town "takes back what you were carrying" (S8). Finding **w3**.
+- **The hat and the rope, at the way out.** Anyone at the way out, as their action. Turn 10: all three move there. Turn 11: the Creature **picks up both** (one action, S4), then the Witch rolls the way out for everyone. The order matters: anything still lying at the way out when "a Success or a Cost gets everyone out" stays in town (S10). (The way out wasn't rolled: the drill's question was answered.)
+
+**What c showed.** Both places read cleanly: the way out and the lock-up are named in Chapter 3's list, and a stash there waits for anyone who comes. Setting loot down before a watched roll protects it from a capture at the cost of one action later (here the Creature's, in a Turn he had nothing else to do). One gap: captives at the lock-up (**w3**).
+
+### 4.4 Drill d: the furniture's "try for the piece"; a carrier sets the piece down, waits, takes it back up
+
+**Start (chosen):** Thistlewick, **Turn 3**, Suspicion **1**, the hatter. **Dracula** (3 charges) beat the nosy neighbour (way A, Sly 8, not watched) on Turn 2 and holds **the top hat**. **The Werewolf** (3 charges) is with him. The furniture: **the gilt mirror** (Bulky), behind a guard dog (watched, Charm (good dog) / Nimble loud, **10**, already 2 harder).
+
+**d1: "try for the piece".** Chapter 4: "Once that location's loot is in hand, whoever is past all its obstacles may try for the piece." The top hat is in hand, and both are past the neighbour (it "stays beaten for the whole party"): either may try. Dracula hands the top hat to the Werewolf first (free, so a capture can't take it) and tries.
+
+| Turn | Rolls | Roll | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|
+| 3 | R54–R55 | Dracula, the guard dog: Charm d12, Monster under **Hypnotic Eyes** (shows only on a 2+ lead: 30%) (70 / 13 / 18; the Mask's 54 / 17 / 29) | 12 + 1 | 13 vs 10 | Success: the dog is beaten for the party | 1 |
+
+I read "try for the piece" as rolling the extra obstacle named in the sentence before, and the piece as free to take once it's beaten, by anyone at the location (it isn't a group obstacle). It reads cleanly. **The Werewolf takes the mirror** ("Taking a piece ... is free"). End of Turn 3: the mirror +1 → **2**.
+
+**d2: set down, wait, take it back up, carry on.**
+
+| Turn | Rolls | The Werewolf | Sus at the end |
+|---|---|---|---|
+| 4 | — | Carries the mirror toward the baker: a move "takes two Turns: you're between places until you act in the second" | 3 |
+| 5 | R56 | Arrives at the baker (watched; nobody has been there): Tell check R56 = 3, nothing | 4 |
+| 6 | R57–R58 | **Sets the mirror down** (free). He's no longer carrying, so he rolls the shuttered window (way B, Nimble / Brawn loud, 8, not watched) with **Nimble d12 and the Mask** (71 / 15 / 14). Carrying, it would have been Nimble d10 and the Monster forced (a 45% show). 3 + 4 = 7 vs 8: **Cost**, the window is beaten. The Storyteller's Cost: "drop an item" would only cost him an action, and so would "lose a Turn", in a Turn he means to wait anyway; **Suspicion +1** | 4 + 1, then the mirror "even set down" +1: 6 |
+| 7 | — | **Waits** (for the Witch, who arrives this Turn for the shopkeeper). The mirror lies at the baker | 7 |
+| 8 | — | **Takes it back up** ("or taking it back up) is free": no action) and carries on toward the way out, the first Turn of a two-Turn move | 8 |
+
+Chapter 4's "Taking a piece (or taking it back up) is free" reads cleanly: no action, no roll, and the noise runs on "even set down". But it also means that in Turn 6 he could have **taken the mirror back up right after his roll**, in the same action, at no cost: he got the Mask and his full Nimble for the roll and kept the piece. Nothing in the book stops a carrier doing that before every roll outside a local chase, so "Carriers can't use the Mask; their Nimble is one size smaller" bites only in a local chase (and, under the other reading of m1, not even in the final flight). Finding **m2**.
+
+**What d showed.** "Try for the piece" and "taking it back up" both read cleanly. The six Turns of noise (+6, of Suspicion 1 → 8) were the real cost of the mirror; the carrier's dice penalty cost nothing, because a free set-down and a free take-up can go round any roll (**m2**).
