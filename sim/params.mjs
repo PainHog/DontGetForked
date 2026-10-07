@@ -403,7 +403,7 @@ export const TARGETS = {
  * history; new candidate packages go here as rule changes are proposed.
  */
 export const PACKAGES = {
-  P0: { title: "The rules as decided (through V20, 2026-10-06) with the current numbers", params: {}, numbers: {} },
+  P0: { title: "The rules as decided (through V25, 2026-10-07) with the current numbers", params: {}, numbers: {} },
   N1: {
     title: "Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
     params: {},
