@@ -117,3 +117,60 @@ End of Turn 4: Sus **9**.
 
 *Table talk at the end:* *Daredevil:* "I spent the whole night in jail and we still had a Grand Year." *Newcomer:* "Is it always this quick?" *Hoarder:* "I didn't spend a single charge." *Planner:* "It's half past eight. Again?" The raid ended in the 6th Turn, not before it, but it never reached a final flight and took about an hour (section 3), so the table played a second night in Puddlecombe with the same Entities and picks.
 
+---
+
+## Night 2: the same town, a new night
+
+Same Entities, same picks, charges back to 3 each, Suspicion 0. Choosing took about five minutes ("same again?"). Everyone now knows the town.
+
+### The plan (party decision 4)
+
+The Planner proposes the same split. *Daredevil:* "Same door. I'm rolling the Monster again." *Planner:* "Last time..." *Daredevil:* "Last time was the dice." *Roleplayer:* "Can we stop for a pie on a doorstep?" *Storyteller:* "Customs are flavour, not rules" (Chapter 8). Nobody looked for the Ghost's Through the Wall at the trapdoor (see finding **F9**). Unanimous.
+
+### Turn 1: everyone moves (R32–R36)
+
+| Where | Who arrives | Tell check | Result | Sus |
+|---|---|---|---|---|
+| Tavern cellar | Dracula, Ghost | R32: 5; whose (R36: 6, 1–3 Dracula, 4–6 Ghost) | The Ghost: candles gutter in the tavern window | 1 |
+| Market garden | Werewolf | R33: 1 | nothing | 1 |
+| Schoolhouse | Mummy | R34: 1 | nothing | 1 |
+| Draper | Invisible Man | R35: 6 | The Invisible Man: bandages, goggles, a false nose and a sneeze | 2 |
+
+### Turn 2 (R37–R42)
+
+- **Ghost**, tavern front door: Sly d12 (Cook), the Monster: **2 + 4 = 6 vs 8: Cost**, the Monster shows (Rattle, +1): **Sus 3**. The door is beaten for the party. The Storyteller's options: Suspicion +1 would cost nothing (the roll already raised it, Chapter 3); "drop an item" would cost nothing (the Ghost carries nothing); so **lose a Turn** or a smaller die next roll. He picks **lose a Turn**: it bites for certain, the smaller die might not. Who causes it (R38: 5): the night watchman, tipsy, sits on the cellar steps to admire "a lovely sheet costume", and the Ghost has to hover behind the barrels.
+- **Dracula**, back room, **Bat** (charge 1): Nimble d10, the Mask: **1 + 6 = 7 vs 6: Success. The cheese.**
+- **Werewolf**, geese: Sly d8 (Gardener), the Mask: **5 + 2 = 7 vs 6: Success.**
+- **Mummy**, back gate: Brawn d12 (Librarian), the Mask: **8 + 1 = 9 vs 8: Success.**
+- **Invisible Man**, shopkeeper: Charm d8 (Tailor), the Mask: **5 + 2 = 7 vs 8: Cost. The knitting wool.** This time the Storyteller picks **Suspicion +1** (last night's smaller die never came into play): the shopkeeper counts the till twice and calls through to the back. **Sus 4.**
+
+End of Turn 2: Sus **4**.
+
+### Turn 3 (R43–R45): everything in hand again
+
+- **Ghost** loses this action.
+- **Invisible Man** walks to the schoolhouse (already checked, no Tell). *Planner:* "Can you put your Unseen on my roll? If I'm caught, a Mummy with Nimble d4 is going to the lock-up." *Newcomer:* "That's allowed?" (Chapter 3: "An ability can help any Entity's roll at the same place"; the At the Table page doesn't say so.) He spends **Unseen** (charge 1) on the Mummy's roll.
+- **Mummy**, children (group, watched): Charm d10 (Librarian), the Monster without risk: **8 + 3 = 11 vs 8: Success. The almanac.**
+- **Werewolf**, night watchman: Wits d10 (Gardener), the Mask: **10 + 6 = 16 vs 8: Success. Seed potatoes.**
+- **Dracula**, guard dog: the Roleplayer asks for the Monster again; the Planner reminds him of last night's +2, and he takes the Mask. Charm d12: **5 + 5 = 10 vs 10: Success, and a Critical** (both dice show 5): he gets back the charge he spent on Bat.
+
+End of Turn 3: Sus **4**. All four items in hand, the dog beaten.
+
+### Turn 4 (R46): the Ghost takes the bear
+
+- *Party decision 5:* *Roleplayer:* "We could stay for the festival..." *Planner:* "There's nothing left to take. Every Turn we stay is a Turn something can go wrong." *Daredevil:* "Then I'm carrying the bear." Unanimous.
+- **Ghost** (past every tavern obstacle: the door it beat, the room and the dog Dracula beat) takes the bear (free) and starts the carried move.
+- **Dracula, Werewolf, Mummy, Invisible Man** walk to the way out. Tell check (R46: 2): nothing.
+- End of Turn 4: the bear, **Sus 5.**
+
+### Turn 5 (R47): home
+
+- **Ghost** arrives with the bear.
+- **Werewolf** rolls for all: Nimble d12, the Mask, vs 5 (Fetch): **7 + 2 = 9: Success.**
+
+**Night 2 result: Grand Year** in **5 of 12 Turns**, Suspicion **5 of 11**. No chase, no final flight, nobody captured. Charges spent: Newcomer 1, Daredevil 0, Planner 0, Hoarder 0, Roleplayer 1 (and got it back on the Critical).
+
+**Epilogue:** Grand Year again: "A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there." (*Roleplayer:* "Two bears. One for each side of the fireplace.")
+
+*Table talk at the end:* *Hoarder:* "Six charges in two nights and I never touched one." *Daredevil:* "When do we get chased by the whole town?" *Planner:* "Next time, Thistlewick."
+
