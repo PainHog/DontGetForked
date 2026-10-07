@@ -325,6 +325,26 @@ function seenChance(S, m) {
   return 0;
 }
 
+/**
+ * V21: you may drop your own loot any time; picking it up costs your next action. lootDrop "outOfSight" (a player
+ * policy, to test V21): before a watched roll the Invisible Man sets his loot down when that keeps Trouble from getting
+ * him caught (no furniture in hand, nobody else here carrying), and picks it up again after the roll (his next action).
+ */
+function setDownLoot(S, m, witnessed) {
+  if (S.P.lootDrop !== "outOfSight" || !witnessed || !m.items.length || m.furniture || !hasPerk(m, "outOfSight")) return null;
+  if ((S.P.outOfSightRule ?? "place") !== "place" || hereOf(S).some((o) => o !== m && carrying(o))) return null;
+  const items = m.items;
+  m.items = [];
+  S.rec.count("loot set down (V21)");
+  return items;
+}
+function pickUpLoot(S, m, items) {
+  if (!items) return;
+  if (m.status !== "active") { S.rec.count("loot set down, left behind (V21)"); return; }
+  m.items.push(...items);
+  m.loseTurn = m.loseTurn ? (typeof m.loseTurn === "number" ? m.loseTurn + 1 : 2) : true;
+}
+
 /** An Entity's dice now (Jekyll & Hyde: the form it's in). */
 const diceOf = (m) => (m.ent.formDice ? m.ent.formDice[m.form === "hyde" ? "hyde" : "jekyll"] : m.ent.dice);
 const carriedItems = (S) => S.party.flatMap((m) => (m.status === "active" ? m.items : []));
@@ -586,7 +606,10 @@ function workLocation(S, loc) {
         best.plan = planRoll(S, best.m, ctxFor(S, best.m, ob, loc, "raid"));
       }
     }
+    const setDown = setDownLoot(S, best.m, best.plan.witnessed);
+    if (setDown) best.plan = planRoll(S, best.m, ctxFor(S, best.m, ob, loc, "raid"));
     const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
+    pickUpLoot(S, best.m, setDown);
     addSusp(S, r.suspGain, "roll");
     if (r.band !== "trouble") {
       ob.cleared = true;
@@ -623,6 +646,7 @@ function pastHere(S, loc) {
  * after all the rolls, so a Cost is never a Suspicion +1 the group already took (F23). Returns false if the raid ended.
  */
 function groupCheck(S, loc, ob, rollers, acted) {
+  const setDown = new Map(rollers.map((m) => [m, setDownLoot(S, m, ob.witnessed)]));
   const promised = new Map();
   const planned = rollers.map((m) => {
     const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
@@ -640,6 +664,7 @@ function groupCheck(S, loc, ob, rollers, acted) {
     acted.add(m);
     if (plan.value <= 0 && planned.length > 1) S.rec.count("group: forced low-value roll");
     const r = executeRoll(S, m, plan, "raid", { deferCost: true });
+    pickUpLoot(S, m, setDown.get(m));
     results.push({ m, r });
     worst = Math.max(worst, r.suspGain);
     if (r.band !== "trouble") ob.passed.add(m.id);

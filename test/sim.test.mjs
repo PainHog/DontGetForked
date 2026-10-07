@@ -330,3 +330,9 @@ test("Out of Sight (V17): caught while anyone with him carries loot; the other c
   assert.equal(run("half", [1, 1, 4]), 0); // 4–6: they didn't see him
   assert.equal(run("half", [1, 1, 3]), 1);
 });
+
+test("V21: with lootDrop outOfSight the Invisible Man sets loot down before watched rolls, and never by default", () => {
+  const ent = (P) => runConfig({ params: { ...defaults(), ...P }, numbers: NUMBERS, runs: 150, seed: 5 }).rec.counts["loot set down (V21)"] ?? 0;
+  assert.equal(ent({}), 0);
+  assert.ok(ent({ lootDrop: "outOfSight" }) > 0);
+});

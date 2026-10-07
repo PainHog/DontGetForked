@@ -119,6 +119,12 @@ export const PARAMS = {
     doc: "free = Entities at the same place hand loot over at any time, free (U2, decided 2026-10-05); the simulated players hand theirs over before a watched roll; none = no handing over.",
     ref: "CORE-RULES The raid (Carrying); PT3 M6",
   },
+  lootDrop: {
+    kind: "policy", default: "never", values: ["never", "outOfSight"],
+    title: "Setting loot down before a roll (V21)",
+    doc: "never = the simulated players only drop loot as a Cost; outOfSight = before a watched roll the Invisible Man sets his loot down when that keeps Trouble from getting him caught (nobody else there carrying), then picks it up again, which costs his next action (V21: \"drop yours any time\").",
+    ref: "Chapter 3 (Cost); DESIGN V21",
+  },
   chaseTable: {
     kind: "content", default: "approved", values: ["approved", "placeholder", "B", "C"],
     title: "The d6 chase table (C12)",
