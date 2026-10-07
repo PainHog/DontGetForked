@@ -1,6 +1,6 @@
 # First table playtest kit
 
-For Richard's first playtest with real people. It adds no rules: everything at the table comes from the rulebook (`book/dist/Dont_Get_Forked_v0.1.pdf`, 28 pages). Seven computer playtests and the simulator have already checked the rules; what only people can tell us is how it **feels**, how **long** it takes, and where they **get lost**.
+For Richard's first playtest with real people. It adds no rules: everything at the table comes from the rulebook (`book/dist/Dont_Get_Forked_v0.1.pdf`, 28 pages). Eight computer playtests and the simulator have already checked the rules; what only people can tell us is how it **feels**, how **long** it takes, and where they **get lost**.
 
 ## Before the session
 
