@@ -454,7 +454,7 @@ Everything home, plus the armchair: **Grand Year** again, nobody left behind.
 
 ## Appendix: every roll
 
-IM = the Invisible Man. Every die below is one numbered roll from `node -e` (`Math.random`), in the order rolled. A d3 was rolled directly (the same odds as the book’s halved d6). R22–R57 were rolled in one batch whose printed numbers restarted at 1 because a counter file the roller shared was reset by another process during the batch; the dice are the real ones, listed in the order rolled and numbered in sequence here.
+IM = the Invisible Man. Every die below is one numbered roll from `node -e` (`Math.random`), in the order rolled. A d3 was rolled directly (the same odds as the book’s halved d6). R22–R57 were rolled in one batch whose printed numbers restarted at 1 because a counter file the roller shared was reset by another process during the batch; the dice are the real ones, listed in the order rolled and numbered in sequence here. That shared log also picked up five empty d8 lines (around R37–R41) written by another roller; they were never rolls of this game and are not in this list. From R58 on, every roll went through a private roller and log kept outside the repository.
 
 | Rolls | What for | Results |
 |---|---|---|
