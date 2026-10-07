@@ -26,10 +26,10 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 
 1. **GM:** Actors sidebar → **New Entity**. Pick **A Witch**, player **Ann** → *Create*. Her sheet opens:
    - dice **Brawn d6 · Nimble d4 · Sly d10 · Charm d8 · Wits d12**; **Charges 3 / 3**;
-   - **Hedge Spell** (signature) with the book's text; **Gift: Witchcraft** set to *Broomstick (default)*; **Perk** *Familiar's Warning (default)*; **Castle Duty** *Cook (default)*;
-   - **Weakness: Rowan (Soon)** and **Tell: A Black Cat**, with the book's text;
+   - each power spelled out as Chapter 2 does: **Signature: Hedge Spell** *1 charge*, its rule; **Gift: Witchcraft** *pick one · 1 charge a use*, its three versions each with its rule and its flavour in italics, *Broomstick (default)* chosen; **Perk** *pick one · always on*, its three, *Familiar's Warning (default)* chosen; **Castle Duty** *Cook (default)*. Compare a line or two with the Witch's entry in the book: the same words;
+   - **Weakness: Rowan.** *Soon: from the third round of any chase, your trait die is one size smaller.* and its flavour in italics; **Tell: A Black Cat.** and its flavour;
    - Status *Active*, Carrying furniture (unticked), *Carrying: Nothing yet*, Notes.
-   - Change the Gift to *Black Cat*: the text under it changes. Change it back.
+   - Change the Gift to *Black Cat* (the *Chosen:* menu): the marked version moves to Black Cat. Change it back.
 2. **GM:** New Entity → **Dracula**, player **Ben**. Then New Entity → **Jekyll & Hyde**, player **Ann**. The chooser marks Entities already in the world ("already in this world").
 3. **Ann:** the Actors sidebar shows all three. Ann can edit the Witch and Jekyll & Hyde, and open Dracula's sheet read-only.
 

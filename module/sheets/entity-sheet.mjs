@@ -12,6 +12,7 @@ import { setting } from "../settings.mjs";
 import { DGF } from "../config.mjs";
 import { partyClashes, isInRaid } from "../logic/entity.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
+import { powerRule, perkParts, weaknessTiming } from "../logic/power-text.mjs";
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
 import { chooseEntity, becomeEntityUpdate } from "../entities/create.mjs";
 import { getRaid } from "../raid/store.mjs";
@@ -48,7 +49,8 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
     const sys = actor.system;
     const view = sys.view;
     const raid = getRaid();
-    const effect = (e, trait) => t(`DGF.Effect.${e}`, { trait: traitLabel(trait) });
+    // each power spelled out as Chapter 2 does (module/logic/power-text.mjs): the rule, then the flavour
+    const words = { traitName: traitLabel, ease: DGF.openApproachEase };
     // the party is the Entities in this raid (F26): unplayed Entities in the world clash with nobody
     const party = game.actors.filter((a) => a.type === actor.type && isInRaid(a.system)).map((a) => ({ id: a.id, entityKey: a.system.entityKey, duty: a.system.duty }));
     const clashes = partyClashes(party);
@@ -68,17 +70,14 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       hasForms: (view?.forms?.length ?? 0) > 1,
       dice: DGF.traits.map((k) => ({ key: k, label: traitLabel(k), die: sys.traits[k], dieLabel: dieLabel(sys.traits[k]) })),
       charges: sys.charges,
-      signatureText: view?.signature?.text ?? "",
+      signature: view ? { name: view.signature.name, rule: powerRule(view.signature, words), flavour: view.signature.flavour ?? "" } : null,
       giftName: view?.giftName ?? "",
-      gifts: (view?.gifts ?? []).map((g) => ({ key: g.key, name: g.name, selected: g.key === view.gift.key, isDefault: !!g.default })),
-      giftRule: view ? effect(view.gift.effect, view.gift.trait) : "",
-      giftText: view?.gift?.text ?? "",
-      perks: (view?.perks ?? []).map((p) => ({ key: p.key, name: p.name, selected: p.key === view.perk.key, isDefault: !!p.default })),
-      perkText: view?.perk?.text ?? "",
+      gifts: (view?.gifts ?? []).map((g) => ({ key: g.key, name: g.name, selected: g.key === view.gift.key, isDefault: !!g.default, rule: powerRule(g, words), flavour: g.text ?? "" })),
+      perks: (view?.perks ?? []).map((p) => ({ key: p.key, name: p.name, selected: p.key === view.perk.key, isDefault: !!p.default, ...perkParts(p) })),
       duties: DGF.duties.map((d) => ({ key: d.key, name: d.name, selected: d.key === sys.duty, isDefault: d.key === view?.defaultDuty })),
       dutyText: view?.duty ? t("DGF.Sheet.dutyText", { kind: view.duty.kind, where: view.duty.where }) : "",
       weakness: view?.weakness ?? null,
-      weaknessTiming: view ? t(`DGF.Timing.${view.weakness.timing}`) : "",
+      weaknessRule: view ? weaknessTiming[view.weakness.timing] ?? "" : "",
       tell: view?.tell ?? null,
       statuses: DGF.statuses.map((s) => ({ key: s, label: t(`DGF.Status.${s}`), selected: s === sys.status })),
       statusLabel: t(`DGF.Status.${sys.status}`), // FA-R11: a player sees its status; the Storyteller changes it

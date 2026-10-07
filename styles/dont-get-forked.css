@@ -64,6 +64,14 @@
 .dont-get-forked .dgf-pick { margin: 0.5em 0; }
 .dont-get-forked .dgf-pick label { font-weight: bold; display: flex; gap: 0.5em; align-items: center; }
 .dont-get-forked .dgf-pick select { flex: 0 1 auto; width: auto; }
+/* each power spelled out as Chapter 2 does: heading and cost, the rule, the flavour in italics */
+.dont-get-forked .dgf-pw-h { margin: 0.6em 0 0.15em; }
+.dont-get-forked .dgf-pw-cost { font-variant: small-caps; color: var(--dgf-ink-soft); font-size: 0.9em; margin-left: 0.4em; }
+.dont-get-forked .dgf-pw { margin: 0.1em 0 0.4em; line-height: 1.4; }
+.dont-get-forked .dgf-pw-list { margin: 0.15em 0 0.3em; padding-left: 1.2em; }
+.dont-get-forked .dgf-pw-list li { margin: 0.15em 0; line-height: 1.35; color: var(--dgf-ink-soft); }
+.dont-get-forked .dgf-pw-list li.dgf-chosen { color: var(--dgf-ink); }
+.dont-get-forked .dgf-pick label.dgf-pw-pick { font-weight: normal; font-size: 0.9em; }
 .dont-get-forked .dgf-weakness { border-top: 1px solid var(--dgf-paper-edge); margin-top: 0.6em; padding-top: 0.3em; }
 .dont-get-forked .dgf-marks { list-style: none; padding: 0; margin: 0.5em 0; }
 .dont-get-forked .dgf-mark { color: var(--dgf-warn); }

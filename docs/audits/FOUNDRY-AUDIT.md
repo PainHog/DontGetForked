@@ -136,6 +136,8 @@ The compendium guide says who the raid holds and that a new raid frees every Ent
 
 **V28 · after playtest PT11: nothing handed to a captive, nothing handed over from a local chase.** The system has no hand-over action (players edit the carried list), so the Entity's data model guards it, as it guards *Carrying furniture*: a player's edit that would give a captive an item, or take one from an Entity in a running local chase, is dropped with a warning (`carriedChangeRefused` in module/logic/lockup.mjs: items compared by name as a multiset; `raid.drop` already refused in a chase). The Storyteller's client still corrects either, and the chase's own capture (run by the Storyteller's client) clears the list as before. *Tests:* test/drop.test.mjs ("V28: …", "V28 at the table…").
 
+**The Entity sheet spells each power out as Chapter 2 does** (Richard, 2026-10-07). The sheet shows the signature, every Gift version and every Perk with the book's heading and cost (*1 charge*; *pick one · 1 charge a use*; *pick one · always on*; localised), the rule from module/logic/power-text.mjs (`powerRule`, `perkParts`) and the flavour in italics, the chosen Gift and Perk marked; the Weakness with its timing spelled out (`weaknessTiming`) and the Tell's flavour in italics. The roll dialog's ability lines say the same things in context, so they stay. The compendium Entities carry no descriptions, so no pack changed. *Tests:* test/sheet-powers.test.mjs compares each sheet line with the book's (book/tools/entity-entries.mjs `powersHtml`) for four Entities.
+
 **FA-R7 · Low · Resolved in the book:** the book audit (BA-03) put "(in a local chase, only hers)" into Chapter 2's Hedge Spell, so the book and the config agree.
 
 ## Accepted
