@@ -96,4 +96,30 @@ Notation: trait die + second die = total vs Difficulty → result. "Shows" = the
 | 2 | R88–R89 | Invisible Man, tailor way B (maze of festival stalls, group, Wits, 6, watched) | Wits d10 → d12 (Tailor), Mask (86 / 10 / 4) | 2 + 4 | 6 vs 6 | Success: **the cape** (essential; one obstacle) | 2 |
 | 2 | R90–R91 | Jekyll & Hyde, florist way A (the rooftops, group, Nimble, 8, unwatched) | **The Draught** (3 → 2): Hyde, Nimble d10, Mask (65 / 18 / 17); the gate would be Hyde's Brawn d12 at 10 (54 / 17 / 29) | 5 + 3 | 8 vs 8 | Success (past for himself) | 2 |
 
-*(play continues)*
+| 3 | R92–R93 | Jekyll & Hyde, florist (guard dog, Charm / Nimble loud, 6, **watched**) | Back to Jekyll before the roll, free (**Practised Hand**): Charm d12, Mask (86 / 10 / 4) | 5 + 5 | 10 vs 6 | **Critical**: "anywhere else you get back one spent charge, up to your starting number" (2 → 3). **The rose bushes** (essential) | 2 |
+| 3 | R94–R95 | Creature, smithy (high garden wall, Nimble / Brawn loud, 8, **watched**) | Nimble d8 → d10 (Handyman), Mask (65 / 18 / 17; Brawn d12 the loud way: 71 / 15 / 14 and +1 every time; Mountain Stride can't open it, it lists Nimble) | 6 + 3 | 9 vs 8 | Success: **the hinges** | 2 |
+| 3 | R96–R97 | Invisible Man, tailor furniture (crowded shop floor, group, Sly, 10, unwatched): the cape is in hand, so "whoever is past all its obstacles may take on the extra one" | Sly d12 (his Tailor raise can't lift a d12), Mask (54 / 17 / 29); unwatched, so Trouble costs only +1 | 1 + 2 | 3 vs 10 | Trouble (no chase; Out of Sight doesn't come into it: nobody is watching) | 3 |
+| 3 | R98 | The Witch moves to the draper: Tell check (her Familiar's Warning would need a second d6) | | 3 | — | — | 3 |
+
+Three Turns gone, Suspicion 3: both essentials and two of the three extras in hand, a Win already. The top hat and the armour would make it a Grand Year.
+
+The draper's way in: the maze (group, Wits 10) would make everyone who wants past roll Wits at 10; the cart (Brawn 8, watched) stays beaten for the party once anyone beats it. The party takes the cart. The window after it (Nimble / Brawn loud, 8, watched) is no job for the Witch (Nimble d4; her Broomstick can't open it, it lists Nimble), so the Creature and Jekyll come over; the Witch waits for them rather than try the cart with Brawn d6 (42 / 31 / 28, caught on Trouble).
+
+| Turn | Roll | Who / where | Choice and why | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|---|
+| 4 | R99–R100 | Invisible Man, the furniture's shop floor again | Sly d12, Mask | 4 + 2 | 6 vs 10 | Trouble (no chase) | 4 |
+| 4 | — | The Creature and Jekyll move to the draper (already reached: no check). The Witch waits | | | | | 4 |
+| 5 | R101–R102 | Creature, draper way B (cart blocking the alley, Brawn / Nimble loud, 8, **watched**) | Brawn d12, Mask (71 / 15 / 14) | 7 + 3 | 10 vs 8 | Success: beaten for the whole party | 4 |
+| 5 | R103–R104 | Jekyll & Hyde, draper (shuttered window, Nimble / Brawn loud, 8, **watched**) | **The Draught** (3 → 2): Hyde, Nimble d10 → d12 by the Witch's **Hedge Spell** (3 → 2: "on any roll in the same place, hers or a friend's"), Mask (71 / 15 / 14) | 8 + 5 | 13 vs 8 | Success: **the top hat**. All five items in hand | 4 |
+| 5 | R105–R106 | Invisible Man, the furniture's shop floor a third time | **Unseen** (3 → 2): Sly d12, Monster hidden (70 / 13 / 18) | 12 + 9 | 21 vs 10 | Success (no show: 9 is under 12). The suit of armour is his to take | 4 |
+| 6 | R107 | The Witch, Hyde and the Creature move to the way out: Tell check ("the way out when anyone first comes back to it") | | 2 | — | — (Familiar's Warning not needed) | 4 |
+| 6 | — | The Invisible Man **takes the armour** (Bulky, one carrier; "Taking a piece is free") and sets off: between places | | | | | 4 |
+| 6 | — | End of the Turn: the armour, +1 | | | | | **5** |
+| 7 | — | The Invisible Man acts first and finishes his carried move ("you're between places until you act in the second") | | | | | 5 |
+| 7 | R108–R109 | Invisible Man, the way out (Sly / Nimble / Brawn loud, 8, watched; "one rolls for all") | A carrier "can't use the Mask": Sly d12, **Unseen** (2 → 1) hides the Monster (83 / 9 / 8). Out of Sight wouldn't save him here: he carries furniture, and everyone at the way out carries loot | 9 + 10 (shows, hidden) | 19 vs 8 | Success: **everyone out**, all they carry with them | 5 |
+
+**How the Year Went: Grand Year.** All five items and the suit of armour; nobody left behind; no missing-kind lines. "A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there." Out on **Turn 7** with five Turns to spare, at **Suspicion 5 of 11**. Charges: 5 spent of 12, one won back by the Critical (the Draught ×2, Hedge Spell, Unseen ×2; Jekyll's change back was free). The armour cost +1. No local chase, no capture: of the 13 rolls after the Tell checks, 2 were Trouble, both at the unwatched furniture obstacle. Suspicion came from two Tells (2), two unwatched Troubles (2) and the armour (1).
+
+The main line never needed V21 (nobody was caught with loot, and the Invisible Man rolled his watched obstacle empty-handed), Mesmerise or a shared place; those are drilled in section 6. What it did put through the text: the d3 at five places (one reroll for a taken place), three second ways in rerolled for a repeated quiet trait, the ceiling, a Critical winning back a charge, Practised Hand, a friend's Hedge Spell, the furniture taken and carried, and the way out with a carrier rolling.
+
+*(drills follow)*
