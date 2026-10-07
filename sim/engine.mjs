@@ -1196,7 +1196,7 @@ function captivesAct(S) {
     const ctx = {
       phase: "slip",
       options: [{ trait: "sly", loud: false }, { trait: "nimble", loud: false }, { trait: "brawn", loud: true }], // T8: like the way out
-      difficulty: S.town.lockup.difficulty, witnessed: false, helpers: [], locKind: null, weakness: false, noCost: true,
+      difficulty: S.town.lockup.difficulty, witnessed: S.P.slipWatched ?? true, helpers: [], locKind: null, weakness: false, noCost: true, // slipWatched: the lock-up is always watched, slipping free too (only Mesmerise reads it here)
     };
     const plan = planRoll(S, m, ctx);
     if (plan.value <= 0.05) continue;

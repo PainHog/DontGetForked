@@ -186,7 +186,7 @@ test("every rule switch defaults to the decided rule", () => {
     openTrait: "unlisted", waysIn: "two", overdrawStack: "merge", lootHandover: "free", chaseTable: "approved", captiveItems: "lost",
     multiCaught: "shared", monsterRule: "plus2", chaseSusp: "yes", slipRule: "success", furnitureRule: "noisySlowHard",
     corneredAtLimit: "captured", fetchRule: "flightExit", alreadyDeadTurns: 1, furniturePlace: "onList", exitRule: "gateSingle",
-    groupRule: "all", tellScope: "party", triesPerTurn: "each", exitTries: "one", openedRule: "onlyOpener", mesmeriseRule: "watched", spectralRule: "noLoot", roster: "approved", dutyEdge: true,
+    groupRule: "all", tellScope: "party", triesPerTurn: "each", exitTries: "one", openedRule: "onlyOpener", mesmeriseRule: "watched", spectralRule: "noLoot", slipWatched: true, roster: "approved", dutyEdge: true,
     tellPartyChance: 0.5, weaknessRule: "timing",
   };
   const D = defaults();

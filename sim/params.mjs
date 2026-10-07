@@ -119,6 +119,12 @@ export const PARAMS = {
     doc: "free = Entities at the same place hand loot over at any time, free (U2, decided 2026-10-05); the simulated players hand theirs over before a watched roll; none = no handing over.",
     ref: "CORE-RULES The raid (Carrying); PT3 M6",
   },
+  slipWatched: {
+    kind: "rule", default: true, values: [true, false],
+    title: "Is slipping free watched? (PT9 w1)",
+    doc: "true = the lock-up is always watched, for slipping free too, so Dracula may Mesmerise his way out (what the online version did); false = slipping free isn't watched (what the simulator did before PT9). Only Mesmerise reads it: a slip's Trouble starts no chase either way.",
+    ref: "Chapter 6 (Rescue, Slipping free); PT9 w1",
+  },
   lootDrop: {
     kind: "policy", default: "never", values: ["never", "outOfSight"],
     title: "Setting loot down before a roll (V21)",

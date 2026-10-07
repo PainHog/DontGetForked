@@ -1,6 +1,6 @@
 Now: The eighth computer playtest is done and its fixes are in the rulebook, the online version and the simulator: players can now set loot down, and a few rules were made clearer.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
-Number: Design decisions made = 99
+Number: Design decisions made = 102
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 264
