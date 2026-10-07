@@ -107,3 +107,47 @@ She is back at the silversmith with her Turn used up. *Table talk.* Newcomer, at
 - **Werewolf** moves to the way out with the lock. **Mummy** moves to the way out with the paper. **Witch** waits there. **Ghost** waits at the tailor with the bandages, because he wants to carry the armour ("I'm already past the crowd").
 - *Ruling (lock-up and loot).* The Mummy came to the lock-up for a possible rescue while carrying the paper. A rescuer's Trouble gets them caught, and capture loses whatever they carry. The table spotted this and the Planner suggested dropping the paper first. Hyde's escape made it moot.
 
+### Turn 6: Hyde walks to the tailor (Suspicion 10)
+- **Hyde** moves from the lock-up to the tailor (visited on Turn 1, so no Tell check). **Witch, Werewolf and Mummy** wait at the way out. **Ghost** waits at the tailor.
+- *Table talk.* Hoarder: "So we just... stand at the gate?" Planner: "We stand at the gate." Three players have nothing to do this Turn, or for the next two.
+
+### Turn 7: through the crowd (Suspicion 10)
+- **Hyde**, crowded shop floor (group, Sly 10, watched). Sly d8, raised to d10 by the Tailor Duty, + Monster with **Pillar** (his last charge, 1 → 0): R36 5 + 7 = **12, a Success.** The Monster showed (7 over 5), but Pillar means it raises nothing. Hyde is past all the tailor's obstacles.
+- Everyone else waits.
+
+### Turn 8: the trapdoor holds (Suspicion 10 → 12)
+- **Hyde**, heavy cellar trapdoor (Brawn 12, not watched; the furniture). Hyde has no charges, so the **Ghost spends Fade on Hyde's roll** (3 → 2; "an ability can help any Entity's roll at the same place"). Brawn d12 + Monster: R37 6 + 3 = **9, Trouble.** **Suspicion 11.** It's not watched, so there's no chase.
+- **Ghost** tries the trapdoor himself, with **Fade** (2 → 1): Brawn d4 + Monster: R38 3 + 2 = **5, Trouble. Suspicion 12.**
+  - *Table talk.* Planner: "That was a fifteen-percent roll." Daredevil: "Fifteen percent of a suit of armour!"
+- The Planner's limit has come: the armour isn't out. **Vote to leave, 3 to 2** (Planner, Hoarder, Newcomer against Daredevil and Roleplayer). The Planner did the sum aloud: taken on Turn 9, the armour would add +1 at the end of Turns 9, 10 and 11 while it's carried home (two Turns a move), and that reaches the Limit before the exit roll.
+
+### Turn 9: the way out, the Limit, and the final flight (Suspicion 12 → 15)
+- **Hyde and the Ghost** move to the way out. Everyone not captured is now there, so the **Werewolf** rolls for all in the same Turn ("each result (a move too) counts at once"). The way out is 10, 9 with **Fetch**. The Planner spends **Good Dog** (2 → 1): Nimble d12 + Monster: R39 1 + 5 = **6, Trouble.** The Monster showed, but Good Dog means it raises nothing; the Trouble does: **Suspicion 13.** The face is Granny Mott, ringing the bells at the gate (R40). The Werewolf is caught, **carrying the lock (an essential).**
+
+**Local chase: the Werewolf** (Lead 1; the mob is 8 + 6 = 14, capped at **12**). Round 1, R41 6 dead end: Brawn d10.
+- *The argument.* The Planner has one charge left (Good Dog). He explains Chapter 5: "If the Limit comes during a local chase, that chase ends at once and those Entities join the flight." If he rolls the Monster without Good Dog and it shows, Suspicion hits 15: the chase ends, and all five of them flee together from Lead 3 (Fetch), instead of him alone at Lead 1 against 12 with the lock. Hoarder: "You're doing it *on purpose*?" Daredevil: "Yes! Do it!" Newcomer: "What's the Limit again?" Roleplayer: "Hyde approves of chaos." Roll unprotected: Brawn d10 + Monster: R42 5 + 6 = **11, a Cost (the Lead stays at 1).** **The Monster showed: Suspicion 15, the Limit.** The local chase ends at once. Nobody was cornered, so **the whole town hunts and all five flee together.**
+
+**The final flight** (Gallowsmere: mob 11, escape at Lead 6; it starts at Lead 3 because the Werewolf has Fetch). The Mask is off and Suspicion stops. The Ghost's Cold Iron (Always) is in play from round 1. Everyone else's Weakness (Soon) comes in from round 3. Charges going in: Witch 2 · Ghost 1 · Werewolf 1 · Mummy 3 · Jekyll & Hyde 0.
+
+What the charges can still do: the Witch's Hedge Spell (raise anyone's roll) and the Mummy's Old Curse (raise) and Ancient Lore (use Wits). The Ghost's Fade and the Werewolf's Good Dog only protect Suspicion, which has stopped, and Through the Wall and Through the Hedge are "never in a chase". **Two players hold charges that can do nothing.** Jekyll & Hyde can go back to Jekyll free (Practised Hand), but turning into Hyde costs a charge.
+
+| Rnd | Ground | Witch | Ghost | Werewolf | Mummy | Jekyll & Hyde | S / T | Lead |
+|---|---|---|---|---|---|---|---|---|
+| 1 | R43 6 dead end (Brawn, Wits) | Wits d12: R44 5+4 = 9 Cost | Wits d6→d4 (Cold Iron), **Hedge Spell** (Witch 2→1) → d6: R45 3+3 = 6 Trouble | Brawn d10: R46 3+4 = 7 Trouble | Wits d12: R47 11+6 = 17 **S** | Hyde Brawn d12: R48 10+7 = 17 **S** | 2 / 2 | 3 |
+| 2 | R49 1 crowded square (Sly, Charm) | Sly d10: R50 4+3 = 7 Trouble | Sly d10→d8: R51 1+2 = 3 Trouble | Sly d6: R52 1+8 = 9 Cost | **Ancient Lore** (3→2), Wits d12: R53 3+7 = 10 Cost | back to Jekyll free, Charm d12: R54 3+7 = 10 Cost; the Monster showed, so Hyde takes over | 0 / 2 | **1** |
+| 3 | R55 4 rooftops (Nimble, Wits) — every Weakness in play | Wits d12→d10: R56 9+5 = 14 **S** | Nimble d12→d10: R57 6+4 = 10 Cost | Nimble d12→d10: R58 2+5 = 7 Trouble | Wits d12→d10, **Old Curse** (2→1) → d12: R59 3+6 = 9 Cost | Hyde Nimble d10→d8, **Hedge Spell** (Witch 1→0) → d10: R60 3+10 = 13 **S** | 2 / 1 | 2 |
+| 4 | R61 6 dead end | Wits d10: R62 9+5 = 14 **S** | Wits d4: R63 1+6 = 7 Trouble | Brawn d10→d8: R64 3+5 = 8 Trouble | Wits d10: R65 5+4 = 9 Cost (keeps his last charge) | Hyde Brawn d12→d10: R66 4+9 = 13 **S** | 2 / 2 | 2 |
+| 5 | R67 1 crowded square | Sly d10→d8: R68 5+5 = 10 Cost | Sly d10→d8: R69 7+6 = 13 **S** | Sly d6→d4: R70 3+7 = 10 Cost | Charm d8→d6: R71 2+6 = 8 Trouble (still keeps his last charge) | back to Jekyll free, Charm d12→d10: R72 8+7 = 15 **S** | 2 / 1 | 3 |
+| 6 | R73 3 market stalls (Brawn, Nimble) | Brawn d6→d4: R74 3+3 = 6 Trouble | Nimble d10: R75 5+3 = 8 Trouble | Nimble d10: R76 4+10 = 14 **S** | Brawn d10→d8: R77 8+10 = 18 **S** | Jekyll: no charge to become Hyde, and no overdraw while his Weakness is in play. Nimble d6→d4: R78 1+3 = 4 Trouble; the Monster showed, so Hyde takes over | 2 / 3 | 2 |
+| 7 | R79 3 market stalls | Brawn d4: R80 3+4 = 7 Trouble | Nimble d10: R81 5+3 = 8 Trouble | Nimble d10: R82 4+2 = 6 Trouble | **Ancient Lore** (1→0), Wits d10: R83 10+9 = 19 **S** | Hyde Brawn d10: R84 3+1 = 4 Trouble | 1 / 4 | **0: FORKED** |
+
+- Round 2, Lead 3 → 1. Planner: "Two Troubles and no Successes is minus two. Everyone, spend now." Hoarder: "I'll spend *one*."
+- Round 3, at Lead 1. The Witch puts her last Hedge Spell on Hyde. Newcomer: "Is this the emergency?" Planner: "This is the emergency."
+- Round 4. The Planner wanted the Hoarder's last charge on the Ghost's d4. Hoarder: "In case it gets worse." It stayed 2 to 2.
+- Round 6. On a Brawn/Nimble ground, Jekyll is stuck as Jekyll: no charge to become Hyde, and no overdraw, because "while your Weakness is in play, however it came, you can't overdraw". Roleplayer: "Practised Hand lets me become the *useless* one for free."
+- Round 7: four Troubles. The Mummy's 19 is the best roll of the night, and it's not enough. **The party is forked.** All five monsters are killed in the flight, and the lock, the spoons, the paper and the bandages stay in Gallowsmere.
+- *Table talk.* Daredevil: "Seven rounds. We were at 3 twice." Hoarder: "I *did* spend them all, in the end." Planner: "We had a Win at the gate on Turn 9."
+
+## How the Year Went
+**Forked.** "The town tells the story for years. Next Lantern Night, the bells ring a little louder." (No missing-kind lines after Forked, Chapter 7.)
+
