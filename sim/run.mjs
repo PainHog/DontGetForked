@@ -205,7 +205,7 @@ function sweepRow(name, M, B) {
 
 export function writeReport({ cmd, pkg, base, baseM, presets, sweeps, numbers, runs, sweepRuns, out, packages, furniture }) {
   const lines = [];
-  lines.push(`# Don't Get Forked — simulator report: ${pkg} (core rules 1.28)`, "");
+  lines.push(`# Don't Get Forked — simulator report: ${pkg} (core rules 1.31)`, "");
   lines.push(`Command: \`${cmd}\``, "");
   lines.push(`${runs} raids per label × party size (3, 4, 5 Entities) for the package table and the detail below; ${sweepRuns} for the presets and sweeps. Same seed → same report.`, "");
   lines.push("**The Entities are the approved roster** (dice, signatures, Gifts, Perks and Weakness timings read from `module/config.mjs`); towns are rolled with the book's town tables (`sim/town.mjs`). Players follow the policies in `sim/params.mjs`, which are simpler than real play.", "");
