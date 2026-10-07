@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   installFoundry, asUser, settle, diceQueue, dialogResponders, fakeForm, renderMessage, clickButton, log,
 } from "../tools/fake-foundry.mjs";
-import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake } from "../module/logic/raid.mjs";
+import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake, takeFurniture, setFurniture, advanceTurn } from "../module/logic/raid.mjs";
 import { newChase, endChase, inLocalChase } from "../module/logic/chase.mjs";
 import { homeFromCarried, yearFromList } from "../module/logic/year.mjs";
 
@@ -36,12 +36,20 @@ test("V24: no dropping in a local chase: its members from the moment they're cau
   assert.equal(inLocalChase(null, "w"), false);
 });
 
-test("V26: taking a set-down piece back up is an action; the first take, or joining a carrier, is free", () => {
-  assert.equal(isFurnitureRetake({ furniture: "inPlay", othersCarrying: 0 }), true, "taken earlier, set down, taken back up");
-  assert.equal(isFurnitureRetake({ furniture: "", othersCarrying: 0 }), false, "the first take is free");
-  assert.equal(isFurnitureRetake({ furniture: "inPlay", othersCarrying: 1 }), false, "joining whoever carries it");
-  assert.equal(isFurnitureRetake({ furniture: "out", othersCarrying: 0 }), false);
-  assert.equal(isFurnitureRetake({ furniture: "lost", othersCarrying: 0 }), false);
+test("V26: taking a set-down piece back up is an action; the first take is free, and so is a second carrier joining it that Turn", () => {
+  let s = newRaid({ id: "r" });
+  assert.equal(s.furnitureTakenTurn, 0);
+  assert.equal(isFurnitureRetake(s), false, "the first take is free");
+  s = takeFurniture(advanceTurn(s, 1)); // first taken in Turn 2
+  assert.equal(s.furnitureTakenTurn, 2);
+  assert.equal(isFurnitureRetake(s), false, "Turn 2: a second carrier joins the first take, free");
+  s = advanceTurn(s, 1);
+  assert.equal(isFurnitureRetake(s), true, "Turn 3: whoever takes it back up spends an action (each carrier of a Huge piece)");
+  assert.equal(isFurnitureRetake(setFurniture(s, "out")), false);
+  assert.equal(isFurnitureRetake(setFurniture(s, "lost")), false);
+  // an older raid without the Turn: any take while in play is a retake
+  assert.equal(normalizeRaid({ raidId: "old", turn: 4, furniture: "inPlay" }).furnitureTakenTurn, 0);
+  assert.equal(isFurnitureRetake(normalizeRaid({ raidId: "old", turn: 4, furniture: "inPlay" })), true);
 });
 
 test("V22: two items from one shared place, carried home together, both count", () => {
@@ -244,25 +252,31 @@ test("V21 with the switch off: Drop just takes the item off the sheet; nothing w
   await setSetting(SETTINGS.autoDrops, true);
 });
 
-test("V26 at the table: the first take is free; setting the piece down and taking it back up is the carrier's action that Turn", async () => {
+test("V26 at the table: a Huge piece's first take charges neither carrier; taking it back up later charges both", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
   await asUser(ANN, () => witch.update({ "system.carryingFurniture": true })); // the first take
   await settle();
   assert.equal(raid().furniture, "inPlay");
+  assert.equal(raid().furnitureTakenTurn, raid().turn);
   assert.equal(witch.system.pickedUpTurn, 0, "free");
-  // Dracula joins her carrying it: free too
+  // Dracula joins the first take the same Turn: free too
   await asUser(BEN, () => dracula.update({ "system.carryingFurniture": true }));
   await settle();
   assert.equal(dracula.system.pickedUpTurn, 0);
-  // both set it down; the Witch takes it back up: her action this Turn
+  // both set it down; a later Turn, both take it back up: each spends its action
   await asUser(BEN, () => dracula.update({ "system.carryingFurniture": false }));
   await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  await op(GM, OPS.raidTurn, { delta: 1 });
+  await settle();
   await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": true }));
   await settle();
   assert.equal(witch.system.carryingFurniture, true);
   assert.equal(witch.system.pickedUpTurn, raid().turn);
   assert.equal(witch.system.pickedUp, "the furniture");
+  assert.equal(dracula.system.pickedUpTurn, raid().turn, "the second re-taker is charged too");
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": false }));
   const sheet = await sheetOf(ANN, witch);
   assert.match(sheet.renderedParts.sheet, /Picked up the furniture: that’s its action this Turn/);
   await op(GM, OPS.raidTurn, { delta: 1 });

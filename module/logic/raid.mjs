@@ -15,6 +15,7 @@
  *             list,    // the shopping list: [{ name, duty, essential }]
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
  *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
+ *             furnitureTakenTurn, // V26: the Turn the piece was first taken (0: not yet, or an older raid)
  *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
  *             dropped,  // V21: loot dropped where it fell, waiting to be picked up: [{ id, name, by, turn }]
  *             readied,  // F26: the Entities a new raid (or the Storyteller's tick) made ready for this raid; null in an older raid
@@ -57,6 +58,7 @@ export function newRaid({ id = "", difficulty = "standard", readied = [] } = {})
     over: null,
     furniture: "",
     furnitureLost: false,
+    furnitureTakenTurn: 0,
     dropped: [],
     readied: [...readied],
     partyOut: null,
@@ -86,6 +88,7 @@ export function normalizeRaid(stored) {
     list: Array.isArray(s.list) ? s.list : [],
     over: s.over && typeof s.over === "object" ? s.over : null,
     furniture: FURNITURE_STATES.includes(s.furniture) ? s.furniture : s.furnitureLost ? "lost" : "",
+    furnitureTakenTurn: num(s.furnitureTakenTurn, 0), // an older raid: missing = not this Turn
     furnitureLost: s.furniture === "lost" || (!FURNITURE_STATES.includes(s.furniture) && !!s.furnitureLost),
     readied: Array.isArray(s.readied) ? s.readied : null, // an older raid didn't keep it: nobody is made ready again
     dropped: Array.isArray(s.dropped) ? s.dropped : [],
@@ -282,11 +285,13 @@ export function dropLoot(state, { id, name, by = "" }) {
 }
 
 /**
- * V26 (Chapter 4): "Taking a piece is free (taking it back up is an action)". Is ticking the piece now a retake:
- * it was taken earlier (in play) and is set down, nobody else carrying it? The first take, or joining a carrier, is free.
+ * V26 (Chapter 4): "Taking a piece is free (taking it back up is an action)". Given the raid, is taking the piece now
+ * a retake: it is in play, and this isn't the Turn it was first taken? So each carrier of a Huge piece taking it back
+ * up spends an action, while a second carrier joining the first take that Turn is free. An older raid without the
+ * first take's Turn counts as "not this Turn".
  */
-export function isFurnitureRetake({ furniture = "", othersCarrying = 0 } = {}) {
-  return furniture === "inPlay" && !(othersCarrying > 0);
+export function isFurnitureRetake(state) {
+  return state?.furniture === "inPlay" && (state.furnitureTakenTurn ?? 0) !== state.turn;
 }
 
 /** V21: someone picks a dropped item up. Returns { state, item } (item null if it's gone already). */
@@ -316,7 +321,9 @@ export function undoEndOfTurnFurniture(state) {
 /** The piece's state, set (the Storyteller's hand, or the rules below). */
 export function setFurniture(state, furniture) {
   if (!FURNITURE_STATES.includes(furniture)) throw new Error(`unknown furniture state: ${furniture}`);
-  return state.furniture === furniture ? state : { ...state, furniture, furnitureLost: furniture === "lost" };
+  if (state.furniture === furniture) return state;
+  const first = state.furniture === "" && furniture === "inPlay"; // V26: the Turn of the first take
+  return { ...state, furniture, furnitureLost: furniture === "lost", ...(first ? { furnitureTakenTurn: state.turn } : {}) };
 }
 
 /** F15 (Chapter 6, Captured): a furniture carrier was captured: the piece is gone for the night. */

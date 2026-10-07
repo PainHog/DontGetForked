@@ -29,8 +29,7 @@ function retake(model, sys) {
   if (sys.carryingFurniture !== true || model.carryingFurniture || !model.parent) return;
   const raid = currentRaid();
   if (!raid) return;
-  const othersCarrying = game.actors.filter((a) => a.id !== model.parent.id && a.system?.carryingFurniture && a.system.status !== "captured").length;
-  if (!isFurnitureRetake({ furniture: raid.furniture, othersCarrying })) return;
+  if (!isFurnitureRetake(raid)) return;
   if (raid.hunt) {
     delete sys.carryingFurniture;
     globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.noPickUpInFlight"));
