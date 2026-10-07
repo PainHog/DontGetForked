@@ -325,6 +325,8 @@ Read cleanly: the extra charge is part of the starting number, so the Critical r
 
 "(a d6 halved, rounding up, serves as the d3)": 1–2 → 1, 3–4 → 2, 5–6 → 3, the same bands as Chapter 2's random picks. Rolled thirteen times for places (main line R13–R18, drill d R182–R188): every result mapped without a question. Clean.
 
+---
+
 ## 7. Findings (most severe first)
 
 No blockers. Every change I was asked to verify read cleanly at the moment it mattered: Mesmerise at a watched obstacle (refused at an unwatched one; used at a wall, a drainpipe, the way out and the lock-up), Out of Sight's "anyone in the same place" both ways, an opened approach's "others must beat it themselves" (a friend rolled the window himself), the way out and a rescue opened for everyone, the d3 at thirteen places, the castle upgrade's charge restored by a Critical, and V22's shared place. V21 works as meant before a watched roll (drill a1) and for Spectral (drill b). What needs the author is at V21's edges: "drop yours any time" reaches into a chase (M1), and the sentence doesn't say where a dropped item lies or when its pick-up happens (m1, m2). Each finding is marked **wording** (the book already implies an answer, or the fix only says more clearly what it means) or **rules** (the fix would change a rule: needs the author's decision; no new numbers proposed).
@@ -379,7 +381,7 @@ No blockers. Every change I was asked to verify read cleanly at the moment it ma
 
 ### 9.1 Numbers from play
 
-- **Main line:** **Grand Year**, out on **Turn 7** with five Turns to spare, at Suspicion 5 of 11. Suspicion at the end of each Turn: 2, 2, 3, 4, 4, 5 (out at 5). Sources: Tells 2 (of 6 checks; one let through by Familiar's Warning's second d6), Trouble 2 (both at the unwatched furniture obstacle), the armour 1. 13 rolls after the Tell checks: 11 Successes (one a Critical), 0 Costs, 2 Troubles. Charges 5 of 12 spent, one won back. No chase, no capture.
+- **Main line:** **Grand Year**, out on **Turn 7** with five Turns to spare, at Suspicion 5 of 11. Suspicion at the end of each Turn: 2, 2, 3, 4, 4, 5 (out at 5). Sources: Tells 2 (of 6 checks; at the silversmith Familiar's Warning's second d6 also came up 4–6), Trouble 2 (both at the unwatched furniture obstacle), the armour 1. 13 rolls after the Tell checks: 11 Successes (one a Critical), 0 Costs, 2 Troubles. Charges 5 of 12 spent, one won back. No chase, no capture.
 - **Local chases (drills):** 4, of 1–5 rounds (12 rounds): a2 escaped in round 2 on a Critical; c1 and c2 ended at the Limit (rounds 5 and 4); c3 cornered in round 1. No final flight was played.
 - **V21 in use:** 6 set-downs (the cape in a1 and a2; the tea service and the cape in b; the tea service and the roses in c), 3 pick-ups played (a1's cape; b's two items), and one capture that took nothing (c3).
 - **Opened approaches:** 6 (Mesmerise 4, Through the Wall 1, Through the Gap 1), all got through. With PT5–PT8's 30 and 1 Trouble, 36 and 1.
