@@ -107,3 +107,26 @@ What went wrong, or took several rounds, on Richard's first game. Each lesson li
 - **Commit and push work-in-progress often.** Agents and sessions stop on usage limits; resume them, don't restart.
 - **Parallel agents need disjoint file ownership.** When one package depends on another, tell the dependent agent the other's interface.
 - **Keep the simulator measuring the version it was built for.** It imported live rules code, which silently changed its baseline. Freeze a copy of the old rules when the live rules change.
+
+# Lessons from Don't Get Forked (so far)
+
+What took several rounds on this game, up to the full-table playtests (2026-10-07).
+
+## Rules
+- **"Any time" needs its edges playtested.** "Drop your loot any time" (V21) took four more rounds (V24–V28): dropping once caught, handing over once caught, drops between places and in the final flight, taking a piece back up, a captive picking up. **Do:** for any "any time" or "free" action, list the edges before it goes in (in a chase, at the Limit, in the final flight, as a captive, between places, the last Turn) and drill each.
+- **"Costs your next action" reads two ways** (pick up now and skip later, or the pick-up is the action). **Do:** say what the action *is*.
+- **Verification playtests converge but never reach zero.** Findings went 12, 6, 6, 6 and then only wording; each round mostly tested the last round's wording. **Do:** stop when two rounds in a row find nothing major, and save the rest for real tables.
+
+## Balance
+- **Test player styles, not just the default players.** A printed town can be on target for the default players and still be too easy for a party that stays together, or have a furniture gamble with no risk. **Do:** run `sim/full-table.mjs` (styles: default, cautious, daredevil, stay together) and the furniture gamble (Grand Year when tried, Win lost) for every printed town.
+- **The simulator's "upper bound" policies settle exploit worries fast.** Play the trick as generously as possible; if the targets still hold, no rule is needed (V21's loot drop: Out of Sight +0.7 → +1.4).
+- **Party size changes the feel more than the odds.** Five players stay on target but finish by Turn 7–8 with charges unspent. Fix the length claim in the book before touching the numbers (one more list item at five made Standard far too hard).
+
+## Layout
+- **Know each page's slack before editing.** Chapters 3 and 4 and At the Table are full; any added words spill a page. **Do:** build after every edit batch, check every chapter starts on the same page, and trim a short last line to make room rather than cutting meaning. Put Storyteller-facing clarifications in Chapter 8 (it has room) when the rules page has none.
+- **Generated pages need their generator run.** Chapter 9's town pages and maps come from `book/src/towns.json` via `book/tools/town-pages.mjs`; the book build doesn't regenerate them, and the packs need `npm run build:packs`.
+
+## Process
+- **Agents sharing one checkout must keep scratch files private.** A shared dice script in the scratchpad mixed two playtests' roll logs, and one agent's helper wrote files into the repository root. **Do:** give each agent its own scratch folder in the brief, and say "never in the repository".
+- **Gate every commit on the checks** (`npm run check >log 2>&1 && git commit …`): chaining a commit after a `grep` on the test output committed failing code twice.
+- **Guard tests that pin the book's wording are worth their friction.** They caught every place a wording change had to be synced (Foundry texts, compendium quotes, the simulator's decided defaults).

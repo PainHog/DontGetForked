@@ -6,6 +6,8 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 **What slice 2 covers:** chases (the local chase and the final flight, with the chase tracker: the Lead, the ground, the mob, Weaknesses, the majority rule), the lock-up (capture, slipping free, rescue, left behind), group checks (one Suspicion rise), Tell checks, carried furniture's Suspicion, the shopping list and how the year went.
 **For sections 1–9**, switch off *Run chases automatically* first (Configure Settings), so the hunt in section 7 doesn't start a final flight; switch it back on for section 10.
 
+**Short on time? The 45-minute path.** The automated tests already check the rules logic on a stand-in for Foundry; what only real Foundry can show is two browsers talking to each other, who may change what, and whether the windows draw properly. If you only have one sitting, do these, in order, and send back what you find: **Setup**, **1** (the world loads), **2** (making Entities), **3** (a plain roll), **8** (who may change what), **12** (a local chase through to capture), **13** (slipping free and a rescue), **15** (the final flight and the year), **19** steps 1, 2 and 6 (the packs, dragging in an Entity, opening a town), and **21** step 14 (dropping and picking up loot between the two browsers). The rest can wait for a second sitting.
+
 ## Setup
 
 1. Until a release is published, copy the repository folder into your Foundry data folder as `Data/systems/dont-get-forked` (the folder name must match). Restart Foundry. *(After a release: Install System → manifest URL `https://github.com/PainHog/DontGetForked/releases/latest/download/system.json`.)*
