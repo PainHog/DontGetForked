@@ -363,7 +363,7 @@ test("V17 Out of Sight at the table: the roll dialog's tick for someone with him
   let card = cardOf(lastRoll());
   assert.equal(card.caught, true);
   assert.equal(card.carryingBy, "companion");
-  assert.match(lastRoll().content, /someone with him carries loot or furniture/i);
+  assert.match(lastRoll().content, /someone in the same place carries loot or furniture/i);
   await op(GM, OPS.chaseEnd, { outcome: "dropped" });
   await settle();
   // without the tick: unseen, no chase
@@ -381,7 +381,7 @@ test("V17 Out of Sight at the table: the roll dialog's tick for someone with him
   await settle();
 });
 
-test("B7 at the table: the roll dialog offers Mesmerise only where someone's watching; refused otherwise", async () => {
+test("B7 at the table: the roll dialog offers Mesmerise only at a watched obstacle; refused otherwise", async () => {
   const { promptRoll } = await import("../module/dice/rolling.mjs");
   const mes = `ability:${dracula.id}:signature`;
   const box = (html) => html.match(new RegExp(`<input type="checkbox" name="${mes}"[^>]*>`))?.[0] ?? "";
@@ -389,7 +389,7 @@ test("B7 at the table: the roll dialog offers Mesmerise only where someone's wat
   dialogResponders.push((options) => { content = options.content; return null; });
   await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 8, abilities: [] }));
   assert.match(box(content), /disabled/, "unwatched: not offered");
-  assert.match(content, /where someone’s watching|where someone's watching/);
+  assert.match(content, /at a watched obstacle/);
   dialogResponders.push((options) => { content = options.content; return null; });
   await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 8, abilities: [], watched: true }));
   assert.doesNotMatch(box(content), /disabled/, "watched: offered");
@@ -398,7 +398,7 @@ test("B7 at the table: the roll dialog offers Mesmerise only where someone's wat
   const before = log.warnings.length;
   await asUser(BEN, () => api.roll(dracula, { trait: "sly" }));
   await settle();
-  assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only where someone/.test(w)));
+  assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only at a watched obstacle/.test(w)));
 });
 
 test("V19 at the table: a group check lets an empty-handed Spectral Ghost past; one that carries rolls like anyone else", async () => {

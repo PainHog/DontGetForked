@@ -155,7 +155,7 @@ function dialogContext(actor, values, raid) {
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));
     if (c.weakness) notices.push(t("DGF.Roll.notice.chaseWeakness"));
   } else if (c) notices.push(t(`DGF.Plan.${c.reason}`));
-  // B7: an approach only where someone's watching (Mesmerise) isn't offered until Watched, the way out or the lock-up is ticked
+  // B7: an approach only at a watched obstacle (Mesmerise) isn't offered until Watched, the way out or the lock-up is ticked
   const watchedHere = !!(values.watched || values.wayOut || values.lockup);
   const describe = (a) => ({
     id: a.id, name: a.name, helper: a.payerName, charges: a.payer.charges,

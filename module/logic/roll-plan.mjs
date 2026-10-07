@@ -80,7 +80,7 @@ export function buildRollPlan(input) {
   // Where the roll is: the way out (Chapter 4) or the lock-up (Chapter 6) list their own traits.
   const mode = input.wayOut ? "wayOut" : input.lockup === "slip" ? "slip" : input.lockup === "rescue" ? "rescue" : "";
   const listed = mode === "wayOut" ? DGF.wayOut : mode ? DGF.lockup[mode] : null;
-  // B7: Mesmerise opens an approach only where someone's watching (the way out and the lock-up always are)
+  // B7: Mesmerise opens an approach only at a watched obstacle (the way out and the lock-up always are)
   if (opener?.watchedOnly && !input.watched && !mode) errors.push({ code: "openNotWatched", name: opener.name });
   const captive = sys.status === "captured";
   if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free
@@ -162,7 +162,7 @@ export function buildRollPlan(input) {
   });
   const overdraw = !hunt && payments.some((p) => p.overdraw > 0);
 
-  // V17 Out of Sight: Trouble gets you caught only while you or anyone with you carries loot or furniture. The
+  // V17 Out of Sight: Trouble gets you caught only while you or anyone in the same place carries loot or furniture. The
   // roller's own carrying counts by itself; a helper on this roll is at the same place; anyone else is the dialog's tick.
   let carryingBy = "", carryingName = "";
   if (P.caughtOnlyCarrying) {

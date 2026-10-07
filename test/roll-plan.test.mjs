@@ -86,7 +86,7 @@ test("abilities: raise, switch, hidden, open; at most one raise per roll, Castle
   p = plan(drac, { abilities: [bat] });
   assert.equal(p.trait, "nimble");
   assert.equal(p.traitDie, 10);
-  const mesmerise = ownAbility(drac, "signature"); // open with Charm, where someone's watching (B7)
+  const mesmerise = ownAbility(drac, "signature"); // open with Charm, at a watched obstacle (B7)
   p = plan(drac, { abilities: [mesmerise], difficulty: 10, watched: true });
   assert.equal(p.trait, "charm");
   assert.equal(p.difficulty, 8);
@@ -230,7 +230,7 @@ test("V17 Out of Sight: caught only while you or anyone with you carries loot or
   assert.equal(drac.carryingBy, "");
 });
 
-test("B7: Mesmerise opens an approach only where someone's watching (the way out and the lock-up always are)", () => {
+test("B7: Mesmerise opens an approach only at a watched obstacle (the way out and the lock-up always are)", () => {
   const drac = roller("dracula");
   const mes = ownAbility(drac, "signature");
   assert.equal(mes.name, "Mesmerise");

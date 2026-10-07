@@ -12,7 +12,7 @@ The players are classic monsters who share a castle in the woods. Once a year, o
 
 | Entity | Brawn | Nimble | Sly | Charm | Wits | Signature [C2] |
 |---|---|---|---|---|---|---|
-| Dracula | d8 | d10 | d6 | d12 | d4 | Mesmerise: open an approach with Charm where someone's watching [B7] |
+| Dracula | d8 | d10 | d6 | d12 | d4 | Mesmerise: open an approach with Charm at a watched obstacle [B7] |
 | Frankenstein's creature | d12 | d8 | d6 | d4 | d10 | Brute Force: use Brawn instead |
 | The Mummy | d10 | d4 | d6 | d8 | d12 | Ancient Lore: use Wits instead |
 | The Werewolf | d10 | d12 | d6 | d4 | d8 | Good Dog: the Monster die without risking Suspicion |
