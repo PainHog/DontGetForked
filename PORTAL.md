@@ -1,9 +1,9 @@
-Now: Full checks of the rulebook, the online version and the balance simulator: more than 80 problems found and fixed, from security holes in the online version to pictures without descriptions.
+Now: The eighth computer playtest is done and its fixes are in the rulebook, the online version and the simulator: players can now set loot down, and a few rules were made clearer.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
 Number: Design decisions made = 99
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 254
+Number: Automated checks passing = 264
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -53,7 +53,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Online version, part 2: chases and the lock-up
 - [x] Online version: ready-made monsters, tables and towns to drag in
 - [x] Computer playtest of the full draft, and its fixes (shorter final flights)
-- [x] Three more computer playtests until nothing major was left
+- [x] Four more computer playtests until nothing major was left
 - [x] A kit for the first playtest with real people
 - [x] Full audits of the rulebook, the online version and the simulator, with every confirmed problem fixed
 - [x] Online version keeps track of the optional campaign (castle upgrades) and of who is in each raid
