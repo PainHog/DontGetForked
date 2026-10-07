@@ -146,6 +146,7 @@ function dialogContext(actor, values, raid) {
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
   if (sys.status === "captured") notices.push(t("DGF.Roll.notice.captured"));
   if (!isInRaid(sys)) notices.push(t("DGF.Roll.notice.notInRaid"));
+  if (sys.nextActionLost) notices.push(t("DGF.Roll.notice.actionLost", { item: sys.nextActionLost })); // V21
   if (raid.group?.open && raid.group.rolls?.[actor.id]?.passed) notices.push(t("DGF.Roll.notice.spectral", { label: raid.group.label || t("DGF.Group.unnamed") })); // V19
   const where = rollSituation(actor, { ...values, chase: true, lockup: true, group: true }, raid);
   const c = where.chase;
@@ -286,6 +287,7 @@ export async function performRoll(actor, values) {
   }
   if (own?.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
   if (plan.consumeSmaller) update["system.nextRollSmaller"] = 0;
+  if (sys.nextActionLost) update["system.nextActionLost"] = ""; // V21: the action the pick-up spent has gone; this roll is the next
   let formTo = "";
   if (res.formShift && setting(SETTINGS.autoForm)) {
     formTo = otherForm(sys.entityKey, sys.form) ?? "";

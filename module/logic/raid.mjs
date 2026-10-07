@@ -16,6 +16,7 @@
  *             over,    // how the raid ended: null, or { result, turn } once the year is decided
  *             furniture, // V4: the piece: "" (not taken) | "inPlay" (taken, in town: noisy) | "out" (out of town) | "lost"
  *             furnitureLost, // F15: a carrier was captured: the piece is gone for the night (furniture === "lost")
+ *             dropped,  // V21: loot dropped where it fell, waiting to be picked up: [{ id, name, by, turn }]
  *             readied,  // F26: the Entities a new raid (or the Storyteller's tick) made ready for this raid; null in an older raid
  *             partyOut, // null, or { how: "wayOut" | "flight", turn, piece } once the party has left town (no hunt or chase starts);
  *                       //   piece: what that leaving made of the furniture ("out" | "lost"), or "" if it moved nothing
@@ -56,6 +57,7 @@ export function newRaid({ id = "", difficulty = "standard", readied = [] } = {})
     over: null,
     furniture: "",
     furnitureLost: false,
+    dropped: [],
     readied: [...readied],
     partyOut: null,
     endedChase: null,
@@ -86,6 +88,7 @@ export function normalizeRaid(stored) {
     furniture: FURNITURE_STATES.includes(s.furniture) ? s.furniture : s.furnitureLost ? "lost" : "",
     furnitureLost: s.furniture === "lost" || (!FURNITURE_STATES.includes(s.furniture) && !!s.furnitureLost),
     readied: Array.isArray(s.readied) ? s.readied : null, // an older raid didn't keep it: nobody is made ready again
+    dropped: Array.isArray(s.dropped) ? s.dropped : [],
     partyOut: s.partyOut && typeof s.partyOut === "object" ? s.partyOut : null,
     endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
@@ -266,6 +269,23 @@ export function endOfTurnFurniture(state, carriers = []) {
   if (s.ledger.some((e) => e.eventId === eventId)) return restore(s, eventId);
   // set down, nobody's name goes with it: the event says so ("the furniture (set down)")
   return recordEvent(s, { eventId, amount: DGF.suspicion.furniture, source: "furniture", label: carriers.length ? "furniture" : "furnitureDown", actorName: carriers.join(", ") });
+}
+
+/**
+ * V21 (Chapter 3, Cost): "A dropped item (drop yours any time) falls where you are; picking it up costs your next
+ * action." The item waits in the raid's state (the system doesn't track places: `by` says who dropped it, so the
+ * table knows where). A Cost's "drop an item" goes the same way.
+ */
+export function dropLoot(state, { id, name, by = "" }) {
+  if (!id) throw new Error("a dropped item needs an id");
+  return { ...state, dropped: [...(state.dropped ?? []), { id, name: String(name ?? ""), by: String(by ?? ""), turn: state.turn }] };
+}
+
+/** V21: someone picks a dropped item up. Returns { state, item } (item null if it's gone already). */
+export function pickUpLoot(state, dropId) {
+  const item = (state.dropped ?? []).find((d) => d.id === dropId) ?? null;
+  if (!item) return { state, item: null };
+  return { state: { ...state, dropped: state.dropped.filter((d) => d.id !== dropId) }, item };
 }
 
 /**

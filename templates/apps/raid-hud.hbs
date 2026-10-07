@@ -21,6 +21,11 @@
   {{#if furnitureOut}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureOut"}}</p>{{/if}}
   {{#if furnitureInPlay}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureInPlay"}}{{#if isGM}} <button type="button" class="dgf-link" data-action="furnitureOut">{{localize "DGF.Raid.furnitureOutButton"}}</button> <button type="button" class="dgf-link" data-action="furnitureLost">{{localize "DGF.Raid.furnitureLostButton"}}</button>{{/if}}</p>{{/if}}
   {{#if castle}}<p class="dgf-hud-group">{{castle}}</p>{{/if}}
+  {{#if dropped.length}}
+  <div class="dgf-hud-dropped"><span class="dgf-hud-label">{{localize "DGF.Raid.dropped"}}</span>
+    <ul>{{#each dropped}}<li>{{text}} <button type="button" class="dgf-link" data-action="pickUp" data-drop-id="{{dropId}}">{{localize "DGF.Raid.pickUp"}}</button></li>{{/each}}</ul>
+  </div>
+  {{/if}}
   {{#if party.length}}
   <details class="dgf-hud-list dgf-hud-party"><summary>{{localize "DGF.Raid.party" n=partyCount}}</summary>
     <ul>{{#each party}}<li class="{{#unless inRaid}}dgf-out{{/unless}}">{{name}}{{#unless inRaid}} <span class="dgf-hint">{{localize "DGF.Raid.notInRaid"}}</span>{{/unless}} <button type="button" class="dgf-link" data-action="toggleMember" data-actor-id="{{actorId}}">{{#if inRaid}}{{localize "DGF.Raid.leaveRaid"}}{{else}}{{localize "DGF.Raid.joinRaid"}}{{/if}}</button></li>{{/each}}</ul>

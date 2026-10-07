@@ -86,7 +86,7 @@ export function captivesOf(entities) {
  */
 export function newRaidUpdate(system) {
   const update = {
-    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false, carried: [], carryingFurniture: false,
+    status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, nextActionLost: "", weaknessInPlay: false, overdrewInFlight: false, carried: [], carryingFurniture: false,
     "charges.value": system?.charges?.start ?? DGF.charges,
   };
   const forms = formsOf(system?.entityKey);

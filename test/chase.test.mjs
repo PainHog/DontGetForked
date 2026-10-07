@@ -244,7 +244,7 @@ test("slipping free: once per Turn, from the Turn after the capture; only a Succ
 test("a new raid frees everyone, refills the charges (castle upgrades included) and clears the last raid's marks", () => {
   const u = newRaidUpdate({ ...entitySystem("witch", { upgrades: 1 }), status: "captured", skipTurn: 4, nextRollSmaller: 1, weaknessInPlay: true, overdrewInFlight: true, carried: [{ name: "a coil of rope" }], carryingFurniture: true, charges: { value: 0, start: 4 } });
   // last year's loot and piece went home: nobody carries them into the new town (else the first Turn's end takes the piece: V4)
-  assert.deepEqual(u, { status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, weaknessInPlay: false, overdrewInFlight: false, carried: [], carryingFurniture: false, "charges.value": 4 });
+  assert.deepEqual(u, { status: "active", capturedTurn: 0, slipTurn: 0, skipTurn: 0, nextRollSmaller: 0, nextActionLost: "", weaknessInPlay: false, overdrewInFlight: false, carried: [], carryingFurniture: false, "charges.value": 4 });
 });
 
 /* ---------------------------------------------------- group and Tell checks -- */

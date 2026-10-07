@@ -70,7 +70,7 @@
     {{/if}}
     <h3>{{localize "DGF.Sheet.carried"}}{{#if editable}} <button type="button" class="dgf-link" data-action="addItem">+ {{localize "DGF.Sheet.addItem"}}</button>{{/if}}</h3>
     <ul class="dgf-carried">
-      {{#each carried}}<li>{{name}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="removeItem" data-index="{{index}}" aria-label="{{localize "DGF.Sheet.removeItem"}}">×</button>{{/if}}</li>{{else}}<li class="dgf-hint">{{localize "DGF.Sheet.nothingCarried"}}</li>{{/each}}
+      {{#each carried}}<li>{{name}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="dropItem" data-index="{{index}}" data-tooltip="{{localize "DGF.Sheet.dropHint"}}">{{localize "DGF.Sheet.drop"}}</button> <button type="button" class="dgf-link" data-action="removeItem" data-index="{{index}}" aria-label="{{localize "DGF.Sheet.removeItem"}}">×</button>{{/if}}</li>{{else}}<li class="dgf-hint">{{localize "DGF.Sheet.nothingCarried"}}</li>{{/each}}
     </ul>
     <h3>{{localize "DGF.Sheet.notes"}}</h3>
     <textarea name="system.notes" rows="4">{{system.notes}}</textarea>

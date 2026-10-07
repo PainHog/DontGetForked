@@ -137,7 +137,54 @@ const prefixed = (update) => Object.fromEntries(Object.entries(update).map(([k, 
 /** Every Entity in the world (one of the eight chosen), in this raid or not. */
 const allEntities = () => game.actors.filter((a) => isEntity(a) && a.system.entityKey);
 
+/**
+ * V21: one of the Entity's loot items drops where it is (a Cost's "drop an item" or the owner's own drop, any time).
+ * With autoDrops on it waits in the raid's dropped list until someone picks it up; off, it just leaves the sheet.
+ * Returns the item dropped, or null. GM only (it writes the raid).
+ */
+async function dropFrom(actor, index, { announce: say = true } = {}) {
+  const carried = [...(actor.system.carried ?? [])];
+  if (!(index >= 0 && index < carried.length)) return null;
+  const [item] = carried.splice(index, 1);
+  await actor.update({ "system.carried": carried });
+  if (setting(SETTINGS.autoDrops)) {
+    const { state } = await mutateRaid((s) => R.dropLoot(s, { id: foundry.utils.randomID(), name: item.name, by: actor.name }));
+    if (say) await announce("drop", state, { names: [actor.name], label: item.name });
+  }
+  return item;
+}
+
+/** May this user act for this Entity (its owner, or a Storyteller)? Checked from the request (v13 queries carry no sender). */
+const actsFor = (user, actor) => !!user?.isGM || !!actor?.testUserPermission?.(user, "OWNER");
+
 export function registerRaidOps() {
+  // The Entity's owner (or the Storyteller): drop one of its loot items where it is, any time (V21).
+  registerOp(OPS.raidDrop, {
+    apply: async ({ actorId, index } = {}, { user }) => {
+      const actor = game.actors.get(actorId);
+      if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
+      if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
+      const item = await dropFrom(actor, Math.trunc(Number(index)));
+      return item ? { ok: true, item: item.name } : { ok: false, reason: "noItem" };
+    },
+  });
+
+  // An Entity's owner (or the Storyteller): pick a dropped item up; it costs that Entity's next action (V21).
+  registerOp(OPS.raidPickUp, {
+    apply: async ({ dropId, actorId } = {}, { user }) => {
+      if (!setting(SETTINGS.autoDrops)) return { ok: false, reason: "dropsOff" };
+      const actor = game.actors.get(actorId);
+      if (!isEntity(actor) || !isInRaid(actor.system)) return { ok: false, reason: "notAnEntity" };
+      if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
+      if (actor.system.status === "captured") return { ok: false, reason: "captured" };
+      const { state, result } = await mutateRaid((s) => { const out = R.pickUpLoot(s, dropId); return { state: out.state, result: out.item }; });
+      if (!result) return { ok: false, reason: "gone" };
+      await actor.update({ "system.carried": [...(actor.system.carried ?? []), { name: result.name }], "system.nextActionLost": result.name });
+      await announce("pickUp", state, { names: [actor.name], label: result.name });
+      return { ok: true, item: result.name };
+    },
+  });
+
   setRaidIdReader(() => getRaid().raidId);
   setEventAmountReader((eventId) => R.eventAmount(getRaid(), eventId));
 
@@ -186,10 +233,8 @@ export function registerRaidOps() {
           await actor.update({ "system.skipTurn": turn });
           patch.skipTurn = turn;
         } else if (choice === "drop" && isEntity(actor)) {
-          const carried = [...(actor.system.carried ?? [])];
-          const i = Math.min(Math.max(0, Number(itemIndex) || 0), carried.length - 1);
-          const [item] = i >= 0 ? carried.splice(i, 1) : [];
-          await actor.update({ "system.carried": carried });
+          const carried = actor.system.carried ?? [];
+          const item = await dropFrom(actor, Math.min(Math.max(0, Number(itemIndex) || 0), carried.length - 1), { announce: false });
           patch.dropped = item?.name ?? "";
         }
       }

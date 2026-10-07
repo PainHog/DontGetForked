@@ -52,6 +52,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       furnitureOut: () => runOp(OPS.raidFurniture, { state: "out" }),
       backInTown: () => runOp(OPS.raidBackInTown, {}),
       toggleMember: RaidHud.#onToggleMember,
+      pickUp: RaidHud.#onPickUp,
     },
   };
 
@@ -95,6 +96,8 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       // F26: who is in this raid (the Storyteller's list: tick an Entity in or out)
       party: isGM ? allEntities().map((a) => ({ actorId: a.id, name: a.name, inRaid: inRaid(a) })) : [],
       partyCount: entities().length,
+      // V21: loot dropped where it fell, waiting to be picked up (by an Entity there: its next action)
+      dropped: setting(SETTINGS.autoDrops) ? state.dropped.map((d) => ({ dropId: d.id, text: t("DGF.Raid.droppedItem", { item: d.name, by: d.by, turn: d.turn }) })) : [],
       castle: setting(SETTINGS.campaign) ? t("DGF.Raid.castle", { n: castleUpgrades().length, max: DGF.campaign.maxUpgrades, names: castleUpgrades().length ? `: ${castleUpgrades().join(", ")}` : "" }) : "",
       captives: entities().filter((a) => isCaptive(a.system)).map((a) => ({
         actorId: a.id, name: a.name,
@@ -109,6 +112,29 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       furnitureInPlay: v.furniture === "inPlay" && setting(SETTINGS.autoFurniture),
       furnitureOut: v.furniture === "out",
     };
+  }
+
+  /** V21: pick a dropped item up: the user's own Entity in the raid (asked which, if several; a Storyteller may pick for anyone). */
+  static async #onPickUp(event, target) {
+    const dropId = target.dataset.dropId;
+    const free = entities().filter((a) => a.system.status !== "captured" && (game.user?.isGM || a.isOwner));
+    if (!free.length) return null;
+    let actorId = free[0].id;
+    if (free.length > 1) {
+      const options = free.map((a) => `<option value="${a.id}">${foundry.utils.escapeHTML(a.name)}</option>`).join("");
+      actorId = await foundry.applications.api.DialogV2.wait({
+        window: { title: t("DGF.Raid.pickUpTitle") },
+        classes: ["dont-get-forked"],
+        content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Raid.pickUpText")}</p><select name="actor">${options}</select></div>`,
+        buttons: [
+          { action: "ok", label: t("DGF.Raid.pickUp"), default: true, callback: (event, button) => button.form.elements.namedItem("actor")?.value },
+          { action: "cancel", label: t("DGF.Dialog.cancel") },
+        ],
+        rejectClose: false,
+      });
+      if (!actorId || typeof actorId !== "string") return null;
+    }
+    return runOp(OPS.raidPickUp, { dropId, actorId });
   }
 
   static async #onToggleMember(event, target) {

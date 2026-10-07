@@ -40,6 +40,7 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.autoFurniture, true);
   toggle(SETTINGS.resetOnNewRaid, true);
   toggle(SETTINGS.chaseTracker, true);
+  toggle(SETTINGS.autoDrops, true);
   // The optional campaign rules (Chapter 7): castle upgrades, kept from raid to raid (off: a raid stands alone).
   toggle(SETTINGS.campaign, false, { onChange: () => onCastleChange() });
   reg(SETTINGS.castleUpgrades, { scope: "world", config: false, type: Array, default: [], onChange: () => onCastleChange() });

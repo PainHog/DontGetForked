@@ -37,6 +37,7 @@ export class EntityData extends foundry.abstract.TypeDataModel {
       carryingFurniture: new f.BooleanField({ initial: false }),
       nextRollSmaller: count(0),                // a Cost: the next roll's trait die one size smaller (each)
       skipTurn: count(0),                       // a Cost: the Turn this Entity loses (0 = none)
+      nextActionLost: key(),                    // V21: picking a dropped item up spends the next action (the item's name; "" = none)
       weaknessInPlay: new f.BooleanField({ initial: false }),
       overdrewInFlight: new f.BooleanField({ initial: false }), // B3: overdrawn once in this final flight (no second)
       inRaid: new f.BooleanField({ initial: true }), // F26: in this raid (a new raid ticks those with a player owner); missing = in

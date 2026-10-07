@@ -6,7 +6,8 @@
  * what it carries, a Cost's marks). Rolling, spending a charge and the Draught
  * are buttons; the rules behind them are in module/logic/.
  */
-import { SYSTEM_ID } from "../contracts.mjs";
+import { SYSTEM_ID, OPS } from "../contracts.mjs";
+import { runOp } from "../net/gm-ops.mjs";
 import { DGF } from "../config.mjs";
 import { partyClashes, isInRaid } from "../logic/entity.mjs";
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
@@ -30,6 +31,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       addItem: EntitySheet.#onAddItem,
       removeItem: EntitySheet.#onRemoveItem,
       clearMark: EntitySheet.#onClearMark,
+      dropItem: EntitySheet.#onDropItem,
     },
   };
 
@@ -83,6 +85,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
         ...(sys.nextRollSmaller > 0 ? [{ key: "nextRollSmaller", label: t("DGF.Sheet.mark.smaller", { n: sys.nextRollSmaller }) }] : []),
         ...(sys.skipTurn > 0 ? [{ key: "skipTurn", label: t("DGF.Sheet.mark.skipTurn", { turn: sys.skipTurn }), now: sys.skipTurn === raid.turn }] : []),
         ...(sys.weaknessInPlay ? [{ key: "weaknessInPlay", label: t("DGF.Sheet.mark.weakness") }] : []),
+        ...(sys.nextActionLost ? [{ key: "nextActionLost", label: t("DGF.Sheet.mark.actionLost", { item: sys.nextActionLost }), now: true }] : []),
       ],
       warnings,
       draughtLabel: view?.signature?.effect === "form" ? view.signature.name : "",
@@ -137,10 +140,18 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
     return this.document.update({ "system.carried": carried });
   }
 
+  /** V21: drop one of the Entity's loot items where it is, any time (the Storyteller's client writes it). */
+  static async #onDropItem(event, target) {
+    if (!this.isEditable) return;
+    const i = Number(target.dataset.index);
+    if (!(i >= 0 && i < (this.document.system.carried ?? []).length)) return;
+    return runOp(OPS.raidDrop, { actorId: this.document.id, index: i });
+  }
+
   static async #onClearMark(event, target) {
     if (!this.isEditable) return;
     const key = target.dataset.mark;
-    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false }[key];
+    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false, nextActionLost: "" }[key];
     if (value === undefined) return;
     return this.document.update({ [`system.${key}`]: value });
   }
