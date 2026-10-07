@@ -379,6 +379,8 @@ A new night: charges back to 3, Suspicion 0, the town as printed. Same Entities 
 
 All rolls are real `node -e` rolls (Math.random), in the order rolled. “T” is the Turn; “N2” marks the second night. One note on order: R29 (Dracula, night 2, Turn 2) was rolled after the Witch was caught and before her chase dice (R30–R31). The log tells the chase first. That changes nothing: Dracula’s roll didn’t depend on the chase, and his Cost was chosen after it.
 
+One misfire is not counted. Before I set up my own roller, a first call went through another agent’s helper script and rolled no dice at all (it printed “R1: d8x15 ->” with no result). R1 below is the real Entity roll that followed.
+
 | # | What | Dice |
 |---|---|---|
 | R1 | Entities: d8 in sequence, repeats rerolled, first 5 distinct (1 Dracula 2 Creature 3 Mummy 4 Werewolf 5 Invisible 6 Ghost 7 Witch 8 J&H) | d8=7,4,4,1,2,6,3,4,8,3,2,2,3,1,7 |
