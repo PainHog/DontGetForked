@@ -109,3 +109,65 @@ Suspicion is shown after each Turn as **S n/11**.
 
 The raid ended on Turn 6, after about an hour of table time (§4). The brief asks for a second raid only if the first ends *before* Turn 6, but six Turns, one chase and no final flight leave too much of the game unplayed, and a real table with two hours booked would play again. So the same five play a **second night** in Thistlewick (§2).
 
+---
+
+## 2. Raid 2: the next Lantern Night, same town
+
+A new night: charges back to 3, Suspicion 0, the town as printed. Same Entities and picks. The players now know the town.
+
+### The plan (party decision D5)
+- **Hoarder:** “Pairs this time. Nobody goes alone.”
+- **Roleplayer:** “After last night? Yes.”
+- **Planner:** “Last night took six Turns, so we have time. The Witch and the Werewolf take the baker, then the seed merchant: her Hedge Spell and his Good Dog work for each other. Dracula and the Ghost take the china shop, then the hatter and the mirror: I do the dog with Charm, the Ghost does the neighbour. The Creature’s shop is easy; he does it alone and meets us.”
+- **Daredevil:** “Boring. Fine, as long as there’s a mirror.”
+- **Newcomer:** “Can I go with someone this time? Good.”
+- **Vote: 5–0 for pairs.**
+
+### Turn 1: three groups out
+- Witch and Werewolf to the baker, Dracula and Ghost to the china shop, the Creature to the ironmonger.
+- Tell checks (R22–R24): baker 3 (the cat’s die 5 doesn’t matter), china shop 3, ironmonger 2. Nothing.
+- **S 0/11.**
+
+### Turn 2: the cake, lost
+- **Werewolf** (baker, shuttered window, Nimble 8, not watched): Nimble d12 + Mask: 7 + 6 = 13, Success (R25). The window is open for both.
+- **Ghost** (china shop, front door, Sly 8, not watched): Sly d10 + Mask: 10 + 1 = 11, Success (R26). The Planner had him go first: “no charge if you can do it.”
+- **Creature** (ironmonger, cart, Brawn 6): 11 + 4 = 15, Success (R27).
+- **Witch** (baker, shopkeeper, Charm 8, watched): Charm d10 (Cook). The Daredevil: “Let the monster out, I’ve got you,” and spends Good Dog on her roll. 4 + 1 = 5, **Trouble** (R28). **+1**, and she is **caught**.
+  - **Local chase** (Lead 1, escape at 4, mob 8 + half of 1 = 8). Round 1, back alleys: Nimble or Sly (R30). The Newcomer takes the Mask and doesn’t think of her Hedge Spell: Sly d10 + Mask: 2 + 2 = 4, **Trouble** (R31). Lead 0: **captured** on the first round. **+1.**
+  - The town takes back what she carried: **the wedding cake, an essential**, gone for the night. The Storyteller: “It’s back in the window by morning with a little sign: NOT FOR MONSTERS.”
+  - Daredevil: “We go back and take it again!” The Planner reads Chapter 6 aloud: “gone for the night.” Then Chapter 7: “missing an essential is at best a Partial.” Turn 2, and the best the night can now be is a **Partial**. The Newcomer: “Sorry. Sorry, everyone.”
+- **Dracula** (back room, Wits 8, not watched): Bat (charge 1) for Nimble d12 + Mask: 3 + 3 = 6, a **Cost** (R29; doubles, but not a Success, so no Critical). He has **the tea service** (essential). The Storyteller weighs it: Suspicion is low, he carries nothing else, and the party is about to reorganise round a rescue, so a lost Turn hurts most right now. **Dracula loses his next action** (the shop’s owner insists on showing him every cup of the new service).
+- **S 2/11.**
+
+### Turn 3: plans fall apart and come back together
+- **Party decision D6.** Planner: “The mirror is pointless now: a Grand Year needs a Win. We need three items for a Partial and the Witch out, or she drops us to a Bust.” Daredevil: “So I can’t even go for the mirror?” Planner: “You can. It just doesn’t count.” The Daredevil drops it, grumbling.
+- **Witch** slips free (lock-up 10, Sly; only a Success counts). Coached by the Planner, she spends Hedge Spell on herself: Sly d12 + Mask: 3 + 4 = 7, **Trouble** (R32). **+1**; no chase. Still held.
+- **Creature** (strongbox, Wits 8, watched): Wits d12 (Handyman) + Mask: 5 + 6 = 11, Success (R33). **The coil of rope.**
+- **Ghost** moves to the lock-up to rescue her. Tell check (the lock-up counts): **4**, the Ghost’s Cold Spot: the jailer’s candle gutters and his breath fogs (R34). **+1.**
+- **Werewolf** moves to the seed merchant. Tell check: **5**, his eyebrows again (R35). **+1.**
+- **Dracula** loses this action (the Cost).
+- **S 5/11.**
+
+### Turn 4: the rescue
+- **Ghost** rescues (lock-up 10, Sly, watched). **Ruling R-B:** the Witch is held, but nothing stops a captive using an ability, and Chapter 3 lets an ability help “any Entity’s roll at the same place (… or the lock-up)”, so she spends Hedge Spell on the Ghost’s roll (logged as F7). Sly d12 + Monster (Rattle): 6 + 10 = 16, Success (R36). The Monster showed: chains rattle all down the cell block and the jailer laughs at the costume. **+1** (Rattle). **The Witch is free**, and acts again next Turn.
+- **Werewolf** (seed merchant, geese): the loud way again. The table groans. Planner: “We’re on six!” Daredevil: “I’m a werewolf. I run at geese.” Nimble d12 + Mask: 6 + 3 = 9, Success (R37). **+1** (loud).
+- **Creature** moves to the hatter (not watched, no check) to take the top hat while the Ghost is busy.
+- **Dracula** waits at the china shop, so that he can arrive at the way out with the Witch (ruling R-C below).
+- **S 7/11.**
+
+### Turn 5: everything they can still get
+- **Werewolf** (watchman, Wits 10, watched): Through the Hedge (Brawn d12 with Gardener, at 8) + Good Dog: 11 + 3 = 14, Success (R38). **The turnip seed.** Charges left: 0.
+- **Creature** (hatter, nosy neighbour, Sly 8, not watched). Planner: “Brute Force. Brawn d12.” Hoarder: “It’s not even watched. I’ll just roll.” Sly d6 + Mask: 1 + 6 = 7, a **Cost** (R39). **The top hat.** The Storyteller could drop his rope (his own item, not what this roll won), but near the Limit Suspicion +1 hurts most: the neighbour shouts “Oi! Who’s that big lad in the hatter’s?” **+1.**
+- **Witch, Ghost and Dracula** move to the way out together. **Ruling R-C:** Entities who move to the same place in the same Turn and say so arrive together, so the Witch’s Familiar’s Warning covers the first-return Tell check (logged as F8). 3, and the cat’s 6 (R40): nothing.
+- **S 8/11.**
+
+### Turn 6: out, just
+- **Werewolf** and **Creature** move to the way out.
+- **Party decision D9, the way out** (8, watched). Planner: “Hoarder. Suspicion is 8. If this is Trouble, the roller is chased by a mob of 12. This is the emergency.” Hoarder: “…Fine. This is the emergency.” He spends **Hovel Watcher** on the Ghost’s roll: Nimble d12 + Monster: 6 + 3 = 9, Success (R41). Everyone is out.
+- **S 8/11** at the end.
+
+### How the Year Went
+- Home: the tea service (essential), the coil of rope, the turnip seed, the top hat: 4 of 5. Missing: **the wedding cake, an essential**. Four of five is more than half, so the result is a **Partial**. Nobody was left behind.
+- **Epilogue:** “The castle gets by, just. Someone has to sleep in the draughty tower.” And for food and drink: “Turnip soup every night until spring.” The Newcomer: “I’ll sleep in the tower.”
+- Turns used: 6 of 12. Final flight: none. Charges spent: Witch 2, Werewolf 3, Dracula 1, Creature 1, Ghost 0.
+
