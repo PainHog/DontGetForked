@@ -281,6 +281,14 @@ export function dropLoot(state, { id, name, by = "" }) {
   return { ...state, dropped: [...(state.dropped ?? []), { id, name: String(name ?? ""), by: String(by ?? ""), turn: state.turn }] };
 }
 
+/**
+ * V26 (Chapter 4): "Taking a piece is free (taking it back up is an action)". Is ticking the piece now a retake:
+ * it was taken earlier (in play) and is set down, nobody else carrying it? The first take, or joining a carrier, is free.
+ */
+export function isFurnitureRetake({ furniture = "", othersCarrying = 0 } = {}) {
+  return furniture === "inPlay" && !(othersCarrying > 0);
+}
+
 /** V21: someone picks a dropped item up. Returns { state, item } (item null if it's gone already). */
 export function pickUpLoot(state, dropId) {
   const item = (state.dropped ?? []).find((d) => d.id === dropId) ?? null;

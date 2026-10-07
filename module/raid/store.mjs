@@ -148,7 +148,10 @@ async function dropFrom(actor, index, { announce: say = true } = {}) {
   if (!(index >= 0 && index < carried.length)) return null;
   const [item] = carried.splice(index, 1);
   await actor.update({ "system.carried": carried });
-  if (setting(SETTINGS.autoDrops)) {
+  if (getRaid().hunt) {
+    // V27: anything dropped in the final flight is left in town: nobody picks it up, so it isn't listed
+    if (say && setting(SETTINGS.autoDrops)) await announce("leftInTown", getRaid(), { names: [actor.name], label: item.name });
+  } else if (setting(SETTINGS.autoDrops)) {
     const { state } = await mutateRaid((s) => R.dropLoot(s, { id: foundry.utils.randomID(), name: item.name, by: actor.name }));
     if (say) await announce("drop", state, { names: [actor.name], label: item.name });
   }
@@ -179,6 +182,7 @@ export function registerRaidOps() {
       if (!isEntity(actor) || !isInRaid(actor.system)) return { ok: false, reason: "notAnEntity" };
       if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
       if (actor.system.status === "captured") return { ok: false, reason: "captured" };
+      if (getRaid().hunt) return { ok: false, reason: "flight" }; // V27: nothing is picked up in the final flight
       const { state, result } = await mutateRaid((s) => { const out = R.pickUpLoot(s, dropId); return { state: out.state, result: out.item }; });
       if (!result) return { ok: false, reason: "gone" };
       // V25: picking items up is the Entity's action for this Turn: one action for any number picked up in the Turn

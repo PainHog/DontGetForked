@@ -23,7 +23,8 @@
   {{#if castle}}<p class="dgf-hud-group">{{castle}}</p>{{/if}}
   {{#if dropped.length}}
   <div class="dgf-hud-dropped"><span class="dgf-hud-label">{{localize "DGF.Raid.dropped"}}</span>
-    <ul>{{#each dropped}}<li>{{text}} <button type="button" class="dgf-link" data-action="pickUp" data-drop-id="{{dropId}}">{{localize "DGF.Raid.pickUp"}}</button></li>{{/each}}</ul>
+    <ul>{{#each dropped}}<li>{{text}}{{#if ../canPickUp}} <button type="button" class="dgf-link" data-action="pickUp" data-drop-id="{{dropId}}">{{localize "DGF.Raid.pickUp"}}</button>{{/if}}</li>{{/each}}</ul>
+    {{#unless canPickUp}}<p class="dgf-hint">{{localize "DGF.Raid.leftInTown"}}</p>{{/unless}}
   </div>
   {{/if}}
   {{#if party.length}}

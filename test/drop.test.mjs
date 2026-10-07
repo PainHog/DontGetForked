@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   installFoundry, asUser, settle, diceQueue, dialogResponders, fakeForm, renderMessage, clickButton, log,
 } from "../tools/fake-foundry.mjs";
-import { newRaid, normalizeRaid, dropLoot, pickUpLoot } from "../module/logic/raid.mjs";
+import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake } from "../module/logic/raid.mjs";
 import { newChase, endChase, inLocalChase } from "../module/logic/chase.mjs";
 import { homeFromCarried, yearFromList } from "../module/logic/year.mjs";
 
@@ -34,6 +34,14 @@ test("V24: no dropping in a local chase: its members from the moment they're cau
   const flight = newChase({ id: "f", kind: "final", members: [{ actorId: "w", name: "A Witch", perk: "", timing: "soon" }] });
   assert.equal(inLocalChase(flight, "w"), false);
   assert.equal(inLocalChase(null, "w"), false);
+});
+
+test("V26: taking a set-down piece back up is an action; the first take, or joining a carrier, is free", () => {
+  assert.equal(isFurnitureRetake({ furniture: "inPlay", othersCarrying: 0 }), true, "taken earlier, set down, taken back up");
+  assert.equal(isFurnitureRetake({ furniture: "", othersCarrying: 0 }), false, "the first take is free");
+  assert.equal(isFurnitureRetake({ furniture: "inPlay", othersCarrying: 1 }), false, "joining whoever carries it");
+  assert.equal(isFurnitureRetake({ furniture: "out", othersCarrying: 0 }), false);
+  assert.equal(isFurnitureRetake({ furniture: "lost", othersCarrying: 0 }), false);
 });
 
 test("V22: two items from one shared place, carried home together, both count", () => {
@@ -234,6 +242,63 @@ test("V21 with the switch off: Drop just takes the item off the sheet; nothing w
   const hud = await asUser(ANN, () => openHud());
   assert.doesNotMatch(hud.renderedParts.body, /data-action="pickUp"/);
   await setSetting(SETTINGS.autoDrops, true);
+});
+
+test("V26 at the table: the first take is free; setting the piece down and taking it back up is the carrier's action that Turn", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true })); // the first take
+  await settle();
+  assert.equal(raid().furniture, "inPlay");
+  assert.equal(witch.system.pickedUpTurn, 0, "free");
+  // Dracula joins her carrying it: free too
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": true }));
+  await settle();
+  assert.equal(dracula.system.pickedUpTurn, 0);
+  // both set it down; the Witch takes it back up: her action this Turn
+  await asUser(BEN, () => dracula.update({ "system.carryingFurniture": false }));
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  await settle();
+  assert.equal(witch.system.carryingFurniture, true);
+  assert.equal(witch.system.pickedUpTurn, raid().turn);
+  assert.equal(witch.system.pickedUp, "the furniture");
+  const sheet = await sheetOf(ANN, witch);
+  assert.match(sheet.renderedParts.sheet, /Picked up the furniture: that’s its action this Turn/);
+  await op(GM, OPS.raidTurn, { delta: 1 });
+  await settle();
+  assert.equal(witch.system.pickedUpTurn, 0, "the next Turn: the mark goes");
+});
+
+test("V27: nothing is picked up in the final flight; anything dropped in the flight is left in town", async () => {
+  await asUser(GM, () => dracula.update({ "system.carried": [{ name: "a gravy boat" }] }));
+  await op(BEN, OPS.raidDrop, { actorId: dracula.id, index: 0 }); // dropped before the hunt: it waits
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false })); // the piece set down in town
+  await settle();
+  const before = raid().dropped.map((d) => d.id);
+  diceQueue.push(1); // the flight's ground
+  await op(GM, OPS.raidHunt, { on: true });
+  await settle();
+  assert.equal(raid().chase?.kind, "final");
+  assert.equal((await op(ANN, OPS.raidPickUp, { dropId: before[0], actorId: witch.id })).reason, "flight");
+  const hud = await asUser(ANN, () => openHud());
+  assert.doesNotMatch(hud.renderedParts.body, /data-action="pickUp"/, "no pick-up buttons in the flight");
+  assert.match(hud.renderedParts.body, /left in town/i);
+  // nor taking the set-down piece back up
+  const warned = log.warnings.length;
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": true }));
+  assert.equal(witch.system.carryingFurniture, false);
+  assert.ok(log.warnings.slice(warned).some((w) => /final flight/i.test(w)));
+  // dropping in the flight: it leaves the sheet and is left in town, not listed for picking up
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a lace tablecloth" }] }));
+  assert.equal((await op(ANN, OPS.raidDrop, { actorId: witch.id, index: 0 })).ok, true);
+  await settle();
+  assert.deepEqual(witch.system.carried, []);
+  assert.deepEqual(raid().dropped.map((d) => d.id), before, "not listed");
+  assert.match(game.messages.at(-1).content, /A Witch drops a lace tablecloth: left in town/);
+  await op(GM, OPS.raidHunt, { on: false });
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
 });
 
 test("the drop session left no errors, no missing words and no unanswered dialogs", () => {

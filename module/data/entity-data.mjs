@@ -11,13 +11,37 @@
  */
 import { DGF } from "../config.mjs";
 import { entityView, rollAbilities } from "../logic/entity.mjs";
-import { normalizeRaid } from "../logic/raid.mjs";
+import { normalizeRaid, isFurnitureRetake } from "../logic/raid.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
 
-/** The raid's chase now (the world setting every client reads). */
-const currentChase = () => {
-  try { return normalizeRaid(game.settings.get("dont-get-forked", "raidState")).chase; } catch (err) { return null; }
+/** The raid now (the world setting every client reads), or null. */
+const currentRaid = () => {
+  try { return normalizeRaid(game.settings.get("dont-get-forked", "raidState")); } catch (err) { return null; }
 };
+const currentChase = () => currentRaid()?.chase ?? null;
+
+/**
+ * V26: taking a set-down piece back up is the carrier's action for the Turn (the same mark as picking loot up, V25);
+ * V27: nothing is picked up in the final flight, so then it isn't taken back up at all. The first take stays free.
+ * `model` is the Entity's data before the change; `sys` the change's system part (changed in place).
+ */
+function retake(model, sys) {
+  if (sys.carryingFurniture !== true || model.carryingFurniture || !model.parent) return;
+  const raid = currentRaid();
+  if (!raid) return;
+  const othersCarrying = game.actors.filter((a) => a.id !== model.parent.id && a.system?.carryingFurniture && a.system.status !== "captured").length;
+  if (!isFurnitureRetake({ furniture: raid.furniture, othersCarrying })) return;
+  if (raid.hunt) {
+    delete sys.carryingFurniture;
+    globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.noPickUpInFlight"));
+    return;
+  }
+  const piece = game.i18n.localize("DGF.Raid.thePiece");
+  const names = model.pickedUpTurn === raid.turn && model.pickedUp ? model.pickedUp.split(", ") : [];
+  if (!names.includes(piece)) names.push(piece);
+  sys.pickedUpTurn = raid.turn;
+  sys.pickedUp = names.join(", ");
+}
 
 /** FA-R11: where an Entity stands in the raid is the Storyteller's to change (captured, since when, in this raid). */
 const STORYTELLER_ONLY = Object.freeze(["status", "capturedTurn", "slipTurn", "inRaid"]);
@@ -74,6 +98,7 @@ export class EntityData extends foundry.abstract.TypeDataModel {
       delete sys.carryingFurniture;
       globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.noDropInChase"));
     }
+    retake(this, sys);
     return allowed;
   }
 
