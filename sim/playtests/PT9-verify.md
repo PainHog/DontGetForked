@@ -209,4 +209,80 @@ Without V21 the Ghost needed a friend to hold its loot (PT8 drill b2: alone with
 
 So under V21 as written, dropping everything the moment you're caught makes a capture cost no loot, for an action per item later; and the same was already true of furniture ("drop it any time"), which a carrier can also put down to get the Mask and their full Nimble back for the chase. Finding **M1**.
 
-*(drills d–g follow)*
+### 6.4 Drill d: two items sharing a place (V22)
+
+**Start (chosen):** a Standard list of five whose **kinds I chose** to force sharing: four cloth and costumes, then one food and drink. Every item, place and obstacle rolled.
+
+**The list** (R176–R181): R176 = 3, odd: one essential. **A bolt of black velvet** · essential (R177 = 1), boots in a very large size (R178 = 6), a new cape (R179 = 4), a top hat (R180 = 3), a side of bacon (R181 = 2).
+
+**Places** (the d3 as a d6 halved, rounding up): the velvet R182 = 1 → 1, **the draper**; the boots R183 = 2 → 1, the draper (taken), R185 = 6 → 3, the hatter (taken by then? no: see the cape), R186 = 3 → 2, **the tailor**; the cape R184 = 5 → 3, **the hatter**. (Rolled in list order, the cape's place was settled before the boots' rerolls, so R185's hatter was taken.) The top hat: cloth has three places and all three are taken, so "if a kind has more items than places, two may share a place (one location, guarding both)": R187 = 1 → 1, **the draper, with the velvet**. The bacon R188 = 3 → 2, **the butcher**.
+
+So **four locations for five items**: 1 the draper (the velvet · essential, and the top hat), 2 the tailor (the boots), 3 the hatter (the cape), 4 the butcher (the bacon). Only the draper was built and played.
+
+**The draper, one location** (R189–R200): **one** obstacle count (R189 = 6: one), **one** pair of ways in: way A the shopkeeper behind the counter (Charm / Sly loud, R191 = 5 → 8, R192 = 4: **watched**); way B a heavy cellar trapdoor (Brawn, R194 = 17 → 10, R195 = 10: not watched). **The furniture** (R196 = 1, a wingback armchair, Bulky): "number them and roll a d6, rerolling a number without one": four locations, numbered once each, so 1–4 and reroll 5–6: R197 = 1, **the draper**. Its obstacle: the shopkeeper behind the counter (R198 = 13; R199 = 10 → 8, +2 = **10**; R200 = 10: not watched).
+
+**Play** (the Invisible Man and Jekyll, defaults; Suspicion 0):
+
+| Turn | Roll | Who / where | Choice and why | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|---|
+| 1 | R201 | Both arrive at the draper: **one** Tell check for the one location | | 2 | — | — | 0 |
+| 2 | R202–R203 | Jekyll, way A (shopkeeper, Charm / Sly loud, 8, watched) | Charm d12, Mask (71 / 15 / 14); the Invisible Man's Charm is a d6 (d8 with his Tailor raise) | 5 + 1 | 6 vs 8 | **Cost**: the last obstacle, so **both the velvet and the top hat** are in his hand. "'Drop an item' … never what this roll wins" covers both: he carries nothing else, so it's barred. Suspicion +1 at 0 of 11 and a lost Turn early are cheap; the furniture's shopkeeper at 10 is next: **his next roll's trait die one size smaller** | 0 |
+| 3 | R204–R205 | Jekyll, the furniture's shopkeeper (Charm / Sly loud, 10, unwatched) | Charm d12 → d10 (the Cost); **Doctor's Bag** (3 → 2) raises it back ("a d12 raised and stepped down stays a d12"), Mask (54 / 17 / 29) | 2 + 1 | 3 vs 10 | Trouble (no chase) | 1 |
+| 4 | R206–R207 | Jekyll, the shopkeeper again | Charm d12, Mask | 6 + 5 | 11 vs 10 | Success: the armchair is the party's to take | 1 |
+
+Read cleanly: "(one location, guarding both)" gave one obstacle count, one pair of ways in, one Tell check and one number for the furniture's d6, and the one roll past the last obstacle put both items in hand. Two seams in the wording, neither of which stopped play: Chapter 8's step still opens "Locations: one for each item on the list", and Chapter 4 still defines a location as "guarding a list item; beat or pass the last and **it's** in your hand" (finding w2). A shared place is a real saving for the party: two items for one location's obstacles, Tell check and move.
+
+### 6.5 Drill e: Mesmerise only at a watched obstacle
+
+**Start (chosen):** the main town. **Dracula** (default: Mesmerise, Bat, Hypnotic Eyes, Butler; Garlic, Always), 3 charges unless said. Chapter 2 now: "open an approach with Charm **at a watched obstacle**"; Chapter 3: "if it doesn't list the ability's trait, roll that trait at 2 lower Difficulty".
+
+| Case | Obstacle | Ruling | Roll | Dice | Total | Result |
+|---|---|---|---|---|---|---|
+| e1 | The smithy's crowded shop floor (group, Sly, 6, **unwatched**; the smithy itself is watched) | **Refused**: not a watched obstacle (PT8's M1 settled). He rolls Sly d6 with the Mask (72 / 19 / 8); Bat (Nimble d10 at 6) wasn't worth a charge | R208–R209 | 1 + 1 | 2 vs 6 | Trouble (doubles, not a Success): +1, no chase |
+| e2 | The smithy's high garden wall (Nimble / Brawn loud, 8, **watched**). Start: Dracula past the shop floor | Allowed: **Mesmerise** (3 → 2), Charm d12 at **6**, Mask (86 / 10 / 4). Charm isn't listed, so it isn't loud | R210–R211 | 10 + 5 | 15 vs 6 | Success: **the hinges**. "Only you get through (others must beat it themselves)": the wall is not beaten for the party |
+| e3 | The smithy's way B shopkeeper (Charm / Sly loud, 12, watched) | **Can't open**: it lists Charm. Plain Charm d12 at 12 (38 / 17 / 46). Not rolled | — | — | — | — |
+| e4 | The silversmith's rickety drainpipe (Nimble, 10, **watched**); way A's back room is unwatched, so refused there | **Mesmerise** (2 → 1), Charm d12 at **8** (his Butler raise can't lift a d12), Mask (71 / 15 / 14) | R212–R213 | 8 + 1 | 9 vs 8 | Success: **the tea service** |
+| e5 | The way out (Sly / Nimble / Brawn loud, 8, "always watched") | **Mesmerise** (1 → 0), Charm d12 at **6**, Mask (86 / 10 / 4) | R214–R215 | 1 + 5 | 6 vs 6 | Success: "the way out (**everyone leaves**)" |
+| e6 | Captured, slipping free at the lock-up (Sly or Nimble, or Brawn loud, at 10), 1 charge | Allowed on my reading that slipping free is at a watched obstacle (S12; finding w1): **Mesmerise** (1 → 0), Charm d12 at **8**, Mask | R216–R217 | 3 + 5 | 8 vs 8 | Success: free ("Only a Success frees you"), "a captive may open its own way out" |
+
+(e2's rolls were made in one batch with e1's, before e1's result was known; I kept them for e2, whose chosen start has Dracula past the shop floor.)
+
+Read cleanly except e6: Mesmerise at a watched obstacle is now unambiguous at an obstacle, at the way out and at the rescue (which Chapter 6 calls "always watched"); for slipping free the book still doesn't say (PT8's w4, not changed). Reach in the main town: 6 of its 14 obstacles (the watched ones that don't list Charm: the tailor's maze, the florist's dog is Charm so no, the draper's cart and window, the smithy's wall, the silversmith's drainpipe; and the way out and the lock-up).
+
+### 6.6 Drill f: opening an approach: "others must beat it themselves"; a rescue
+
+Chapter 3: "Only you get through (others must beat it themselves), though the way out (everyone leaves) and a rescue work as usual, and a captive may open its own way out." The way out and a captive's own way out are drill e5 and e6.
+
+**f1. Start (chosen):** the main town, Turn 2, Suspicion 2. The party takes the tailor's **way A**, the shuttered window (Nimble / Brawn loud, 10, unwatched). **A Ghost** (default; 3 charges) and **the Creature** (default; 3 charges) are there.
+
+| Roll | Who | Choice | Dice | Total | Result | Sus |
+|---|---|---|---|---|---|---|
+| R218–R219 | Ghost, the window | **Through the Wall** (3 → 2): Sly isn't listed, Sly d10 at **8**, Mask (65 / 18 / 17) | 6 + 2 | 8 vs 8 | Success: the Ghost is through, and **the cape** is in its hand. The window is **not** beaten for the party | 2 |
+| R220–R221 | Creature, the same window | He must beat it himself: Brawn d12 the loud way at 10, Mask (54 / 17 / 29, +1 whatever; Nimble d8 at 10 is 31 / 25 / 44) | 7 + 6 | 13 vs 10 | Success (loud +1): now it "stays beaten for the whole party" | 3 |
+
+Then the Ghost hands the cape to the Creature ("hand it over free in the same place") and passes the furniture's shop floor (group) by Spectral: the armour is its to take, and as it's Bulky it needs no help. Had it been **Huge**, the second carrier would need to be past the window and the shop floor too, each by its own roll: PT8's m6 (a Huge piece behind an opened approach couldn't come out) is gone with the old "(and only you can carry a piece out that way)".
+
+**f2. Start (chosen):** the main town, Turn 6, Suspicion 6. The Witch and Jekyll were captured together (one group check, one shared chase). **The Invisible Man** (default; 2 charges, empty-handed) moves to the lock-up: Tell check ("the lock-up does") R222 = 2, none. Turn 7, the rescue (Sly, or Brawn loud, 10, always watched): **Through the Gap** (2 → 1): Nimble isn't listed, Nimble d8 at **8**, Mask (56 / 23 / 21): R223–R224 **5 + 6 = 11 vs 8, Success**: "every captive there is free, at the lock-up, and acts again next Turn": both of them, though "only you get through".
+
+Read cleanly, both. The parenthesis "(others must beat it themselves)" answers the question PT8's w2 and m6 raised.
+
+### 6.7 Drill g: a castle upgrade's charge (campaign play)
+
+**Start (chosen):** main line's Grand Year brought home the suit of armour: one **castle upgrade**. "In every later raid, each upgrade gives one Entity of the players' choice one extra charge (part of its starting number that raid)." The next raid is on a town the party hasn't seen, **Puddlecombe** (Easy, Chapter 9); the players give the charge to **the Invisible Man**: **4 charges, starting number 4**. Turn 2, Suspicion 0, at the market garden's way B, the muddy yard full of geese (Sly / Nimble loud, 6, unwatched). Each try he spends **Unseen** (4 → 3) and rolls Sly d12 with the hidden Monster (92 / 6 / 3). A Critical gets back "one spent charge, up to your starting number": I restarted until one came.
+
+| Try | Rolls | Dice | Total | Result | Charges |
+|---|---|---|---|---|---|
+| 1 | R225–R226 | 6 + 5 | 11 vs 6 | Success | 3 |
+| 2 | R227–R228 | 7 + 10 (shows, hidden) | 17 | Success | 3 |
+| 3 | R229–R230 | 12 + 3 | 15 | Success | 3 |
+| 4 | R231–R232 | 8 + 6 | 14 | Success | 3 |
+| 5 | R233–R234 | 12 + 8 | 20 | Success | 3 |
+| 6 | R235–R236 | **3 + 3** | 6 vs 6 | **Critical**: one spent charge back, up to 4 | **4** |
+
+Read cleanly: the extra charge is part of the starting number, so the Critical restores it (under the old text a reader could stop him at 3). Not covered, and not needed here: whether two upgrades may go to the same Entity; "each upgrade gives one Entity of the players' choice" reads as yes.
+
+### 6.8 The d3 (Chapter 1)
+
+"(a d6 halved, rounding up, serves as the d3)": 1–2 → 1, 3–4 → 2, 5–6 → 3, the same bands as Chapter 2's random picks. Rolled twelve times for places (main line R13–R18, drill d R182–R188): every result mapped without a question. Clean.
+
+*(findings follow)*
