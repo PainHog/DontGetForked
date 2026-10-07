@@ -6,8 +6,9 @@
  * what it carries, a Cost's marks). Rolling, spending a charge and the Draught
  * are buttons; the rules behind them are in module/logic/.
  */
-import { SYSTEM_ID, OPS } from "../contracts.mjs";
+import { SYSTEM_ID, OPS, SETTINGS } from "../contracts.mjs";
 import { runOp } from "../net/gm-ops.mjs";
+import { setting } from "../settings.mjs";
 import { DGF } from "../config.mjs";
 import { partyClashes, isInRaid } from "../logic/entity.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
@@ -82,7 +83,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       statuses: DGF.statuses.map((s) => ({ key: s, label: t(`DGF.Status.${s}`), selected: s === sys.status })),
       statusLabel: t(`DGF.Status.${sys.status}`), // FA-R11: a player sees its status; the Storyteller changes it
       carried: (sys.carried ?? []).map((c, i) => ({ index: i, name: c.name })),
-      noDrop: inLocalChase(raid.chase, actor.id), // V24: nothing is dropped in a local chase
+      noDrop: setting(SETTINGS.autoDrops) && inLocalChase(raid.chase, actor.id), // V24: nothing is dropped in a local chase (off: by hand)
       marks: [
         ...(sys.nextRollSmaller > 0 ? [{ key: "nextRollSmaller", label: t("DGF.Sheet.mark.smaller", { n: sys.nextRollSmaller }) }] : []),
         ...(sys.skipTurn > 0 ? [{ key: "skipTurn", label: t("DGF.Sheet.mark.skipTurn", { turn: sys.skipTurn }), now: sys.skipTurn === raid.turn }] : []),
@@ -142,12 +143,19 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
     return this.document.update({ "system.carried": carried });
   }
 
-  /** V21: drop one of the Entity's loot items where it is, any time (the Storyteller's client writes it). */
+  /**
+   * V21: drop one of the Entity's loot items where it is, any time (the Storyteller's client writes it). The item's
+   * name goes too, so a second click on the same button drops nothing more; a sheet opened before a local chase
+   * began still says why its drop is refused (V24).
+   */
   static async #onDropItem(event, target) {
     if (!this.isEditable) return;
     const i = Number(target.dataset.index);
-    if (!(i >= 0 && i < (this.document.system.carried ?? []).length)) return;
-    return runOp(OPS.raidDrop, { actorId: this.document.id, index: i });
+    const item = (this.document.system.carried ?? [])[i];
+    if (!(i >= 0) || !item) return;
+    const result = await runOp(OPS.raidDrop, { actorId: this.document.id, index: i, name: item.name });
+    if (result?.reason === "inChase") ui.notifications.warn(t("DGF.Notify.noDropInChase"));
+    return result;
   }
 
   static async #onClearMark(event, target) {

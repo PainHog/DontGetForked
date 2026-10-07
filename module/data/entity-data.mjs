@@ -10,28 +10,39 @@
  * New Entities are filled with the book's defaults by entitySystem(key).
  */
 import { DGF } from "../config.mjs";
-import { entityView, rollAbilities } from "../logic/entity.mjs";
+import { SYSTEM_ID, SETTINGS } from "../contracts.mjs";
+import { entityView, rollAbilities, isInRaid } from "../logic/entity.mjs";
 import { normalizeRaid, isFurnitureRetake } from "../logic/raid.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
 import { carriedChangeRefused } from "../logic/lockup.mjs";
 
 /** The raid now (the world setting every client reads), or null. */
 const currentRaid = () => {
-  try { return normalizeRaid(game.settings.get("dont-get-forked", "raidState")); } catch (err) { return null; }
+  try { return normalizeRaid(game.settings.get(SYSTEM_ID, SETTINGS.raidState)); } catch (err) { return null; }
 };
 const currentChase = () => currentRaid()?.chase ?? null;
+/** The switch for the drop and pick-up rules (V21–V28: "Dropped loot waits where it fell"); off, they are by hand. */
+const dropsAutomated = () => {
+  try { return game.settings.get(SYSTEM_ID, SETTINGS.autoDrops) !== false; } catch (err) { return true; }
+};
+/** Does another Entity in the raid carry the piece now (so taking it joins a carrier, rather than taking it back up)? */
+const carriedByAnother = (actor) => !!game.actors?.some?.((a) => a !== actor && a.type === actor.type && isInRaid(a.system) && a.system.carryingFurniture);
 
 /**
- * V26: taking a set-down piece back up is the carrier's action for the Turn (the same mark as picking loot up, V25);
- * V27: nothing is picked up in the final flight, so then it isn't taken back up at all. The first take stays free.
- * `model` is the Entity's data before the change; `sys` the change's system part (changed in place).
+ * V26: taking a set-down piece back up is the carrier's action for the Turn (the same mark as picking loot up, V25),
+ * in the Turn of the first take too once nobody carries it; V27: nothing is picked up in the final flight, so then it
+ * isn't taken back up at all. The first take stays free, and so does joining a carrier in that Turn.
+ * The action is the Entity's whoever ticks it (a Storyteller playing it too); in the flight a Storyteller's tick is a
+ * correction and stands, unmarked. `model` is the Entity's data before the change; `sys` the change's system part
+ * (changed in place); `refuse`: false for a Storyteller.
  */
-function retake(model, sys) {
+function retake(model, sys, { refuse = true } = {}) {
   if (sys.carryingFurniture !== true || model.carryingFurniture || !model.parent) return;
   const raid = currentRaid();
   if (!raid) return;
-  if (!isFurnitureRetake(raid)) return;
+  if (!isFurnitureRetake(raid, { setDown: !carriedByAnother(model.parent) })) return;
   if (raid.hunt) {
+    if (!refuse) return;
     delete sys.carryingFurniture;
     globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.noPickUpInFlight"));
     return;
@@ -87,12 +98,18 @@ export class EntityData extends foundry.abstract.TypeDataModel {
     const allowed = await super._preUpdate?.(changes, options, user);
     if (allowed === false) return false;
     const sys = changes?.system;
-    if (!sys || user?.isGM) return allowed;
+    if (!sys) return allowed;
+    if (user?.isGM) {
+      if (dropsAutomated()) retake(this, sys, { refuse: false }); // V26: the Storyteller's tick takes it back up too
+      return allowed;
+    }
     const dropped = STORYTELLER_ONLY.filter((k) => k in sys && sys[k] !== this[k]);
     if (dropped.length) {
       for (const k of dropped) delete sys[k];
       globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.storytellerOnly"));
     }
+    // the drop and pick-up rules below follow their switch (autoDrops): off, the player keeps them by hand
+    if (!dropsAutomated()) return allowed;
     // V24: a carrier in a local chase can't set the furniture down (the Storyteller can, as a correction)
     if (sys.carryingFurniture === false && this.carryingFurniture && this.parent && inLocalChase(currentChase(), this.parent.id)) {
       delete sys.carryingFurniture;

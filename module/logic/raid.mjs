@@ -286,12 +286,14 @@ export function dropLoot(state, { id, name, by = "" }) {
 
 /**
  * V26 (Chapter 4): "Taking a piece is free (taking it back up is an action)". Given the raid, is taking the piece now
- * a retake: it is in play, and this isn't the Turn it was first taken? So each carrier of a Huge piece taking it back
- * up spends an action, while a second carrier joining the first take that Turn is free. An older raid without the
- * first take's Turn counts as "not this Turn".
+ * a retake: it is in play, and either this isn't the Turn it was first taken, or it is but nobody carries it now
+ * (`setDown`: it was set down since, so this takes it back up)? So each carrier of a Huge piece taking it back up
+ * spends an action, and so does a carrier who sets it down and takes it up again in the Turn of the first take, while
+ * a second carrier joining the first take that Turn is free. An older raid without the first take's Turn counts as
+ * "not this Turn".
  */
-export function isFurnitureRetake(state) {
-  return state?.furniture === "inPlay" && (state.furnitureTakenTurn ?? 0) !== state.turn;
+export function isFurnitureRetake(state, { setDown = false } = {}) {
+  return state?.furniture === "inPlay" && (setDown || (state.furnitureTakenTurn ?? 0) !== state.turn);
 }
 
 /** V21: someone picks a dropped item up. Returns { state, item } (item null if it's gone already). */

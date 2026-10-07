@@ -146,10 +146,11 @@ function dialogContext(actor, values, raid) {
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
   if (sys.status === "captured") notices.push(t("DGF.Roll.notice.captured"));
   if (!isInRaid(sys)) notices.push(t("DGF.Roll.notice.notInRaid"));
-  if (sys.pickedUpTurn && sys.pickedUpTurn === raid.turn && !raid.dawn) notices.push(t("DGF.Roll.notice.pickedUp", { items: sys.pickedUp })); // V25: rolling again that Turn
   if (raid.group?.open && raid.group.rolls?.[actor.id]?.passed) notices.push(t("DGF.Roll.notice.spectral", { label: raid.group.label || t("DGF.Group.unnamed") })); // V19
   const where = rollSituation(actor, { ...values, chase: true, lockup: true, group: true }, raid);
   const c = where.chase;
+  // V25: rolling again in the Turn it picked up (a chase roll, the final flight's included, isn't one of the Turn's actions)
+  if (sys.pickedUpTurn && sys.pickedUpTurn === raid.turn && !raid.dawn && !raid.hunt && !c?.ok) notices.push(t("DGF.Roll.notice.pickedUp", { items: sys.pickedUp }));
   if (c?.ok) {
     const ground = DGF.chaseTable[c.ground.face - 1]?.name ?? "";
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));

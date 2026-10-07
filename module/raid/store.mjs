@@ -138,24 +138,34 @@ const prefixed = (update) => Object.fromEntries(Object.entries(update).map(([k, 
 /** Every Entity in the world (one of the eight chosen), in this raid or not. */
 const allEntities = () => game.actors.filter((a) => isEntity(a) && a.system.entityKey);
 
+let dropping = Promise.resolve(); // one drop at a time (see dropFrom)
+
 /**
  * V21: one of the Entity's loot items drops where it is (a Cost's "drop an item" or the owner's own drop, any time).
- * With autoDrops on it waits in the raid's dropped list until someone picks it up; off, it just leaves the sheet.
- * Returns the item dropped, or null. GM only (it writes the raid).
+ * With autoDrops on it waits in the raid's dropped list until someone picks it up; off, or for an Entity that isn't
+ * in this raid (F26: it isn't in town), it just leaves the sheet. Returns the item dropped, or null. GM only (it
+ * writes the raid). Drops run one at a time, each reading the list the last one left, and `name` (when given) must
+ * still be the item at `index`: a double click drops the item once, never a copy of it or the next one.
  */
-async function dropFrom(actor, index, { announce: say = true } = {}) {
-  const carried = [...(actor.system.carried ?? [])];
-  if (!(index >= 0 && index < carried.length)) return null;
-  const [item] = carried.splice(index, 1);
-  await actor.update({ "system.carried": carried });
-  if (getRaid().hunt) {
-    // V27: anything dropped in the final flight is left in town: nobody picks it up, so it isn't listed
-    if (say && setting(SETTINGS.autoDrops)) await announce("leftInTown", getRaid(), { names: [actor.name], label: item.name });
-  } else if (setting(SETTINGS.autoDrops)) {
-    const { state } = await mutateRaid((s) => R.dropLoot(s, { id: foundry.utils.randomID(), name: item.name, by: actor.name }));
-    if (say) await announce("drop", state, { names: [actor.name], label: item.name });
-  }
-  return item;
+function dropFrom(actor, index, { announce: say = true, name } = {}) {
+  const job = dropping.then(async () => {
+    const carried = [...(actor.system.carried ?? [])];
+    if (!(index >= 0 && index < carried.length)) return null;
+    if (typeof name === "string" && carried[index].name !== name) return null; // the list has changed since
+    const [item] = carried.splice(index, 1);
+    await actor.update({ "system.carried": carried });
+    if (!setting(SETTINGS.autoDrops) || !isInRaid(actor.system)) return item;
+    if (getRaid().hunt) {
+      // V27: anything dropped in the final flight is left in town: nobody picks it up, so it isn't listed
+      if (say) await announce("leftInTown", getRaid(), { names: [actor.name], label: item.name });
+    } else {
+      const { state } = await mutateRaid((s) => R.dropLoot(s, { id: foundry.utils.randomID(), name: item.name, by: actor.name }));
+      if (say) await announce("drop", state, { names: [actor.name], label: item.name });
+    }
+    return item;
+  });
+  dropping = job.catch(() => {});
+  return job;
 }
 
 /** May this user act for this Entity (its owner, or a Storyteller)? Checked from the request (v13 queries carry no sender). */
@@ -164,12 +174,13 @@ const actsFor = (user, actor) => !!user?.isGM || !!actor?.testUserPermission?.(u
 export function registerRaidOps() {
   // The Entity's owner (or the Storyteller): drop one of its loot items where it is, any time (V21).
   registerOp(OPS.raidDrop, {
-    apply: async ({ actorId, index } = {}, { user }) => {
+    apply: async ({ actorId, index, name } = {}, { user }) => {
       const actor = game.actors.get(actorId);
       if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
       if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
-      if (inLocalChase(getRaid().chase, actor.id)) return { ok: false, reason: "inChase" }; // V24: not in a local chase
-      const item = await dropFrom(actor, Math.trunc(Number(index)));
+      // V24: not in a local chase (autoDrops; off, the table keeps this rule by hand)
+      if (setting(SETTINGS.autoDrops) && inLocalChase(getRaid().chase, actor.id)) return { ok: false, reason: "inChase" };
+      const item = await dropFrom(actor, Math.trunc(Number(index)), { name: typeof name === "string" ? name : undefined });
       return item ? { ok: true, item: item.name } : { ok: false, reason: "noItem" };
     },
   });
@@ -183,6 +194,7 @@ export function registerRaidOps() {
       if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
       if (actor.system.status === "captured") return { ok: false, reason: "captured" };
       if (getRaid().hunt) return { ok: false, reason: "flight" }; // V27: nothing is picked up in the final flight
+      if (getRaid().partyOut || getRaid().over) return { ok: false, reason: "outOfTown" }; // nobody is left in town to pick it up
       const { state, result } = await mutateRaid((s) => { const out = R.pickUpLoot(s, dropId); return { state: out.state, result: out.item }; });
       if (!result) return { ok: false, reason: "gone" };
       // V25: picking items up is the Entity's action for this Turn: one action for any number picked up in the Turn

@@ -98,7 +98,8 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       partyCount: entities().length,
       // V21: loot dropped where it fell, waiting to be picked up (by an Entity there: its next action)
       dropped: setting(SETTINGS.autoDrops) ? state.dropped.map((d) => ({ dropId: d.id, text: t("DGF.Raid.droppedItem", { item: d.name, by: d.by, turn: d.turn }) })) : [],
-      canPickUp: !state.hunt, // V27: nothing is picked up in the final flight (what's dropped is left in town)
+      canPickUp: !state.hunt && !state.partyOut && !state.over, // V27: nothing is picked up in the final flight (what's dropped is left in town), nor once the party is out
+      leftHint: t(state.hunt ? "DGF.Raid.leftInTown" : "DGF.Raid.leftBehind"),
       castle: setting(SETTINGS.campaign) ? t("DGF.Raid.castle", { n: castleUpgrades().length, max: DGF.campaign.maxUpgrades, names: castleUpgrades().length ? `: ${castleUpgrades().join(", ")}` : "" }) : "",
       captives: entities().filter((a) => isCaptive(a.system)).map((a) => ({
         actorId: a.id, name: a.name,

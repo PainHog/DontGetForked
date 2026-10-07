@@ -164,3 +164,64 @@ The compendium guide says who the raid holds and that a new raid frees every Ent
 - Not shipped: `docs/`, `book/`, `sim/`, `tools/`, `test/`, `node_modules/`, `packs/_source/`, `AGENTS.md`, `package*.json` and, after FA-17, `PORTAL.md` and `TESTING.md`.
 - The stamped manifest: `version` 0.1.0, `manifest` `…/releases/latest/download/system.json` (Foundry sees updates), `download` `…/releases/download/v0.1.0/system.zip` (pinned). The version comes from the dispatch input or the `v*` tag and must be semver.
 - The clean checkout passes `npm run check` (the step the release now runs first).
+
+# Drop and pick-up review (2026-10-07)
+
+Today's V21–V28 work in the Foundry system (`git diff 1d72371^..HEAD -- module templates lang test`): the `raid.drop` and `raid.pickUp` operations (module/raid/store.mjs), `dropLoot`, `pickUpLoot` and `isFurnitureRetake` (module/logic/raid.mjs), `inLocalChase` (module/logic/chase.mjs), `carriedChangeRefused` (module/logic/lockup.mjs), the Entity data model's guards (module/data/entity-data.mjs), the pick-up mark and its clearing, the sheet's **drop**, the Raid window's **pick up** and the roll dialog's notice, read against the book (Chapter 3's Cost and dropping, Chapter 4's Turn and the piece, Chapter 6's local chase, lock-up and final flight). Every finding fixed here was proved first by a test that failed on the code before the fix (`test/drop-audit.test.mjs`, 11 tests); `npm run check` afterwards: 283 tests, 283 pass, 0 fail.
+
+| Severity | Fixed | Not proved | Total |
+|---|---|---|---|
+| Medium | 4 | 0 | 4 |
+| Low | 5 | 6 | 11 |
+| **Total** | **9** | **6** | **15** |
+
+## Proved and fixed
+
+**FA-D1 · Medium · A double click on drop dropped the same item twice.** `dropFrom` read the carried list before the last drop's write had landed, so two quick clicks (or a player's drop and the Storyteller's "drop an item" Cost at once) each took the same item: one jar of honey on the sheet became two on the Raid window.
+*Fix:* drops run one at a time on the Storyteller's client, each reading the list the last one left, and the sheet sends the item's name, which must still be at that place in the list, so the second click drops nothing. *Test:* "a double click on drop drops one item once: never the same item twice, and never a second item".
+
+**FA-D2 · Medium · V26: in the Turn of the first take, a carrier could set the piece down and take it back up for free.** Chapter 4: "Taking a piece is free (taking it back up is an action)". The Turn check couldn't tell a second carrier joining the first take (free) from the first carrier taking it back up, so in that Turn the piece could be set down before a roll and taken up again at no cost (the dodge V26 was made to close).
+*Fix:* `isFurnitureRetake(state, { setDown })`: in the Turn of the first take it's a retake when nobody else carries the piece now (it was set down); joining a carrier that Turn stays free. *Test:* "V26: the first carrier who sets the piece down and takes it back up in the Turn of the first take spends an action".
+
+**FA-D3 · Medium · V27: a final flight starting in the Turn of the first take let a piece set down in the flight be taken back up.** Same cause: the "nothing is picked up in the final flight" check sat behind the Turn check, so with the Limit reached in the same Turn as the first take, a carrier could drop the piece in the flight and take it again.
+*Fix:* as FA-D2 (nobody carries it now, so it's a retake, refused in the flight). *Test:* "V27: the final flight starting in the Turn of the first take: a piece set down in the flight isn't taken back up".
+
+**FA-D4 · Low · With "Dropped loot waits where it fell" off, its rules still ran.** The switch's hint puts "nothing is dropped in a local chase" and the pick-up action under it, but off, `raid.drop` still refused a drop in a local chase, the sheet still greyed its buttons, the data model still refused a player's furniture and carried-list edits (V24, V28), and taking the piece back up was still marked as an action and refused in the flight (V26, V27). Off must leave the sheet usable by hand.
+*Fix:* each of these reads the switch; off, a drop just leaves the sheet and the table keeps the rules by hand. The hint now says everything the switch covers. *Test:* "with 'Dropped loot waits where it fell' off, the drop and pick-up rules are by hand: nothing refused, no action marked".
+
+**FA-D5 · Low · An Entity outside the raid dropped its loot into this raid's town (F26).** The Raid window listed it, and an Entity in the raid could pick it up, though the one that dropped it couldn't (pick-up already takes only Entities in the raid).
+*Fix:* an Entity that isn't in the raid isn't in town: its drop just leaves the sheet, as with the switch off. *Test:* "an Entity that isn't in this raid drops nothing into the town: nobody in the raid can pick it up".
+
+**FA-D6 · Low · A drop refused in a local chase said nothing on a sheet opened before the chase.** The sheet doesn't re-render when the raid changes, so its **drop** buttons were still live after its Entity was caught, and the refusal was silent.
+*Fix:* the sheet warns "Not in a local chase…" when the drop is refused for that. *Test:* "a drop refused in a local chase says why, even from a sheet opened before the chase began".
+
+**FA-D7 · Low · The roll dialog called a flight roll a second action.** After a pick-up, the dialog said "that was its action for the Turn" on every roll that Turn, including the final flight started later that Turn by the Limit, where everyone flees and rolls.
+*Fix:* the notice isn't shown on a chase roll or once the hunt is on. *Test:* "the pick-up notice is for the Turn's own rolls: a flight roll later that Turn isn't a second action".
+
+**FA-D8 · Medium · Once the party was out of town, the Raid window still offered pick up.** After the way out was beaten, an item left in town could be picked up, and then counted as home in the year's starting ticks. "Anyone there may pick up": nobody is there any more.
+*Fix:* `raid.pickUp` refuses (`outOfTown`) once the party is out of town or the raid is over; the Raid window drops its **pick up** buttons and says *Out of town: all this is left behind*. *Test:* "once the party is out of town, nothing left in town is picked up: it can't come home".
+
+**FA-D9 · Low · The Storyteller taking the piece back up for an Entity marked no action.** The data model skipped every Storyteller write, so a GM ticking *Carrying furniture* for an Entity they play (TESTING.md section 14 has the GM do it for Dracula, and expects the mark) took the piece back up for free, and the Storyteller had to remember the action by hand.
+*Fix:* the action is the Entity's whoever ticks it; in the final flight a Storyteller's tick is still a correction and stands, unmarked (as with V24 and V28). *Test:* "V26: the Storyteller taking the piece back up for an Entity (TESTING.md's GM does it for Dracula) marks its action too; in the flight it's a correction".
+
+TESTING.md section 14 has the human steps for FA-D1, D2, D4, D8 and D9.
+
+## Suspected, not proved (not changed)
+
+- **Two pick-ups by one Entity at once** (two different items) could lose one if the first's actor write landed after the second read the list. On the fake Foundry both land, and in Foundry each pick-up's actor write follows its raid write, which the server answers in order.
+- **Next Turn racing a pick-up** could clear the mark of a pick-up made in the new Turn. Not reproducible on the fake Foundry.
+- **A freed captive "acts again next Turn"**, and an Entity that lost its Turn "skips its next action", yet either can pick up that Turn. The system doesn't record when a captive was freed, and, as with rolls, a second action gets a notice at most, never a refusal.
+- **A cornered Entity with "Run the lock-up automatically" off** can drop or hand over before the Storyteller captures it by hand (its chase has ended). That's by the switch.
+- **Outside today's work, the same class as FA-D7:** the "lose a Turn" notice also shows on a flight roll in that Turn (module/dice/rolling.mjs).
+- **Outside today's work:** an Entity outside the raid ticking *Carrying furniture* marks the raid's piece taken (the V4 hook in module/raid/store.mjs doesn't check the raid).
+
+## Checked and sound
+
+- **Authority:** `raid.drop` and `raid.pickUp` act only for the Entity's owner or a Storyteller, checked from the request; a request claiming to be the active Storyteller or a user who isn't connected is refused (FA-04); claiming another connected player is FA-R2's accepted floor. A player can't drop or pick up for another player's Entity (tested in test/drop.test.mjs).
+- **Two clients picking up the same item:** the raid's one write queue gives it to the first; the second is told it's gone.
+- **HTML in item names** is escaped everywhere it appears: the Raid window, the chat cards, the sheet, the roll dialog's notice, the drop-an-item and pick-up dialogs.
+- **Turn boundaries:** Next Turn clears every pick-up mark, Turn 12 into dawn included; a new raid clears the marks, the dropped list and the first take's Turn; stepping a Turn back clears nothing.
+- **An older saved raid** (normalizeRaid) gets an empty dropped list and no first-take Turn (any take while in play counts as taking it back up, as documented for V26).
+- **The data model's guards skip every Storyteller write:** a capture emptying the list, a new raid's reset, an Entity ticked in later, the Cost's drop, the Storyteller's corrections (only the action mark for taking the piece back up applies to a Storyteller's tick, FA-D9; no automated flow ticks it).
+- **Chases:** a local chase the Limit ends puts its members in the flight, where they may drop (left in town); every member of a shared local chase is held to it; a Huge piece's carriers each spend an action taking it back up in a later Turn, while joining the first take is free.
+- **A Storyteller handing over:** the operations run on whichever GM is active, and nothing in this work keeps state outside the raid setting and the Entities (the one-at-a-time drop queue is per client and empty between drops).
