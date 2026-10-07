@@ -3,7 +3,7 @@ Next: Richard's two-player try of the online version, then the first playtest wi
 Number: Design decisions made = 108
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 287
+Number: Automated checks passing = 290
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
