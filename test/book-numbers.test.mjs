@@ -11,6 +11,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DGF } from "../module/config.mjs";
+import { powerRule, perkParts, weaknessTiming } from "../module/logic/power-text.mjs";
+import { rewrite as rewriteEntries } from "../book/tools/entity-entries.mjs";
 import { band, isCritical, monsterShows, suspicionForRoll, leadMove, majorityMove, localMobDifficulty, stepUp, stepDown, tellGoesOff } from "../module/logic/rules.mjs";
 
 /* ------------------------------------------------------------ helpers -- */
@@ -298,7 +300,8 @@ const ENTRIES = [...chapter(CH.ch2).matchAll(/<article class="entry" id="entity-
   n: Number(m[1]),
   name: plain(m[2].match(/<h4 class="name">([\s\S]*?)<\/h4>/)[1]),
   dice: [...m[2].matchAll(/<p class="dice">([\s\S]*?)<\/p>/g)].map((d) => plain(d[1])),
-  paras: [...m[2].matchAll(/<p class="(?:sig|pick)">([\s\S]*?)<\/p>/g)].map((d) => plain(d[1])),
+  paras: [...m[2].matchAll(/<p class="(?:pw-h|pw|pw-meta)">([\s\S]*?)<\/p>/g)].map((d) => plain(d[1])),
+  items: [...m[2].matchAll(/<li>([\s\S]*?)<\/li>/g)].map((d) => plain(d[1])),
 }));
 const diceLine = (dice) => DGF.traits.map((t) => `${TRAIT[t]} d${dice[t]}`).join(" · ");
 const effectText = (v) => ({
@@ -324,32 +327,33 @@ test("Chapter 2 has the eight Entities in DGF.entities order, each with its dice
   }
 });
 
-test("each Entity's Gift, Perks, Castle Duty, Weakness and Tell (Chapter 2) are DGF.entities", () => {
+test("each Entity's powers (Chapter 2) are generated from DGF.entities, and the chapter is up to date", () => {
+  assert.equal(rewriteEntries(readFileSync(new URL("../book/src/chapters/12-ch02.html", import.meta.url), "utf8")), readFileSync(new URL("../book/src/chapters/12-ch02.html", import.meta.url), "utf8"), "run node book/tools/entity-entries.mjs");
+  const ctx = { traitName: (t) => TRAIT[t], ease: DGF.openApproachEase };
   for (const [i, e] of DGF.entities.entries()) {
-    const p = ENTRIES[i].paras;
-    const find = (prefix) => { const x = p.find((s) => s.startsWith(prefix)); assert.ok(x, `${e.key}: a "${prefix}" line`); return x; };
-    const gift = find(`Gift: ${e.gift.name}.`);
-    assert.equal(gift, `Gift: ${e.gift.name}. ${e.gift.versions.map((v) => `${v.name}${v.default ? " (default)" : ""}: ${effectText(v)}. ${v.text}`).join(" · ")}`, `${e.key}: Gift`);
-    const perks = find("Perk.").slice("Perk. ".length).split(" · ");
-    assert.equal(perks.length, e.perks.length, `${e.key}: three Perks`);
-    for (const [j, k] of e.perks.entries()) {
-      const head = `${k.name}${k.default ? " (default)" : ""}: `;
-      assert.ok(perks[j].startsWith(head), `${e.key}: Perk ${j + 1} is "${head}…" (book: "${perks[j]}")`);
-      // the book lower-cases a Perk's first word after the colon (house style), so compare from the second letter on
-      assert.equal(lowFirst(perks[j].slice(head.length)), lowFirst(k.text), `${e.key}: ${k.name}`);
-    }
-    assert.equal(find("Castle Duty"), `Castle Duty (default): ${DGF.duties.find((d) => d.key === e.duty).name}.`, `${e.key}: default Duty`);
-    assert.equal(find("Weakness:"), `Weakness: ${e.weakness.name} (${cap(e.weakness.timing)}). ${e.weakness.text}`, `${e.key}: Weakness`);
-    assert.equal(find("Tell:"), `Tell: ${e.tell.name}. ${e.tell.text}`, `${e.key}: Tell`);
+    const { paras, items } = ENTRIES[i];
+    const has = (x, what) => assert.ok(paras.includes(x) || items.includes(x), `${e.key}: ${what} ("${x}")`);
+    has(`Signature: ${e.signature.name} 1 charge`, "the signature's heading and cost");
+    has(`${powerRule(e.signature, ctx)}${e.signature.flavour ? ` ${e.signature.flavour}` : ""}`, "the signature's rule");
+    has(`Gift: ${e.gift.name} pick one · 1 charge a use`, "the Gift's heading");
+    for (const v of e.gift.versions) has(`${v.name}${v.default ? " (default)" : ""}: ${powerRule(v, ctx)} ${v.text}`, `Gift ${v.name}`);
+    has("Perk pick one · always on", "the Perk heading");
+    for (const k of e.perks) { const { rule, flavour } = perkParts(k); has(`${k.name}${k.default ? " (default)" : ""}: ${rule}${flavour ? ` ${flavour}` : ""}`, `Perk ${k.name}`); }
+    const duty = DGF.duties.find((d) => d.key === e.duty);
+    has(`Castle Duty (default): ${duty.name}, who shops for ${duty.kind}.`, "the default Duty");
+    has(`Weakness: ${e.weakness.name}. ${weaknessTiming[e.weakness.timing]} ${e.weakness.text}`, "the Weakness");
+    has(`Tell: ${e.tell.name}. ${e.tell.text}`, "the Tell");
     assert.equal(e.gift.versions.filter((v) => v.default).length, 1, `${e.key}: one default Gift`);
     assert.equal(e.perks.filter((v) => v.default).length, 1, `${e.key}: one default Perk`);
   }
+  // Every standard power's rule says what its effect does, in the words Chapter 3 uses.
+  assert.match(powerRule({ effect: "raise" }, ctx), /one size bigger/);
+  assert.match(powerRule({ effect: "switch", trait: "brawn" }, ctx), /^Roll Brawn instead of the trait the obstacle calls for/);
+  assert.match(powerRule({ effect: "hidden" }, ctx), /without risking Suspicion/);
+  assert.match(powerRule({ effect: "open", trait: "sly" }, ctx), new RegExp(`roll Sly at ${DGF.openApproachEase} lower Difficulty`));
 });
 
-test("each signature ability (Chapter 2) is DGF.entities' signature, and does its standard effect", () => {
-  for (const [i, e] of DGF.entities.entries()) {
-    assert.ok(ENTRIES[i].paras.includes(`${e.signature.name} (signature): ${e.signature.text}`), `${e.key}: signature`);
-  }
+test("each signature ability's data says its standard effect (what the Foundry sheet shows)", () => {
   for (const e of DGF.entities) assert.ok(e.signature.text.startsWith(effectText(e.signature)), `${e.key}: the signature's text starts with its effect (${e.signature.effect})`);
 });
 
@@ -357,9 +361,12 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   const perk = (key) => {
     const e = DGF.entities.find((x) => x.perks.some((k) => k.key === key));
     const k = e.perks.find((x) => x.key === key);
-    const line = ENTRIES[DGF.entities.indexOf(e)].paras.find((s) => s.startsWith("Perk.")).slice("Perk. ".length).split(" · ").find((s) => s.startsWith(k.name));
+    const line = ENTRIES[DGF.entities.indexOf(e)].items.find((s) => s.startsWith(`${k.name}:`) || s.startsWith(`${k.name} (default):`));
     assert.ok(line, `${key} is in the book`);
-    return line;
+    // The entry capitalises the rule after the name; the checks below quote it mid-sentence. Offer both spellings
+    // (a lower-cased "hyde" alone would miss "Hyde takes over").
+    const at = line.indexOf(": ") + 2;
+    return `${line} | ${line.slice(0, at)}${lowFirst(line.slice(at))}`;
   };
   const R = DGF.perkRules;
   says(perk("hypnoticEyes"), `on ${TRAIT[R.hypnoticEyes.trait]} rolls, the Monster shows only if it beats your trait die by ${R.hypnoticEyes.showMargin} or more`, "Hypnotic Eyes");

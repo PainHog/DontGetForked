@@ -74,3 +74,4 @@ why, and the source (author / playtest / simulator). Rows 1–12 point at `docs/
 | 67 | 2026-10-07 | Chapters 1, 2, 7, 8; At the Table | FT5 wording: raids and evenings, hear the list before the Duty, villager faces, the way-out Cost costs nothing, a Bulky piece's minimum Suspicion, picking up on the Turns line | FT5 (advance approval) | playtest |
 | 68 | 2026-10-07 | Chapter 6 | A captive can still spend charges, on its own roll or a rescuer's (FT2 F3; what the helping rule and the online version already allowed) | FT2 | playtest |
 | 69 | 2026-10-07 | Credits page, back cover | No Foundry mention (a separate DriveThruRPG product) and no typefaces line (the OFL doesn't require one) | Richard | author |
+| 70 | 2026-10-07 | Chapter 2 (the Eight, the abilities box, Three Picks) | Each power spelled out with its cost and exact rule, flavour in italics; generated from the game data | Richard | author |

@@ -329,6 +329,13 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
 .entry p.pick { margin: 0.02in 0 0.04in; }
 .entry ul.picks { margin: 0 0 0.04in; padding-left: 0.16in; }
 .entry ul.picks li { margin: 0 0 0.02in; }
+/* The powers, spelled out (book/tools/entity-entries.mjs): a heading with what it costs, the rule, flavour in italics */
+.entry p.pw-h { margin: 0.05in 0 0.01in; break-after: avoid; }
+.entry p.pw-h .pw-cost { margin-left: 0.05in; font: 700 7.4pt var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+.entry p.pw { margin: 0 0 0.03in; }
+.entry ul.pw-list { margin: 0 0 0.03in; padding-left: 0.16in; }
+.entry ul.pw-list li { margin: 0 0 0.025in; }
+.entry p.pw-meta { margin: 0.025in 0 0.015in; }
 .entry .portrait, .entry .badge {
   float: right;
   width: 1.2in;
