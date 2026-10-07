@@ -13,6 +13,7 @@ import { DGF } from "../config.mjs";
 import { entityView, rollAbilities } from "../logic/entity.mjs";
 import { normalizeRaid, isFurnitureRetake } from "../logic/raid.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
+import { carriedChangeRefused } from "../logic/lockup.mjs";
 
 /** The raid now (the world setting every client reads), or null. */
 const currentRaid = () => {
@@ -96,6 +97,16 @@ export class EntityData extends foundry.abstract.TypeDataModel {
     if (sys.carryingFurniture === false && this.carryingFurniture && this.parent && inLocalChase(currentChase(), this.parent.id)) {
       delete sys.carryingFurniture;
       globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.noDropInChase"));
+    }
+    // V28: nothing is handed to a captive; nothing is dropped or handed over from a local chase (the Storyteller can correct)
+    if (Array.isArray(sys.carried) && this.parent) {
+      const refused = carriedChangeRefused({
+        captive: this.status === "captured", inLocalChase: inLocalChase(currentChase(), this.parent.id), before: this.carried, after: sys.carried,
+      });
+      if (refused) {
+        delete sys.carried;
+        globalThis.ui?.notifications?.warn(game.i18n.localize(refused === "captive" ? "DGF.Notify.nothingToCaptive" : "DGF.Notify.noHandOverInChase"));
+      }
     }
     retake(this, sys);
     return allowed;

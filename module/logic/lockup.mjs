@@ -39,6 +39,29 @@ export function captureUpdate(system, { turn }) {
   };
 }
 
+/** How many of each item name a carried list holds. */
+function tally(list) {
+  const n = new Map();
+  for (const c of list ?? []) n.set(c?.name ?? "", (n.get(c?.name ?? "") ?? 0) + 1);
+  return n;
+}
+
+/**
+ * V28 (Chapter 6): "You are held at the town's lock-up (you can't pick up or be handed anything)", and in a local
+ * chase "you can't drop or hand over anything until the chase ends". The system has no hand-over action (players
+ * edit the carried list), so: may this change to an Entity's carried list stand? Returns "" (yes), "captive" (a
+ * captive would gain an item) or "inChase" (an Entity in a local chase would lose one). Items compare by name, as a
+ * multiset (reordering changes nothing).
+ */
+export function carriedChangeRefused({ captive = false, inLocalChase = false, before = [], after = [] } = {}) {
+  const was = tally(before), now = tally(after);
+  const gains = [...now].some(([name, n]) => n > (was.get(name) ?? 0));
+  const loses = [...was].some(([name, n]) => n > (now.get(name) ?? 0));
+  if (captive && gains) return "captive";
+  if (inLocalChase && loses) return "inChase";
+  return "";
+}
+
 /** Freed (rescued, or slipped free): it acts again next Turn. */
 export function freeUpdate() {
   return { status: "active", capturedTurn: 0, slipTurn: 0 };

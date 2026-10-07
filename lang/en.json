@@ -41,6 +41,8 @@
   "DGF.Notify.storytellerOnly": "Only the Storyteller changes an Entity's status, its time at the lock-up, or whether it's in the raid.",
   "DGF.Notify.noDropInChase": "Not in a local chase: nothing is dropped, loot or furniture, until it's over.",
   "DGF.Notify.noPickUpInFlight": "Not in the final flight: nothing is picked up (or taken back up) while the whole town hunts.",
+  "DGF.Notify.nothingToCaptive": "Held at the lock-up: a captive can't pick up or be handed anything.",
+  "DGF.Notify.noHandOverInChase": "Not in a local chase: nothing is dropped or handed over until it's over.",
   "DGF.Notify.refused": "The Storyteller's client turned that down — nothing was changed.",
   "DGF.Dialog.cancel": "Cancel",
   "DGF.Roll.title": "{name} rolls",

@@ -11,6 +11,7 @@ import {
 import { newRaid, normalizeRaid, dropLoot, pickUpLoot, isFurnitureRetake, takeFurniture, setFurniture, advanceTurn } from "../module/logic/raid.mjs";
 import { newChase, endChase, inLocalChase } from "../module/logic/chase.mjs";
 import { homeFromCarried, yearFromList } from "../module/logic/year.mjs";
+import { carriedChangeRefused } from "../module/logic/lockup.mjs";
 
 /* ------------------------------------------------------------ the rules -- */
 
@@ -50,6 +51,17 @@ test("V26: taking a set-down piece back up is an action; the first take is free,
   // an older raid without the Turn: any take while in play is a retake
   assert.equal(normalizeRaid({ raidId: "old", turn: 4, furniture: "inPlay" }).furnitureTakenTurn, 0);
   assert.equal(isFurnitureRetake(normalizeRaid({ raidId: "old", turn: 4, furniture: "inPlay" })), true);
+});
+
+test("V28: nothing handed to a captive; nothing dropped or handed over from a local chase", () => {
+  const rope = [{ name: "a coil of rope" }], both = [{ name: "a coil of rope" }, { name: "a top hat" }];
+  assert.equal(carriedChangeRefused({ captive: true, before: rope, after: both }), "captive", "a captive gains nothing");
+  assert.equal(carriedChangeRefused({ captive: true, before: both, after: rope }), "", "losing isn't receiving");
+  assert.equal(carriedChangeRefused({ inLocalChase: true, before: both, after: rope }), "inChase", "a chased Entity loses nothing");
+  assert.equal(carriedChangeRefused({ inLocalChase: true, before: rope, after: both }), "");
+  assert.equal(carriedChangeRefused({ inLocalChase: true, before: both, after: [both[1], both[0]] }), "", "the same items, reordered");
+  assert.equal(carriedChangeRefused({ before: both, after: [] }), "", "free and not chased: anything goes");
+  assert.equal(carriedChangeRefused({ captive: true, before: rope, after: [{ name: "a coil of rope" }, { name: "a coil of rope" }] }), "captive", "a second of the same counts");
 });
 
 test("V22: two items from one shared place, carried home together, both count", () => {
@@ -311,6 +323,33 @@ test("V27: nothing is picked up in the final flight; anything dropped in the fli
   assert.deepEqual(raid().dropped.map((d) => d.id), before, "not listed");
   assert.match(game.messages.at(-1).content, /A Witch drops a lace tablecloth: left in town/);
   await op(GM, OPS.raidHunt, { on: false });
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
+});
+
+test("V28 at the table: a player can't hand a captive anything, or hand anything over from a local chase; the Storyteller can correct", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "easy" });
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a coil of rope" }, { name: "a top hat" }] }));
+  await settle();
+  // caught: in her local chase she can't take an item off her sheet (a hand-over or a drop)
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
+  assert.equal(raid().chase?.kind, "local");
+  let warned = log.warnings.length;
+  await asUser(ANN, () => witch.update({ "system.carried": [{ name: "a top hat" }] }));
+  assert.equal(witch.system.carried.length, 2);
+  assert.ok(log.warnings.slice(warned).some((w) => w.startsWith("Ann:") && /local chase/.test(w)));
+  await op(GM, OPS.chaseEnd, { outcome: "dropped" });
+  await settle();
+  // held at the lock-up: nothing is handed to her (the sheet's add), but the Storyteller can correct
+  await op(GM, OPS.lockupSet, { actorId: witch.id, captured: true });
+  await settle();
+  warned = log.warnings.length;
+  await asUser(ANN, () => witch.update({ "system.carried": [{ name: "a jar of honey" }] }));
+  assert.deepEqual(witch.system.carried, []);
+  assert.ok(log.warnings.slice(warned).some((w) => w.startsWith("Ann:") && /lock-up/.test(w)));
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a jar of honey" }] }));
+  assert.deepEqual(witch.system.carried.map((c) => c.name), ["a jar of honey"]);
+  await op(GM, OPS.lockupSet, { actorId: witch.id, captured: false });
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
 });
