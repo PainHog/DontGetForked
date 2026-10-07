@@ -183,3 +183,80 @@ No kinds missing, so no extra lines.
 | Rules lookups | 8 (Spectral "at no action"; Cost choices and "never what this roll wins"; Critical refund; helping another's roll with an ability; keeping to the chosen way in; the furniture: loot in hand, Spectral while carrying, when the +1 happens; leaving: everyone there, one rolls, can it happen right after the carrier arrives; handing loot over) |
 
 Because the raid ended on Turn 6 (not before), a second raid was not strictly required, but it had no chase, no capture and no final flight, so the table played a second night in the same town for coverage (§2).
+
+---
+
+## 2. Raid 2: a second Lantern Night in the same town
+
+Same town sheet (list, locations, obstacles, furniture), same players, Entities and picks. A new night: charges back to 3 each, Suspicion 0, every obstacle unbeaten again, Tell checks reset, nothing carried over. (Chapter 1 says each session is "a town you have never seen before", so this replay is a test device, not something the book offers.)
+
+**The plan (party decision 1).** Everyone knows the town now. The Planner's new split: the Ghost to the bookseller by the tug-of-war ("group, so Spectral walks me straight past it, and nobody watches it"); the Witch and Jekyll together to the butcher (the Witch for the geese, Hyde for the gate); the Creature back to the draper; the Invisible Man to the baker; the tavern later, for whoever is free. Hoarder: "Company at the butcher this time. Good." Roleplayer: "You're sending the Invisible Man to steal a sack of flour." Nobody objected; the Newcomer asked to "have another go at my trapdoor". **Unanimous.**
+
+### Turn 1 (moves)
+- **Ghost** to the bookseller; Spectral takes him past the tug-of-war (group) without a roll. It was the bookseller's only obstacle, so **the writing paper** is in his hand at once ("beat or pass the last and the loot is in your hand").
+- **Witch and Jekyll** to the butcher, **Creature** to the draper, **Invisible Man** to the baker.
+- Tell checks: bookseller R99 = 1 (the bookseller counts as watched although the Ghost came the unwatched way: F7), butcher R100 = 2, baker R101 = 2. No Tells.
+
+**Suspicion 0.**
+
+### Turn 2
+- **Creature**: trapdoor, Brawn d12 + Mask, 3 + 2 = 5, **Trouble**. Suspicion 1. Newcomer: "This trapdoor hates me."
+- **Witch**: geese, Sly d12 (Cook) + Mask, 4 + 5 = 9, **Success**.
+- **Jekyll**, right after her: the Draught (a charge) makes him Hyde; the gate, Brawn d12 + Mask, 8 + 2 = 10, **Success**. **The honey** is Hyde's. The butcher is done on Turn 2.
+- **Invisible Man**: the party picks the rooftops as the baker's way in; Unseen (a charge), Nimble d8 + Monster d10, 8 + 6 = 14, **Success**: he's past the rooftops (a group obstacle, so only he is).
+- **Ghost** moves to the tavern cellar, paper in hand. Daredevil: "I'm not sitting in a bookshop for six Turns."
+
+**Suspicion 1.**
+
+### Turn 3
+- **Creature**: trapdoor, Mask, 1 + 4 = 5, **Trouble** (his fifth Trouble at this trapdoor in two nights). Suspicion 2. Table: groans; the Daredevil offers to "blow on his dice".
+- **Invisible Man**: baker's geese, Sly d12 + Mask, 10 + 4 = 14, **Success**: **the flour**. Roleplayer: "If I sneeze now, we're all dead."
+- **Ghost**: the garden wall, Fade (a charge), Nimble d12 + Monster d10, 8 + 6 = 14, **Success**: **the cheese**.
+- **Hyde** and **the Witch** move to the draper to give the trapdoor more tries (party decision 2). Roleplayer: "Can't the Creature just try the doorman instead?" Planner, checking Chapter 4: "No: the party picks one way in and keeps to it." (F12.)
+
+**Suspicion 2.**
+
+### Turn 4
+- **Creature**: the Planner points at his Gift: Mountain Stride opens an approach with Nimble at an obstacle that doesn't list it, at 2 lower. Nimble d8 + Mask against 8 instead of Brawn d12 against 10. The Newcomer spends his first charge in two nights: 1 + 6 = 7, one short, **a Cost**. Only he gets through, but that's all it takes: **the bandages**, at last. The Storyteller's Cost: he carries only what this roll won, and nothing else bites this early, so **Suspicion +1** (the doorman hears the trapdoor bang). Suspicion 3. Newcomer: "I GOT THEM."
+- Every item on the list is in hand on Turn 4 again.
+- **The armchair (party decision 3).** The Ghost carries paper and cheese, and Spectral doesn't work while carrying loot. The table first asked whether he could just drop them at the bookseller, pass the children and take the chair, and whether the paper would still count as "in hand" for the furniture once dropped (F9). To keep it clean and the chair's Suspicion at 1, the Planner's plan: the Ghost hands his loot to Hyde at the draper, goes back to the bookseller empty-handed, and takes the chair as he sets off on the Turn after; everyone else waits at the way out. Daredevil: "Three Turns of you lot standing around so I can do one thing?" Hoarder: "Yes. We're at 3. Keep it at 3." **4–1.**
+- **Ghost** moves to the draper and hands the paper and cheese to Hyde (free). **Hyde** waits for him there.
+- **Witch** and **Invisible Man** move to the way out. Tell check (first back): R118 = 3, nothing.
+
+**Suspicion 3.**
+
+### Turn 5
+- **Ghost** moves to the bookseller, carrying nothing (passing the tug-of-war again is moot with Spectral: F8).
+- **Hyde** and **Creature** move to the way out.
+- **Witch**, **Invisible Man** wait. Roleplayer, as the Invisible Man, chats up the bell-ringers by the town gate "in a voice from nowhere"; the Storyteller plays along.
+
+**Suspicion 3.**
+
+### Turn 6
+- **Ghost**: Spectral past the children, takes the wingback armchair, starts the carried move to the way out.
+- Everyone else waits.
+- End of Turn: the chair, +1. **Suspicion 4.**
+
+### Turn 7
+- **Ghost** arrives with the chair. The **Invisible Man** rolls the way out for everyone with Unseen (a charge): Sly d12 + Monster d10, 3 + 5 = 8 against 8, **Success** (exactly). Out, before the Turn ends.
+
+**Out of town on Turn 7, Suspicion 4 of 11, no chases.**
+
+### How the Year Went (raid 2)
+Everything home, plus the armchair: **Grand Year** again, nobody left behind.
+> *A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there.*
+
+(Without the campaign rules, the castle now "has" two wingback armchairs and nothing to show for it. Roleplayer: "They pretend both were always there.")
+
+**Charges spent (raid 2):** Newcomer 1 (Mountain Stride). Daredevil 1 (Fade). Planner 1 (the Draught). Hoarder 0. Roleplayer 2 (Unseen twice). **5 of 15 spent, 10 unspent.**
+
+### Raid 2 by the numbers
+| | |
+|---|---|
+| Result | Grand Year, Turn 7 of 12 |
+| Suspicion at the end | 4 of 11 |
+| Suspicion sources | Trouble at the unwatched trapdoor 2 · a Cost 1 · furniture 1 |
+| Chases / captures / final flight | none / none / none |
+| Rolls in play | 13 roll events (22 dice, R99–R120) |
+| Party decisions | 3 (the split, more hands at the draper, the armchair handoff) |
+| Rules lookups | 4 (coming back through a group obstacle; does passing the last obstacle by Spectral hand you the loot, and does dropped loot still count as "in hand"; opening an approach, "only you get through"; can the party switch the draper's way in) |
