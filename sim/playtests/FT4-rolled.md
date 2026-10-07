@@ -101,3 +101,85 @@ Duty clash rule: no two defaults clashed, so the "second player picks another" r
 ### 0.3 What the party knows
 
 The book never says how much of a rolled town the Storyteller shows the players. Chapter 9's maps mark watched locations and the furniture, the Example of Play has players quoting Difficulties ("Charm, 8, watched"), and the party has to pick a way in, so the table ruled: **the whole town sheet is open** (obstacles, traits, Difficulties, watched). Logged as F1.
+
+---
+
+## 1. Raid 1: the play, Turn by Turn
+
+Suspicion 0, Limit 11. Twelve Turns. The party starts at the way out.
+
+**The plan (party decision 1).** The Planner proposed one Entity per location: the Creature to the draper (unwatched, Brawn d12 at the trapdoor: "a safe first job"), the Witch to the butcher (Sly d12 there with her Cook edge), the Ghost to the baker (Spectral walks past the rooftops), Jekyll to the bookseller (Charm d12 at the shopkeeper), the Invisible Man to the tavern cellar (unwatched, the garden wall).
+*Argument.* Roleplayer: "The bandages are literally mine, I should get them." Planner: "Your best there is Charm d8 against 10. The Creature has Brawn d12, and nobody watches the draper, so the new player can't get caught." Hoarder: "The butcher is watched three times over. Why me?" Planner: "Because your Sly is a d12 there and the honey is essential." Vote: Planner, Daredevil, Newcomer for; Hoarder and Roleplayer against. **3–2, the plan stands.** Roleplayer: "Fine. But I'm wearing them home."
+
+### Turn 1 (moves)
+Everyone moves to their location. The Ghost passes the baker's rooftops (group) with Spectral, at no action, in the Turn he moves.
+Tell checks, first arrival at each watched location: butcher R69 = 3, nothing. Baker R70 = 5, **a Tell**: only the Ghost arrived, so it's his Cold Spot. Villager (R72–73): *the mayor, in his best costume, practising the bells*; his handbell's breath fogs. Bookseller R71 = 6, **a Tell**: Jekyll's Wrong Hand. Villager (R74–75): *a gang of children, practising the bells*, who stare at the doctor's hairy hand. (The obstacle is "the shopkeeper behind the counter", so the Storyteller made the children witnesses at the counter: F5.)
+**Suspicion 2.**
+
+### Turn 2 (first rolls)
+- **Creature** (draper, trapdoor, Brawn 10, not watched): Brawn d12 + Mask, 5 + 1 = 6, **Trouble**. Suspicion 3, no chase (nobody watching). Newcomer: "Is that bad?"
+- **Witch** (butcher, geese, Sly 8, watched): Sly d12 (Cook) + Mask, 7 + 1 = 8, **Success**. The geese are beaten for the party.
+- **Ghost** (baker, geese, watched): takes the loud way, Nimble ("run for it, honking"), d12 + Mask, 10 + 6 = 16, **Success**, loud: Suspicion 4. The geese were the baker's last obstacle: **the sack of flour** is in his hand. Daredevil: "Flour! Keep it away from the invisible guy." Planner: "You had Sly d10 against 8 for free."
+- **Jekyll** (bookseller, shopkeeper, Charm 8, watched): Charm d12 + Mask, 2 + 5 = 7, one short, **a Cost**; he has **the writing paper**. The Storyteller's options: drop an item is out (he carries only what this roll won), lose a Turn and a smaller die don't bite yet on Turn 2, so **Suspicion +1**: the children see a hairy hand vanish under the counter. Suspicion 5. (Logged as X5: early in the night, Suspicion is almost always the Cost that "hurts most".)
+- **Invisible Man** (tavern cellar, garden wall, Nimble 8, not watched): Nimble d8 + Mask, 1 + 3 = 4, **Trouble**. Suspicion 6.
+
+**Suspicion 6** after two Turns, five points of it from bad dice at places nobody watched. Hoarder: "Half way to the Limit and we've got two things."
+
+### Turn 3
+- **Creature**: trapdoor again, Mask, 2 + 1 = 3, **Trouble**. Suspicion 7. Newcomer: "I have the biggest die at the table and I keep rolling ones."
+- **Invisible Man**: spends a charge on Unseen and rolls Nimble d8 + Monster d10: 7 + 7 = 14, **Success, and a Critical** (doubles): the charge comes back. **The cheese** is his. Roleplayer, as the Invisible Man: "Gentlemen, the cheese has left the building. Unaccompanied."
+- **Witch** waits at the bolted back gate (Brawn 10, watched). Hoarder: "The mob would be 11 if I'm caught. I'm not rolling that alone." (Mob = 8 + half of 7.)
+- **Ghost** moves to the butcher to lend his Fade to the Witch's roll next Turn (party decision 2: the Planner's call, nobody objected).
+- **Jekyll**, seeing the Creature fail again, moves to the draper: "Two shots at that trapdoor next Turn."
+
+**Suspicion 7.**
+
+### Turn 4
+- **Creature**: trapdoor, Mask, 3 + 2 = 5, **Trouble** (third in a row). Suspicion 8.
+- **Witch** spends a charge on A Potion for That (Wits d12 instead of Brawn) and the Ghost spends one on Fade for her roll (the Monster without risking Suspicion; helping costs his charge, not his action). Wits d12 + Monster d10: 9 + 4 = 13, **Success**. **The honey** is hers. Hoarder: "That's one charge. I'm keeping the other two."
+- **Hyde**: Jekyll spends a charge on the Draught and becomes Hyde, Brawn d12 + Mask: 6 + 6 = 12, **Success and a Critical**: the Draught's charge comes back. **The bandages** are in Hyde's hairy hand. Roleplayer: "Those are *my bandages*."
+
+Every item on the list is in hand on Turn 4: both essentials (bandages, honey) and all three extras (flour, paper, cheese). **Suspicion 8.**
+
+**The armchair (party decision 3).** Daredevil: "We've got everything by Turn 4. Get the chair." Hoarder: "We've got everything. Go home." Planner worked out the cheapest timing: the furniture adds 1 Suspicion at the end of every Turn once taken, and a carried move takes two Turns, so the Ghost should pass the children and take the chair on the Turn the others reach the way out, then arrive in the next Turn and let someone roll the way out straight after he arrives, before the Turn ends. "One Suspicion, if nobody fumbles." He also wanted the way out's Tell check done before the chair was taken. Roleplayer: "The chair would look wonderful in the great hall." Newcomer: "Whatever you think." **4–1 for the chair.**
+
+Rest of Turn 4:
+- **Ghost** hands the flour to the Witch (free, same place) so he carries nothing, and moves to the bookseller.
+- **Invisible Man** moves to the way out. Tell check, first back at the way out: R96 = 1, nothing.
+
+**Suspicion 8.**
+
+### Turn 5
+- **Ghost**: Spectral takes him past the children (group, Charm 12, watched) without a roll, at no action. He takes **the wingback armchair** (free) and starts the carried move to the way out (between places).
+- **Creature, Hyde, Witch** move to the way out.
+- **Invisible Man** waits.
+- End of Turn: the chair, +1. **Suspicion 9.**
+
+Storyteller (the town's mood at 9 of 11): "The bells stop. Someone is asking why the mayor's armchair is walking down the high street by itself, wrapped in a cold mist."
+
+### Turn 6
+- **Ghost** acts first and arrives at the way out with the chair.
+- Everyone is there. The party picks the Invisible Man to roll for all (party decision 4; the Daredevil wanted to roll it himself "with the big die", outvoted). He spends a charge on Unseen: Sly d12 + Monster d10, 9 + 6 = 15 against 8, **Success**. Everyone is out, free, before the Turn ends, so the chair adds nothing more.
+
+**Out of town on Turn 6, Suspicion 9 of 11, no chases.**
+
+### How the Year Went (raid 1)
+Every essential and every extra came home, plus a piece of furniture: **Grand Year**. Nobody left behind.
+> *A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there.*
+
+No kinds missing, so no extra lines.
+
+**Charges spent (raid 1):** Newcomer (Creature) 0 of 3. Daredevil (Ghost) 1 (Fade on the Witch's roll). Planner (Jekyll & Hyde) 1, refunded by a Critical, so 0 net. Hoarder (Witch) 1 (A Potion for That). Roleplayer (Invisible Man) 2, one refunded by a Critical. **5 uses, 2 refunded: 10 of 15 charges went home unspent.**
+
+### Raid 1 by the numbers
+| | |
+|---|---|
+| Result | Grand Year, Turn 6 of 12 |
+| Suspicion at the end | 9 of 11 |
+| Suspicion sources | Tells 2 · Trouble at unwatched places 4 · loud way 1 · a Cost 1 · furniture 1 |
+| Chases / captures / final flight | none / none / none |
+| Rolls in play | 17 roll events (30 dice, R69–R98) |
+| Party decisions | 4 (the split, Turn 3 support, the armchair, who rolls the way out) |
+| Rules lookups | 8 (Spectral "at no action"; Cost choices and "never what this roll wins"; Critical refund; helping another's roll with an ability; keeping to the chosen way in; the furniture: loot in hand, Spectral while carrying, when the +1 happens; leaving: everyone there, one rolls, can it happen right after the carrier arrives; handing loot over) |
+
+Because the raid ended on Turn 6 (not before), a second raid was not strictly required, but it had no chase, no capture and no final flight, so the table played a second night in the same town for coverage (§2).
