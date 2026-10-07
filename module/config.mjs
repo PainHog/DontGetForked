@@ -97,7 +97,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "nightRunner", name: "Night Runner", text: "When you flee alone, your local chase starts at Lead 2.", default: true },
       { key: "shortcut", name: "Shortcut", text: "The way out is 2 easier when you roll it." },
-      { key: "fetch", name: "Fetch", text: "You know the way home. The way out is 1 easier while you’re there, and a final flight you’re in starts at Lead 3." },
+      { key: "fetch", name: "Fetch", text: "You know the way home. The way out is 1 easier, whoever rolls it, while you’re there, and a final flight you’re in starts at Lead 3." },
     ],
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },

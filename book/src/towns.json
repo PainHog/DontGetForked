@@ -129,14 +129,10 @@
           "place": "the hatter",
           "item": [6, 3],
           "waysIn": [
-            { "obstacle": "neighbour", "difficulty": 8 },
+            { "obstacle": "neighbour", "difficulty": 8, "watched": true },
             { "obstacle": "rooftops", "difficulty": 10 }
           ],
           "then": [],
-          "furniture": {
-            "piece": "mirror",
-            "obstacle": { "obstacle": "dog", "difficulty": 8, "watched": true }
-          },
           "map": { "x": 450, "y": 130 }
         },
         {
@@ -150,6 +146,10 @@
           "then": [
             { "obstacle": "strongbox", "difficulty": 8, "watched": true }
           ],
+          "furniture": {
+            "piece": "mirror",
+            "obstacle": { "obstacle": "dog", "difficulty": 8, "watched": true }
+          },
           "map": { "x": 455, "y": 305 }
         },
         {

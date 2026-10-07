@@ -1,7 +1,7 @@
 {
   "key": "castle-duties",
   "name": "Castle Duties (d6)",
-  "description": "<p>Each Entity’s entry gives its default Duty; if two defaults clash in a party, the second player picks another or rolls a d6, rerolling any Duty already taken.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
+  "description": "<p>Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose later picks another or rolls a d6, rerolling any Duty already taken.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
   "formula": "1d6",
   "results": [
     {

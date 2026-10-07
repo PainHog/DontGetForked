@@ -7,7 +7,7 @@ Command: `node sim/full-table.mjs 6000` (seed 1). 6,000 raids per town with five
 | Town | Grand Year | Win | Partial | Bust | Forked | Turns used (1 in 10 · half · 9 in 10 by) | Ends at the Limit · at dawn | Any local chase · 3 or more · per night | Final flight (rounds: half by · 9 in 10 by) | Someone captured · left behind | Suspicion at the end | Charges spent · Entities with none spent |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Puddlecombe (Easy) | 40% | 52% | 4% | 4% | 1% | 5 · 7 · 8 | 16% · 0% | 26% · 0% · 0.3 | 16% (2 · 4) | 9% · 4% | 6.7 | 47% · 1.2 of 5 |
-| Thistlewick (Standard) | 61% | 17% | 8% | 9% | 5% | 5 · 8 · 9 | 37% · 0% | 44% · 1% · 0.5 | 37% (2 · 5) | 18% · 10% | 9.2 | 69% · 0.5 of 5 |
+| Thistlewick (Standard) | 26% | 52% | 8% | 9% | 4% | 4 · 7 · 9 | 29% · 0% | 41% · 0% · 0.5 | 29% (2 · 6) | 17% · 9% | 8.1 | 66% · 0.6 of 5 |
 | Gallowsmere (Hard) | 0% | 59% | 15% | 17% | 8% | 4 · 9 · 11 | 38% · 3% | 63% · 3% · 0.9 | 41% (3 · 8) | 34% · 17% | 12.8 | 81% · 0.3 of 5 |
 | A rolled Easy town | 40% | 52% | 4% | 3% | 0% | 6 · 7 · 9 | 15% · 0% | 22% · 0% · 0.3 | 15% (2 · 4) | 8% · 4% | 6.7 | 51% · 1.2 of 5 |
 | A rolled Standard town | 13% | 62% | 10% | 11% | 4% | 5 · 8 · 10 | 28% · 0% | 39% · 0% · 0.5 | 28% (2 · 6) | 16% · 10% | 8.0 | 71% · 0.5 of 5 |
@@ -23,10 +23,10 @@ Win is a Win without the furniture; a Grand Year is a Win with it. "Ends at the 
 | Puddlecombe (Easy) | Cautious (never go for the furniture) | 0% | 92% | 1% | 6 | 25% | 3% |
 | Puddlecombe (Easy) | Daredevils (go for the furniture as soon as the essentials are in hand) | 87% | 91% | 1% | 7 | 25% | 5% |
 | Puddlecombe (Easy) | Stay together (the party never splits) | 0% | 91% | 0% | 11 | 34% | 6% |
-| Thistlewick (Standard) | Default players (split up; furniture only when safe) | 61% | 78% | 5% | 8 | 44% | 10% |
-| Thistlewick (Standard) | Cautious (never go for the furniture) | 0% | 82% | 2% | 7 | 35% | 7% |
-| Thistlewick (Standard) | Daredevils (go for the furniture as soon as the essentials are in hand) | 63% | 76% | 6% | 8 | 45% | 11% |
-| Thistlewick (Standard) | Stay together (the party never splits) | 0% | 89% | 2% | 12 | 26% | 6% |
+| Thistlewick (Standard) | Default players (split up; furniture only when safe) | 26% | 78% | 4% | 7 | 41% | 9% |
+| Thistlewick (Standard) | Cautious (never go for the furniture) | 0% | 79% | 3% | 7 | 38% | 9% |
+| Thistlewick (Standard) | Daredevils (go for the furniture as soon as the essentials are in hand) | 59% | 72% | 7% | 7 | 48% | 12% |
+| Thistlewick (Standard) | Stay together (the party never splits) | 0% | 87% | 3% | 12 | 29% | 7% |
 | Gallowsmere (Hard) | Default players (split up; furniture only when safe) | 0% | 59% | 8% | 9 | 63% | 17% |
 | Gallowsmere (Hard) | Cautious (never go for the furniture) | 0% | 60% | 8% | 9 | 63% | 18% |
 | Gallowsmere (Hard) | Daredevils (go for the furniture as soon as the essentials are in hand) | 35% | 54% | 15% | 7 | 59% | 17% |

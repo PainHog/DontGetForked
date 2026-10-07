@@ -70,7 +70,7 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
  * checks each still appears in its chapter.
  */
 export const BOOK_QUOTES = Object.freeze({
-  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the second player picks another or rolls a d6, rerolling any Duty already taken." },
+  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose later picks another or rolls a d6, rerolling any Duty already taken." },
   chase: { chapter: "16-ch06.html", html: "The result says which traits work this round for everyone in the chase, and always includes one that isn’t Nimble." },
   customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way: roll a d6 or pick a custom for each town. Customs are flavour, not rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result (Chapter 5). At a <em>group</em> obstacle, everyone there rolls for themselves (Chapter 4)." },

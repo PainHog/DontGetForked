@@ -4,13 +4,13 @@ For Richard's first playtest with real people. It adds no rules: everything at t
 
 ## Before the session
 
-- **Players:** 3 or 4 is the sweet spot for a first test (the book allows 3–5), plus you as Storyteller.
-- **Time:** 2–3 hours: about 20 minutes to pick Entities, then one raid. A second raid if there's time, on a harder town.
+- **Players:** 3 or 4 is the sweet spot for a first test (the book allows 3–5), plus you as Storyteller. **With five, start on Thistlewick**: in the simulator and in a computer game, five players walked through Puddlecombe.
+- **Time:** 2–3 hours: about 20 minutes to pick Entities, then a raid of about an hour (the computer games took 35–70 minutes of play). Plan a second raid, on a harder town.
 - **Print:** an **Entity Sheet** per player (page 26), an **At the Table** page per player (page 27), and the town's page from **Chapter 9** (pages 23–25) for you.
 - **Dice:** a d4, d6, d8, d10 and d12 per player (the d6 is the Mask, the d10 the Monster); a d20 for you. Counters or a sheet for Suspicion, the Turn and the Lead.
 - **Which town:**
   - New to the game: **Puddlecombe** (Easy, page 23). Wins about 9 times in 10.
-  - The real test: **Thistlewick** (Standard, page 24), the town of the worked example. Wins about 3 times in 4 and is forked about 1 time in 14.
+  - The real test: **Thistlewick** (Standard, page 24), the town of the worked example. Wins about 3 times in 4 and is forked about 1 time in 18. Its gilt mirror is now at the ironmonger: a party that goes for it brings it home a bit over half the time.
   - If they want a fright: **Gallowsmere** (Hard, page 25). Wins a bit over half the time and is forked about 1 time in 10.
 - **Entities:** let each player pick one of the eight (Chapter 2, pages 6–10), with the marked defaults for the Gift, Perk and Castle Duty, so nobody has to read every option before the first roll.
 
@@ -27,7 +27,7 @@ These are the points the computer playtests couldn't settle. A tick or a word pe
 
 - [ ] **Length:** how many minutes did the raid take, and how many Turns of the 12 did it use? (The simulator expects most raids to end by Turn 7–9.)
 - [ ] **The final flight**, if there was one: how many rounds? Did it feel tense or like a slog? (Expected: 2–5 rounds since this morning's change.)
-- [ ] **A local chase:** when someone got caught, was the chase exciting, or did it feel like the raid was already lost? (On Hard it can snowball; that's by design, but it has to feel fair.)
+- [ ] **A local chase:** when someone got caught, was the chase exciting, or did it feel like the raid was already lost? Three of the four computer games found a capture on the very first roll harsh (the Lead starts at 1). If your table agrees, there's a tested fix ready: start at Lead 2 and escape at 5.
 - [ ] **The Mask or the Monster:** did players actually weigh the choice, or always pick the same die?
 - [ ] **Charges:** did players spend them, or hoard them? (Computer players often finished with most of their charges unspent.)
 - [ ] **Splitting up:** did the party split into pairs or stay together? (On Standard and Hard a party that stays together wins about 15–20 points less in the simulator; the book now advises splitting.)
@@ -35,6 +35,8 @@ These are the points the computer playtests couldn't settle. A tick or a word pe
 - [ ] **Castle Duties and Perks:** did anyone remember to use theirs?
 - [ ] **At the Table:** what did players still have to find in a chapter? (Two computer playtests needed 7–12 lookups; this decides whether it becomes two pages.)
 - [ ] **Confusing words:** any sentence someone read twice. Note the page.
+- [ ] **Waiting:** who sat out longest (a captive, someone waiting at the way out)? Did giving them a villager to voice help?
+- [ ] **Setting loot down:** did anyone use it (it's new)? Did it feel fiddly or gamey?
 - [ ] **Laughs:** when did the table laugh? When did it go quiet?
 
 ## The record (one per raid)

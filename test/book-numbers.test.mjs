@@ -117,7 +117,7 @@ test("the dice: one each of d12…d4, the Mask d6 and the Monster d10 (Chapters 
 
 test("abilities: opening an approach is 2 lower; the Costs in the book's order (Chapter 3, At the Table)", () => {
   says(TXT.ch3, `roll that trait at ${DGF.openApproachEase} lower Difficulty`, "Chapter 3, Abilities");
-  says(TXT.ref, `open your own approach (${DGF.openApproachEase} lower`, "At the Table, Abilities");
+  says(TXT.ref, `open your own approach with an unlisted trait (${DGF.openApproachEase} lower`, "At the Table, Abilities");
   const COST = { suspicion: `Suspicion +${DGF.suspicion.cost}`, drop: "drop an item", loseTurn: "lose a Turn", smaller: "one size smaller" };
   for (const [where, text] of [["Chapter 3, Results", TXT.ch3.slice(TXT.ch3.indexOf("Cost: 1–2 short"))], ["At the Table", TXT.ref.slice(TXT.ref.indexOf("Cost:"))]]) {
     const at = DGF.costs.map((k) => text.indexOf(COST[k]));
@@ -370,7 +370,7 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   says(perk("lightStep"), "the loud way costs you no Suspicion", "Light Step");
   assert.equal(R.lightStep.loud, 0);
   says(perk("shortcut"), `the way out is ${R.shortcut.exitEase} easier when you roll it`, "Shortcut");
-  says(perk("fetch"), `The way out is ${R.fetch.partyExitEase} easier while you’re there, and a final flight you’re in starts at Lead ${R.fetch.finalLead}`, "Fetch");
+  says(perk("fetch"), `The way out is ${R.fetch.partyExitEase} easier, whoever rolls it, while you’re there, and a final flight you’re in starts at Lead ${R.fetch.finalLead}`, "Fetch");
   says(perk("nightRunner"), `when you flee alone, your local chase starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
   says(perk("fearTheCurse"), `when you flee alone, the mob in your local chase is ${R.fearTheCurse.localMobEase} easier`, "Fear the Curse");
   says(perk("wallCrawler"), `in a chase you can always roll ${TRAIT[R.wallCrawler.chaseTrait]}`, "Wall-Crawler");
