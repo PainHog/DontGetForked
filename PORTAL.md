@@ -1,9 +1,9 @@
-Now: The ninth computer playtest is done and its fixes are in: a caught monster can no longer drop its loot to cheat the town, and picking loot up is a full action. A short tenth check of those fixes is running.
+Now: Ten computer playtests done: the last one found nothing major, and its small fixes are in the rulebook, the online version and the simulator. One last two-drill check is running.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
 Number: Design decisions made = 104
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 266
+Number: Automated checks passing = 267
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -53,7 +53,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Online version, part 2: chases and the lock-up
 - [x] Online version: ready-made monsters, tables and towns to drag in
 - [x] Computer playtest of the full draft, and its fixes (shorter final flights)
-- [x] Five more computer playtests until nothing major was left
+- [x] Six more computer playtests until nothing major was left
 - [x] A kit for the first playtest with real people
 - [x] Full audits of the rulebook, the online version and the simulator, with every confirmed problem fixed
 - [x] Online version keeps track of the optional campaign (castle upgrades) and of who is in each raid
