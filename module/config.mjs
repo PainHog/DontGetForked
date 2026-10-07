@@ -34,7 +34,7 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Gifts, Perks, Weaknesses and Tells: C3–C9 (rulebook Chapter 2).
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", watchedOnly: true, text: "open an approach with Charm where someone’s watching. He bends a mind with a look." },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", watchedOnly: true, text: "open an approach with Charm at a watched obstacle. He bends a mind with a look." },
     gift: {
       name: "Shape of the Night",
       versions: [
@@ -112,7 +112,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you or anyone with you carries loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
+      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you or anyone in the same place carries loot or furniture: they can’t see you, but they can see a floating candlestick.", default: true },
       { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep the loot you carry (not furniture)." },
       { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
     ],
