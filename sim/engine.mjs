@@ -1148,6 +1148,7 @@ function localChase(S, m) {
 function localChaseBody(S, m, t) {
   const N = S.N;
   S.rec.count("local chases");
+  S.chases = (S.chases ?? 0) + 1;
   let weak = weakStart(S, m, false);
   let lead = N.lead.localStart + (hasPerk(m, "nightRunner") ? 1 : 0);
   const curse = hasPerk(m, "fearTheCurse") ? 1 : 0;
@@ -1184,6 +1185,7 @@ function localChaseBody(S, m, t) {
 function groupChase(S, group) {
   const N = S.N;
   S.rec.count("local chases (shared)");
+  S.chases = (S.chases ?? 0) + 1;
   const weak = new Map(group.map((m) => [m, weakStart(S, m, false)]));
   let lead = N.lead.localStart, gained = 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
@@ -1301,6 +1303,7 @@ function finalFlight(S, trigger) {
       S.rec.count("final flight escaped");
       S.rec.count("final flight rounds", round + 1);
       S.rec.count(`hist final ${round + 1}`);
+      S.flightRounds = round + 1;
       return;
     }
     if (lead <= 0) {
@@ -1309,6 +1312,7 @@ function finalFlight(S, trigger) {
       S.rec.count("forked");
       S.rec.count("final flight rounds", round + 1);
       S.rec.count(`hist final ${round + 1}`);
+      S.flightRounds = round + 1;
       return;
     }
   }
@@ -1349,6 +1353,8 @@ function summarise(S) {
     furnitureHome,
     susp: S.susp,
     turnsUsed: S.turn,
+    chases: S.chases ?? 0, // local chases in this raid (a shared chase counts once)
+    flightRounds: S.flightRounds ?? 0, // rounds of the final flight, 0 if there was none
     spend: S.party.map((m) => ({ id: m.id, gift: m.gift, duty: m.duty, frac: m.chargesStart ? (m.chargesStart - Math.max(0, m.charges)) / m.chargesStart : 0 })),
   };
 }
