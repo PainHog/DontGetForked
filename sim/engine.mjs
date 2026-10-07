@@ -331,8 +331,14 @@ function seenChance(S, m) {
  * him caught (no furniture in hand, nobody else here carrying), and picks it up again after the roll (his next action).
  */
 function setDownLoot(S, m, witnessed) {
-  if (S.P.lootDrop !== "outOfSight" || !witnessed || !m.items.length || m.furniture || !hasPerk(m, "outOfSight")) return null;
-  if ((S.P.outOfSightRule ?? "place") !== "place" || hereOf(S).some((o) => o !== m && carrying(o))) return null;
+  if (!witnessed || !m.items.length) return null;
+  if (S.P.lootDrop === "outOfSight") {
+    if (m.furniture || !hasPerk(m, "outOfSight")) return null;
+    if ((S.P.outOfSightRule ?? "place") !== "place" || hereOf(S).some((o) => o !== m && carrying(o))) return null;
+  } else if (S.P.lootDrop === "guard") {
+    // PT10: anyone sets its loot down before a watched roll, so a capture can't take it (V24 only stops drops once caught).
+    if (hasPerk(m, "hiddenPockets") || turnsLeft(S) < 3) return null;
+  } else return null;
   const items = m.items;
   m.items = [];
   S.rec.count("loot set down (V21)");
@@ -340,9 +346,34 @@ function setDownLoot(S, m, witnessed) {
 }
 function pickUpLoot(S, m, items) {
   if (!items) return;
-  if (m.status !== "active") { S.rec.count("loot set down, left behind (V21)"); return; }
-  m.items.push(...items);
-  m.loseTurn = m.loseTurn ? (typeof m.loseTurn === "number" ? m.loseTurn + 1 : 2) : true;
+  // Captured (lootDrop "guard"): the loot lay where it was set down; an upper bound for the trick, someone still free
+  // picks it up (anyone at the place first, else anyone at all), for an action.
+  const by = m.status === "active" ? m : hereOf(S).find((o) => o.status === "active") ?? active(S).find((o) => o.status === "active");
+  if (!by) { S.rec.count("loot set down, left behind (V21)"); return; }
+  if (by !== m) S.rec.count("loot set down, saved from a capture (V21)");
+  by.items.push(...items);
+  by.loseTurn = by.loseTurn ? (typeof by.loseTurn === "number" ? by.loseTurn + 1 : 2) : true;
+}
+
+/**
+ * PT10 m2 (policy pieceSetDown, to test it): before a raid roll (not the way out, where the piece must be carried
+ * out), a carrier sets its piece down so it rolls with the Mask and full Nimble, and takes it up again after:
+ * free (the book after PT9) or as its next action ("action"). Caught with it set down, the piece stays in town
+ * (still noisy) and the carrier takes it up again after its chase if it's still free; captured, the piece is lost.
+ */
+function setDownPiece(S, m, loc) {
+  const how = S.P.pieceSetDown ?? "never";
+  if (how === "never" || !m.furniture || loc.id === "exit") return null;
+  const piece = m.furniture;
+  m.furniture = null;
+  S.rec.count("piece set down before a roll (PT10)");
+  return piece;
+}
+function takeUpPiece(S, m, piece) {
+  if (!piece) return;
+  if (m.status !== "active") { if (S.furnitureCarried === piece && !S.party.some((o) => o.furniture === piece)) dropFurniture(S, "set down, carrier captured"); return; }
+  m.furniture = piece;
+  if (S.P.pieceSetDown === "action") m.loseTurn = m.loseTurn ? (typeof m.loseTurn === "number" ? m.loseTurn + 1 : 2) : true;
 }
 
 /** An Entity's dice now (Jekyll & Hyde: the form it's in). */
@@ -607,9 +638,11 @@ function workLocation(S, loc) {
       }
     }
     const setDown = setDownLoot(S, best.m, best.plan.witnessed);
-    if (setDown) best.plan = planRoll(S, best.m, ctxFor(S, best.m, ob, loc, "raid"));
+    const piece = setDownPiece(S, best.m, loc);
+    if (setDown || piece) best.plan = planRoll(S, best.m, ctxFor(S, best.m, ob, loc, "raid"));
+    if (best.m.furniture) S.rec.count(loc.id === "exit" ? "carrier rolls: the way out" : "carrier rolls: other obstacles");
     const r = executeRoll(S, best.m, best.plan, "raid", { noCost: loc.id === "exit" }); // T4: an exit Cost costs nothing more
-    pickUpLoot(S, best.m, setDown);
+    if (!r.caught) { pickUpLoot(S, best.m, setDown); takeUpPiece(S, best.m, piece); }
     addSusp(S, r.suspGain, "roll");
     if (r.band !== "trouble") {
       ob.cleared = true;
@@ -626,6 +659,8 @@ function workLocation(S, loc) {
     if (limitHit(S)) return finalFlight(S, "limit");
     if (r.caught) {
       localChase(S, best.m);
+      pickUpLoot(S, best.m, setDown);
+      takeUpPiece(S, best.m, piece);
       if (S.phase !== "raid") return;
     }
   }
@@ -664,7 +699,7 @@ function groupCheck(S, loc, ob, rollers, acted) {
     acted.add(m);
     if (plan.value <= 0 && planned.length > 1) S.rec.count("group: forced low-value roll");
     const r = executeRoll(S, m, plan, "raid", { deferCost: true });
-    pickUpLoot(S, m, setDown.get(m));
+    if (!r.caught) { pickUpLoot(S, m, setDown.get(m)); setDown.delete(m); }
     results.push({ m, r });
     worst = Math.max(worst, r.suspGain);
     if (r.band !== "trouble") ob.passed.add(m.id);
@@ -678,15 +713,19 @@ function groupCheck(S, loc, ob, rollers, acted) {
   S.rec.count("group checks");
   addSusp(S, worst, "roll");
   if (limitHit(S)) { finalFlight(S, "limit"); return false; }
+  const pickUpAfter = () => { for (const [m, items] of setDown) pickUpLoot(S, m, items); setDown.clear(); };
   if (caught.length > 1 && S.P.multiCaught === "shared") {
     groupChase(S, caught); // R4: one chase on a shared Lead (majority rule)
+    pickUpAfter();
     if (S.phase !== "raid") return false;
   } else {
     for (const m of caught) {
       localChase(S, m);
+      pickUpLoot(S, m, setDown.get(m)); setDown.delete(m);
       if (S.phase !== "raid") return false;
     }
   }
+  pickUpAfter();
   return true;
 }
 

@@ -119,6 +119,12 @@ export const PARAMS = {
     doc: "free = Entities at the same place hand loot over at any time, free (U2, decided 2026-10-05); the simulated players hand theirs over before a watched roll; none = no handing over.",
     ref: "CORE-RULES The raid (Carrying); PT3 M6",
   },
+  pieceSetDown: {
+    kind: "policy", default: "never", values: ["never", "free", "action"],
+    title: "Setting the piece down before a roll (PT10 m2)",
+    doc: "never = carriers roll as carriers; free = before any raid roll but the way out, a carrier sets its piece down (rolling with the Mask and full Nimble) and takes it up again free (the book after PT9); action = the same, but taking it up again costs the carrier's next action.",
+    ref: "Chapter 4 (Carrying); PT10 m2",
+  },
   slipWatched: {
     kind: "rule", default: true, values: [true, false],
     title: "Is slipping free watched? (PT9 w1)",
@@ -126,9 +132,9 @@ export const PARAMS = {
     ref: "Chapter 6 (Rescue, Slipping free); PT9 w1",
   },
   lootDrop: {
-    kind: "policy", default: "never", values: ["never", "outOfSight"],
+    kind: "policy", default: "never", values: ["never", "outOfSight", "guard"],
     title: "Setting loot down before a roll (V21)",
-    doc: "never = the simulated players only drop loot as a Cost; outOfSight = before a watched roll the Invisible Man sets his loot down when that keeps Trouble from getting him caught (nobody else there carrying), then picks it up again, which costs his next action (V21: \"drop yours any time\").",
+    doc: "never = the simulated players only drop loot as a Cost; guard = anyone carrying loot (not Hidden Pockets) sets it down before every watched roll with 3+ Turns left and picks it up after, so a capture can't take it (PT10; captured, someone free picks it up for an action: an upper bound); outOfSight = before a watched roll the Invisible Man sets his loot down when that keeps Trouble from getting him caught (nobody else there carrying), then picks it up again, which costs his next action (V21: \"drop yours any time\").",
     ref: "Chapter 3 (Cost); DESIGN V21",
   },
   chaseTable: {

@@ -363,3 +363,11 @@ V21 (after PT8) lets you drop your own loot any time; picking it up costs your n
 ## V23–V25 after PT9 (2026-10-07)
 
 `slipWatched` now defaults to true (V23: the lock-up is always watched, for slipping free too, so Dracula may Mesmerise his way out; only Mesmerise reads it). Three seeds (1, 7, 11), 2,000 raids per label and party size: Dracula **+1.7 → +1.8**, wins 91.7 / 73.7 / 56.3% → 91.7 / 73.8 / 56.3%, forked unchanged (0.9 / 5.1 / 10.1%). V24 (nothing is dropped in a local chase) and V25 (picking items up is an action) are what the simulator already played: captures take everything, and a pick-up costs the next action. Full report regenerated (seed 1): wins **91.7 / 73.1 / 56.3%**, forked **0.8 / 5.4 / 9.4%**, Hard captures 0.36; every win and forked target met. The seed-1 outlier line still names Book-Learned (−3.3), within the three-seed averages (inside ±2.5 but for Keen Nose −2.6 and Through the Hedge +2.5, as before).
+
+## PT10: setting loot or a piece down before a roll (2026-10-07, for V26–V27)
+
+Two player policies, three seeds (1, 7, 11), 2,000 raids per label and party size.
+
+**Anyone sets loot down before a watched roll** (`lootDrop: "guard"`: everyone carrying loot except Hidden Pockets, before every watched roll with 3+ Turns left, then picks it up for an action; loot a captive set down is picked up by someone still free, at the place if anyone is there, else anywhere: an upper bound). Wins **91.4 / 74.0 / 57.0%** (default players 91.7 / 73.8 / 56.3), forked **0.9 / 4.7 / 9.5%** (0.9 / 5.1 / 10.1), Grand Year 33.8 / 6.3 / 2.9% (33.9 / 6.9 / 3.1: the actions cost time). About 780 set-downs per 1,000 raids; loot saved from a capture about 29 times per 1,000. Every target still met: V21 needs no limit beyond V24.
+
+**A carrier sets its piece down before a roll** (`pieceSetDown`, with a party that always goes for the piece so carriers roll at all): carriers roll at an obstacle other than the way out in about 114 raids per 1,000 (6 with the default players, who take the piece last). Never / free / for an action: wins 87.9 / 60.2 / 45.6%, 87.9 / 60.4 / 45.7%, 87.9 / 60.2 / 45.4%; Grand Year 62.0 / 32.9 / 21.4%, 61.9 / 33.1 / 21.5%, 61.9 / 32.9 / 21.3%. Balance doesn't choose; V26 makes taking it back up an action so the carrier rules mean what they say, as with loot (V25).

@@ -336,3 +336,11 @@ test("V21: with lootDrop outOfSight the Invisible Man sets loot down before watc
   assert.equal(ent({}), 0);
   assert.ok(ent({ lootDrop: "outOfSight" }) > 0);
 });
+
+test("PT10 policies: anyone can set loot down before watched rolls (guard), and carriers can set the piece down", () => {
+  const counts = (P) => runConfig({ params: { ...defaults(), ...P }, numbers: NUMBERS, runs: 150, seed: 5 }).rec.counts;
+  assert.ok((counts({ lootDrop: "guard" })["loot set down (V21)"] ?? 0) > 0);
+  const c = counts({ furniturePolicy: "always", pieceSetDown: "action" });
+  assert.ok((c["piece set down before a roll (PT10)"] ?? 0) > 0);
+  assert.equal(c["carrier rolls: other obstacles"] ?? 0, 0); // set down first, so no carrier rolls there
+});

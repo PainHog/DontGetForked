@@ -1,6 +1,6 @@
 Now: The ninth computer playtest is done and its fixes are in: a caught monster can no longer drop its loot to cheat the town, and picking loot up is a full action. A short tenth check of those fixes is running.
 Next: Richard's first playtest with real people, and his two-player try of the online version.
-Number: Design decisions made = 102
+Number: Design decisions made = 104
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 266
