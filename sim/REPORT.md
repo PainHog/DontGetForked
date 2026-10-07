@@ -1,4 +1,4 @@
-# Don't Get Forked — simulator report: P0 — The rules as decided (through V25, 2026-10-07) with the current numbers (core rules 1.28)
+# Don't Get Forked — simulator report: P0 — The rules as decided (through V30, 2026-10-07) with the current numbers (core rules 1.31)
 
 Command: `node sim/run.mjs`
 
@@ -8,7 +8,7 @@ Command: `node sim/run.mjs`
 
 ## Packages
 
-- **P0**: The rules as decided (through V25, 2026-10-07) with the current numbers.
+- **P0**: The rules as decided (through V30, 2026-10-07) with the current numbers.
 - **N1**: Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14.
 - **N2**: Tried for a party that splits up: the night lasts 8 Turns; final mob 10 / 12 / 12 (on target overall, but Hard wins 42% with 3 Entities and 72% with 5).
 
@@ -19,7 +19,7 @@ Command: `node sim/run.mjs`
 | N1 | 91.5% | 75.2% | 52.0% | 1.2% · 6.7% · 19.4% | 0.34 | 79.3% | 20.4% | 37.4% | 73.2% | 48% · 51% · 57% |
 | N2 | 87.1% | 36.1% | 18.7% | 0.3% · 4.6% · 9.2% | 0.23 | — | 16.7% | 33.7% | 58.4% | 6% · 11% · 40% |
 
-## P0 — The rules as decided (through V25, 2026-10-07) with the current numbers against the targets
+## P0 — The rules as decided (through V30, 2026-10-07) with the current numbers against the targets
 
 | Measure | Target | Simulated |  |
 |---|---|---|---|
@@ -122,8 +122,11 @@ Win rate (points vs the baseline at the same run count). Rules first, then playe
 | waysIn = "one" (rule) | 89% (-2.9) | 66% (-7.3) | 50% (-6.2) | 11.3% | 0.44 | 21% |
 | overdrawStack = "stack" (rule) | 91% (-0.2) | 73% (-0.4) | 56% (+0.1) | 9.2% | 0.38 | 26% |
 | lootHandover = "none" (rule) | 91% (-0.3) | 73% (-0.8) | 54% (-2.1) | 8.9% | 0.37 | 26% |
+| pieceSetDown = "free" (policy) | 91% (+0.0) | 74% (+0.0) | 56% (+0.0) | 8.6% | 0.37 | 26% |
+| pieceSetDown = "action" (policy) | 91% (+0.0) | 74% (+0.0) | 56% (+0.0) | 8.6% | 0.37 | 26% |
 | slipWatched = false (rule) | 91% (+0.0) | 74% (+0.0) | 56% (+0.0) | 8.6% | 0.37 | 26% |
 | lootDrop = "outOfSight" (policy) | 91% (+0.0) | 74% (+0.1) | 56% (+0.2) | 8.5% | 0.37 | 26% |
+| lootDrop = "guard" (policy) | 91% (-0.6) | 74% (+0.3) | 56% (+0.7) | 8.2% | 0.37 | 26% |
 | chaseTable = "placeholder" (content) | 91% (-0.3) | 73% (-0.2) | 56% (+0.2) | 9.1% | 0.36 | 26% |
 | chaseTable = "B" (content) | 93% (+1.3) | 75% (+1.7) | 59% (+2.8) | 5.3% | 0.35 | 27% |
 | chaseTable = "C" (content) | 92% (+0.1) | 74% (+0.5) | 58% (+1.9) | 7.5% | 0.36 | 26% |
@@ -225,6 +228,8 @@ entity A Ghost +2.7 · gift Frankenstein’s Creature:Mountain Stride +2.7 · gi
 | captive rescued | 0.032 |
 | captive slipped free | 0.065 |
 | captures | 0.210 |
+| carrier rolls: other obstacles | 0.005 |
+| carrier rolls: the way out | 0.010 |
 | charges regained by a Critical | 0.530 |
 | charges spent | 9.290 |
 | cost:drop | 0.096 |
