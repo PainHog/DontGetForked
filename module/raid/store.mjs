@@ -22,6 +22,7 @@ import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, po
 import { newRaidUpdate } from "../logic/lockup.mjs";
 import { rollAbilities, isInRaid } from "../logic/entity.mjs";
 import { assignExtraCharges } from "../logic/rules.mjs";
+import { inLocalChase } from "../logic/chase.mjs";
 
 /** The castle's upgrades (campaign play): the pieces brought home, three at most. */
 export function castleUpgrades() {
@@ -164,6 +165,7 @@ export function registerRaidOps() {
       const actor = game.actors.get(actorId);
       if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
       if (!actsFor(user, actor)) return { ok: false, reason: "notYours" };
+      if (inLocalChase(getRaid().chase, actor.id)) return { ok: false, reason: "inChase" }; // V24: not in a local chase
       const item = await dropFrom(actor, Math.trunc(Number(index)));
       return item ? { ok: true, item: item.name } : { ok: false, reason: "noItem" };
     },
@@ -179,7 +181,14 @@ export function registerRaidOps() {
       if (actor.system.status === "captured") return { ok: false, reason: "captured" };
       const { state, result } = await mutateRaid((s) => { const out = R.pickUpLoot(s, dropId); return { state: out.state, result: out.item }; });
       if (!result) return { ok: false, reason: "gone" };
-      await actor.update({ "system.carried": [...(actor.system.carried ?? []), { name: result.name }], "system.nextActionLost": result.name });
+      // V25: picking items up is the Entity's action for this Turn: one action for any number picked up in the Turn
+      const names = actor.system.pickedUpTurn === state.turn && actor.system.pickedUp ? actor.system.pickedUp.split(", ") : [];
+      if (!names.includes(result.name)) names.push(result.name);
+      await actor.update({
+        "system.carried": [...(actor.system.carried ?? []), { name: result.name }],
+        "system.pickedUpTurn": state.turn,
+        "system.pickedUp": names.join(", "),
+      });
       await announce("pickUp", state, { names: [actor.name], label: result.name });
       return { ok: true, item: result.name };
     },
@@ -282,9 +291,13 @@ export function registerRaidOps() {
       const step = Math.sign(Number(delta)) || 1;
       const auto = setting(SETTINGS.autoFurniture);
       const carriers = game.actors.filter((a) => isEntity(a) && isInRaid(a.system) && a.system.carryingFurniture && a.system.status !== "captured").map((a) => a.name);
-      const { state } = await mutateRaid((s) => (step > 0
+      const { state, before } = await mutateRaid((s) => (step > 0
         ? R.advanceTurn(auto ? R.endOfTurnFurniture(s, carriers) : s, 1)
         : R.advanceTurn(R.undoEndOfTurnFurniture(s), -1)));
+      // V25: a pick-up was the Entity's action for its Turn: the mark goes when the Turn moves on
+      if (step > 0 && (state.turn !== before.turn || state.dawn !== before.dawn)) {
+        for (const a of game.actors.filter((x) => isEntity(x) && x.system.pickedUpTurn)) await a.update({ "system.pickedUpTurn": 0, "system.pickedUp": "" });
+      }
       return { ok: true, turn: state.turn, dawn: state.dawn };
     },
   });
@@ -349,7 +362,7 @@ export function registerRaidOps() {
       for (const actor of allEntities()) {
         const inRaid = members.includes(actor);
         const plus = given.extra[actor.id] ?? 0;
-        const update = { "system.inRaid": inRaid, "system.charges.extra": plus, ...(inRaid && reset ? prefixed(newRaidUpdate(actor.system)) : {}) };
+        const update = { "system.inRaid": inRaid, "system.charges.extra": plus, "system.pickedUpTurn": 0, "system.pickedUp": "", ...(inRaid && reset ? prefixed(newRaidUpdate(actor.system)) : {}) };
         if (plus) update["system.charges.value"] = (inRaid && reset ? actor.system.charges.start : actor.system.charges.value) + plus;
         await actor.update(update);
       }

@@ -60,7 +60,7 @@
       {{#if isGM}}<label>{{localize "DGF.Sheet.status"}}
         <select name="system.status">{{#each statuses}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{label}}</option>{{/each}}</select>
       </label>{{else}}<span>{{localize "DGF.Sheet.status"}}: <strong>{{statusLabel}}</strong></span>{{/if}}
-      <label class="dgf-check"><input type="checkbox" name="system.carryingFurniture"{{#if system.carryingFurniture}} checked{{/if}}> {{localize "DGF.Sheet.carryingFurniture"}}</label>
+      <label class="dgf-check"{{#if noDrop}}{{#if system.carryingFurniture}} data-tooltip="{{localize "DGF.Sheet.noDropHint"}}"{{/if}}{{/if}}><input type="checkbox" name="system.carryingFurniture"{{#if system.carryingFurniture}} checked{{/if}}{{#if noDrop}}{{#if system.carryingFurniture}}{{#unless isGM}} disabled{{/unless}}{{/if}}{{/if}}> {{localize "DGF.Sheet.carryingFurniture"}}</label>
       {{#if isGM}}<label class="dgf-check"><input type="checkbox" name="system.inRaid"{{#if inRaid}} checked{{/if}}> {{localize "DGF.Sheet.inRaid"}}</label>{{else}}{{#unless inRaid}}<span class="dgf-hint">{{localize "DGF.Sheet.notInRaid"}}</span>{{/unless}}{{/if}}
     </div>
     {{#if marks.length}}
@@ -70,7 +70,7 @@
     {{/if}}
     <h3>{{localize "DGF.Sheet.carried"}}{{#if editable}} <button type="button" class="dgf-link" data-action="addItem">+ {{localize "DGF.Sheet.addItem"}}</button>{{/if}}</h3>
     <ul class="dgf-carried">
-      {{#each carried}}<li>{{name}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="dropItem" data-index="{{index}}" data-tooltip="{{localize "DGF.Sheet.dropHint"}}">{{localize "DGF.Sheet.drop"}}</button> <button type="button" class="dgf-link" data-action="removeItem" data-index="{{index}}" aria-label="{{localize "DGF.Sheet.removeItem"}}">×</button>{{/if}}</li>{{else}}<li class="dgf-hint">{{localize "DGF.Sheet.nothingCarried"}}</li>{{/each}}
+      {{#each carried}}<li>{{name}}{{#if ../editable}} <button type="button" class="dgf-link" data-action="dropItem" data-index="{{index}}"{{#if ../noDrop}} disabled data-tooltip="{{localize "DGF.Sheet.noDropHint"}}"{{else}} data-tooltip="{{localize "DGF.Sheet.dropHint"}}"{{/if}}>{{localize "DGF.Sheet.drop"}}</button> <button type="button" class="dgf-link" data-action="removeItem" data-index="{{index}}" aria-label="{{localize "DGF.Sheet.removeItem"}}">×</button>{{/if}}</li>{{else}}<li class="dgf-hint">{{localize "DGF.Sheet.nothingCarried"}}</li>{{/each}}
     </ul>
     <h3>{{localize "DGF.Sheet.notes"}}</h3>
     <textarea name="system.notes" rows="4">{{system.notes}}</textarea>

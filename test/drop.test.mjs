@@ -9,6 +9,7 @@ import {
   installFoundry, asUser, settle, diceQueue, dialogResponders, fakeForm, renderMessage, clickButton, log,
 } from "../tools/fake-foundry.mjs";
 import { newRaid, normalizeRaid, dropLoot, pickUpLoot } from "../module/logic/raid.mjs";
+import { newChase, endChase, inLocalChase } from "../module/logic/chase.mjs";
 import { homeFromCarried, yearFromList } from "../module/logic/year.mjs";
 
 /* ------------------------------------------------------------ the rules -- */
@@ -23,6 +24,16 @@ test("V21: a dropped item waits where it fell, in the raid's state, until someon
   assert.deepEqual(state.dropped, []);
   assert.equal(pickUpLoot(state, "d1").item, null, "picked up once");
   assert.deepEqual(normalizeRaid({ raidId: "old" }).dropped, [], "an older raid has nothing dropped");
+});
+
+test("V24: no dropping in a local chase: its members from the moment they're caught until it ends; a final flight is no local chase", () => {
+  const local = newChase({ id: "c", kind: "local", members: [{ actorId: "w", name: "A Witch", perk: "", timing: "soon" }] });
+  assert.equal(inLocalChase(local, "w"), true);
+  assert.equal(inLocalChase(local, "d"), false, "not in it");
+  assert.equal(inLocalChase(endChase(local, "escaped"), "w"), false, "over");
+  const flight = newChase({ id: "f", kind: "final", members: [{ actorId: "w", name: "A Witch", perk: "", timing: "soon" }] });
+  assert.equal(inLocalChase(flight, "w"), false);
+  assert.equal(inLocalChase(null, "w"), false);
 });
 
 test("V22: two items from one shared place, carried home together, both count", () => {
@@ -98,24 +109,45 @@ test("V21 at the table: Ann drops her honey from the sheet, any time; it waits o
   assert.match(benHud.renderedParts.body, /data-action="pickUp"/);
 });
 
-test("V21: picking it up (any Entity there) spends that Entity's next action; the roll dialog says so and the roll clears it", async () => {
+test("V25: picking it up is that Entity's action for the Turn: marked with the Turn; the roll dialog says so only in that Turn", async () => {
   const dropId = raid().dropped[0].id;
   const benHud = await asUser(BEN, () => openHud());
   await asUser(BEN, () => benHud.runAction("pickUp", { dropId })); // Ben has one Entity: no question asked
   await settle();
   assert.deepEqual(raid().dropped, []);
   assert.deepEqual(dracula.system.carried.map((c) => c.name), ["a jar of honey"]);
-  assert.equal(dracula.system.nextActionLost, "a jar of honey");
-  assert.match(game.messages.at(-1).content, /Dracula picks up a jar of honey/);
+  assert.equal(dracula.system.pickedUpTurn, raid().turn);
+  assert.equal(dracula.system.pickedUp, "a jar of honey");
+  assert.match(game.messages.at(-1).content, /Dracula picks up a jar of honey: that’s its action this Turn/);
+  // more pick-ups the same Turn are the same action: they add to the mark, nothing more
+  await op(BEN, OPS.raidDrop, { actorId: dracula.id, index: 0 });
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "the silver spoons" }] }));
+  await op(ANN, OPS.raidDrop, { actorId: witch.id, index: 0 });
+  await settle();
+  for (const d of [...raid().dropped]) await op(BEN, OPS.raidPickUp, { dropId: d.id, actorId: dracula.id });
+  await settle();
+  assert.equal(dracula.system.pickedUp, "a jar of honey, the silver spoons");
+  assert.equal(dracula.system.pickedUpTurn, raid().turn);
   const sheet = await sheetOf(BEN, dracula);
-  assert.match(sheet.renderedParts.sheet, /next action is spent picking up a jar of honey/i);
+  assert.match(sheet.renderedParts.sheet, /Picked up a jar of honey, the silver spoons: that’s its action this Turn/);
+  // rolling again the same Turn: the dialog says so (and the mark stays)
   let content = "";
   dialogResponders.push((options) => { content = options.content; return press("roll", { trait: "charm", second: "mask", difficulty: 8 })(options); });
   diceQueue.push(6, 4);
   await asUser(BEN, () => api.roll(dracula, { trait: "charm" }));
   await settle();
-  assert.match(content, /next action is spent picking up a jar of honey/i);
-  assert.equal(dracula.system.nextActionLost, "", "the roll is its action after that: the mark goes");
+  assert.match(content, /picked up a jar of honey, the silver spoons this Turn/i);
+  assert.equal(dracula.system.pickedUpTurn, raid().turn, "the roll doesn't clear it");
+  // the next Turn: the mark goes, and the dialog says nothing
+  await op(GM, OPS.raidTurn, { delta: 1 });
+  await settle();
+  assert.equal(dracula.system.pickedUpTurn, 0);
+  assert.equal(dracula.system.pickedUp, "");
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => api.roll(dracula, { trait: "charm" }));
+  await settle();
+  assert.doesNotMatch(content, /picked up/i);
+  await asUser(GM, () => dracula.update({ "system.carried": [{ name: "a jar of honey" }] }));
 });
 
 test("V21: nobody drops or picks up for an Entity that isn't theirs", async () => {
@@ -135,11 +167,12 @@ test("V21: nobody drops or picks up for an Entity that isn't theirs", async () =
   await asUser(GM, () => gmHud.runAction("pickUp", { dropId }));
   await settle();
   assert.deepEqual(witch.system.carried.map((c) => c.name), ["a jar of honey"]);
-  assert.equal(witch.system.nextActionLost, "a jar of honey");
+  assert.equal(witch.system.pickedUp, "a jar of honey");
+  assert.equal(witch.system.pickedUpTurn, raid().turn);
 });
 
 test("V21: a Cost's 'drop an item' goes down the same path: it waits where it fell, to be picked up", async () => {
-  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a jar of honey" }], "system.nextActionLost": "" }));
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a jar of honey" }], "system.pickedUpTurn": 0, "system.pickedUp": "" }));
   await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8 }, [4, 3]); // a Cost
   clickButton(renderMessage(lastRoll(), GM), "Drop an item", GM);
   await settle();
@@ -149,11 +182,45 @@ test("V21: a Cost's 'drop an item' goes down the same path: it waits where it fe
 });
 
 test("V21: a new raid leaves last year's dropped loot and marks behind", async () => {
-  await asUser(GM, () => dracula.update({ "system.nextActionLost": "a lamp" }));
+  await asUser(GM, () => dracula.update({ "system.pickedUpTurn": 3, "system.pickedUp": "a lamp" }));
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
   assert.deepEqual(raid().dropped, []);
-  assert.equal(dracula.system.nextActionLost, "");
+  assert.equal(dracula.system.pickedUpTurn, 0);
+  assert.equal(dracula.system.pickedUp, "");
+});
+
+test("V24 at the table: in a local chase nothing is dropped (loot or furniture) and the sheet says why; in the final flight it is", async () => {
+  await op(GM, OPS.raidReset, { difficulty: "easy" });
+  await asUser(GM, () => witch.update({ "system.carried": [{ name: "a coil of rope" }, { name: "a top hat" }] }));
+  await settle();
+  await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]); // caught; the ground
+  assert.equal(raid().chase?.kind, "local");
+  assert.equal((await op(ANN, OPS.raidDrop, { actorId: witch.id, index: 0 })).reason, "inChase");
+  assert.equal(witch.system.carried.length, 2);
+  const sheet = await sheetOf(ANN, witch);
+  assert.match(sheet.renderedParts.sheet, /data-action="dropItem" data-index="0"[^>]*disabled/);
+  assert.match(sheet.renderedParts.sheet, /not in a local chase/i);
+  // nor the furniture: setting it down waits until the chase is over
+  await asUser(GM, () => witch.update({ "system.carryingFurniture": true }));
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  assert.equal(witch.system.carryingFurniture, true);
+  // a Cost's drop comes from a raid roll, not the chase: not this rule (and Dracula, not chased, may drop his own)
+  await asUser(GM, () => dracula.update({ "system.carried": [{ name: "a lamp and a can of oil" }] }));
+  assert.equal((await op(BEN, OPS.raidDrop, { actorId: dracula.id, index: 0 })).ok, true);
+  await op(GM, OPS.chaseEnd, { outcome: "dropped" });
+  await settle();
+  // the final flight isn't a local chase: dropping is allowed there
+  diceQueue.push(1);
+  await op(GM, OPS.raidHunt, { on: true });
+  await settle();
+  assert.equal(raid().chase?.kind, "final");
+  assert.equal((await op(ANN, OPS.raidDrop, { actorId: witch.id, index: 0 })).ok, true);
+  await asUser(ANN, () => witch.update({ "system.carryingFurniture": false }));
+  assert.equal(witch.system.carryingFurniture, false);
+  await op(GM, OPS.raidHunt, { on: false });
+  await op(GM, OPS.raidReset, { difficulty: "standard" });
+  await settle();
 });
 
 test("V21 with the switch off: Drop just takes the item off the sheet; nothing waits on the Raid window", async () => {

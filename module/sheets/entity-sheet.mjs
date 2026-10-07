@@ -10,6 +10,7 @@ import { SYSTEM_ID, OPS } from "../contracts.mjs";
 import { runOp } from "../net/gm-ops.mjs";
 import { DGF } from "../config.mjs";
 import { partyClashes, isInRaid } from "../logic/entity.mjs";
+import { inLocalChase } from "../logic/chase.mjs";
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
 import { chooseEntity, becomeEntityUpdate } from "../entities/create.mjs";
 import { getRaid } from "../raid/store.mjs";
@@ -81,11 +82,12 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       statuses: DGF.statuses.map((s) => ({ key: s, label: t(`DGF.Status.${s}`), selected: s === sys.status })),
       statusLabel: t(`DGF.Status.${sys.status}`), // FA-R11: a player sees its status; the Storyteller changes it
       carried: (sys.carried ?? []).map((c, i) => ({ index: i, name: c.name })),
+      noDrop: inLocalChase(raid.chase, actor.id), // V24: nothing is dropped in a local chase
       marks: [
         ...(sys.nextRollSmaller > 0 ? [{ key: "nextRollSmaller", label: t("DGF.Sheet.mark.smaller", { n: sys.nextRollSmaller }) }] : []),
         ...(sys.skipTurn > 0 ? [{ key: "skipTurn", label: t("DGF.Sheet.mark.skipTurn", { turn: sys.skipTurn }), now: sys.skipTurn === raid.turn }] : []),
         ...(sys.weaknessInPlay ? [{ key: "weaknessInPlay", label: t("DGF.Sheet.mark.weakness") }] : []),
-        ...(sys.nextActionLost ? [{ key: "nextActionLost", label: t("DGF.Sheet.mark.actionLost", { item: sys.nextActionLost }), now: true }] : []),
+        ...(sys.pickedUpTurn ? [{ key: "pickedUp", label: t("DGF.Sheet.mark.pickedUp", { items: sys.pickedUp }), now: sys.pickedUpTurn === raid.turn }] : []),
       ],
       warnings,
       draughtLabel: view?.signature?.effect === "form" ? view.signature.name : "",
@@ -151,7 +153,8 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
   static async #onClearMark(event, target) {
     if (!this.isEditable) return;
     const key = target.dataset.mark;
-    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false, nextActionLost: "" }[key];
+    if (key === "pickedUp") return this.document.update({ "system.pickedUpTurn": 0, "system.pickedUp": "" }); // V25
+    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false }[key];
     if (value === undefined) return;
     return this.document.update({ [`system.${key}`]: value });
   }

@@ -92,6 +92,14 @@ export function isRunning(chase) {
   return !!chase && !chase.outcome;
 }
 
+/**
+ * V24 (Chapters 3 and 4): nothing is dropped in a local chase, loot or furniture: is this Entity in one now (a
+ * member of a running local chase, from the moment it's caught until the chase ends)? A final flight isn't one.
+ */
+export function inLocalChase(chase, actorId) {
+  return isRunning(chase) && chase.kind === "local" && chase.members.some((m) => m.actorId === actorId);
+}
+
 /** C12: the ground on a d6 face (the traits that work this round). */
 export function groundOn(face) {
   const row = DGF.chaseTable[face - 1];

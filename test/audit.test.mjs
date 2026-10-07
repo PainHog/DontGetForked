@@ -393,6 +393,14 @@ test("B7 at the table: the roll dialog offers Mesmerise only at a watched obstac
   dialogResponders.push((options) => { content = options.content; return null; });
   await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 8, abilities: [], watched: true }));
   assert.doesNotMatch(box(content), /disabled/, "watched: offered");
+  // V23: slipping free from the lock-up (always watched): offered too
+  await op(GM, OPS.lockupSet, { actorId: dracula.id, captured: true });
+  await settle();
+  dialogResponders.push((options) => { content = options.content; return null; });
+  await asUser(BEN, () => promptRoll(dracula, { trait: "sly", second: "mask", difficulty: 10, abilities: [], lockup: true }));
+  assert.doesNotMatch(box(content), /disabled/, "slipping free: offered");
+  await op(GM, OPS.lockupSet, { actorId: dracula.id, captured: false });
+  await settle();
   // ticked anyway (a macro, or a stale form): the roll is refused with words
   dialogResponders.push(press("roll", { trait: "sly", second: "mask", difficulty: 8, [mes]: true }), press("cancel"));
   const before = log.warnings.length;
