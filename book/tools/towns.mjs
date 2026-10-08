@@ -11,7 +11,7 @@
  *  - the furniture: one piece from the d6 table at one of the list's locations, behind
  *    one extra obstacle 2 harder than rolled (at most 12);
  *  - one Lantern Night custom, two villagers (who + what they're doing).
- * The way out, the lock-up, the Limit and the final mob come from the Difficulty table.
+ * The way out, the lock-up, the Limit and the final mob come from the Easy, Standard or Hard table.
  * The book generator (town-pages.mjs) and the simulator (sim/premade.mjs) both read
  * the towns through loadTowns(), so they can't drift apart.
  */
@@ -73,7 +73,7 @@ function resolveTown(t) {
     };
   });
 
-  // The list (Chapter 8, Difficulty table).
+  // The list (Chapter 8, the Easy, Standard or Hard table).
   if (locations.length !== L.items) problems.push(`${t.key}: ${locations.length} items (a ${label} list has ${L.items})`);
   const ess = locations.filter((l) => l.essential).length;
   if (!L.essentials.includes(ess)) problems.push(`${t.key}: ${ess} essentials (a ${label} list has ${L.essentials.join(" or ")})`);

@@ -83,3 +83,31 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C6-13** applied, keeping a short Dice bullet ("the Monster only; the Mask is off") so the flight's list says it where a reader looks.
 - **C6-14** applied, with the example.
 - **C6-15** applied ("From the moment the hunt is on, when the final flight begins").
+
+### Chapter 7
+- **C7-1** applied.
+- **C7-2** applied.
+- **C7-3** applied.
+- **C7-4** applied.
+- **C7-5** applied with Richard's rulings (5) "One Entity may take more than one upgrade" and (6) "An Entity forked or left behind is back at the castle for the next raid".
+
+### Chapter 8
+- **C8-1** applied with Richard's ruling (3), option 1: "Your own town: draw your own town on a map, choose its locations, and build each one by hand with the Building a Location by Hand box below (or roll any part of it). Your map may make some moves take two Turns, and mark some entrances small."
+- **C8-2** applied ("premade town" in Chapter 8; the ceiling points to Rolling a Town, step 4).
+- **C8-3** applied differently. The overview went in at the top of Rolling a Town, with the way out and the lock-up. The sections were tried in build order, but that cost a near-empty page and split tables, so the order was chosen for the page instead: the four steps follow the overview, then the obstacle table, the box, Easy, Standard or Hard, the shopping list, the furniture, Lantern Night and the villagers. The overview names each step and where it is.
+- **C8-4** applied.
+- **C8-5** applied.
+- **C8-6** applied.
+- **C8-7** applied, without the optional one-band-per-line cells.
+- **C8-8** applied: flavour in italics in both way columns; entry 14's quiet way is now "Charm (*a biscuit and a pat*)", in the game data too, so Chapter 9's towns and the compendium follow.
+- **C8-9** applied, wording only (the default): the heading is "Easy, Standard or Hard", and each place the setting is meant names the three.
+- **C8-10** applied: "Obstacle Difficulties the d20 gives (6 · 8 · 10 · 12)", and by the default, hand-built towns aim for the same mix (in the by-hand box).
+- **C8-11** applied, keeping "entrance" (Richard's ruling (3) says a map marks "entrances" small; Chapter 4 says the same).
+- **C8-12** applied ("roll any die first" without "first", which read as a step before the list).
+- **C8-13** applied as "Building a Location by Hand", with the default for Difficulty (aim for the rolled mix, keep the ceiling). It became a full-width box after the obstacle table, where it fits the page. "The way out and the lock-up are fixed and list three" was left out: the rescue lists two, and the overview already says both are the same in every town.
+- **C8-14** applied. The location is picked by numbering the list's items (each item has its location), since the furniture is now rolled before the locations are placed.
+- **C8-15** applied; "Roll them as you need them" is in the overview, and "or a couple before play" here.
+- **C8-16** applied.
+- **C8-17** applied.
+- **C8-18** applied.
+- **C8-19** applied with the default "at least 1, and usually 2".

@@ -22,7 +22,7 @@ import { installFoundry, asUser, settle, log } from "../tools/fake-foundry.mjs";
 
 const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'", "&nbsp;": " " };
 /** An HTML fragment as the words a reader sees. */
-const plain = (html) => String(html).replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/g, (m) => ENTITIES[m] ?? m).replace(/\s+/g, " ").trim();
+const plain = (html) => String(html).replace(/<\/?(?:em|i)\b[^>]*>/g, "").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/g, (m) => ENTITIES[m] ?? m).replace(/\s+/g, " ").trim();
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const low = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 const chapter = (file) => readFileSync(join(ROOT, "book", "src", "chapters", file), "utf8");

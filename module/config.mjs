@@ -252,7 +252,7 @@ DGF.obstacleTable = Object.freeze([
   { key: "shopFloor", name: "A crowded shop floor", quiet: "sly", group: true },
   { key: "geese", name: "A muddy yard full of geese", quiet: "sly", loud: "nimble", loudText: "run for it, honking" },
   { key: "shopkeeper", name: "The shopkeeper behind the counter", quiet: "charm", loud: "sly", loudText: "snatch it from under her nose" },
-  { key: "dog", name: "A guard dog", quiet: "charm", quietText: "good dog", loud: "nimble", loudText: "outrun it, barking" },
+  { key: "dog", name: "A guard dog", quiet: "charm", quietText: "a biscuit and a pat", loud: "nimble", loudText: "outrun it, barking" },
   { key: "doorman", name: "A doorman checking invitations", quiet: "charm", loud: "wits", loudText: "a forged invitation that fools nobody for long" },
   { key: "children", name: "Children in costumes who want a closer look", quiet: "charm", group: true },
   { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "work out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it" },

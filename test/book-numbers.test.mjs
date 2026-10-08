@@ -13,7 +13,7 @@ import { readFileSync } from "node:fs";
 import { DGF } from "../module/config.mjs";
 import { powerRule, perkParts, weaknessTiming } from "../module/logic/power-text.mjs";
 import { rewrite as rewriteEntries } from "../book/tools/entity-entries.mjs";
-import { band, isCritical, monsterShows, suspicionForRoll, leadMove, majorityMove, localMobDifficulty, stepUp, stepDown, tellGoesOff } from "../module/logic/rules.mjs";
+import { band, isCritical, monsterShows, suspicionForRoll, leadMove, majorityMove, localMobDifficulty, stepUp, stepDown, tellGoesOff, yearResult } from "../module/logic/rules.mjs";
 
 /* ------------------------------------------------------------ helpers -- */
 
@@ -139,17 +139,17 @@ test("3 charges, 12 Turns, the castle upgrades (Chapters 2, 4, 7, 8, Entity Shee
   assert.equal((sheet.match(/<span class="pip"><\/span>/g) ?? []).length, DGF.charges, "the Entity Sheet has a pip per charge");
   assert.equal((sheet.match(/<span class="pip dashed"><\/span>/g) ?? []).length, DGF.campaign.maxUpgrades, "the Entity Sheet has a dashed pip per castle upgrade");
   const C = DGF.campaign;
-  says(TXT.ch7, `each upgrade gives one Entity of the players’ choice ${WORD[C.chargesPerUpgrade]} extra charge`, "Chapter 7, Campaign Play");
-  says(TXT.ch7, `The castle holds ${WORD[C.maxUpgrades]} upgrades at most; bringing home a ${ORDINAL[C.maxUpgrades + 1]} replaces one`, "Chapter 7, Campaign Play");
+  says(TXT.ch7, `Each upgrade gives that Entity ${WORD[C.chargesPerUpgrade]} extra charge that raid, as part of its starting number: with one upgrade it starts with ${DGF.charges + C.chargesPerUpgrade}`, "Chapter 7, Campaign Play");
+  says(TXT.ch7, `The castle holds ${WORD[C.maxUpgrades]} upgrades at most. A ${ORDINAL[C.maxUpgrades + 1]} piece replaces one of them`, "Chapter 7, Campaign Play");
 });
 
 /* --------------------------------------------- the difficulty labels -- */
 
-test("Chapter 8's Difficulty table is DGF.labels, row by row", () => {
-  const rows = tableAfter(CH.ch8, "Difficulty");
+test("Chapter 8's Easy, Standard or Hard table is DGF.labels, row by row", () => {
+  const rows = tableAfter(CH.ch8, "Easy, Standard or Hard");
   const want = [
     ["Shopping list (essentials)", (l) => `${l.items} (${essentials(l.essentials)})`],
-    ["Obstacle Difficulties: share of 6 · 8 · 10 · 12", (l) => mixRow(l.mix)],
+    ["Obstacle Difficulties the d20 gives (6 · 8 · 10 · 12)", (l) => mixRow(l.mix)],
     ["Suspicion Limit", (l) => `${l.limit}`],
     ["The final flight: escape at Lead", (l) => `${l.finalEscape}`],
     ["The way out: Difficulty", (l) => `${l.exit}`],
@@ -158,7 +158,7 @@ test("Chapter 8's Difficulty table is DGF.labels, row by row", () => {
   ];
   assert.deepEqual(rows.map((r) => r[0]), want.map((w) => w[0]), "the table's rows");
   for (const [i, [label, f]] of want.entries()) assert.deepEqual(rows[i].slice(1), LABELS.map((k) => f(L[k])), label);
-  says(TXT.ch8, "on Standard, roll any die: odd, one; even, two", "Chapter 8, The Shopping List");
+  says(TXT.ch8, "On Standard, roll any die: odd, one essential; even, two.", "Chapter 8, The Shopping List");
   assert.deepEqual(L.standard.essentials, [1, 2]);
 });
 
@@ -204,7 +204,7 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   says(TXT.ch6, `Lead: starts at ${localStart}. You escape at ${localEscape}.`, "Chapter 6, The Local Chase");
   says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion, rounded down, at most ${M.max}. Work it out again at the start of every round`, "Chapter 6, The Local Chase");
   says(TXT.ch6, `(Suspicion 5: ${M.base} + 2 = ${localMobDifficulty(5)}.)`, "Chapter 6, The Local Chase (the example)");
-  says(TXT.ch8, `On every difficulty: ${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw +${DGF.suspicion.overdraw} Suspicion; a local chase starts at Lead ${localStart} and escapes at ${localEscape} against a mob of ${M.base} plus half the Suspicion (at most ${M.max}); the final flight starts at Lead ${DGF.lead.finalStart}.`, "Chapter 8, under the Difficulty table");
+  says(TXT.ch8, `The same on Easy, Standard and Hard: ${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw Suspicion +${DGF.suspicion.overdraw}. Local chase: Lead starts at ${localStart}, escape at ${localEscape}; the mob is ${M.base} plus half the Suspicion, rounded down, at most ${M.max}. Final flight: Lead starts at ${DGF.lead.finalStart}.`, "Chapter 8, under the Easy, Standard or Hard table");
   says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion (at most ${M.max})`, "At the Table, Chases");
   assert.equal(localMobDifficulty(3), 9, "8 + half of 3, rounded down");
   assert.equal(localMobDifficulty(100), M.max);
@@ -282,8 +282,8 @@ test("Tells go off on 4–6 on a d6 (Chapters 2 and 5, At the Table) as DGF.tell
 test("the furniture's obstacle is 2 harder, at most 12 (Chapters 4, 8, 9) as DGF.furnitureObstacle", () => {
   const F = DGF.furnitureObstacle;
   says(TXT.ch4, `That obstacle’s Difficulty is ${F.harder} higher than it would otherwise be (at most ${F.max})`, "Chapter 4, Furniture");
-  says(TXT.ch8, `the furniture’s extra one, ${F.harder} harder`, "Chapter 8, Rolling a Town");
-  says(TXT.ch8, `(the furniture’s obstacle counts by its roll, before its +${F.harder})`, "Chapter 8, Rolling a Town");
+  says(TXT.ch8, `its Difficulty is ${F.harder} higher than rolled, at most ${F.max}`, "Chapter 8, Rolling a Town");
+  says(TXT.ch8, `The furniture’s obstacle counts by its d20 roll, before the +${F.harder}`, "Chapter 8, Rolling a Town");
   says(TXT.ch9, `The furniture’s obstacle is already ${F.harder} harder.`, "Chapter 9's opener");
 });
 
@@ -402,6 +402,15 @@ test("the year's results and the epilogue (Chapter 7) are DGF.results and DGF.ep
   assert.deepEqual(tables[0].map((r) => r[0]), order.map((k) => NAME[k]), "the results table, best to worst, then Forked");
   assert.deepEqual(tables[1], order.map((k) => [NAME[k], DGF.epilogue.year[k]]), "the year's lines");
   assert.deepEqual(tables[2], DGF.duties.map((d) => [cap(d.kind), DGF.epilogue.missing[d.key]]), "what the castle went without, by kind in Castle Duty order");
+  // "at least half the list home: 2 of 4 items, 3 of 5" and "0–1 of 4, 0–2 of 5" (a missing essential, so never a Win)
+  const yr = (listSize, itemsHome) => yearResult({ listSize, itemsHome, essentialsAllHome: false, extrasMissing: 0 });
+  says(TXT.ch7, "at least half the list home: 2 of 4 items, 3 of 5", "Chapter 7, Partial");
+  says(TXT.ch7, "Less than half the list home: 0–1 of 4, 0–2 of 5", "Chapter 7, Bust");
+  assert.deepEqual([0, 1, 2, 3, 4].map((n) => yr(4, n)), ["bust", "bust", "partial", "partial", "partial"]);
+  assert.deepEqual([0, 1, 2, 3, 4, 5].map((n) => yr(5, n)), ["bust", "bust", "bust", "partial", "partial", "partial"]);
+  says(TXT.ch7, "Two left behind drop it two steps. It never drops below Bust.", "Chapter 7, Left Behind");
+  assert.equal(yearResult({ listSize: 5, itemsHome: 5, essentialsAllHome: true, extrasMissing: 0, furnitureHome: true, leftBehind: 2 }), "partial");
+  assert.equal(yearResult({ listSize: 5, itemsHome: 3, essentialsAllHome: false, extrasMissing: 0, leftBehind: 3 }), "bust");
 });
 
 /* --------------------------------------------------------- Chapter 8 -- */
@@ -418,9 +427,9 @@ test("rolling a town (Chapter 8's d20/d10 table and the ceiling) is DGF.townDice
   assert.deepEqual(rows.map((r) => r[0]), ["Obstacles at a location (d20)", "Difficulty (d20)", "Watched (d10)"]);
   assert.deepEqual(rows[0].slice(1), LABELS.map((k) => T.obstacles[k].map(([lo, hi, n]) => `${range(lo, hi)}: ${COUNT[n]}`).join(" · ")), "obstacles per location");
   assert.deepEqual(rows[1].slice(1), LABELS.map((k) => T.difficulty[k].map(([lo, hi, d]) => `${range(lo, hi)}: ${d}`).join(" · ")), "Difficulty");
-  assert.deepEqual(rows[2].slice(1), LABELS.map((k) => `1–${T.watchedOn[k]}`), "watched");
+  assert.deepEqual(rows[2].slice(1), LABELS.map((k) => `watched on 1–${T.watchedOn[k]}`), "watched");
   assert.equal(T.twelves.easy, T.twelves.standard);
-  says(TXT.ch8, `at most ${WORD[T.twelves.easy]} Difficulty 12 in an Easy or Standard town, ${WORD[T.twelves.hard]} in a Hard town`, "Chapter 8, Rolling a Town");
+  says(TXT.ch8, `A town may have ${WORD[T.twelves.easy]} Difficulty 12 (${WORD[T.twelves.hard]} on Hard)`, "Chapter 8, Rolling a Town");
   for (const k of LABELS) {
     const share = {};
     for (const [lo, hi, d] of T.difficulty[k]) share[d] = (hi - lo + 1) / 20;
@@ -449,7 +458,8 @@ test("the shopping table (Chapter 8) is DGF.shoppingTable, its kinds and places 
 
 test("every kind has three places, and Chapter 8 says how to place a list (V15)", () => {
   for (const d of DGF.duties) assert.equal(d.where.split(", ").length, 3, `${d.name}: three places, so a d3 always lands on one`);
-  says(TXT.ch8, "a d3 or pick, one item per place; if a kind has more items than places, two may share a place", "Chapter 8, Rolling a Town");
+  says(TXT.ch8, "Roll a d3, or pick: 1 is the first place listed, 2 the second, 3 the third. One item per place.", "Chapter 8, Rolling a Town");
+  says(TXT.ch8, "If a kind has more items than places, two of them share a place: one location, guarding both items.", "Chapter 8, Rolling a Town");
 });
 
 test("the villagers (Chapter 8) are DGF.villagers", () => {

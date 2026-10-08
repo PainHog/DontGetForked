@@ -1,7 +1,7 @@
 {
   "key": "shopping-list",
   "name": "The Shopping List (d66)",
-  "description": "<p>For each item, roll a d6 for its kind and a d6 for the item itself; roll again on a repeated item. Only the kind matters to the rules: it decides which Castle Duty gets its edge there.</p><p><em>Rulebook, Chapter 8: The Shopping List.</em></p><p>Read the total as the two dice, tens then units: 34 is a 3 for the kind and a 4 for the item. On the Raid HUD, <strong>Shopping list</strong> → <strong>Roll the list</strong> rolls a whole list on this table (a repeat is rolled again) and keeps it on the HUD.</p>",
+  "description": "<p>For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again. Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location (Chapter 2).</p><p><em>Rulebook, Chapter 8: The Shopping List.</em></p><p>Read the total as the two dice, tens then units: 34 is a 3 for the kind and a 4 for the item. On the Raid HUD, <strong>Shopping list</strong> → <strong>Roll the list</strong> rolls a whole list on this table (a repeat is rolled again) and keeps it on the HUD.</p>",
   "formula": "1d6 * 10 + 1d6",
   "results": [
     {

@@ -9,7 +9,7 @@
  *
  * Everything in a town's block restates the approved tables: the custom, the villagers,
  * the list, the furniture, each obstacle's name and ways as printed in Chapter 8, and the
- * label's numbers from the Difficulty table. The hand-written parts of the chapter (its
+ * label's numbers from the Easy, Standard or Hard table. The hand-written parts of the chapter (its
  * opener and the example of play) sit outside the markers and are never touched.
  */
 import { readFileSync, writeFileSync } from "node:fs";

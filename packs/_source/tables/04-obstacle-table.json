@@ -1,7 +1,7 @@
 {
   "key": "obstacle-table",
   "name": "The Obstacle Table (d20)",
-  "description": "<p>The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result (Chapter 5). At a <em>group</em> obstacle, everyone there rolls for themselves (Chapter 4).</p><p><em>Rulebook, Chapter 8: The Obstacle Table.</em></p>",
+  "description": "<p>The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result (Chapter 5). At a <em>group</em> obstacle, each Entity who wants past rolls for itself (Chapter 4).</p><p><em>Rulebook, Chapter 8: The Obstacle Table.</em></p>",
   "formula": "1d20",
   "results": [
     {
@@ -110,7 +110,7 @@
     },
     {
       "key": "dog",
-      "description": "<p><strong>A guard dog</strong></p><p>Quiet way: Charm (good dog)<br>Loud way: Nimble (outrun it, barking)</p>",
+      "description": "<p><strong>A guard dog</strong></p><p>Quiet way: Charm (a biscuit and a pat)<br>Loud way: Nimble (outrun it, barking)</p>",
       "range": [
         14,
         14
