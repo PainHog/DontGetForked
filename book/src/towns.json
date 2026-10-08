@@ -181,7 +181,7 @@
         "lockup": { "x": 160, "y": 330, "label": "below" },
         "cottages": 44,
         "trees": 10,
-        "newPage": true
+        "newPage": false
       }
     },
     {

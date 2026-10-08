@@ -577,8 +577,7 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 }
 .town-key .step { display: inline-block; width: 0.56in; font: 700 6.8pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); }
 .town-key .watched { font: italic 600 7.6pt var(--sans); color: var(--alarm); white-space: nowrap; }
-.town-key tr.furn td { font-style: italic; }
-.town-key tr.furn td:first-child .step { font-style: normal; }
+.town-key .for-piece { font: italic 600 7.6pt var(--sans); color: var(--accent-deep); white-space: nowrap; }
 
 /* Chapter 8's shopping table: where each kind is found, under the kind */
 .tbl .where { font-size: 0.86em; color: var(--ink-soft); font-style: italic; }

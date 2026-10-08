@@ -140,3 +140,17 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C2-21** applied.
 - **C2-22** applied with Richard's ruling (8): a `note` that powerRule adds after the standard wording. Pillar of Society: "On Jekyll's rolls, Hyde still takes over if the Monster shows." then its flavour in italics; Trample: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", with no flavour line.
 - **C2-23** applied.
+
+### Chapter 9
+- **C9-1** applied: the opener names Easy, Standard and Hard; "the Lantern Night custom and the villagers are colour" went into the Reading the Town Pages box.
+- **C9-2** applied differently, for the page: the first page keeps the rows' order, the ways in (with Richard's ruling (2), "picked the first time anyone tries the location, then kept for the raid"), the furniture's 2 harder and its "for the piece" mark. Watched, (group), the loud way, the kind in brackets, when to try the furniture and the moves went into a full-width box, Reading the Town Pages, after Puddlecombe (the first page can't take more without pushing Puddlecombe off it).
+- **C9-3** applied, in the box.
+- **C9-4** applied: the numbers line reads "Difficulty: the way out 6, the lock-up 10 · the final flight: mob 10, Lead 2, escape at 5"; the traits of the way out and the lock-up are in the box.
+- **C9-5** applied differently: the step label "For the piece" doesn't fit the label column, so the furniture's row is a "Then" (it comes last) tagged "for the piece" after the obstacle's name, set roman; the facts line says "(Bulky: one carrier)". By the same token every way's flavour in the town keys is now in italics, as in Chapter 8. The compendium's town pages say the same.
+- **C9-6** applied.
+- **C9-7** applied in full.
+- **C9-8** applied differently: "Each round, the Storyteller rolls the ground on the chase table (Chapter 6)." The rest of the suggested sentence ("against a d12 the Monster can't show") isn't so: the Monster shows whenever its number beats the trait die's, and in round 2 it does (the d12 rolls 2, the Monster 9). It was left out.
+- **C9-9** applied.
+- **C9-10** applied.
+- **C9-11** applied ("a d6 between the two arrivals picks the Creature").
+- Layout: to keep every page full, the example of play now follows Gallowsmere (it still follows Thistlewick, which it plays), Thistlewick no longer forces a new page, and the chapter ends with the owl spot.

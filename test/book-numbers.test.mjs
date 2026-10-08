@@ -493,18 +493,18 @@ test("Chapter 9's towns are book/src/towns.json, built from the tables, with the
     assert.deepEqual(list, t.locations.map((l) => `${cap(itemOf(l))}${l.essential ? " (essential)" : ""}`), `${t.key}: the list`);
     const at = t.locations.findIndex((l) => l.furniture);
     const piece = DGF.furniture.find((f) => f.key === t.locations[at].furniture.piece);
-    says(text, `The furniture: ${low(piece.name)} (${cap(piece.size)}), at ${t.locations[at].place} (${at + 1}).`, t.key);
+    says(text, `The furniture: ${low(piece.name)} (${cap(piece.size)}: ${piece.size === "huge" ? "two carriers" : "one carrier"}), at ${t.locations[at].place} (${at + 1}).`, t.key);
     says(text, `Villagers: ${t.villagers.map((v) => `${low(DGF.villagers.who[v.who - 1])} (${low(DGF.villagers.doing[v.doing - 1])})`).join("; ")}.`, t.key);
-    says(text, `${label}: Suspicion Limit ${Lb.limit} · the way out ${Lb.exit} · the lock-up ${Lb.lockup} · the final flight: mob ${Lb.finalMob}, escape at Lead ${Lb.finalEscape}.`, t.key);
-    const row = (step, o, harder = 0) => {
+    says(text, `${label}: Suspicion Limit ${Lb.limit} · Difficulty: the way out ${Lb.exit}, the lock-up ${Lb.lockup} · the final flight: mob ${Lb.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${Lb.finalEscape}.`, t.key);
+    const row = (step, o, harder = 0, tag = "") => {
       const e = obstacleOf(o);
-      return [`${step} ${e.name}${e.group ? " (group)" : ""}${o.watched ? " watched" : ""}`, way(e.quiet, e.quietText), e.loud ? way(e.loud, e.loudText) : "—", `${Math.min(DGF.furnitureObstacle.max, o.difficulty + harder)}`];
+      return [`${step} ${e.name}${e.group ? " (group)" : ""}${o.watched ? " watched" : ""}${tag ? ` ${tag}` : ""}`, way(e.quiet, e.quietText), e.loud ? way(e.loud, e.loudText) : "—", `${Math.min(DGF.furnitureObstacle.max, o.difficulty + harder)}`];
     };
     const want = t.locations.flatMap((l, n) => [
       [`${n + 1} ${cap(l.place)}: ${itemOf(l)} (${dutyOf(l).kind})${l.essential ? " · essential" : ""}`],
       row("Way in", l.waysIn[0]), row("or", l.waysIn[1]),
       ...l.then.map((o) => row("Then", o)),
-      ...(l.furniture ? [row("Furniture", l.furniture.obstacle, DGF.furnitureObstacle.harder)] : []),
+      ...(l.furniture ? [row("Then", l.furniture.obstacle, DGF.furnitureObstacle.harder, "for the piece")] : []),
     ]);
     assert.deepEqual(rowsOf(b.match(/<table class="tbl town-key">[\s\S]*?<\/table>/)[0]), want, `${t.key}: the location key`);
     // the town keeps Chapter 8's rules for building one
@@ -619,7 +619,7 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   assert.ok([...loc("ironmonger").waysIn, ...loc("ironmonger").then].some((o) => o.watched), "the ironmonger is watched");
   assert.ok(tellGoesOff(4), "a Tell check of 4 goes off");
   suspicion += DGF.suspicion.tell;
-  says(text, `the Tell check is a 4, and a second roll picks the Creature, who stands a head above the crowd. Suspicion ${suspicion}.`, "Turn 3");
+  says(text, `the Tell check is a 4, and a d6 between the two arrivals picks the Creature, who stands a head above the crowd. Suspicion ${suspicion}.`, "Turn 3");
   says(text, `Three Turns gone, ${WORD[DGF.turns - 3]} to go.`, "Turn 3");
   says(text, `Suspicion is ${suspicion} of ${Lb.limit}`, "Turn 3");
   assert.ok(suspicion < Lb.limit, "the hunt hasn't started");

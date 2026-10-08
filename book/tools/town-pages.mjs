@@ -14,6 +14,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { loadTowns, wayText } from "./towns.mjs";
+import { DGF } from "../../module/config.mjs";
 import { townMap } from "./town-maps.mjs";
 
 const CHAPTER = new URL("../src/chapters/32-ch09.html", import.meta.url);
@@ -21,10 +22,14 @@ const mapFile = (key) => new URL(`../art/map-${key}.svg`, import.meta.url);
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const low = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 const SIZE = { bulky: "Bulky", huge: "Huge" };
+const CARRIERS = { bulky: "one carrier", huge: "two carriers" };
 
-function obstacleRow(step, o, cls = "") {
-  const name = `${o.name}${o.group ? " <em>(group)</em>" : ""}${o.watched ? ' <span class="watched">watched</span>' : ""}`;
-  return `<tr${cls ? ` class="${cls}"` : ""}><td><span class="step">${step}</span>${name}</td><td>${wayText(o.quiet, o.quietText)}</td><td>${o.loud ? wayText(o.loud, o.loudText) : "—"}</td><td class="num">${o.difficulty}</td></tr>`;
+/** A way as printed in the key: the trait, then its flavour in italics (as Chapter 8's obstacle table sets it). */
+const wayHtml = (trait, text) => (trait && text ? `${wayText(trait)} (<em>${text}</em>)` : wayText(trait, text));
+
+function obstacleRow(step, o, cls = "", tag = "") {
+  const name = `${o.name}${o.group ? " <em>(group)</em>" : ""}${o.watched ? ' <span class="watched">watched</span>' : ""}${tag ? ` <span class="for-piece">${tag}</span>` : ""}`;
+  return `<tr${cls ? ` class="${cls}"` : ""}><td><span class="step">${step}</span>${name}</td><td>${wayHtml(o.quiet, o.quietText)}</td><td>${o.loud ? wayHtml(o.loud, o.loudText) : "—"}</td><td class="num">${o.difficulty}</td></tr>`;
 }
 
 function townBlock(t, { newPage }) {
@@ -39,7 +44,8 @@ function townBlock(t, { newPage }) {
     rows.push(obstacleRow("Way in", l.waysIn[0]));
     rows.push(obstacleRow("or", l.waysIn[1]));
     for (const o of l.then) rows.push(obstacleRow("Then", o));
-    if (l.furniture) rows.push(obstacleRow("Furniture", l.furniture.obstacle, "furn"));
+    // the furniture's obstacle comes last, so it is a "Then" too, tagged as the piece's (a "Furniture" label read as "the furniture is a guard dog")
+    if (l.furniture) rows.push(obstacleRow("Then", l.furniture.obstacle, "furn", "for the piece"));
     groups.push(`<tbody>\n${rows.join("\n")}\n</tbody>`);
   }
   return `<div class="town${newPage ? " new-page" : ""}" id="town-${t.key}">
@@ -50,9 +56,9 @@ function townBlock(t, { newPage }) {
 <p><strong>Lantern Night:</strong> ${t.custom}</p>
 <p class="town-list-head"><strong>The shopping list</strong> (${L.length} items):</p>
 <ol class="town-list">${list}</ol>
-<p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}), at ${host.place} (${host.n}).</p>
+<p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}: ${CARRIERS[host.furniture.size]}), at ${host.place} (${host.n}).</p>
 <p><strong>Villagers:</strong> ${villagers}.</p>
-<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · the way out ${t.wayOut.difficulty} · the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, escape at Lead ${t.finalEscape}.</p>
+<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>
 </div>
 <figure class="art map" data-art="map-${t.key}"></figure>
 </div>

@@ -78,9 +78,10 @@ export const BOOK_QUOTES = Object.freeze({
   shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location (Chapter 2)." },
   furniture: { chapter: "31-ch08.html", html: "Roll a d6 on the table below for the piece. Decor counts as furniture for every rule." },
   villagers: { chapter: "31-ch08.html", html: "Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are flavour: they don’t change an obstacle’s traits or Difficulty." },
-  townRows: { chapter: "32-ch09.html", html: "A location’s first two rows are its two ways in: the party picks one and keeps to it. The furniture’s obstacle is already 2 harder." },
-  townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn." },
-  townMap: { chapter: "32-ch09.html", html: "On the map, an eye marks a watched location, a star the furniture." },
+  townRows: { chapter: "32-ch09.html", html: "Each location’s rows run in order: its two ways in (picked the first time anyone tries the location, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”." },
+  townTraits: { chapter: "32-ch09.html", html: "<em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for." },
+  townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn (two carrying furniture)." },
+  townMap: { chapter: "32-ch09.html", html: "On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture." },
 });
 const Q = (k) => BOOK_QUOTES[k].html;
 const source = (chapter, section) => `<p><em>Rulebook, Chapter ${chapter}: ${section}.</em></p>`;
@@ -185,8 +186,8 @@ export function listMacro(t) {
     + `game.dontGetForked.runOp(${JSON.stringify(OPS.raidList)}, { action: "set", list: [\n${items.join(",\n")}\n] });`;
 }
 
-function obstacleRow(step, o) {
-  const name = `${esc(o.name)}${o.group ? " <em>(group)</em>" : ""}${o.watched ? " <strong>watched</strong>" : ""}`;
+function obstacleRow(step, o, tag = "") {
+  const name = `${esc(o.name)}${o.group ? " <em>(group)</em>" : ""}${o.watched ? " <strong>watched</strong>" : ""}${tag ? ` <em>${tag}</em>` : ""}`;
   return `<tr><td><strong>${step}</strong> ${name}</td><td>${esc(wayText(o.quiet, o.quietText))}</td><td>${o.loud ? esc(wayText(o.loud, o.loudText)) : "—"}</td><td>${o.difficulty}</td></tr>`;
 }
 
@@ -201,9 +202,9 @@ function townDoc(t) {
     `<p><strong>Lantern Night:</strong> ${esc(t.custom)}</p>`,
     `<p><strong>The shopping list</strong> (${L.length} items):</p>`,
     `<ol>${list}</ol>`,
-    `<p><strong>The furniture:</strong> ${esc(low(host.furniture.name))} (${SIZE[host.furniture.size]}), at ${esc(host.place)} (${host.n}).</p>`,
+    `<p><strong>The furniture:</strong> ${esc(low(host.furniture.name))} (${SIZE[host.furniture.size]}: ${host.furniture.size === "huge" ? "two carriers" : "one carrier"}), at ${esc(host.place)} (${host.n}).</p>`,
     `<p><strong>Villagers:</strong> ${villagers}.</p>`,
-    `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · the way out ${t.wayOut.difficulty} · the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, escape at Lead ${t.finalEscape}.</p>`,
+    `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>`,
     `<h2>In Foundry</h2>`,
     `<p>On the Raid HUD, ${B("DGF.Raid.newRaid")} → <strong>${t.labelName}</strong> sets these numbers. To put this town’s list on the HUD (so its items show there and the end of the raid starts from them), run this as a script macro:</p>`,
     `<pre><code>${esc(listMacro(t))}</code></pre>`,
@@ -214,10 +215,10 @@ function townDoc(t) {
     rows.push(obstacleRow("Way in", l.waysIn[0]));
     rows.push(obstacleRow("or", l.waysIn[1]));
     for (const o of l.then) rows.push(obstacleRow("Then", o));
-    if (l.furniture) rows.push(obstacleRow("Furniture", l.furniture.obstacle));
+    if (l.furniture) rows.push(obstacleRow("Then", l.furniture.obstacle, "for the piece"));
   }
   const locations = [
-    `<p>${Q("townRows")} ${Q("townMove")}</p>`,
+    `<p>${Q("townRows")} ${Q("townTraits")} ${Q("townMove")}</p>`,
     `<table>`,
     `<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th>Difficulty</th></tr></thead>`,
     `<tbody>`,

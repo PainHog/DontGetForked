@@ -191,19 +191,19 @@ test("each town's journal is book/src/towns.json: its list, furniture, custom, v
     assert.equal(list.length, L.items, `a ${t.label} list has ${L.items} items`);
     const at = t.locations.findIndex((l) => l.furniture);
     const piece = DGF.furniture.find((f) => f.key === t.locations[at].furniture.piece);
-    assert.ok(ov.includes(`The furniture: ${low(piece.name)} (${cap(piece.size)}), at ${t.locations[at].place} (${at + 1}).`));
+    assert.ok(ov.includes(`The furniture: ${low(piece.name)} (${cap(piece.size)}: ${piece.size === "huge" ? "two carriers" : "one carrier"}), at ${t.locations[at].place} (${at + 1}).`));
     const villagers = t.villagers.map((v) => `${low(DGF.villagers.who[v.who - 1])} (${low(DGF.villagers.doing[v.doing - 1])})`).join("; ");
     assert.ok(ov.includes(`Villagers: ${villagers}.`));
-    assert.ok(ov.includes(`${label}: Suspicion Limit ${L.limit} · the way out ${L.exit} · the lock-up ${L.lockup} · the final flight: mob ${L.finalMob}, escape at Lead ${L.finalEscape}.`));
+    assert.ok(ov.includes(`${label}: Suspicion Limit ${L.limit} · Difficulty: the way out ${L.exit}, the lock-up ${L.lockup} · the final flight: mob ${L.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${L.finalEscape}.`));
   }
 });
 
 test("each town's location key is its locations and obstacles, row by row (the furniture's 2 harder)", () => {
   const journal = readSource("journal");
-  const row = (step, o, harder = 0) => {
+  const row = (step, o, harder = 0, tag = "") => {
     const e = DGF.obstacleTable.find((x) => x.key === o.obstacle);
     return [
-      `${step} ${e.name}${e.group ? " (group)" : ""}${o.watched ? " watched" : ""}`,
+      `${step} ${e.name}${e.group ? " (group)" : ""}${o.watched ? " watched" : ""}${tag ? ` ${tag}` : ""}`,
       way(e.quiet, e.quietText),
       e.loud ? way(e.loud, e.loudText) : "—",
       String(Math.min(DGF.furnitureObstacle.max, o.difficulty + harder)),
@@ -215,7 +215,7 @@ test("each town's location key is its locations and obstacles, row by row (the f
       row("Way in", l.waysIn[0]),
       row("or", l.waysIn[1]),
       ...l.then.map((o) => row("Then", o)),
-      ...(l.furniture ? [row("Furniture", l.furniture.obstacle, DGF.furnitureObstacle.harder)] : []),
+      ...(l.furniture ? [row("Then", l.furniture.obstacle, DGF.furnitureObstacle.harder, "for the piece")] : []),
     ]);
     const page = journal.find((j) => j.key === t.key).pages[1];
     assert.deepEqual(rowsOf(page.text.content.match(/<table>[\s\S]*<\/table>/)[0]), want, t.key);
