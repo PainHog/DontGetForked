@@ -154,3 +154,29 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C9-10** applied.
 - **C9-11** applied ("a d6 between the two arrivals picks the Creature").
 - Layout: to keep every page full, the example of play now follows Gallowsmere (it still follows Thistlewick, which it plays), Thistlewick no longer forces a new page, and the chapter ends with the owl spot.
+
+### The Entity Sheet
+- **SH-1** applied as the label: "Shops for (one size bigger there)"; the footer says the Duty counts as the roll's raise.
+- **SH-2** applied in the Form label ("Jekyll's dice above, Hyde's below in each box; starts as Jekyll").
+- **SH-3** applied: "it shows if its number beats your trait die's".
+- **SH-4** applied ("extra charges (campaign, Chapter 7)").
+- **SH-5** applied.
+- **SH-6** applied, paid for as the report says (status one row shorter, no Notes line, a shorter intro) and by slightly tighter field spacing.
+- **SH-7** applied.
+- **SH-8** applied, the four-item version.
+- **SH-9** applied.
+- **SH-10** applied, shorter: "One raise (one size bigger) per roll, from any source, Castle Duty included; never above a d12 or below a d4."
+
+### At the Table
+- **AT-1** applied, shorter: "(one the obstacle lists; in a chase, the ground)".
+- **AT-2** applied: "You don't do it; Suspicion +1; caught if the obstacle is watched (a local chase)."
+- **AT-3** applied: "a Success on doubles: two Successes in a chase; anywhere else, a spent charge back."
+- **AT-4** applied: "on yours or a friend's in the same place (not in a local chase), for no action", and "(a Difficulty 2 lower; your own roll, and only you get past; never in a chase)".
+- **AT-5** applied.
+- **AT-6** applied, shorter ("one action: roll, move, pick up or wait"; "(own rolls; the one raise; not in a chase)"; "The way out (watched): … one roll for all, everyone not captured there").
+- **AT-7** applied.
+- **AT-8** applied ("slip free once a Turn from the next").
+- **AT-9** applied.
+- **AT-10** applied.
+- **AT-11** applied.
+- **AT-12** applied (the lock-up row went; "Difficulty 10" is in the local chase line). To keep the card to one page, its intro line went too, a few phrases are shorter ("Done, but the Storyteller picks"; "Monster shows: it outrolls your trait die. Suspicion +2."), and the card's type is a touch smaller (9.4pt).

@@ -119,7 +119,7 @@ test("the dice: one each of d12…d4, the Mask d6 and the Monster d10 (Chapters 
 
 test("abilities: opening an approach is 2 lower; the Costs in the book's order (Chapter 3, At the Table)", () => {
   says(TXT.ch3, `roll that trait at a Difficulty ${DGF.openApproachEase} lower`, "Chapter 3, Abilities");
-  says(TXT.ref, `open your own approach with an unlisted trait (${DGF.openApproachEase} lower`, "At the Table, Abilities");
+  says(TXT.ref, `open your own approach with an unlisted trait (a Difficulty ${DGF.openApproachEase} lower`, "At the Table, Abilities");
   const COST = { suspicion: `Suspicion +${DGF.suspicion.cost}`, drop: "drop an item", loseTurn: "lose a Turn", smaller: "one size smaller" };
   for (const [where, text] of [["Chapter 3, Results", TXT.ch3.slice(TXT.ch3.indexOf("Cost: 1–2 short"))], ["At the Table", TXT.ref.slice(TXT.ref.indexOf("Cost:"))]]) {
     const at = DGF.costs.map((k) => text.toLowerCase().indexOf(COST[k].toLowerCase()));
@@ -168,12 +168,14 @@ test("At the Table's numbers table is DGF.labels", () => {
   const want = {
     "Shopping list (essentials)": (l) => `${l.items} (${essentials(l.essentials)})`,
     "Suspicion Limit": (l) => `${l.limit}`,
-    "The way out": (l) => `${l.exit}`,
+    "The way out: Difficulty": (l) => `${l.exit}`,
     "The final flight: mob · escape at": (l) => `${l.finalMob} · ${l.finalEscape}`,
-    "The lock-up": (l) => `${l.lockup}`,
   };
   assert.deepEqual(rows.map((r) => r[0]), Object.keys(want));
   for (const r of rows) assert.deepEqual(r.slice(1), LABELS.map((k) => want[r[0]](L[k])), r[0]);
+  // the lock-up is the same on every label, so At the Table says it once, in the local chase
+  assert.ok(LABELS.every((k) => L[k].lockup === L.easy.lockup));
+  says(TXT.ref, `At the lock-up (Difficulty ${L.easy.lockup}, watched)`, "At the Table, Chases");
 });
 
 test("the labels' numbers in the chapters' prose (Chapters 4, 5, 6) are DGF.labels", () => {
@@ -228,7 +230,7 @@ test("Weakness timings (Chapters 2 and 6, At the Table, Entity Sheet) are the En
   says(TXT.ch6, `Soon: from the ${ORDINAL[DGF.weaknessSoonRound]} round of any chase (everyone else).`, "Chapter 6, Your Weakness");
   says(TXT.ref, `(Always: round 1; Soon: round ${DGF.weaknessSoonRound})`, "At the Table, Chases");
   assert.deepEqual([...DGF.weaknessTimings], ["always", "soon"]);
-  assert.match(chapter(CH.sheet), /<span class="box-check"><\/span>Always<span class="box-check"><\/span>Soon<\/div>/, "the sheet's Weakness boxes are the two timings");
+  assert.match(chapter(CH.sheet), new RegExp(`<span class="box-check"></span>Always \\(round 1\\)<span class="box-check"></span>Soon \\(round ${DGF.weaknessSoonRound}\\)</div>`), "the sheet's Weakness boxes are the two timings");
 });
 
 test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
@@ -241,7 +243,7 @@ test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
 
 test("the way out and the lock-up's traits (Chapters 4 and 6, At the Table) are DGF.wayOut and DGF.lockup", () => {
   says(TXT.ch4, `The way out is one watched obstacle: ${ways(DGF.wayOut)}, at Difficulty ${L.easy.exit} on Easy, ${L.standard.exit} on Standard and ${L.hard.exit} on Hard.`, "Chapter 4, Getting Out");
-  says(TXT.ref, `The way out: ${ways(DGF.wayOut)}; one roll for all.`, "At the Table, Turns");
+  says(TXT.ref, `The way out (watched): ${ways(DGF.wayOut)}; one roll for all, everyone not captured there.`, "At the Table, Turns");
   const traits = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Traits");
   assert.deepEqual(traits, ["Traits", ways(DGF.lockup.rescue), ways(DGF.lockup.slip)], "Chapter 6, Captured: the rescue's and slipping free's traits");
   says(TXT.ch6, "The lock-up is always watched", "Chapter 6, Captured");
@@ -264,7 +266,7 @@ test("what raises Suspicion (Chapter 5's table, Chapter 3, At the Table, Entity 
   says(TXT.ch3, `overdrawing: it costs Suspicion +${S.overdraw} instead of a charge`, "Chapter 3, Abilities");
   says(TXT.ref, `Trouble +${S.trouble} · the Monster shows +${S.monsterShows} · the loud way +${S.loud} · a Cost chosen as Suspicion +${S.cost} · overdraw +${S.overdraw} · a Tell +${S.tell}`, "At the Table, Suspicion");
   says(TXT.ref, `furniture, each Turn once taken +${S.furniture}`, "At the Table, Suspicion");
-  says(TXT.sheet, `it shows if it rolls higher than your trait die: Suspicion +${S.monsterShows}`, "the Entity Sheet");
+  says(TXT.sheet, `it shows if its number beats your trait die’s: Suspicion +${S.monsterShows}`, "the Entity Sheet");
   says(TXT.sheet, `overdraw: Suspicion +${S.overdraw}`, "the Entity Sheet");
   assert.equal(suspicionForRoll({ band: "trouble", show: true }), Math.max(S.trouble, S.monsterShows), "one roll, one rise");
 });

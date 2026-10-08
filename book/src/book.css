@@ -451,7 +451,7 @@ figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
 .sheet-intro { text-align: center; color: var(--ink-soft); margin: 0 0 0.16in !important; border-bottom: 2.5px solid var(--accent); padding-bottom: 0.1in; }
 .sheet .field {
   display: flex; align-items: baseline; gap: 0.06in; flex-wrap: wrap;
-  margin: 0 0 0.17in;
+  margin: 0 0 0.15in;
 }
 .sheet .field strong { color: var(--alarm); font-weight: 800; white-space: nowrap; }
 .sheet .blank {
@@ -461,6 +461,7 @@ figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
   height: 1.1em;
 }
 .sheet-fields { margin-bottom: 0.12in; }
+.sheet .field.cont { margin-top: -0.1in; }   /* a second ruled line for the same field */
 .sheet-grid { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0.06in 0; margin: -0.08in 0 0.18in; }
 .sheet-grid th {
   font: 800 8pt var(--sans); letter-spacing: .05em; text-transform: uppercase;
@@ -471,7 +472,7 @@ figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
   height: 0.62in; border: 1.6px solid var(--dark); border-top: none; border-radius: 0 0 6px 6px;
   background: var(--paper-light);
 }
-.sheet-grid.tall td { height: 0.8in; }
+.sheet-grid.tall td { height: 0.74in; }
 .sheet-grid .blank { display: none; }
 .sheet .box-check {
   display: inline-block; width: 0.15in; height: 0.15in; margin: 0 0.03in 0 0.12in;
@@ -588,7 +589,7 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .sheet .pip.dashed { border-style: dashed; border-color: var(--ink-soft); }
 .sheet-status { padding: 0.06in 0.1in; font-size: 9.4pt; line-height: 1.7; vertical-align: top; }
 .sheet-status .box-check { margin-left: 0; margin-right: 0.06in; }
-.sheet.ref { font-size: 9.6pt; line-height: 1.32; }
+.sheet.ref { font-size: 9.4pt; line-height: 1.3; padding-top: 0.26in; padding-bottom: 0.2in; }
 .ref-cols { columns: 2; column-gap: 0.28in; }
 .ref-block { break-inside: avoid; margin: 0 0 0.1in; }
 .ref-block h3 { margin: 0 0 0.03in; font: 800 9pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--alarm); }
@@ -596,3 +597,4 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .ref-block ul { padding-left: 0.16in; }
 .ref-block li { margin: 0 0 0.02in; }
 .ref-numbers { margin-top: 0.05in; }
+.ref-numbers td { padding-top: 0.03in; padding-bottom: 0.03in; }
