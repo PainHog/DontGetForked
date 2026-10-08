@@ -84,7 +84,7 @@ test("the Difficulty ladder (Chapter 3, At the Table) is DGF.difficulty", () => 
 });
 
 test("the result bands (Chapter 3) are what the rules logic reads", () => {
-  says(TXT.ch3, "Success: the total meets the Difficulty", "Chapter 3, Results");
+  says(TXT.ch3, "Success: the total is equal to the Difficulty or more", "Chapter 3, Results");
   says(TXT.ch3, "Cost: 1–2 short", "Chapter 3, Results");
   says(TXT.ch3, "Trouble: 3 or more short", "Chapter 3, Results");
   for (const d of Object.values(DGF.difficulty)) {
@@ -93,11 +93,11 @@ test("the result bands (Chapter 3) are what the rules logic reads", () => {
     assert.equal(band(d - 2, d), "cost");
     assert.equal(band(d - 3, d), "trouble");
   }
-  says(TXT.ch3, "Critical: a Success where both dice show the same face", "Chapter 3, Results");
+  says(TXT.ch3, "Critical: a Success where both dice show the same number", "Chapter 3, Results");
   assert.equal(isCritical(4, 4, 8), true);
   assert.equal(isCritical(3, 3, 8), false, "doubles that miss are not a Critical");
   says(TXT.ch3, "In a chase it counts as two Successes", "Chapter 3, Results");
-  says(TXT.ch3, "came up higher than your trait die", "Chapter 3, The Monster Shows");
+  says(TXT.ch3, "its number is higher than your trait die’s", "Chapter 3, The Monster Shows");
   assert.equal(monsterShows(4, 5), true);
   assert.equal(monsterShows(5, 5), false, "a tie shows nothing");
 });
@@ -112,17 +112,17 @@ test("the dice: one each of d12…d4, the Mask d6 and the Monster d10 (Chapters 
   says(TXT.sheet, `the Mask d${mask} or the Monster d${monster}`, "the Entity Sheet");
   says(TXT.ref, `the Mask d${mask} or the Monster d${monster}`, "At the Table");
   says(TXT.ch3, `a d${DGF.dieSteps.at(-1)} can’t go higher`, "Chapter 3, Abilities");
-  says(TXT.ch3, `Nothing makes a die smaller than a d${DGF.dieSteps[0]}`, "Chapter 3, Abilities");
+  says(TXT.ch3, `nothing makes a die smaller than a d${DGF.dieSteps[0]}, or bigger than a d${DGF.dieSteps.at(-1)}`, "Chapter 3, Abilities");
   assert.equal(stepUp(DGF.dieSteps.at(-1)).die, DGF.dieSteps.at(-1));
   assert.equal(stepDown(DGF.dieSteps[0]).die, DGF.dieSteps[0]);
 });
 
 test("abilities: opening an approach is 2 lower; the Costs in the book's order (Chapter 3, At the Table)", () => {
-  says(TXT.ch3, `roll that trait at ${DGF.openApproachEase} lower Difficulty`, "Chapter 3, Abilities");
+  says(TXT.ch3, `roll that trait at a Difficulty ${DGF.openApproachEase} lower`, "Chapter 3, Abilities");
   says(TXT.ref, `open your own approach with an unlisted trait (${DGF.openApproachEase} lower`, "At the Table, Abilities");
   const COST = { suspicion: `Suspicion +${DGF.suspicion.cost}`, drop: "drop an item", loseTurn: "lose a Turn", smaller: "one size smaller" };
   for (const [where, text] of [["Chapter 3, Results", TXT.ch3.slice(TXT.ch3.indexOf("Cost: 1–2 short"))], ["At the Table", TXT.ref.slice(TXT.ref.indexOf("Cost:"))]]) {
-    const at = DGF.costs.map((k) => text.indexOf(COST[k]));
+    const at = DGF.costs.map((k) => text.toLowerCase().indexOf(COST[k].toLowerCase()));
     assert.ok(at.every((i) => i >= 0), `${where} lists the four Costs`);
     assert.deepEqual([...at].sort((a, b) => a - b), at, `${where} lists the Costs in DGF.costs order`);
   }
@@ -253,8 +253,8 @@ test("what raises Suspicion (Chapter 5's table, Chapter 3, At the Table, Entity 
     return k;
   });
   assert.deepEqual([...seen].sort(), Object.keys(S).sort(), "Chapter 5's table lists every trigger once");
-  says(TXT.ch3, `the monster did the work and it showed: Suspicion +${S.monsterShows}`, "Chapter 3, The Monster Shows");
-  says(TXT.ch3, `overdraw costs Suspicion +${S.overdraw}`, "Chapter 3, Abilities");
+  says(TXT.ch3, `the Monster shows: Suspicion +${S.monsterShows}, whatever the result`, "Chapter 3, The Monster Shows");
+  says(TXT.ch3, `overdrawing: it costs Suspicion +${S.overdraw} instead of a charge`, "Chapter 3, Abilities");
   says(TXT.ref, `Trouble +${S.trouble} · the Monster shows +${S.monsterShows} · the loud way +${S.loud} · a Cost chosen as Suspicion +${S.cost} · overdraw +${S.overdraw} · a Tell +${S.tell}`, "At the Table, Suspicion");
   says(TXT.ref, `furniture, each Turn once taken +${S.furniture}`, "At the Table, Suspicion");
   says(TXT.sheet, `it shows if it rolls higher than your trait die: Suspicion +${S.monsterShows}`, "the Entity Sheet");

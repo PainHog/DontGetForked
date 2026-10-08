@@ -173,6 +173,8 @@ body = body.replace(
     if (tag === "table" && /\bnosplit\b/.test(attrs)) return `<div class="keep">${head}${ws}${block}</div>`;
     if (tag === "table" && (/\b(wide|flow)\b/.test(attrs) || (block.match(/<tr\b/g) ?? []).length > 9)) return m;
     if ((tag === "ul" || tag === "ol") && (block.match(/<li\b/g) ?? []).length > 6) return m;
+    // a list with a list inside: the match ends at the inner list's close, so wrapping it would split the outer list
+    if ((tag === "ul" || tag === "ol") && /<(?:ul|ol)\b/.test(block.slice(3))) return m;
     if (tag === "p" && block.length > 900) return m;
     return `<div class="keep">${head}${ws}${block}</div>`;
   });
@@ -247,6 +249,7 @@ const SPOTS = {
   // each has one home chapter, and an unused one fills any other gap
   "ch-01": ["spot-lantern"],
   "ch-02": ["spot-owl"],
+  "ch-03": ["spot-watchman"],
   "ch-05": ["spot-watchman"],
   "ch-06": ["spot-windmill"],
   "ch-07": ["spot-cart"],

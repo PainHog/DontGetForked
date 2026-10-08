@@ -1,6 +1,6 @@
-Now: The first version of the online system is published, ready for Richard to install in Foundry and try before the first real game.
+Now: Making the rulebook easier to read: every passage the clarity audit found unclear is being rewritten in plainer words, chapter by chapter, with no rule changes.
 Next: Richard's two-player try of the online version, then the first playtest with real people.
-Number: Design decisions made = 108
+Number: Design decisions made = 118
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 290
