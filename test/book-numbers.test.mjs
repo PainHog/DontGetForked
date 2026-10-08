@@ -234,7 +234,7 @@ test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
 });
 
 test("the way out and the lock-up's traits (Chapters 4 and 6, At the Table) are DGF.wayOut and DGF.lockup", () => {
-  says(TXT.ch4, `The way out is one watched obstacle: ${ways(DGF.wayOut)}.`, "Chapter 4, Getting Out");
+  says(TXT.ch4, `The way out is one watched obstacle: ${ways(DGF.wayOut)}, at Difficulty ${L.easy.exit} on Easy, ${L.standard.exit} on Standard and ${L.hard.exit} on Hard.`, "Chapter 4, Getting Out");
   says(TXT.ref, `The way out: ${ways(DGF.wayOut)}; one roll for all.`, "At the Table, Turns");
   says(TXT.ch6, `the lock-up is an obstacle — ${ways(DGF.lockup.rescue)}, always watched —`, "Chapter 6, Captured (rescue)");
   says(TXT.ch6, `a captive may try to slip free: ${ways(DGF.lockup.slip)}, at the lock-up Difficulty`, "Chapter 6, Captured (slipping free)");
@@ -274,7 +274,7 @@ test("Tells go off on 4–6 on a d6 (Chapters 2 and 5, At the Table) as DGF.tell
 
 test("the furniture's obstacle is 2 harder, at most 12 (Chapters 4, 8, 9) as DGF.furnitureObstacle", () => {
   const F = DGF.furnitureObstacle;
-  says(TXT.ch4, `behind one extra obstacle, ${F.harder} harder (at most ${F.max})`, "Chapter 4, Furniture");
+  says(TXT.ch4, `That obstacle’s Difficulty is ${F.harder} higher than it would otherwise be (at most ${F.max})`, "Chapter 4, Furniture");
   says(TXT.ch8, `the furniture’s extra one, ${F.harder} harder`, "Chapter 8, Rolling a Town");
   says(TXT.ch8, `(the furniture’s obstacle counts by its roll, before its +${F.harder})`, "Chapter 8, Rolling a Town");
   says(TXT.ch9, `The furniture’s obstacle is already ${F.harder} harder.`, "Chapter 9's opener");

@@ -33,3 +33,34 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C3-19** applied, as a list, bound to its lead-in so the two never part.
 - **C3-20** applied (ruling F2 as wording).
 - **C3-21** applied; "one size bigger" is now the phrase for a raise book-wide.
+
+### Chapter 4
+- **C4-1** applied: Chapter 1 now says what Easy, Standard and Hard are and who picks; Chapter 4 adds "(how hard the town is: Chapter 1)".
+- **C4-2** applied, with the optional counts.
+- **C4-3** applied; "gives an edge there" became "gives an edge at its location" (part B's C8-12 flags the same "there").
+- **C4-4** applied.
+- **C4-5** applied. The ways in and the watched location became bullets of their own, and the terms item, loot and piece are defined under the list (as C3-8 asks).
+- **C4-6** applied, with Richard's ruling (2).
+- **C4-7** applied, as its own bullet.
+- **C4-8** applied (the lock-up as a fourth part; "a place is any of these").
+- **C4-9** applied.
+- **C4-10** applied, as a list.
+- **C4-11** applied.
+- **C4-12** applied.
+- **C4-13** applied.
+- **C4-14** applied.
+- **C4-15** applied.
+- **C4-16** applied.
+- **C4-17** applied; the dropping clause went to the new Dropping and Picking Up list (C3-7). The noise rule is one bullet with its end ("That stops when…").
+- **C4-18** applied, as a short "Loot." paragraph under the carrying list; "not while it's in a local chase" became "not once it's caught, until its chase ends" (V28's edge).
+- **C4-19** applied.
+- **C4-20** applied.
+
+### Chapter 5
+- **C5-1** applied, shorter: "A trait the obstacle doesn't list is never loud" (the report's "rolled with your own approach" left out the switch abilities, which also roll unlisted traits and are never loud either).
+- **C5-2** applied as the table's "From a roll?" column and the box's example. The box's sentence on Tells and furniture went, to keep the chapter on one page (the column says it).
+- **C5-3** applied, as a list, with shorter bullets to keep the page ("The lock-up counts, but not a captive's arrival"; "The way out counts once anyone comes back to it").
+- **C5-4** applied, with Richard's ruling (1): the Storyteller checks once everyone moving there this Turn has arrived; one arrival is picked at random (number them and roll a die); Suspicion +1 is the only effect. The "rolling again on a number nobody has" clause went for room.
+- **C5-5** applied.
+- **C5-6** applied ("the hunt is on" is tied to the final flight here; Chapter 6 keeps its heading and says the same).
+- **C5-7** applied, as one sentence ("stays behind" without "at the lock-up", for room).
