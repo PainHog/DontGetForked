@@ -181,12 +181,15 @@ test("the labels' numbers in the chapters' prose (Chapters 4, 5, 6) are DGF.labe
   assert.deepEqual([L.easy.items, L.standard.items, L.hard.items], [eItems, shItems, shItems]);
   const [esLimit, hLimit] = match(TXT.ch5, /Limit: (\d+) on Easy and Standard, (\d+) on Hard/, "Chapter 5's opener");
   assert.deepEqual([L.easy.limit, L.standard.limit, L.hard.limit], [esLimit, esLimit, hLimit]);
-  const [lock] = match(TXT.ch6, /lock-up Difficulty \((\d+)\)/, "Chapter 6, Captured"); // B7: one lock-up Difficulty for every label
+  const lockRow = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Difficulty");
+  assert.ok(lockRow, "Chapter 6's lock-up table has a Difficulty row");
+  const [lock] = match(lockRow[1], /^The lock-up’s: (\d+)$/, "Chapter 6, Captured (rescue)"); // B7: one lock-up Difficulty for every label
+  assert.equal(lockRow[2], lockRow[1], "Chapter 6: rescue and slipping free share the lock-up's Difficulty");
   assert.deepEqual([L.easy.lockup, L.standard.lockup, L.hard.lockup], [lock, lock, lock]);
-  const [start, esEscape, hEscape] = match(TXT.ch6, /The Lead starts at (\d+) and the party escapes at (\d+) \(at (\d+) on Hard\)/, "Chapter 6, The Final Flight");
+  const [start, esEscape, hEscape] = match(TXT.ch6, /Lead: starts at (\d+)\. The party escapes at (\d+) \((\d+) on Hard\)/, "Chapter 6, The Final Flight");
   assert.equal(start, DGF.lead.finalStart);
   assert.deepEqual([L.easy.finalEscape, L.standard.finalEscape, L.hard.finalEscape], [esEscape, esEscape, hEscape]);
-  const [eMob, shMob] = match(TXT.ch6, /set by the town’s difficulty \((\d+) on Easy, (\d+) on Standard and Hard\)/, "Chapter 6, The Final Flight");
+  const [eMob, shMob] = match(TXT.ch6, /The mob’s Difficulty: (\d+) on Easy, (\d+) on Standard and Hard, however many flee/, "Chapter 6, The Final Flight");
   assert.deepEqual([L.easy.finalMob, L.standard.finalMob, L.hard.finalMob], [eMob, shMob, shMob]);
   const [rStart, rEsc, rHard] = match(TXT.ref, /Final flight:.*?Lead (\d+), escape at (\d+) \((\d+) on Hard\)/, "At the Table, Chases");
   assert.deepEqual([rStart, rEsc, rHard], [DGF.lead.finalStart, L.standard.finalEscape, L.hard.finalEscape]);
@@ -198,8 +201,9 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   const { localStart, localEscape } = DGF.lead;
   const M = DGF.localMob;
   assert.equal(M.perSuspicion, 0.5, "the book says “half the Suspicion”");
-  says(TXT.ch6, `Your Lead starts at ${localStart} and you escape at ${localEscape}.`, "Chapter 6, The Local Chase");
-  says(TXT.ch6, `The mob’s Difficulty is ${M.base} plus half the Suspicion (round down), at most ${M.max}, checked each round.`, "Chapter 6, The Local Chase");
+  says(TXT.ch6, `Lead: starts at ${localStart}. You escape at ${localEscape}.`, "Chapter 6, The Local Chase");
+  says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion, rounded down, at most ${M.max}. Work it out again at the start of every round`, "Chapter 6, The Local Chase");
+  says(TXT.ch6, `(Suspicion 5: ${M.base} + 2 = ${localMobDifficulty(5)}.)`, "Chapter 6, The Local Chase (the example)");
   says(TXT.ch8, `On every difficulty: ${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw +${DGF.suspicion.overdraw} Suspicion; a local chase starts at Lead ${localStart} and escapes at ${localEscape} against a mob of ${M.base} plus half the Suspicion (at most ${M.max}); the final flight starts at Lead ${DGF.lead.finalStart}.`, "Chapter 8, under the Difficulty table");
   says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion (at most ${M.max})`, "At the Table, Chases");
   assert.equal(localMobDifficulty(3), 9, "8 + half of 3, rounded down");
@@ -211,8 +215,10 @@ test("the Lead and the majority rule (Chapter 6, At the Table) are what the rule
   says(TXT.ch6, "Cost: no change", "Chapter 6, The Lead");
   says(TXT.ch6, "Trouble: Lead −1", "Chapter 6, The Lead");
   assert.deepEqual([leadMove({ band: "success" }), leadMove({ band: "success", critical: true }), leadMove({ band: "cost" }), leadMove({ band: "trouble" })], [1, 2, 0, -1]);
-  says(TXT.ch6, "If Successes outnumber Trouble, the Lead rises by 1, or by 2 if they outnumber it by two or more; if Trouble outnumbers Successes, it falls the same way; otherwise it stays. A Critical counts as two Successes.", "Chapter 6, The Majority Rule");
+  says(TXT.ch6, "Then count the Successes (a Critical counts as two) and the Trouble. Costs count for neither. Successes ahead by 1: Lead +1. Ahead by 2 or more: Lead +2. Trouble ahead by 1: Lead −1. Ahead by 2 or more: Lead −2. Level: the Lead stays.", "Chapter 6, The Majority Rule");
+  says(TXT.ch6, "a Success, a Critical, a Cost and a Trouble make 3 Successes to 1 Trouble: Lead +2.", "Chapter 6, The Majority Rule (the example)");
   const S = { band: "success" }, T = { band: "trouble" }, C = { band: "cost" }, X = { band: "success", critical: true };
+  assert.equal(majorityMove([S, X, C, T]), 2, "the box's example");
   assert.deepEqual([majorityMove([S, T]), majorityMove([S, C]), majorityMove([S, S]), majorityMove([S, S, S, T]), majorityMove([T, T, C]), majorityMove([X])], [0, 1, 2, 2, -2, 2]);
 });
 
@@ -236,8 +242,9 @@ test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
 test("the way out and the lock-up's traits (Chapters 4 and 6, At the Table) are DGF.wayOut and DGF.lockup", () => {
   says(TXT.ch4, `The way out is one watched obstacle: ${ways(DGF.wayOut)}, at Difficulty ${L.easy.exit} on Easy, ${L.standard.exit} on Standard and ${L.hard.exit} on Hard.`, "Chapter 4, Getting Out");
   says(TXT.ref, `The way out: ${ways(DGF.wayOut)}; one roll for all.`, "At the Table, Turns");
-  says(TXT.ch6, `the lock-up is an obstacle — ${ways(DGF.lockup.rescue)}, always watched —`, "Chapter 6, Captured (rescue)");
-  says(TXT.ch6, `a captive may try to slip free: ${ways(DGF.lockup.slip)}, at the lock-up Difficulty`, "Chapter 6, Captured (slipping free)");
+  const traits = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Traits");
+  assert.deepEqual(traits, ["Traits", ways(DGF.lockup.rescue), ways(DGF.lockup.slip)], "Chapter 6, Captured: the rescue's and slipping free's traits");
+  says(TXT.ch6, "The lock-up is always watched", "Chapter 6, Captured");
 });
 
 /* --------------------------------------------------------- Suspicion -- */

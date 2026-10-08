@@ -64,3 +64,22 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C5-5** applied.
 - **C5-6** applied ("the hunt is on" is tied to the final flight here; Chapter 6 keeps its heading and says the same).
 - **C5-7** applied, as one sentence ("stays behind" without "at the lock-up", for room).
+
+## Part B: Chapters 6, 7 and 8
+
+### Chapter 6
+- **C6-1** applied.
+- **C6-2** applied: the round's five steps replace the first sentence of The Lead and the whole of The Ground. The results list sits under step 5 (it covers C6-3), followed by the escape number and cornered (C6-4).
+- **C6-3** applied, through C6-2's step 5 ("Fleeing alone … Fleeing with others, it moves once for the round, by the majority rule").
+- **C6-4** applied, through C6-2 ("captured in a local chase, forked in the final flight"; the numbers are in each chase's list below).
+- **C6-5** applied.
+- **C6-6** applied: the clause moved under the chase table as an italic note. The compendium's chase table now quotes step 1's "The row names two traits that work this round, for everyone in the chase."
+- **C6-7** applied.
+- **C6-8** applied, without the Dice bullet (C6-2's step 2 says it).
+- **C6-9** applied in Chapter 6 (and the lock-up is in Chapter 4's town list, C4-8; Chapter 8 under C8-3).
+- **C6-10** applied with Richard's ruling (4): "You can still spend charges on any roll at the lock-up: your own, a rescuer's or another captive's."
+- **C6-11** applied as the table, with the note on watched and on a later capture.
+- **C6-12** applied.
+- **C6-13** applied, keeping a short Dice bullet ("the Monster only; the Mask is off") so the flight's list says it where a reader looks.
+- **C6-14** applied, with the example.
+- **C6-15** applied ("From the moment the hunt is on, when the final flight begins").

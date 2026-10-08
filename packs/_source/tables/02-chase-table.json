@@ -1,7 +1,7 @@
 {
   "key": "chase-table",
   "name": "The Chase Table (d6)",
-  "description": "<p>The result says which traits work this round for everyone in the chase, and always includes one that isn’t Nimble.</p><p><em>Rulebook, Chapter 6: The Chase Table.</em></p><p>In Foundry the chase tracker rolls the ground each round (<strong>Roll the ground</strong> when chases are run by hand).</p>",
+  "description": "<p>The row names two traits that work this round, for everyone in the chase.</p><p><em>Rulebook, Chapter 6: The Chase Table.</em></p><p>In Foundry the chase tracker rolls the ground each round (<strong>Roll the ground</strong> when chases are run by hand).</p>",
   "formula": "1d6",
   "results": [
     {
