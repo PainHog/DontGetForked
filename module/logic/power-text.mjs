@@ -7,20 +7,31 @@
  * (the Witch's Hedge Spell, Jekyll & Hyde's Draught) carries its own `rule`.
  */
 
-/** The rule for a signature or a Gift version. */
-export function powerRule(power, { traitName, ease = 2 }) {
+/**
+ * The rule for a signature or a Gift version. A power may add a `note`: a rule of its own that follows the standard
+ * wording (Trample's dice as Jekyll and as Hyde; Pillar of Society still turning Jekyll into Hyde), so that only
+ * flavour is left in italics.
+ */
+export function powerRule(power, ctx) {
+  const rule = standardRule(power, ctx);
+  return power.note ? `${rule} ${power.note}` : rule;
+}
+
+function standardRule(power, { traitName, ease = 2 }) {
   if (power.rule) return power.rule;
   const T = power.trait ? traitName(power.trait) : "";
   switch (power.effect) {
     case "raise":
-      return "Your trait die is one size bigger for this roll (a d8 becomes a d10).";
+      return "Your trait die is one size bigger for this roll (a d8 becomes a d10; a d12 can’t go higher).";
     case "switch":
       return `Roll ${T} instead of the trait the obstacle calls for (in a chase, instead of the ground’s).`;
     case "hidden":
-      return "Roll the Monster die without risking Suspicion: if it shows, Suspicion doesn’t rise for it (Trouble or a Cost still counts).";
+      return "Take the Monster d10 as your second die without risking Suspicion: if it shows, that adds nothing. "
+        + "Anything else on the roll still raises Suspicion as usual (Chapter 3).";
     case "open":
-      return `At ${power.watchedOnly ? "a watched obstacle" : "an obstacle"} that doesn’t list ${T}, roll ${T} at ${ease} lower Difficulty. `
-        + "Only you get past, except at the way out and the lock-up (Chapter 3). Never in a chase."
+      return `At ${power.watchedOnly ? "a watched obstacle" : "an obstacle"} that doesn’t list ${T}, roll ${T} at a Difficulty ${ease} lower; `
+        + (power.watchedOnly ? "Trouble still gets you caught. " : "if it’s watched, Trouble still gets you caught. ")
+        + "Only you get past, but the way out still takes everyone and a rescue frees every captive (Chapter 3). Never in a chase."
         + (power.noLoot ? " Not while you carry loot or furniture: nothing you carry passes through." : "");
     default:
       throw new Error(`${power.name}: no rule for effect "${power.effect}"`);
@@ -43,6 +54,6 @@ export function perkParts(perk) {
 
 /** When a Weakness starts to bite, in words (Chapter 6). */
 export const weaknessTiming = {
-  always: "Always: from the first round of any chase, your trait die is one size smaller.",
-  soon: "Soon: from the third round of any chase, your trait die is one size smaller.",
+  always: "Always (from round 1): in any chase, from its first round to its end, your trait die is one size smaller.",
+  soon: "Soon (from round 3): in any chase, from its third round to its end, your trait die is one size smaller.",
 };

@@ -115,7 +115,7 @@ test("the sheet shows the book: dice, signature, Gift, Perk, Duty, Weakness, Tel
   await asUser(ANN, () => sheet.render());
   const html = sheet.renderedParts.sheet;
   // each power spelled out as Chapter 2 does (test/sheet-powers.test.mjs compares every line with the book)
-  for (const s of ["Hedge Spell", "yours or a friend’s", "Broomstick", "doesn’t list Nimble, roll Nimble at 2 lower Difficulty", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
+  for (const s of ["Hedge Spell", "Your trait die is one size bigger for this roll", "Broomstick", "doesn’t list Nimble, roll Nimble at a Difficulty 2 lower", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
     assert.ok(html.includes(s), `the sheet shows ${s}`);
   assert.ok(!html.includes('data-action="drinkDraught"'), "only Jekyll & Hyde has the Draught");
   const jh = new EntitySheet({ document: jekyll });

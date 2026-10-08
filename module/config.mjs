@@ -80,7 +80,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost.", default: true },
       { key: "keeperOfTreasures", name: "Keeper of Treasures", text: "“Drop an item” is never your Cost." },
-      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob in your local chase is 1 easier: nobody wants to get too close.", flavour: "nobody wants to get too close" },
+      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob’s Difficulty in your local chase is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close" },
     ],
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
@@ -96,8 +96,8 @@ DGF.entities = Object.freeze([
     },
     perks: [
       { key: "nightRunner", name: "Night Runner", text: "When you flee alone, your local chase starts at Lead 2.", default: true },
-      { key: "shortcut", name: "Shortcut", text: "The way out is 2 easier when you roll it." },
-      { key: "fetch", name: "Fetch", text: "You know the way home. The way out is 1 easier, whoever rolls it, while you’re there, and a final flight you’re in starts at Lead 3.", flavour: "You know the way home." },
+      { key: "shortcut", name: "Shortcut", text: "The way out’s Difficulty is 2 lower when you roll it." },
+      { key: "fetch", name: "Fetch", text: "You know the way home. Two edges. While you’re at the way out, its Difficulty is 1 lower for whoever rolls it. A final flight you’re in starts at Lead 3, not 2.", flavour: "You know the way home." },
     ],
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
     tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
@@ -112,7 +112,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "outOfSight", name: "Out of Sight", text: "Trouble gets you caught only while you or anyone in the same place carries loot or furniture: they can’t see you, but they can see a floating candlestick.", flavour: "they can’t see you, but they can see a floating candlestick", default: true },
+      { key: "outOfSight", name: "Out of Sight", text: "Trouble at a watched obstacle doesn’t get you caught unless you, or anyone in the same place, carries loot or furniture. It still raises Suspicion: they can’t see you, but they can see a floating candlestick.", flavour: "they can’t see you, but they can see a floating candlestick", default: true },
       { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep the loot you carry (not furniture)." },
       { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
     ],
@@ -129,14 +129,14 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "spectral", name: "Spectral", text: "You get past group obstacles without rolling and without using your action, even in a Turn you move; not while you carry loot or furniture.", default: true },
+      { key: "spectral", name: "Spectral", text: "Group obstacles (the ones each Entity must get past for itself) don’t stop you: no roll and no action, so you can still move or roll that Turn. Not while you carry loot or furniture.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously.", flavour: "nobody takes rattling chains seriously" },
-      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you’re back where you were caught and lose your next Turn instead of being captured (if the Limit comes that round, you just join the final flight)." },
+      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you aren’t captured: you’re back where you were caught, still carrying what you had, and you lose your next Turn. If the Limit comes that round, you simply join the final flight." },
     ],
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers).", rule: "One trait die is one size bigger for one roll in the same place, yours or a friend’s (in a local chase, only yours)." },
+  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers)." },
     gift: {
       name: "Witchcraft",
       versions: [
@@ -146,7 +146,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "familiarsWarning", name: "Familiar’s Warning", text: "When you arrive (alone or with others), a Tell check goes off only if a second d6 also rolls 4–6: the cat warns you.", flavour: "the cat warns you", default: true },
+      { key: "familiarsWarning", name: "Familiar’s Warning", text: "When you arrive somewhere that gets a Tell check (Chapter 5), alone or with others, a Tell goes off only if a second d6 also rolls 4–6. That covers everyone arriving with you: the cat warns you.", flavour: "the cat warns you", default: true },
       { key: "flyByNight", name: "Fly by Night", text: "In a chase you can always roll Wits, whatever the ground." },
       { key: "wiseWoman", name: "Wise Woman", text: "A Cost on your Wits roll is never “lose a Turn”." },
     ],
@@ -155,18 +155,18 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over at once, free." },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, that roll stands and Hyde takes over straight after it, free, until a draught changes him back." },
     gift: {
       name: "The Other Self",
       versions: [
         { key: "doctorsBag", name: "Doctor’s Bag", effect: "raise", text: "The right instrument for the job.", default: true },
-        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", text: "A respectable doctor having a funny turn (if the Monster shows, Hyde still takes over)." },
-        { key: "trample", name: "Trample", effect: "open", trait: "brawn", text: "A d4 as Jekyll, a d12 as Hyde." },
+        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "On Jekyll’s rolls, Hyde still takes over if the Monster shows.", text: "A respectable doctor having a funny turn." },
+        { key: "trample", name: "Trample", effect: "open", trait: "brawn", note: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", text: "" },
       ],
     },
     perks: [
       { key: "practisedHand", name: "Practised Hand", text: "Changing back to Jekyll costs no charge.", default: true },
-      { key: "steadyNerves", name: "Steady Nerves", text: "Hyde takes over only if the Monster beats your trait die by 2 or more." },
+      { key: "steadyNerves", name: "Steady Nerves", text: "On Jekyll’s rolls, Hyde takes over only if the Monster beats your trait die by 2 or more. Beating it by 1 still shows: Suspicion +2." },
       { key: "bruteStrength", name: "Brute Strength", text: "As Hyde, carrying doesn’t make your Nimble smaller." },
     ],
     weakness: { name: "A Familiar Face", timing: "soon", text: "Someone in the mob recognises the good doctor." },
@@ -308,7 +308,7 @@ DGF.perkRules = Object.freeze({
   tireless: Object.freeze({ carryNimble: false }), // Carrying doesn’t make your Nimble smaller.
   patienceOfAges: Object.freeze({ noCost: "loseTurn" }), // “Lose a Turn” is never your Cost.
   keeperOfTreasures: Object.freeze({ noCost: "drop" }), // “Drop an item” is never your Cost.
-  shortcut: Object.freeze({ exitEase: 2 }), // The way out is 2 easier when you roll it.
+  shortcut: Object.freeze({ exitEase: 2 }), // The way out’s Difficulty is 2 lower when you roll it.
   outOfSight: Object.freeze({ caughtOnlyCarrying: true, withYou: true }), // V17: Trouble gets you caught only while you or anyone in the same place carries loot or furniture.
   lightStep: Object.freeze({ loud: 0 }), // The loud way costs you no Suspicion.
   rattle: Object.freeze({ monsterShows: 1 }), // The Monster showing on your roll is Suspicion +1, not +2.
@@ -316,17 +316,17 @@ DGF.perkRules = Object.freeze({
   practisedHand: Object.freeze({ freeDraughtTo: "jekyll" }), // Changing back to Jekyll costs no charge.
   steadyNerves: Object.freeze({ formMargin: 2 }), // Hyde takes over only if the Monster beats your trait die by 2 or more.
   bruteStrength: Object.freeze({ form: "hyde", carryNimble: false }), // As Hyde, carrying doesn’t make your Nimble smaller.
-  fetch: Object.freeze({ finalLead: 3, partyExitEase: 1 }), // B2: a final flight you're in starts at Lead 3; B5: the way out is 1 easier while you're there.
+  fetch: Object.freeze({ finalLead: 3, partyExitEase: 1 }), // B2: a final flight you're in starts at Lead 3; B5: the way out's Difficulty is 1 lower while you're there.
   // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs):
   wallCrawler: Object.freeze({ chaseTrait: "nimble" }), // In a chase you can always roll Nimble.
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
-  fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob in your local chase is 1 easier.
+  fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob's Difficulty in your local chase is 1 lower.
   spectral: Object.freeze({ groupPass: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture.
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep the loot you carry (not furniture: V16).
-  familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive, a Tell check goes off only if a second d6 also rolls 4–6.
+  familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive somewhere that gets a Tell check, a Tell goes off only if a second d6 also rolls 4–6.
 });
 
 /** Chapter 4, Getting Out: the way out is one watched obstacle — Sly or Nimble, or Brawn the loud way. */

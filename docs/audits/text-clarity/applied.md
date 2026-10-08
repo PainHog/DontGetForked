@@ -106,8 +106,37 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **C8-12** applied ("roll any die first" without "first", which read as a step before the list).
 - **C8-13** applied as "Building a Location by Hand", with the default for Difficulty (aim for the rolled mix, keep the ceiling). It became a full-width box after the obstacle table, where it fits the page. "The way out and the lock-up are fixed and list three" was left out: the rescue lists two, and the overview already says both are the same in every town.
 - **C8-14** applied. The location is picked by numbering the list's items (each item has its location), since the furniture is now rolled before the locations are placed.
-- **C8-15** applied; "Roll them as you need them" is in the overview, and "or a couple before play" here.
+- **C8-15** applied (the overview also says "Roll villagers as you need them").
 - **C8-16** applied.
 - **C8-17** applied.
 - **C8-18** applied.
 - **C8-19** applied with the default "at least 1, and usually 2".
+
+## Part C: Chapter 2, Chapter 9, the Entity Sheet and At the Table
+
+### Chapter 2: the introduction
+- **C2-1** applied, shorter: "(he changes form with the Draught)".
+- **C2-2** applied, saying "if its number is higher than your trait die's", as Chapter 3 now does.
+- **C2-3** applied, with "Its dice arrangement." dropped (Five Traits says it). The Tell bullet is shorter for room ("When it goes off, Suspicion +1 (Chapter 5)"); when it goes off is in Chapter 5.
+- **C2-4** applied ("each with an edge where one kind of list item is found"; "No two Entities in a party take the same one").
+- **C2-5** applied without the last sentence on overdraw (the report's own fallback for room; At the Table and Chapter 3 say it).
+- **C2-6** applied with Richard's ruling (7): Hedge Spell lost its own `rule`, so it reads like every raise; the Using an Entry box at the start of The Eight says once, for every Entity, that a signature or a Gift can go on a friend's roll in the same place, for the charge but not the action, and not on a friend's roll in a local chase.
+- **C2-7** applied without "(a trait the obstacle doesn't list)" (for room); the Perk sentence went into the Using an Entry box, as the report allows.
+- **C2-8** applied ("one size bigger", the book-wide phrase).
+- **C2-9** applied: the term map, and the box with the four lines (spend before you roll; one raise per roll, with "a raise cancels a step down"; loud stays loud; Perks aren't abilities).
+
+### Chapter 2: the generated entries
+- **C2-10** applied, shorter: "roll Charm at a Difficulty 2 lower; if it's watched, Trouble still gets you caught. Only you get past, but the way out still takes everyone and a rescue frees every captive (Chapter 3). Never in a chase." (Mesmerise, which only works at a watched obstacle, says "Trouble still gets you caught".)
+- **C2-11** applied through the box's "Loud stays loud" line (not repeated in seven entries, for room).
+- **C2-12** applied differently: "Take the Monster d10 as your second die without risking Suspicion: if it shows, that adds nothing. Anything else on the roll still raises Suspicion as usual (Chapter 3)." The full list (Trouble, the loud way, a Cost, an overdraw) is in Chapter 3; repeating it in eight entries cost Chapter 2 a seventh page.
+- **C2-13** applied (and the box's line).
+- **C2-14** applied ("Always (from round 1): in any chase, from its first round to its end, your trait die is one size smaller.").
+- **C2-15** applied (Fear the Curse, Shortcut, Fetch); "bigger" is the word for raises book-wide.
+- **C2-16** applied.
+- **C2-17** applied.
+- **C2-18** applied, with "get past" for "pass" (part A's C3-18).
+- **C2-19** applied.
+- **C2-20** applied. With Richard's ruling (1), the check is made once everyone moving there that Turn has arrived, so "everyone arriving with you" is everyone who moves there that Turn.
+- **C2-21** applied.
+- **C2-22** applied with Richard's ruling (8): a `note` that powerRule adds after the standard wording. Pillar of Society: "On Jekyll's rolls, Hyde still takes over if the Monster shows." then its flavour in italics; Trample: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", with no flavour line.
+- **C2-23** applied.

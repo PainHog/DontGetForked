@@ -343,7 +343,7 @@ test("each Entity's powers (Chapter 2) are generated from DGF.entities, and the 
     has(`Signature: ${e.signature.name} 1 charge`, "the signature's heading and cost");
     has(`${powerRule(e.signature, ctx)}${e.signature.flavour ? ` ${e.signature.flavour}` : ""}`, "the signature's rule");
     has(`Gift: ${e.gift.name} pick one · 1 charge a use`, "the Gift's heading");
-    for (const v of e.gift.versions) has(`${v.name}${v.default ? " (default)" : ""}: ${powerRule(v, ctx)} ${v.text}`, `Gift ${v.name}`);
+    for (const v of e.gift.versions) has(`${v.name}${v.default ? " (default)" : ""}: ${powerRule(v, ctx)}${v.text ? ` ${v.text}` : ""}`, `Gift ${v.name}`);
     has("Perk pick one · always on", "the Perk heading");
     for (const k of e.perks) { const { rule, flavour } = perkParts(k); has(`${k.name}${k.default ? " (default)" : ""}: ${rule}${flavour ? ` ${flavour}` : ""}`, `Perk ${k.name}`); }
     const duty = DGF.duties.find((d) => d.key === e.duty);
@@ -357,7 +357,8 @@ test("each Entity's powers (Chapter 2) are generated from DGF.entities, and the 
   assert.match(powerRule({ effect: "raise" }, ctx), /one size bigger/);
   assert.match(powerRule({ effect: "switch", trait: "brawn" }, ctx), /^Roll Brawn instead of the trait the obstacle calls for/);
   assert.match(powerRule({ effect: "hidden" }, ctx), /without risking Suspicion/);
-  assert.match(powerRule({ effect: "open", trait: "sly" }, ctx), new RegExp(`roll Sly at ${DGF.openApproachEase} lower Difficulty`));
+  assert.match(powerRule({ effect: "open", trait: "sly" }, ctx), new RegExp(`roll Sly at a Difficulty ${DGF.openApproachEase} lower`));
+  assert.match(powerRule({ effect: "raise" }, ctx), new RegExp(`a d${DGF.dieSteps.at(-1)} can’t go higher`));
 });
 
 test("each signature ability's data says its standard effect (what the Foundry sheet shows)", () => {
@@ -383,10 +384,10 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   says(perk("rattle"), `Suspicion +${R.rattle.monsterShows}, not +${DGF.suspicion.monsterShows}`, "Rattle");
   says(perk("lightStep"), "the loud way costs you no Suspicion", "Light Step");
   assert.equal(R.lightStep.loud, 0);
-  says(perk("shortcut"), `the way out is ${R.shortcut.exitEase} easier when you roll it`, "Shortcut");
-  says(perk("fetch"), `The way out is ${R.fetch.partyExitEase} easier, whoever rolls it, while you’re there, and a final flight you’re in starts at Lead ${R.fetch.finalLead}`, "Fetch");
+  says(perk("shortcut"), `the way out’s Difficulty is ${R.shortcut.exitEase} lower when you roll it`, "Shortcut");
+  says(perk("fetch"), `While you’re at the way out, its Difficulty is ${R.fetch.partyExitEase} lower for whoever rolls it. A final flight you’re in starts at Lead ${R.fetch.finalLead}, not ${DGF.lead.finalStart}`, "Fetch");
   says(perk("nightRunner"), `when you flee alone, your local chase starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
-  says(perk("fearTheCurse"), `when you flee alone, the mob in your local chase is ${R.fearTheCurse.localMobEase} easier`, "Fear the Curse");
+  says(perk("fearTheCurse"), `when you flee alone, the mob’s Difficulty in your local chase is ${R.fearTheCurse.localMobEase} lower`, "Fear the Curse");
   says(perk("wallCrawler"), `in a chase you can always roll ${TRAIT[R.wallCrawler.chaseTrait]}`, "Wall-Crawler");
   says(perk("flyByNight"), `in a chase you can always roll ${TRAIT[R.flyByNight.chaseTrait]}`, "Fly by Night");
   says(perk("familiarsWarning"), `a second d${DGF.tell.die} also rolls ${DGF.tell.goesOffOn}–${DGF.tell.die}`, "Familiar’s Warning");

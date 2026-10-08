@@ -49,10 +49,10 @@ test("the sheet's signature, Gift versions, Perks, Weakness and Tell read exactl
   const drac = game.actors.find((a) => a.system.entityKey === "dracula");
   const shown = await sheetText(drac);
   assert.ok(shown.includes("Signature: Mesmerise 1 charge"));
-  assert.ok(shown.includes("At a watched obstacle that doesn’t list Charm, roll Charm at 2 lower Difficulty."));
+  assert.ok(shown.includes("At a watched obstacle that doesn’t list Charm, roll Charm at a Difficulty 2 lower; Trouble still gets you caught."));
   assert.ok(shown.includes("Gift: Shape of the Night pick one · 1 charge a use"));
   assert.ok(shown.includes("Perk pick one · always on"));
-  assert.ok(shown.includes("Weakness: Garlic. Always: from the first round of any chase, your trait die is one size smaller. Every kitchen in town has some, and the mob knows it."));
+  assert.ok(shown.includes("Weakness: Garlic. Always (from round 1): in any chase, from its first round to its end, your trait die is one size smaller. Every kitchen in town has some, and the mob knows it."));
 });
 
 test("the flavour is in italics, and the chosen Gift and Perk are marked", async () => {
