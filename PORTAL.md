@@ -1,4 +1,4 @@
-Now: Making the rulebook easier to read: every passage the clarity audit found unclear is being rewritten in plainer words, chapter by chapter, with no rule changes.
+Now: The rulebook has been rewritten in plainer words from cover to cover: every rule that was hard to follow is now spelled out, set out as a list or a table where that helps, with no rule changes. It grew from 29 to 34 pages.
 Next: Richard's two-player try of the online version, then the first playtest with real people.
 Number: Design decisions made = 118
 Number: Open design questions = 0
@@ -59,6 +59,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Online version keeps track of the optional campaign (castle upgrades) and of who is in each raid
 - [x] Simulated games with a full table of five players, and the tweaks they pointed to
 - [x] First version of the online system published
+- [x] Rulebook checked for hard-to-follow rules and rewritten in plainer words
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)

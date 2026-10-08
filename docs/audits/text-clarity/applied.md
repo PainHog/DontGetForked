@@ -180,3 +180,9 @@ Every finding in parts A, B and C, and what happened to it in the book. The find
 - **AT-10** applied.
 - **AT-11** applied.
 - **AT-12** applied (the lock-up row went; "Difficulty 10" is in the local chase line). To keep the card to one page, its intro line went too, a few phrases are shorter ("Done, but the Storyteller picks"; "Monster shows: it outrolls your trait die. Suspicion +2."), and the card's type is a touch smaller (9.4pt).
+
+## Outside the findings
+
+- **Part B's "Rule gaps noticed"** were not applied: they are questions about the rules, not wording. Still open for Richard: (1) may a rolled location's later obstacle repeat one of its ways in; (2) may a map mark the way out small, so that a Huge piece can't leave by it. (3) and (4) were settled by his rulings (4)–(6) and the default for C8-19.
+- **The same class of problem elsewhere** (Richard's rule: fix it and audit the book for the same mistake): Chapter 9's town keys now set flavour in italics like Chapter 8's obstacle table; "one size larger" became "one size bigger" wherever it was left; the Foundry labels for opening an approach read "Difficulty 2 lower".
+- **Page count:** 29 before, 34 after (Chapters 3, 4, 6, 8 and 9 each run to one more page; every new page carries text and, where there is room at a chapter's end, a spot illustration).
