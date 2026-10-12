@@ -243,3 +243,4 @@ Proposals put to Richard; nothing here is decided until he answers.
 
   See `docs/LESSONS.md`.
 - Set win-rate targets before writing rules. Heisty settled on Easy ~90%, Standard ~75%, Hard ~55–60%.
+| 2026-10-12 | **Three calls after the clarity pass:** the guard dog's quiet way stays "a biscuit and a pat" (the pass's change, made so it doesn't echo the Werewolf's Good Dog); a rolled location's later obstacle may repeat one of its ways in; a map (your own town) may mark the way out small, so a Huge piece can't leave town. *Richard.* | The audit's two open rule gaps (part B) and the editor's one content change. The simulator already allowed repeats; it has no small entrances, so nothing in its numbers changes |
