@@ -85,7 +85,7 @@ test("every obstacle the script reads out is the town's: its traits, loud way, D
   assert.ok(plain(part(/^<h3>The Way Out/)).includes("Sly to slip across with the crowd, or Nimble"));
   const h = chapter("40-happens.html");
   const rescue = plain(h.slice(h.indexOf('id="if-rescue"'), h.indexOf('id="if-drop"')));
-  assert.equal([...rescue.matchAll(/Difficulty (\d+)/g)].map((m) => +m[1]).join(), `${L.lockup},${L.lockup}`);
+  assert.equal([...rescue.matchAll(/Difficulty (\d+)(?! lower)/g)].map((m) => +m[1]).join(), `${L.lockup},${L.lockup}`);
 });
 
 test("the Tells and Weaknesses are the Entities', each Weakness from the round its timing says", () => {

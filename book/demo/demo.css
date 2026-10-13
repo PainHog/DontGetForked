@@ -122,10 +122,12 @@ table.timeline td:first-child { width: 0.9in; font: 800 9pt var(--sans); color: 
 .pregen p.pg-help { margin-top: 0.05in; padding-top: 0.04in; border-top: 1px solid var(--paper-edge); font: 500 8pt/1.3 var(--sans); color: var(--ink-soft); }
 
 /* --------------------------------------------------------- the tracker -- */
-.tracker h3 { margin-top: 0.12in; }
+.tracker h3 { margin-top: 0.1in; }
+.tracker p.duties { line-height: 2.1; margin: 0 0 0.04in; font-size: 9.6pt; }
+.tracker p.duties .blank { display: inline-block; width: 0.85in; height: 1em; margin: 0 0.14in 0 0.04in; border-bottom: 1.3px solid var(--ink); vertical-align: -0.1em; }
 .track { display: flex; gap: 0.04in; margin: 0.03in 0 0.06in; }
 .track span {
-  flex: 1 1 0; height: 0.42in; box-sizing: border-box;
+  flex: 1 1 0; height: 0.36in; box-sizing: border-box;
   display: flex; align-items: center; justify-content: center;
   border: 1.4px solid var(--ink); border-radius: 4px; background: var(--paper-light);
   font: 800 11pt var(--sans); color: var(--dark);

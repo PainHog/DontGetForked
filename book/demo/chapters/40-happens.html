@@ -19,7 +19,7 @@
 
   <div class="if" id="if-trouble">
     <h3>Trouble</h3>
-    <p class="cue">It doesn’t happen, and Suspicion +1. Read the obstacle’s Trouble line. If the obstacle is <strong>watched</strong>, the roller is caught: turn to Caught. If not, that’s all: they can try again next Turn.</p>
+    <p class="cue">It doesn’t happen, and Suspicion +1. Read the obstacle’s Trouble line. If the obstacle is <strong>watched</strong>, the roller is caught: turn to Caught. If not, that’s all: they can try again next Turn. Check the roller’s Perk: the Invisible Man (Out of Sight) isn’t caught unless he, or anyone where he is, carries loot or the mirror (Suspicion still +1).</p>
   </div>
 
   <div class="if" id="if-monster">
@@ -39,13 +39,13 @@
 
   <div class="if" id="if-critical">
     <h3>A Critical</h3>
-    <p class="cue">A Success where both dice show the same number. Outside a chase, the roller gets back one charge it spent (never more than 3). In a chase, it counts as two Successes.</p>
+    <p class="cue">A Success where both dice show the same number. Outside a chase, the roller gets back one charge it spent (never more than 3): read the box. In a chase, it counts as two Successes: say instead, “You leave them standing.”</p>
     <div class="read"><p>Perfect. Not a sound, not a witness. If you’ve spent a charge tonight, you get one back.</p></div>
   </div>
 
   <div class="if" id="if-tell">
     <h3>A Tell Check</h3>
-    <p class="cue">The first time anyone reaches a watched place: the florist, the carpenter, the tailor, the lock-up (not a captive’s arrival) and the way out once anyone comes back to it. Each place is checked once a night. Wait until everyone moving there this Turn has arrived, then roll a d6. On 4–6, a Tell goes off: number the arrivals, roll to pick one, and read its line. Suspicion +1; that’s its only effect. <strong>The Witch’s Familiar’s Warning:</strong> if she is among the arrivals, a Tell goes off only if a second d6 also rolls 4–6.</p>
+    <p class="cue">The first time anyone reaches a watched place: the florist, the carpenter, the tailor, the lock-up (not a captive’s arrival) and the way out once anyone comes back to it. Each place is checked once a night. Wait until everyone moving there this Turn has arrived (if you’re not sure who else is coming, ask), then roll a d6. On 4–6, a Tell goes off: number the arrivals and roll a d6 to pick one (two arrivals: 1–3 the first, 4–6 the second; three: 1–2, 3–4, 5–6; more: reroll a number nobody has), and read its line. Suspicion +1; that’s its only effect. <strong>The Witch’s Familiar’s Warning:</strong> if she is among the arrivals, a Tell goes off only if a second d6 also rolls 4–6.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><th>Dracula</th><td class="say">A dark shop window reflects the whole street: the lanterns, the crowd, the grinning turnips. Everyone but you. Someone looks from the window, to you, and back.</td></tr>
       <tr><th>The Creature</th><td class="say">You stand a head above the whole crowd, and no costume in the world hides it. A child on her father’s shoulders looks you right in the eye.</td></tr>
@@ -75,10 +75,10 @@
     <ol>
       <li><strong>The Lead</strong> starts at 1. <span class="cue">The Werewolf’s Night Runner, fleeing alone: Lead 2.</span></li>
       <li><strong>The mob’s Difficulty</strong> is 8 plus half the Suspicion, rounded down, at most 12. Work it out again at the start of every round. <span class="cue">Suspicion 0–1: 8 · 2–3: 9 · 4–5: 10 · 6–7: 11 · 8–10: 12.</span></li>
-      <li><strong>Each round,</strong> roll a d6 on the ground table below and read the line. The runner picks one of its two traits, and the Mask or the Monster (no Mask carrying the mirror). Abilities go on the runner’s own roll only: nobody else can spend a charge on it. No Castle Duty in a chase, and no opening a way of your own.</li>
+      <li><strong>Each round,</strong> roll a d6 on the ground table below and read the line. The runner picks one of its two traits, and the Mask or the Monster (no Mask, and Nimble one size smaller, carrying the mirror). Abilities go on the runner’s own roll only: nobody else can spend a charge on it. No Castle Duty in a chase, and no opening a way of your own.</li>
       <li><strong>Move the Lead:</strong> a Success +1 (a Critical +2), a Cost no change, Trouble −1.</li>
       <li><strong>Suspicion still rises in a local chase:</strong> Trouble +1, the Monster showing +2, an overdraw +2, once per roll, by its biggest trigger.</li>
-      <li><strong>The Weakness:</strong> from round 1 for Dracula and a Ghost, from round 3 for everyone else, the runner’s trait die is one size smaller to the end of the chase. Read its line when it starts.</li>
+      <li><strong>The Weakness:</strong> from round 1 for Dracula and a Ghost, from round 3 for everyone else, the runner’s trait die is one size smaller to the end of the chase. Read its line when it starts. A bigger die from an ability cancels it for that roll.</li>
       <li><strong>Escape at 4:</strong> they’re back where they were caught, with this Turn used up. <strong>Cornered at 0:</strong> captured (below).</li>
     </ol>
     <p class="cue"><strong>Caught together</strong> (Trouble in the same group check): everyone in it rolls each round, in any order they like, and the Lead moves once for the round by the majority rule (The Final Flight). Suspicion rises once a round, by the biggest trigger. A Perk that changes a local chase only works for someone fleeing alone. <strong>If Suspicion reaches 11</strong> during the chase, it ends at once and the runners join the final flight; anyone cornered that same round is captured first.</p>
@@ -136,7 +136,7 @@
       <p><strong>Success:</strong> free, and acts again next Turn, from the lock-up. <strong>A Cost:</strong> nothing happens. <strong>Trouble:</strong> Suspicion +1, but no chase.</p>
       <div class="read"><p>The bars, it turns out, are only a suggestion.</p></div>
     </div>
-    <p class="cue">The lock-up is watched, so Dracula’s Mesmerise works on both. A rescue frees only those held at that moment.</p>
+    <p class="cue">The lock-up is watched, so Dracula’s Mesmerise works on both. A captive may also slip free by a way of its own (its card’s ability, at a Difficulty 2 lower). A rescue frees only those held at that moment.</p>
   </div>
 
   <div class="if" id="if-drop">
@@ -146,7 +146,7 @@
 
   <div class="if" id="if-suspicion">
     <h3>Suspicion Rising</h3>
-    <p class="cue">Flavour only. Read each line the first time Suspicion reaches that number, so the players feel the town waking up.</p>
+    <p class="cue">Flavour only. Read each line the first time Suspicion reaches or passes that number, so the players feel the town waking up.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><td class="n">4</td><td class="say">Somewhere a dog starts barking, and doesn’t stop.</td></tr>
       <tr><td class="n">7</td><td class="say">The church bell starts ringing, though it isn’t the hour. In the square, someone says, quite loudly, “Those aren’t costumes.”</td></tr>
