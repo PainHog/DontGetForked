@@ -1,0 +1,48 @@
+{
+  "key": "ghost",
+  "name": "A Ghost",
+  "img": "systems/dont-get-forked/assets/demo/tokens/ghost.png",
+  "system": {
+    "entityKey": "ghost",
+    "form": "",
+    "traits": {
+      "brawn": 4,
+      "nimble": 12,
+      "sly": 10,
+      "charm": 8,
+      "wits": 6
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "chill",
+    "perk": "spectral",
+    "duty": "butler",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  },
+  "prototypeToken": {
+    "name": "A Ghost",
+    "texture": {
+      "src": "systems/dont-get-forked/assets/demo/tokens/ghost.png"
+    },
+    "width": 1,
+    "height": 1,
+    "lockRotation": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 0,
+    "sight": {
+      "enabled": false
+    }
+  }
+}

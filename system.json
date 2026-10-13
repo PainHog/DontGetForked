@@ -2,7 +2,7 @@
   "id": "dont-get-forked",
   "type": "system",
   "title": "Don't Get Forked",
-  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls, with chases and the lock-up run for you. Compendiums hold the eight Entities, the book's random tables and its three premade towns.",
+  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls, with chases and the lock-up run for you. Compendiums hold the eight Entities, the book's random tables and its three premade towns, and a Demo folder with a Halloween one-shot, Lantern Night in Hallowby: its script, a map scene, the Entities with tokens and a macro that starts the raid.",
   "version": "0.1.0",
   "compatibility": {
     "minimum": "13",
@@ -54,6 +54,35 @@
       "path": "packs/journal",
       "type": "JournalEntry",
       "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "demo-entities",
+      "label": "Demo: Entities with Tokens",
+      "path": "packs/demo-entities",
+      "type": "Actor",
+      "system": "dont-get-forked",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "demo-scenes",
+      "label": "Demo: Scenes",
+      "path": "packs/demo-scenes",
+      "type": "Scene",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "demo-journal",
+      "label": "Demo: Script and Guide",
+      "path": "packs/demo-journal",
+      "type": "JournalEntry",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "demo-macros",
+      "label": "Demo: Macros",
+      "path": "packs/demo-macros",
+      "type": "Macro",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
     }
   ],
   "packFolders": [
@@ -61,6 +90,11 @@
       "name": "Don't Get Forked",
       "sorting": "m",
       "packs": ["entities", "tables", "journal"]
+    },
+    {
+      "name": "Demo",
+      "sorting": "m",
+      "packs": ["demo-journal", "demo-scenes", "demo-entities", "demo-macros"]
     }
   ],
   "socket": true,

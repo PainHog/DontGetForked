@@ -55,10 +55,12 @@ test("the compendium source is exactly what the game data makes (run npm run bui
   assert.deepEqual([...stale, ...extra].map((p) => p.slice(ROOT.length + 1)), []);
 });
 
-test("system.json declares the three packs the build makes, in one folder", () => {
+test("system.json declares the packs the build makes: the game's in one folder, the one-shot's in the Demo folder", () => {
   const manifest = JSON.parse(readFileSync(join(ROOT, "system.json"), "utf8"));
   assert.deepEqual(manifest.packs.map((p) => [p.name, p.type, p.path]), PACKS.map((d) => [d.out, d.type, `packs/${d.out}`]));
-  assert.deepEqual(manifest.packFolders.flatMap((f) => f.packs), PACKS.map((d) => d.out));
+  assert.deepEqual(manifest.packFolders.map((f) => f.name), ["Don't Get Forked", "Demo"]);
+  assert.deepEqual(manifest.packFolders[0].packs, ["entities", "tables", "journal"]);
+  assert.deepEqual([...manifest.packFolders[1].packs].sort(), PACKS.map((d) => d.out).filter((n) => n.startsWith("demo-")).sort());
 });
 
 /* ------------------------------------------------------------ entities -- */

@@ -155,6 +155,9 @@ else {
             err(`${def.out}: table "${raw.key}" has ${got.results?.length ?? 0} attached results, expected ${want.results.length}`);
         }
         if (got._stats?.systemId !== manifest.id) err(`${def.out}: "${raw.key}" _stats.systemId is "${got._stats?.systemId}"`);
+        // every picture a document names from the system (actor and token images, scene backgrounds) ships with it
+        for (const m of JSON.stringify(want).matchAll(new RegExp(`systems/${manifest.id}/([A-Za-z0-9_./-]+)`, "g")))
+          if (!existsSync(join(ROOT, m[1]))) err(`${def.out}: "${raw.key}" names a missing file: systems/${manifest.id}/${m[1]}`);
         if (JSON.stringify(stable(got)) !== JSON.stringify(stable(want)))
           err(`${def.out}: "${raw.key}" compiled document differs from source — rebuild packs`);
       });

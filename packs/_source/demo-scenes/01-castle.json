@@ -1,0 +1,51 @@
+{
+  "key": "castle",
+  "name": "The Castle",
+  "background": {
+    "src": "systems/dont-get-forked/assets/demo/castle.jpg"
+  },
+  "width": 2458,
+  "height": 1900,
+  "grid": {
+    "type": 0,
+    "size": 140
+  },
+  "initial": {
+    "x": 1229,
+    "y": 950,
+    "scale": 0.5
+  },
+  "padding": 0,
+  "backgroundColor": "#141a1d",
+  "tokenVision": false,
+  "fog": {
+    "exploration": false
+  },
+  "environment": {
+    "globalLight": {
+      "enabled": true
+    }
+  },
+  "navigation": true,
+  "notes": [
+    {
+      "key": "castle-castle",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "c7e4f450f7d59fbd",
+      "x": 1229,
+      "y": 1560,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "Part One",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    }
+  ]
+}

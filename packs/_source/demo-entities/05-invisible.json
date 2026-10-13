@@ -1,0 +1,48 @@
+{
+  "key": "invisible",
+  "name": "The Invisible Man",
+  "img": "systems/dont-get-forked/assets/demo/tokens/invisible.png",
+  "system": {
+    "entityKey": "invisible",
+    "form": "",
+    "traits": {
+      "brawn": 4,
+      "nimble": 8,
+      "sly": 12,
+      "charm": 6,
+      "wits": 10
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "throughTheGap",
+    "perk": "outOfSight",
+    "duty": "tailor",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  },
+  "prototypeToken": {
+    "name": "The Invisible Man",
+    "texture": {
+      "src": "systems/dont-get-forked/assets/demo/tokens/invisible.png"
+    },
+    "width": 1,
+    "height": 1,
+    "lockRotation": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 0,
+    "sight": {
+      "enabled": false
+    }
+  }
+}

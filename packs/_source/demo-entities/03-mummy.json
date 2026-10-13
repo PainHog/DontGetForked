@@ -1,0 +1,48 @@
+{
+  "key": "mummy",
+  "name": "The Mummy",
+  "img": "systems/dont-get-forked/assets/demo/tokens/mummy.png",
+  "system": {
+    "entityKey": "mummy",
+    "form": "",
+    "traits": {
+      "brawn": 10,
+      "nimble": 4,
+      "sly": 6,
+      "charm": 8,
+      "wits": 12
+    },
+    "charges": {
+      "value": 3,
+      "start": 3
+    },
+    "gift": "royalBearing",
+    "perk": "patienceOfAges",
+    "duty": "librarian",
+    "status": "active",
+    "capturedTurn": 0,
+    "slipTurn": 0,
+    "carried": [],
+    "carryingFurniture": false,
+    "nextRollSmaller": 0,
+    "skipTurn": 0,
+    "weaknessInPlay": false,
+    "overdrewInFlight": false,
+    "notes": ""
+  },
+  "prototypeToken": {
+    "name": "The Mummy",
+    "texture": {
+      "src": "systems/dont-get-forked/assets/demo/tokens/mummy.png"
+    },
+    "width": 1,
+    "height": 1,
+    "lockRotation": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 0,
+    "sight": {
+      "enabled": false
+    }
+  }
+}

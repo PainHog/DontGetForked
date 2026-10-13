@@ -18,6 +18,7 @@
  *                            lang/en.json
  *   assets/maps/             each town's map, drawn by the book's map code
  *                            (book/tools/town-maps.mjs), for the towns' map pages
+ *   packs/_source/demo-…    the Halloween one-shot's Demo compendiums (tools/gen-demo-source.mjs)
  *
  * Everything here restates the book or the system; nothing is new game content.
  * The few sentences quoted from the book (BOOK_QUOTES) are checked against the
@@ -36,6 +37,7 @@ import { entitySystem } from "../module/logic/entity.mjs";
 import { loadTowns, wayText, TRAIT_NAME } from "../book/tools/towns.mjs";
 import { townMap } from "../book/tools/town-maps.mjs";
 import { ROOT, SRC } from "./pack-config.mjs";
+import { demoDocs } from "./gen-demo-source.mjs";
 
 /** The folders this script owns: every file in them is generated (anything else there is removed). */
 export const OWNED = Object.freeze({
@@ -43,6 +45,10 @@ export const OWNED = Object.freeze({
   tables: join(SRC, "tables"),
   journal: join(SRC, "journal"),
   maps: join(ROOT, "assets", "maps"),
+  demoEntities: join(SRC, "demo-entities"),
+  demoScenes: join(SRC, "demo-scenes"),
+  demoJournal: join(SRC, "demo-journal"),
+  demoMacros: join(SRC, "demo-macros"),
 });
 
 const LANG = JSON.parse(readFileSync(join(ROOT, "lang", "en.json"), "utf8"));
@@ -291,6 +297,13 @@ export function generate() {
   const towns = loadTowns();
   journalDocs(towns).forEach((d, i) => files.set(join(OWNED.journal, num(i, d.key)), json(d)));
   for (const t of towns) files.set(join(OWNED.maps, `${t.key}.svg`), townMap(t));
+  // the Halloween one-shot (the Demo folder)
+  const demo = demoDocs({ L, B });
+  demo.entities.forEach((d, i) => files.set(join(OWNED.demoEntities, num(i, d.key)), json(d)));
+  demo.scenes.forEach((d, i) => files.set(join(OWNED.demoScenes, num(i, d.key)), json(d)));
+  demo.journal.forEach((d, i) => files.set(join(OWNED.demoJournal, num(i, d.key)), json(d)));
+  demo.macros.forEach((d, i) => files.set(join(OWNED.demoMacros, num(i, d.key)), json(d)));
+  files.set(join(OWNED.maps, "hallowby.svg"), demo.map);
   return files;
 }
 

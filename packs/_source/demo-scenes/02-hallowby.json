@@ -1,0 +1,147 @@
+{
+  "key": "hallowby",
+  "name": "Hallowby",
+  "background": {
+    "src": "systems/dont-get-forked/assets/demo/hallowby-map.jpg"
+  },
+  "width": 4200,
+  "height": 3010,
+  "thumb": "systems/dont-get-forked/assets/demo/hallowby-thumb.jpg",
+  "grid": {
+    "type": 0,
+    "size": 140
+  },
+  "initial": {
+    "x": 2100,
+    "y": 1505,
+    "scale": 0.35
+  },
+  "padding": 0,
+  "backgroundColor": "#141a1d",
+  "tokenVision": false,
+  "fog": {
+    "exploration": false
+  },
+  "environment": {
+    "globalLight": {
+      "enabled": true
+    }
+  },
+  "navigation": true,
+  "notes": [
+    {
+      "key": "hallowby-tavern",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "c1f88c190159780a",
+      "x": 1190,
+      "y": 784,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "hallowby-florist",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "14ddf4219d0034a1",
+      "x": 3080,
+      "y": 756,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "hallowby-carpenter",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "075d76132057aff6",
+      "x": 3115,
+      "y": 2226,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "hallowby-tailor",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "38a75cd851a3dc9a",
+      "x": 1120,
+      "y": 2226,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "hallowby-lockup",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "185b7913efb2c836",
+      "x": 2100,
+      "y": 2576,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "hallowby-wayout",
+      "entryId": "f504dc12c40d5628",
+      "pageId": "186b418dda4774bd",
+      "x": 3612,
+      "y": 1505,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    }
+  ]
+}

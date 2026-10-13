@@ -29,6 +29,11 @@ export const PACKS = [
   { file: "entities", out: "entities", collection: "actors", type: "Actor", subtype: "entity" },
   { file: "tables", out: "tables", collection: "tables", type: "RollTable", subtype: null },
   { file: "journal", out: "journal", collection: "journal", type: "JournalEntry", subtype: null },
+  // the Halloween one-shot, Lantern Night in Hallowby (tools/gen-demo-source.mjs): the Demo folder
+  { file: "demo-entities", out: "demo-entities", collection: "actors", type: "Actor", subtype: "entity" },
+  { file: "demo-scenes", out: "demo-scenes", collection: "scenes", type: "Scene", subtype: null },
+  { file: "demo-journal", out: "demo-journal", collection: "journal", type: "JournalEntry", subtype: null },
+  { file: "demo-macros", out: "demo-macros", collection: "macros", type: "Macro", subtype: null },
 ];
 
 /** Icons from Foundry core for documents that don't name their own. */
@@ -39,6 +44,7 @@ export const RESULT_ICON = "icons/svg/d20-black.svg";
 export function embeddedOf(def, raw) {
   if (def.type === "JournalEntry") return raw.pages ?? [];
   if (def.type === "RollTable") return raw.results ?? [];
+  if (def.type === "Scene") return raw.notes ?? [];
   return [];
 }
 
@@ -117,6 +123,47 @@ export function toCliDoc(def, raw, index) {
     };
   }
 
+  if (def.type === "Scene") {
+    // A scene with its pins (Notes): each pin opens a journal page by its id, so the journal is imported keeping ids.
+    const { key, notes = [], ...rest } = raw;
+    return {
+      _id: id,
+      _key: `!scenes!${id}`,
+      ...rest,
+      notes: notes.map((n, k) => {
+        const nid = makeId(def.out, raw.key, n.key ?? String(k));
+        const { key: _k, ...note } = n;
+        return { _id: nid, _key: `!scenes.notes!${id}.${nid}`, ...note, _stats: STATS };
+      }),
+      // the other embedded collections, empty (the pack tool writes them back that way)
+      drawings: [], tokens: [], levels: [], lights: [], regions: [], sounds: [], templates: [], tiles: [], walls: [],
+      active: false,
+      folder: null,
+      sort,
+      ownership: { default: 0 },
+      flags: {},
+      _stats: STATS
+    };
+  }
+
+  if (def.type === "Macro") {
+    return {
+      _id: id,
+      _key: `!macros!${id}`,
+      name: raw.name,
+      type: raw.type ?? "script",
+      img: raw.img,
+      scope: "global",
+      command: raw.command,
+      author: null,
+      folder: null,
+      sort,
+      ownership: { default: 0 },
+      flags: {},
+      _stats: STATS
+    };
+  }
+
   if (def.type === "RollTable") {
     // v13+ TableResult: a text result keeps its words in `description` (HTML) and
     // leaves `name` empty, as Foundry's own systems do; `range` is the roll totals
@@ -175,7 +222,7 @@ export function toCliDoc(def, raw, index) {
     // null (not "") disables a token bar; "" would be cleaned back to the
     // system's primaryTokenAttribute. Override per pack once actors exist.
     // actorLink: a dragged-in Entity's tokens change the actor the raid tracks.
-    doc.prototypeToken = { actorLink: true, bar1: { attribute: null }, bar2: { attribute: null } };
+    doc.prototypeToken = { actorLink: true, bar1: { attribute: null }, bar2: { attribute: null }, ...(raw.prototypeToken ?? {}) };
   }
   return doc;
 }
