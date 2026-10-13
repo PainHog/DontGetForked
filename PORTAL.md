@@ -1,9 +1,9 @@
-Now: The rulebook has been rewritten in plainer words from cover to cover: every rule that was hard to follow is now spelled out, set out as a list or a table where that helps, with no rule changes. It grew from 29 to 34 pages.
-Next: Richard's two-player try of the online version, then the first playtest with real people.
-Number: Design decisions made = 118
-Number: Open design questions = 0
+Now: A Halloween one-shot, Lantern Night in Hallowby: a script the Storyteller can read word for word, a new town built to teach the game, and, in the online version, a town map, monster tokens and the whole script ready to drag in.
+Next: Richard checks the one-shot's town and wording, then runs it for his group at Halloween.
+Number: Design decisions made = 119
+Number: Open design questions = 1
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 290
+Number: Automated checks passing = 300
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -60,6 +60,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Simulated games with a full table of five players, and the tweaks they pointed to
 - [x] First version of the online system published
 - [x] Rulebook checked for hard-to-follow rules and rewritten in plainer words
+- [ ] A Halloween one-shot: a word-for-word script, a town map and monster tokens
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
