@@ -235,3 +235,6 @@
 .dgf-script table.ds-lines th { text-align: left; white-space: normal; }
 .dgf-script td.ds-say { border-left: 4px solid var(--dgf-dark); background: var(--dgf-paper-light); color: var(--dgf-ink); font-size: 1.05em; }
 .dgf-script td.ds-n, .dgf-script td.ds-n2, .dgf-script td.ds-when { color: var(--dgf-ink-soft); font-size: 0.9em; }
+
+/* the full rule behind an ability's short line (Chapter 2 spells the kinds out once; the sheet stands alone) */
+.dont-get-forked .dgf-pw-detail { display: block; margin-top: 0.15em; font-size: 0.88em; color: var(--dgf-ink-soft); }

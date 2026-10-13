@@ -11,7 +11,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DGF } from "../module/config.mjs";
-import { powerRule, perkParts, weaknessTiming } from "../module/logic/power-text.mjs";
+import { powerRule, powerShort, kindRules, perkParts, weaknessTiming } from "../module/logic/power-text.mjs";
 import { rewrite as rewriteEntries } from "../book/tools/entity-entries.mjs";
 import { band, isCritical, monsterShows, suspicionForRoll, leadMove, majorityMove, localMobDifficulty, stepUp, stepDown, tellGoesOff, yearResult } from "../module/logic/rules.mjs";
 
@@ -343,9 +343,9 @@ test("each Entity's powers (Chapter 2) are generated from DGF.entities, and the 
     const { paras, items } = ENTRIES[i];
     const has = (x, what) => assert.ok(paras.includes(x) || items.includes(x), `${e.key}: ${what} ("${x}")`);
     has(`Signature: ${e.signature.name} 1 charge`, "the signature's heading and cost");
-    has(`${powerRule(e.signature, ctx)}${e.signature.flavour ? ` ${e.signature.flavour}` : ""}`, "the signature's rule");
+    has(`${powerShort(e.signature, ctx)}${e.signature.flavour ? ` ${e.signature.flavour}` : ""}`, "the signature's rule");
     has(`Gift: ${e.gift.name} pick one · 1 charge a use`, "the Gift's heading");
-    for (const v of e.gift.versions) has(`${v.name}${v.default ? " (default)" : ""}: ${powerRule(v, ctx)}${v.text ? ` ${v.text}` : ""}`, `Gift ${v.name}`);
+    for (const v of e.gift.versions) has(`${v.name}${v.default ? " (default)" : ""}: ${powerShort(v, ctx)}${v.text ? ` ${v.text}` : ""}`, `Gift ${v.name}`);
     has("Perk pick one · always on", "the Perk heading");
     for (const k of e.perks) { const { rule, flavour } = perkParts(k); has(`${k.name}${k.default ? " (default)" : ""}: ${rule}${flavour ? ` ${flavour}` : ""}`, `Perk ${k.name}`); }
     const duty = DGF.duties.find((d) => d.key === e.duty);
@@ -355,7 +355,12 @@ test("each Entity's powers (Chapter 2) are generated from DGF.entities, and the 
     assert.equal(e.gift.versions.filter((v) => v.default).length, 1, `${e.key}: one default Gift`);
     assert.equal(e.perks.filter((v) => v.default).length, 1, `${e.key}: one default Perk`);
   }
-  // Every standard power's rule says what its effect does, in the words Chapter 3 uses.
+  // The four kinds are spelled out once, in the box before the entries, in Chapter 3's words.
+  const box = plain(chapter(CH.ch2).match(/<aside class="box list kinds">[\s\S]*?<\/aside>/)[0]);
+  for (const k of kindRules({ ease: DGF.openApproachEase })) assert.ok(box.includes(`${k.name} ${k.rule}`), `the kinds box: ${k.key}`);
+  assert.match(box, new RegExp(`roll that trait at a Difficulty ${DGF.openApproachEase} lower`));
+  assert.match(box, new RegExp(`a d${DGF.dieSteps.at(-1)} can’t go higher`));
+  // Every standard power's full rule (the sheet and the hand-out cards) says what its effect does, in the words Chapter 3 uses.
   assert.match(powerRule({ effect: "raise" }, ctx), /one size bigger/);
   assert.match(powerRule({ effect: "switch", trait: "brawn" }, ctx), /^Roll Brawn instead of the trait the obstacle calls for/);
   assert.match(powerRule({ effect: "hidden" }, ctx), /without risking Suspicion/);

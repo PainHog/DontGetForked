@@ -29,10 +29,10 @@
   <section class="dgf-abilities">
     <h3>{{localize "DGF.Sheet.abilities"}}</h3>
     <p class="dgf-pw-h"><strong>{{localize "DGF.Sheet.signature"}}: {{signature.name}}</strong> <span class="dgf-pw-cost">{{localize "DGF.Sheet.cost.signature"}}</span></p>
-    <p class="dgf-pw">{{signature.rule}}{{#if signature.flavour}} <em>{{signature.flavour}}</em>{{/if}}</p>
+    <p class="dgf-pw">{{signature.rule}}{{#if signature.flavour}} <em>{{signature.flavour}}</em>{{/if}}{{#if signature.detail}} <span class="dgf-pw-detail">{{signature.detail}}</span>{{/if}}</p>
     <div class="dgf-pick">
       <p class="dgf-pw-h"><strong>{{localize "DGF.Sheet.gift"}}: {{giftName}}</strong> <span class="dgf-pw-cost">{{localize "DGF.Sheet.cost.gift"}}</span></p>
-      <ul class="dgf-pw-list">{{#each gifts}}<li{{#if selected}} class="dgf-chosen"{{/if}}><strong>{{name}}</strong>{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}: {{rule}}{{#if flavour}} <em>{{flavour}}</em>{{/if}}</li>{{/each}}</ul>
+      <ul class="dgf-pw-list">{{#each gifts}}<li{{#if selected}} class="dgf-chosen"{{/if}}><strong>{{name}}</strong>{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}: {{rule}}{{#if flavour}} <em>{{flavour}}</em>{{/if}}{{#if detail}} <span class="dgf-pw-detail">{{detail}}</span>{{/if}}</li>{{/each}}</ul>
       <label class="dgf-pw-pick">{{localize "DGF.Sheet.pick"}}
         <select name="system.gift">{{#each gifts}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}</option>{{/each}}</select>
       </label>

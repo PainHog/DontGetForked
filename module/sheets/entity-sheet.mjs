@@ -12,7 +12,7 @@ import { setting } from "../settings.mjs";
 import { DGF } from "../config.mjs";
 import { partyClashes, isInRaid } from "../logic/entity.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
-import { powerRule, perkParts, weaknessTiming } from "../logic/power-text.mjs";
+import { powerShort, powerDetail, perkParts, weaknessTiming } from "../logic/power-text.mjs";
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
 import { chooseEntity, becomeEntityUpdate } from "../entities/create.mjs";
 import { getRaid } from "../raid/store.mjs";
@@ -70,9 +70,9 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       hasForms: (view?.forms?.length ?? 0) > 1,
       dice: DGF.traits.map((k) => ({ key: k, label: traitLabel(k), die: sys.traits[k], dieLabel: dieLabel(sys.traits[k]) })),
       charges: sys.charges,
-      signature: view ? { name: view.signature.name, rule: powerRule(view.signature, words), flavour: view.signature.flavour ?? "" } : null,
+      signature: view ? { name: view.signature.name, rule: powerShort(view.signature, words), detail: powerDetail(view.signature, words), flavour: view.signature.flavour ?? "" } : null,
       giftName: view?.giftName ?? "",
-      gifts: (view?.gifts ?? []).map((g) => ({ key: g.key, name: g.name, selected: g.key === view.gift.key, isDefault: !!g.default, rule: powerRule(g, words), flavour: g.text ?? "" })),
+      gifts: (view?.gifts ?? []).map((g) => ({ key: g.key, name: g.name, selected: g.key === view.gift.key, isDefault: !!g.default, rule: powerShort(g, words), detail: powerDetail(g, words), flavour: g.text ?? "" })),
       perks: (view?.perks ?? []).map((p) => ({ key: p.key, name: p.name, selected: p.key === view.perk.key, isDefault: !!p.default, ...perkParts(p) })),
       duties: DGF.duties.map((d) => ({ key: d.key, name: d.name, selected: d.key === sys.duty, isDefault: d.key === view?.defaultDuty })),
       dutyText: view?.duty ? t("DGF.Sheet.dutyText", { kind: view.duty.kind, where: view.duty.where }) : "",

@@ -39,6 +39,49 @@ function standardRule(power, { traitName, ease = 2 }) {
 }
 
 /**
+ * The four kinds of ability, each spelled out once (Chapter 2's box, Richard 2026-10-13: "explain each kind once").
+ * The entries then name the kind and say only what is the ability's own (powerShort). Chapter 3's words.
+ */
+export function kindRules({ ease = 2 } = {}) {
+  return [
+    { key: "raise", name: "Your trait die one size bigger.", rule: "This is a raise, for this roll only. A d8 becomes a d10, and a d12 can’t go higher." },
+    { key: "switch", name: "Roll another trait.", rule: "Roll the ability’s trait instead of the one the obstacle calls for, or in a chase instead of the ground’s." },
+    { key: "hidden", name: "The Monster die without risking Suspicion.", rule: "Take the Monster d10 as your second die. If it shows, that adds nothing, but anything else on the roll still raises Suspicion as usual." },
+    { key: "open", name: "An approach of your own.", rule: `At an obstacle that doesn’t list the ability’s trait, roll that trait at a Difficulty ${ease} lower. If the obstacle is watched, Trouble still gets you caught. Only you get past, though the way out still takes everyone and a rescue still frees every captive. Never in a chase.` },
+  ];
+}
+
+/**
+ * One ability in short, for Chapter 2's entries: its kind (spelled out once in the chapter's box) and what is its
+ * own (its trait, where it works, what it can't do), then any note of its own. An ability with a rule of its own
+ * (the Draught) keeps it in full. The sheet and the hand-out cards show one Entity, so they keep powerRule.
+ */
+export function powerShort(power, ctx) {
+  const rule = shortRule(power, ctx);
+  return power.note ? `${rule} ${power.note}` : rule;
+}
+
+/**
+ * The full rule behind an ability's short form, for a place that has no kinds box (the Entity sheet): its kind spelled
+ * out with its own trait. Empty for an ability whose short form is already its whole rule (the Draught).
+ */
+export function powerDetail(power, ctx) {
+  return power.rule ? "" : standardRule(power, ctx);
+}
+
+function shortRule(power, { traitName }) {
+  if (power.rule) return power.rule;
+  const T = power.trait ? traitName(power.trait) : "";
+  switch (power.effect) {
+    case "raise": return "Your trait die one size bigger.";
+    case "switch": return `Roll ${T} instead.`;
+    case "hidden": return "The Monster die without risking Suspicion.";
+    case "open": return `An approach of your own, with ${T}${power.watchedOnly ? ", at a watched obstacle only" : ""}${power.noLoot ? ", and not while you carry loot or furniture" : ""}.`;
+    default: throw new Error(`${power.name}: no rule for effect "${power.effect}"`);
+  }
+}
+
+/**
  * A Perk's rule and its flavour, apart. `text` is the whole sentence the data keeps; `flavour` (optional) is the
  * part that is colour, not rule, at its end (after ": " or ". ") or at its start.
  */
