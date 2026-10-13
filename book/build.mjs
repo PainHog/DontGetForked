@@ -15,6 +15,8 @@
  *   npm run build:book            strict: fails on missing art
  *   npm run build:book -- --draft missing art becomes a labelled placeholder
  *   npm run build:book -- --print print-on-demand interior + covers, with bleed
+ *   npm run build:book -- --final no playtest notice in the footer (for the published book; every
+ *                                 other build says "Playtest copy: please don't share" on each page)
  *   npm run build:book -- --demo  the Halloween one-shot, Lantern Night in Hallowby, from
  *                                 book/demo/chapters (+ book/demo/demo.css), in the book's look
  *
@@ -51,6 +53,8 @@ const DRAFT = process.argv.includes("--draft");
 // --print: print-on-demand files — an interior with 0.125in bleed on every edge
 // (no covers, even page count) plus separate front and back covers with bleed.
 const PRINT = process.argv.includes("--print");
+// Until the game is published, every page's footer asks readers not to pass the PDF on (Richard, 2026-10-13).
+const PLAYTEST_NOTICE = process.argv.includes("--final") ? "" : "Playtest copy: please don’t share";
 const BLEED_IN = PRINT ? 0.125 : 0;
 const CHROME = process.env.CHROME_PATH ?? (existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined);
 
@@ -239,7 +243,7 @@ const fonts = [
 /* ---------------------------------------------------------------- page -- */
 const css = readFileSync(join(SRC, "book.css"), "utf8") + (DEMO ? "\n" + readFileSync(join(BOOK, "demo", "demo.css"), "utf8") : "");
 // The running footer carries the book title from the constant above.
-const FOOTER_CSS = `@page { @bottom-center { content: ${cssString(BOOK_TITLE + "  ·  ")} counter(page); } }`;
+const FOOTER_CSS = `@page { @bottom-center { content: ${cssString(BOOK_TITLE + "  ·  " + (PLAYTEST_NOTICE ? PLAYTEST_NOTICE + "  ·  " : ""))} counter(page); } }`;
 
 /*
  * Spot illustrations fill the space a chapter leaves empty on its last page.
