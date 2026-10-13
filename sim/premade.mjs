@@ -28,6 +28,11 @@ const obstacle = (o, difficulty = o.difficulty) => ({
 export function premadeTown(key, numbers) {
   const t = PREMADE.find((x) => x.key === key);
   if (!t) throw new Error(`no premade town "${key}"; one of ${PREMADE.map((x) => x.key).join(", ")}`);
+  return simTown(t, numbers);
+}
+
+/** The simulator's town for any resolved town (loadTowns(): the book's, or the one-shot's, book/demo/hallowby.json). */
+export function simTown(t, numbers) {
   const L = numbers.labels[t.label];
   const items = t.locations.map((l, i) => ({ id: `item${i + 1}`, essential: l.essential, kind: l.kind }));
   const locations = t.locations.map((l, i) => {

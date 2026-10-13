@@ -13,6 +13,7 @@
  * opener and the example of play) sit outside the markers and are never touched.
  */
 import { readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { loadTowns, wayText } from "./towns.mjs";
 import { DGF } from "../../module/config.mjs";
 import { townMap } from "./town-maps.mjs";
@@ -32,7 +33,7 @@ function obstacleRow(step, o, cls = "", tag = "") {
   return `<tr${cls ? ` class="${cls}"` : ""}><td><span class="step">${step}</span>${name}</td><td>${wayHtml(o.quiet, o.quietText)}</td><td>${o.loud ? wayHtml(o.loud, o.loudText) : "—"}</td><td class="num">${o.difficulty}</td></tr>`;
 }
 
-function townBlock(t, { newPage }) {
+export function townBlock(t, { newPage }) {
   const L = t.locations;
   const host = L.find((l) => l.furniture);
   const list = L.map((l) => `<li>${l.essential ? `<strong>${cap(l.item)}</strong> (essential)` : cap(l.item)}</li>`).join("");
@@ -70,19 +71,21 @@ ${groups.join("\n")}
 </div>`;
 }
 
-const towns = loadTowns();
-const check = process.argv.includes("--check");
-let html = readFileSync(CHAPTER, "utf8");
-let stale = [];
-towns.forEach((t, i) => {
-  const re = new RegExp(`(<!-- town:${t.key} [^>]*-->)[\\s\\S]*?(<!-- /town:${t.key} -->)`);
-  if (!re.test(html)) throw new Error(`32-ch09.html has no <!-- town:${t.key} … --> … <!-- /town:${t.key} --> markers`);
-  html = html.replace(re, (_, a, b) => `${a}\n${townBlock(t, { newPage: !!t.map?.newPage })}\n${b}`); // layout: which towns start a page
-  const svg = townMap(t);
-  let old = "";
-  try { old = readFileSync(mapFile(t.key), "utf8"); } catch {}
-  if (old !== svg) { stale.push(`map-${t.key}.svg`); if (!check) writeFileSync(mapFile(t.key), svg); }
-});
-if (html !== readFileSync(CHAPTER, "utf8")) { stale.push("32-ch09.html"); if (!check) writeFileSync(CHAPTER, html); }
-if (check && stale.length) { console.error(`out of date: ${stale.join(", ")} — run node book/tools/town-pages.mjs`); process.exit(1); }
-console.log(check ? "Chapter 9's towns and maps match book/src/towns.json." : stale.length ? `wrote ${stale.join(", ")}` : "nothing to change");
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const towns = loadTowns();
+  const check = process.argv.includes("--check");
+  let html = readFileSync(CHAPTER, "utf8");
+  let stale = [];
+  towns.forEach((t, i) => {
+    const re = new RegExp(`(<!-- town:${t.key} [^>]*-->)[\\s\\S]*?(<!-- /town:${t.key} -->)`);
+    if (!re.test(html)) throw new Error(`32-ch09.html has no <!-- town:${t.key} … --> … <!-- /town:${t.key} --> markers`);
+    html = html.replace(re, (_, a, b) => `${a}\n${townBlock(t, { newPage: !!t.map?.newPage })}\n${b}`); // layout: which towns start a page
+    const svg = townMap(t);
+    let old = "";
+    try { old = readFileSync(mapFile(t.key), "utf8"); } catch {}
+    if (old !== svg) { stale.push(`map-${t.key}.svg`); if (!check) writeFileSync(mapFile(t.key), svg); }
+  });
+  if (html !== readFileSync(CHAPTER, "utf8")) { stale.push("32-ch09.html"); if (!check) writeFileSync(CHAPTER, html); }
+  if (check && stale.length) { console.error(`out of date: ${stale.join(", ")} — run node book/tools/town-pages.mjs`); process.exit(1); }
+  console.log(check ? "Chapter 9's towns and maps match book/src/towns.json." : stale.length ? `wrote ${stale.join(", ")}` : "nothing to change");
+}

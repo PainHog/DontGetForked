@@ -1,0 +1,83 @@
+{
+  "about": "The Halloween one-shot's town, Hallowby (Easy), in the same form as book/src/towns.json and checked by the same rules (book/tools/towns.mjs): built only from the approved tables. Built to teach: the first location on the list is the safe one (nothing watched), and the others bring in a group obstacle, watched obstacles, loud ways and the furniture. Draft for Richard's approval (2026-10-13). The one-shot's script (book/demo/chapters), its map (book/tools/town-maps.mjs, book/tools/scene-map.mjs), the Foundry Demo packs and the simulator (sim/demo-check.mjs) all read this file.",
+  "towns": [
+    {
+      "key": "hallowby",
+      "name": "Hallowby",
+      "label": "easy",
+      "description": "A market town that takes Lantern Night very seriously, and real monsters not at all.",
+      "custom": "lanterns",
+      "villagers": [
+        { "who": 6, "doing": 4 },
+        { "who": 3, "doing": 3 }
+      ],
+      "locations": [
+        {
+          "key": "tavern",
+          "place": "the tavern cellar",
+          "item": [1, 3],
+          "essential": true,
+          "waysIn": [
+            { "obstacle": "geese", "difficulty": 6 },
+            { "obstacle": "trapdoor", "difficulty": 8 }
+          ],
+          "then": [
+            { "obstacle": "backRoom", "difficulty": 8 }
+          ],
+          "map": { "x": 170, "y": 112 }
+        },
+        {
+          "key": "florist",
+          "place": "the florist",
+          "item": [2, 2],
+          "waysIn": [
+            { "obstacle": "shopFloor", "difficulty": 8, "watched": true },
+            { "obstacle": "drainpipe", "difficulty": 10 }
+          ],
+          "then": [],
+          "map": { "x": 440, "y": 108 }
+        },
+        {
+          "key": "carpenter",
+          "place": "the carpenter",
+          "item": [5, 3],
+          "waysIn": [
+            { "obstacle": "frontDoor", "difficulty": 8, "watched": true },
+            { "obstacle": "gardenWall", "difficulty": 8 }
+          ],
+          "then": [
+            { "obstacle": "watchman", "difficulty": 8, "watched": true }
+          ],
+          "map": { "x": 445, "y": 318 }
+        },
+        {
+          "key": "tailor",
+          "place": "the tailor",
+          "item": [6, 4],
+          "waysIn": [
+            { "obstacle": "shopkeeper", "difficulty": 8, "watched": true },
+            { "obstacle": "window", "difficulty": 10 }
+          ],
+          "then": [],
+          "furniture": {
+            "piece": "mirror",
+            "obstacle": { "obstacle": "dog", "difficulty": 8, "watched": true }
+          },
+          "map": { "x": 160, "y": 318 }
+        }
+      ],
+      "map": {
+        "w": 600,
+        "h": 430,
+        "edge": "hedge",
+        "hub": [300, 215],
+        "hubR": 24,
+        "wayOut": { "at": [578, 215], "out": [598, 215], "label": [446, 196] },
+        "lockup": { "x": 300, "y": 352, "label": "below" },
+        "cottages": 34,
+        "trees": 18,
+        "newPage": false
+      }
+    }
+  ]
+}

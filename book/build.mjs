@@ -15,6 +15,8 @@
  *   npm run build:book            strict: fails on missing art
  *   npm run build:book -- --draft missing art becomes a labelled placeholder
  *   npm run build:book -- --print print-on-demand interior + covers, with bleed
+ *   npm run build:book -- --demo  the Halloween one-shot, Lantern Night in Hallowby, from
+ *                                 book/demo/chapters (+ book/demo/demo.css), in the book's look
  *
  * Chromium: $CHROME_PATH, else /opt/pw-browsers/chromium when present, else
  * Playwright's own default browser.
@@ -32,12 +34,15 @@ const ART = join(BOOK, "art");
 const DIST = join(BOOK, "dist");
 
 /* ------------------------------------------------------------ the book -- */
-const BOOK_TITLE = "Don’t Get Forked";             // curly apostrophe, as in the chapters
-const BOOK_DESCRIPTION = "A tabletop roleplaying game by Richard Moore";   // PLACEHOLDER — the real subtitle is not written yet
+// --demo builds the Halloween one-shot instead of the rulebook: its own chapters and title, the same look.
+const DEMO = process.argv.includes("--demo");
+const CHAPTERS = DEMO ? join(BOOK, "demo", "chapters") : join(SRC, "chapters");
+const BOOK_TITLE = DEMO ? "Lantern Night in Hallowby" : "Don’t Get Forked";             // curly apostrophe, as in the chapters
+const BOOK_DESCRIPTION = DEMO ? "A Halloween one-shot for Don’t Get Forked, by Richard Moore" : "A tabletop roleplaying game by Richard Moore";   // PLACEHOLDER — the real subtitle is not written yet
 const AUTHOR = "Richard Moore";
 const VERSION = "0.1";
-const FILE_STEM = "Dont_Get_Forked";        // → Dont_Get_Forked_v0.1.pdf
-const HTML_NAME = "dont-get-forked.html";   // the self-contained print HTML (digital build only)
+const FILE_STEM = DEMO ? "Lantern_Night_in_Hallowby" : "Dont_Get_Forked";        // → Dont_Get_Forked_v0.1.pdf
+const HTML_NAME = DEMO ? "lantern-night-in-hallowby.html" : "dont-get-forked.html";   // the self-contained print HTML (digital build only)
 // An ornament anchored in the top-left corner of the Table of Contents page
 // (an art name from book/art/, or null for none). Art direction is undecided.
 const TOC_ART = null;
@@ -147,9 +152,9 @@ function inlineArt(html) {
 }
 
 /* ------------------------------------------------------------- chapters -- */
-const files = readdirSync(join(SRC, "chapters")).filter(f => f.endsWith(".html")).sort();
-if (!files.length) throw new Error("no chapters in book/src/chapters");
-let body = files.map(f => `\n<!-- ${f} -->\n` + readFileSync(join(SRC, "chapters", f), "utf8")).join("\n");
+const files = readdirSync(CHAPTERS).filter(f => f.endsWith(".html")).sort();
+if (!files.length) throw new Error(`no chapters in ${relative(ROOT, CHAPTERS)}`);
+let body = files.map(f => `\n<!-- ${f} -->\n` + readFileSync(join(CHAPTERS, f), "utf8")).join("\n");
 
 // Wide tables (4+ columns) span both text columns.
 body = body.replace(/<table class="tbl([^"]*)">([\s\S]*?)<\/table>/g, (m, cls, inner) => {
@@ -232,7 +237,7 @@ const fonts = [
 ].join("\n");
 
 /* ---------------------------------------------------------------- page -- */
-const css = readFileSync(join(SRC, "book.css"), "utf8");
+const css = readFileSync(join(SRC, "book.css"), "utf8") + (DEMO ? "\n" + readFileSync(join(BOOK, "demo", "demo.css"), "utf8") : "");
 // The running footer carries the book title from the constant above.
 const FOOTER_CSS = `@page { @bottom-center { content: ${cssString(BOOK_TITLE + "  ·  ")} counter(page); } }`;
 
@@ -244,7 +249,13 @@ const FOOTER_CSS = `@page { @bottom-center { content: ${cssString(BOOK_TITLE + "
  *   e.g.  "ch-01": ["spot-something", "spot-spare"],
  * Empty until the art exists (the build then warns about large unfilled gaps).
  */
-const SPOTS = {
+const SPOTS = DEMO ? {
+  // the one-shot: the book's stand-in spots (its credits name only the art that is printed)
+  "d-before": ["spot-lantern"],
+  "d-castle": ["spot-owl"],
+  "d-places": ["spot-windmill"],
+  "d-flight": ["spot-cart"],
+} : {
   // stand-in engravings (book/art/stand-in/SOURCES.md) until the illustrator's spots arrive;
   // each has one home chapter, and an unused one fills any other gap
   "ch-01": ["spot-lantern"],
