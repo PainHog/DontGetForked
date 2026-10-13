@@ -78,7 +78,7 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
 export const BOOK_QUOTES = Object.freeze({
   duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose later picks another or rolls a d6, rerolling any Duty already taken." },
   chase: { chapter: "16-ch06.html", html: "The row names two traits that work this round, for everyone in the chase." },
-  customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way, so roll a d6 or pick a custom for each town. Customs are only flavour." },
+  customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way, so roll a d6 or pick a custom for each town. Customs are flavour and change no rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself." },
   shopping: { chapter: "31-ch08.html", html: "For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again." },
   shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location." },

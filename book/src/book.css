@@ -270,6 +270,7 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
 .box.gm h4 { color: var(--alarm); }
 .box.designer { border-left: 5px solid var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
 .box.designer h4 { color: var(--accent-deep); }
+.box .signoff-name { margin-top: 0.04in; text-align: right; font: italic 600 9.5pt var(--display); color: var(--accent-deep); }
 .box.list { border-left: 5px solid var(--dark); }   /* checklists, tips */
 .box.list h4 { color: var(--dark); }
 
@@ -524,6 +525,13 @@ figure.tailpiece svg { height: 100%; width: auto; max-width: 100%; }
 .credits-list { margin: 0; width: 5in; font-family: var(--sans); }
 .credits-list dt { margin-top: 0.16in; font: 800 8.5pt var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--alarm); }
 .credits-list dd { margin: 0.03in 0 0; font: 500 11pt/1.35 var(--text); color: var(--ink); }
+.credits-dedication { width: 5in; margin: 0.4in 0 0; font: italic 500 12pt/1.4 var(--display); color: var(--dark); }
+.credits-thanks { width: 5in; margin: 0.1in 0 0; font: 500 10.5pt/1.4 var(--text); color: var(--ink-soft); }
+/* From the Designer: Richard's own words, one column */
+.chapter.designer { columns: 1; }
+.chapter.designer h3 { margin-top: 0.3in; font-size: 15pt; }
+.chapter.designer p { max-width: 6.2in; font-size: 12.5pt; line-height: 1.5; }
+.chapter.designer p.signoff { max-width: none; margin-top: 0.35in; text-align: right; }
 .credits-legal { width: 5.4in; font: 8.6pt/1.45 var(--sans); color: var(--ink-soft); }
 .credits-legal p { margin: 0 0 0.08in; }
 

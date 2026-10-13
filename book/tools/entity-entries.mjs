@@ -44,7 +44,7 @@ export function powersHtml(e) {
 export function kindsHtml() {
   const L = [
     `  <aside class="box list kinds"><h4>Four Kinds of Ability</h4>`,
-    `    <p>Every Signature and Gift but Jekyll’s Draught does one of these four things. The entries name the kind, then add what is the ability’s own, such as its trait and where it works.</p>`,
+    `    <p>Every signature and Gift but Jekyll’s Draught does one of these four things. The entries name the kind, then add what is the ability’s own, such as its trait and where it works.</p>`,
     `    <ul>`,
     ...kindRules({ ease: DGF.openApproachEase }).map((k) => `      <li><strong>${k.name}</strong> ${k.rule}</li>`),
     `    </ul>`,
