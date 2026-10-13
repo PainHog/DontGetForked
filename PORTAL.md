@@ -1,7 +1,7 @@
 Now: A Halloween one-shot, Lantern Night in Hallowby: a script the Storyteller can read word for word, a new town built to teach the game, and, in the online version, a town map, monster tokens and the whole script ready to drag in.
-Next: Richard checks the one-shot's town and wording, then runs it for his group at Halloween.
-Number: Design decisions made = 119
-Number: Open design questions = 1
+Next: Richard runs the Halloween one-shot for his group, then the first playtest notes come back.
+Number: Design decisions made = 120
+Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 300
 

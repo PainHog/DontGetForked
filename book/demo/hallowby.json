@@ -1,5 +1,5 @@
 {
-  "about": "The Halloween one-shot's town, Hallowby (Easy), in the same form as book/src/towns.json and checked by the same rules (book/tools/towns.mjs): built only from the approved tables. Built to teach: the first location on the list is the safe one (nothing watched), and the others bring in a group obstacle, watched obstacles, loud ways and the furniture. Draft for Richard's approval (2026-10-13). The one-shot's script (book/demo/chapters), its map (book/tools/town-maps.mjs, book/tools/scene-map.mjs), the Foundry Demo packs and the simulator (sim/demo-check.mjs) all read this file.",
+  "about": "The Halloween one-shot's town, Hallowby (Easy), in the same form as book/src/towns.json and checked by the same rules (book/tools/towns.mjs): built only from the approved tables. Built to teach: the first location on the list is the safe one (nothing watched), and the others bring in a group obstacle, watched obstacles, loud ways and the furniture. Approved by Richard on 2026-10-13, names and flavour as written. The one-shot's script (book/demo/chapters), its map (book/tools/town-maps.mjs, book/tools/scene-map.mjs), the Foundry Demo packs and the simulator (sim/demo-check.mjs) all read this file.",
   "towns": [
     {
       "key": "hallowby",
