@@ -219,7 +219,7 @@
   content: "Read aloud"; display: block; margin-bottom: 0.2em;
   font-size: 0.7em; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dgf-accent);
 }
-.dgf-script .ds-cue { color: var(--dgf-ink-soft); font-size: 0.92em; }
+.dgf-script .ds-cue { color: inherit; opacity: 0.8; font-size: 0.92em; }   /* the theme's own text colour, a little quieter: readable in light and dark */
 .dgf-script p.ds-cue { padding-left: 0.8em; }
 .dgf-script .ds-ob {
   margin: 0.4em 0 0.7em; padding: 0.4em 0.7em 0.1em;
