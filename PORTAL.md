@@ -60,7 +60,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Simulated games with a full table of five players, and the tweaks they pointed to
 - [x] First version of the online system published
 - [x] Rulebook checked for hard-to-follow rules and rewritten in plainer words
-- [ ] A Halloween one-shot: a word-for-word script, a town map and monster tokens
+- [x] A Halloween one-shot: a word-for-word script, a town map and monster tokens
 - [ ] Foundry system playable
 - [ ] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
