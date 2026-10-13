@@ -1,14 +1,14 @@
 name: CI
 
-# Validates the system on every push and PR: manifest sanity, pack integrity,
-# compiled-packs-match-source, template compilation, and the unit/smoke tests.
-# Runs against the COMMITTED packs (it does NOT rebuild first) so it catches a
-# source edit that wasn't rebuilt and committed.
+# Validates the system: manifest sanity, pack integrity, compiled-packs-match-source,
+# template compilation, and the unit/smoke tests. Runs against the COMMITTED packs
+# (it does NOT rebuild first) so it catches a source edit that wasn't rebuilt and committed.
+# On request only (Actions → CI → Run workflow) since the repository went private, so it
+# doesn't spend the account's Actions minutes on every push (Richard, 2026-10-13); the same
+# checks run locally before every commit (npm run check).
 
 on:
-  push:
-    branches: ["**"]
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

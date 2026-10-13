@@ -29,6 +29,7 @@ Author and designer: **Richard Moore**. This project reuses the tools and the le
 - **Work on main and push to main.** Don't push branches named after the assistant (Richard, 2026-10-06).
 - Credits: "Game design & writing: Richard Moore". **Never name the assistant or its maker, or credit AI assistance, anywhere in the book, the Foundry system or the repository** (Richard, 2026-10-06).
 - Releases of the Foundry system go out through the release workflow (workflow_dispatch with a version) only when Richard says so.
+- The repository is private (Richard, 2026-10-13), so GitHub Actions spend his monthly minutes: CI runs only on request, so run `npm run check` before every commit. A private release can't be installed from the manifest link; give Richard the system zip to install by hand.
 
 ## Portal
 - Keep PORTAL.md at the repo root up to date as part of your work: set "Now:" to what you're working on and "Next:" to the next step, and keep its checklist of real milestones ("- [ ]" / "- [x]"), ticking items when they're finished and adding new ones when the plan grows. Keep its "Number: Label = value" lines (2 to 6 numbers you can measure from the project itself) current too. Plain words for family and friends; never repo names, usernames, file paths or commit IDs.
