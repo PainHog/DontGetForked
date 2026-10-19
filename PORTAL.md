@@ -1,5 +1,5 @@
-Now: The rulebook and the one-shot read more like a person wrote them, with Richard's dedication and his advice to Storytellers in his own words.
-Next: Richard runs the one-shot for his group at Halloween, and writes his foreword when he has time.
+Now: A last check of the Halloween one-shot before Richard runs it this Wednesday: one more full test game, and the small wording slips it found are fixed.
+Next: Richard runs the one-shot for his group on Wednesday, and writes his foreword when he has time.
 Number: Design decisions made = 123
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
@@ -61,6 +61,8 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] First version of the online system published
 - [x] Rulebook checked for hard-to-follow rules and rewritten in plainer words
 - [x] A Halloween one-shot: a word-for-word script, a town map and monster tokens
+- [x] A final test game of the one-shot before the first real table
+- [ ] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice
 - [ ] Richard's own foreword
 - [ ] Foundry system playable

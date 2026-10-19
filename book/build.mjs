@@ -258,6 +258,7 @@ const SPOTS = DEMO ? {
   "d-before": ["spot-lantern"],
   "d-castle": ["spot-owl"],
   "d-places": ["spot-windmill"],
+  "d-happens": ["spot-watchman"],
   "d-flight": ["spot-cart"],
 } : {
   // stand-in engravings (book/art/stand-in/SOURCES.md) until the illustrator's spots arrive;

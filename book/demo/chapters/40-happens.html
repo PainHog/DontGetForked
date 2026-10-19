@@ -7,7 +7,7 @@
 
   <div class="if" id="if-cost">
     <h3>A Cost</h3>
-    <p class="cue">The roller does it, but you pick one cost. Never pick one that costs nothing right then, such as Suspicion +1 on a roll that already raised Suspicion, “drop an item” from someone carrying nothing, or a lost Turn when nothing is waiting. Check the roller’s Perk too, since the Mummy never loses a Turn as its Cost.</p>
+    <p class="cue">The roller does it, but you pick one cost. Never pick one that costs nothing right then, such as Suspicion +1 on a roll that already raised Suspicion, “drop an item” from someone carrying nothing, or a lost Turn when nothing is waiting, or a smaller die when the roller’s next roll is a d12 at its own Duty’s place (the bigger die cancels it). Check the roller’s Perk too, since the Mummy never loses a Turn as its Cost.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><th>Suspicion +1</th><td class="say">You do it, but somebody noticed something odd about you. Suspicion goes up by 1.</td></tr>
       <tr><th>Drop an item</th><td class="say">You do it, but in the scramble you drop something. It’s lying right here.</td></tr>
@@ -25,15 +25,15 @@
   <div class="if" id="if-monster">
     <h3>The Monster Shows</h3>
     <p class="cue">When the Monster d10 rolls higher than the trait die, Suspicion +2, whatever the result. Not on a tie, and never with the Mask. If an ability let them roll the Monster without risking Suspicion (the Werewolf’s Good Dog, the Invisible Man’s Unseen, some Gifts), its showing adds nothing. One Perk changes this, Dracula’s Hypnotic Eyes, on his Charm rolls. When the Monster shows on one of Jekyll’s rolls, the roll stands, and then Hyde takes over, free.</p>
-    <table class="lines">
-      <tr><th>Dracula</th><td>His shadow stretches the wrong way across the street, and it has wings.</td></tr>
-      <tr><th>The Creature</th><td>It straightens to its full height, and keeps on straightening.</td></tr>
-      <tr><th>The Mummy</th><td>A bandage comes loose and unwinds, and unwinds, and there is nobody inside.</td></tr>
-      <tr><th>The Werewolf</th><td>There’s fur, a great deal of fur, and rather a lot of teeth.</td></tr>
-      <tr><th>The Invisible Man</th><td>A glove waves cheerfully at someone, with nothing inside it.</td></tr>
-      <tr><th>A Ghost</th><td>It flickers, and for a moment the wall behind it shows through.</td></tr>
-      <tr><th>A Witch</th><td>Green sparks crackle off her fingertips, and every lantern in the street flares.</td></tr>
-      <tr><th>Jekyll &amp; Hyde</th><td>The kindly doctor’s face twists into somebody else’s.</td></tr>
+    <table class="lines say"><caption>Read the line aloud</caption>
+      <tr><th>Dracula</th><td class="say">His shadow stretches the wrong way across the street, and it has wings.</td></tr>
+      <tr><th>The Creature</th><td class="say">It straightens to its full height, and keeps on straightening.</td></tr>
+      <tr><th>The Mummy</th><td class="say">A bandage comes loose and unwinds, and unwinds, and there is nobody inside.</td></tr>
+      <tr><th>The Werewolf</th><td class="say">There’s fur, a great deal of fur, and rather a lot of teeth.</td></tr>
+      <tr><th>The Invisible Man</th><td class="say">A glove waves cheerfully at someone, with nothing inside it.</td></tr>
+      <tr><th>A Ghost</th><td class="say">It flickers, and for a moment the wall behind it shows through.</td></tr>
+      <tr><th>A Witch</th><td class="say">Green sparks crackle off her fingertips, and every lantern in the street flares.</td></tr>
+      <tr><th>Jekyll &amp; Hyde</th><td class="say">The kindly doctor’s face twists into somebody else’s.</td></tr>
     </table>
   </div>
 
@@ -54,7 +54,7 @@
       <tr><th>The Invisible Man</th><td class="say">Bandages, goggles, a false nose, and then a sneeze, from nowhere at all. Three people say “Bless you” and look round for whoever sneezed.</td></tr>
       <tr><th>A Ghost</th><td class="say">The candles gutter as you drift in, and everybody’s breath fogs. Someone pulls their shawl tighter and peers into the cold.</td></tr>
       <tr><th>A Witch</th><td class="say">Your black cat sits down in the middle of the floor and stares at people without blinking, and one by one, they stare back.</td></tr>
-      <tr><th>Jekyll &amp; Hyde</th><td class="say">One of your hands is a gentleman’s. The other is hairy and knotted. Guess which one somebody just shook?</td></tr>
+      <tr><th>Jekyll &amp; Hyde</th><td class="say">One of your hands is a gentleman’s. The other is hairy and knotted. Guess which one somebody just shook.</td></tr>
     </table>
   </div>
 
@@ -66,7 +66,7 @@
 
   <div class="if" id="if-caught">
     <h3>Caught: the Local Chase</h3>
-    <p class="cue">Trouble at a watched obstacle. The whole chase, however many rounds, happens inside this Turn. While it lasts, the runner can’t drop or hand over anything.</p>
+    <p class="cue">Trouble at a watched obstacle. The whole chase, however many rounds, happens inside this Turn. While it lasts, the runner can’t drop or hand over anything. With the Werewolf’s Night Runner, fleeing alone, say the Lead starts at 2. Caught together, read the box, then add that the Lead moves once a round, by the majority rule (Caught together, below).</p>
     <div class="read">
       <p>They’ve seen you. Somebody shouts, and somebody else grabs a broom. Run!</p>
       <p>This is a chase. Your <strong>Lead</strong> starts at 1. Get it to 4 and you’ve lost them. If it drops to 0, they’ve cornered you.</p>
@@ -112,9 +112,12 @@
 
   <div class="if" id="if-captured">
     <h3>Captured</h3>
-    <p class="cue">Cornered in a local chase. The town takes back everything the captive carried, the mirror included. The mirror is gone for the night, and nobody can take it again. Put the captive’s token in the lock-up.</p>
+    <p class="cue">Cornered in a local chase. The town takes back everything the captive carried, the mirror included. All of it is gone for the night, and nobody can take any of it again. Put the captive’s token in the lock-up.</p>
     <div class="read">
       <p>Hands grab you from every side, and somebody sits on you. When you get your breath back, you’re in the lock-up, and the constable is very pleased with himself. Everything you were carrying is gone.</p>
+    </div>
+    <p class="cue">If the final flight starts this same round, stop here. Nobody can slip free or come back for the captive now. Otherwise, read on.</p>
+    <div class="read">
       <p>From next Turn, once a Turn, you can try to slip free. Or the others can come and get you. Anyone still in here when they leave town is left behind.</p>
     </div>
     <p class="cue">A captive can’t pick anything up or be handed anything, but can still spend charges on any roll at the lock-up, whether its own, a rescuer’s or another captive’s.</p>
@@ -126,7 +129,7 @@
       <h4>A rescue <span class="tag">watched</span></h4>
       <p class="roll">Anyone not held, at the lock-up (getting there is a move). Sly to sneak past the constable, or Brawn, the loud way: tear the door off. Difficulty 10. Watched.</p>
       <p><strong>Success or Cost:</strong> every captive there is free (pick a Cost as usual). The freed act again next Turn, from the lock-up.</p>
-      <div class="read"><p>The door swings open, and the constable snores on.</p></div>
+      <div class="read"><p>The way is clear, and the constable snores on.</p></div>
       <p><strong>Trouble:</strong> Suspicion +1, and the rescuer is caught in a local chase.</p>
       <div class="read"><p>The constable’s hat falls off, and underneath it he is wide awake.</p></div>
     </div>
@@ -144,7 +147,7 @@
     <p class="cue">An Entity may drop its own loot, or the mirror it carries, any time, free, except while it’s caught (until its chase ends). Dropped things stay in that place; dropped between places, they stay at the place it left, and an Entity that sets the mirror down there is back at that place too. Anyone there may pick up any number of dropped items, as their action for a Turn. Loot can be handed to anyone in the same place, free, any time, though not while caught, and never to a captive.</p>
   </div>
 
-  <div class="if" id="if-suspicion">
+  <div class="if keep" id="if-suspicion">
     <h3>Suspicion Rising</h3>
     <p class="cue">Flavour only. Read each line the first time Suspicion reaches or passes that number, so the players feel the town waking up.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
@@ -168,6 +171,6 @@
       <tr><th>Start of Turn 12</th><td class="say">This is the last Turn before dawn. The first birds are singing. Anyone still in town when the sun comes up will have to run for it.</td></tr>
       <tr><th>End of Turn 12</th><td class="say">The sun comes up over Hallowby, and every costume in the street turns back into a person. All except yours, that is.</td></tr>
     </table>
-    <p class="cue">After the end of Turn 12, everyone still in town who isn’t locked up goes to The Final Flight.</p>
+    <p class="cue">After the end of Turn 12, everyone still in town who isn’t locked up goes to The Final Flight. If everyone is in the lock-up, at dawn or at Suspicion 11, nobody runs. Turn to Part Three, where nothing came home.</p>
   </div>
 </section>
