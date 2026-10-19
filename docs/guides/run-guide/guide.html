@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Running Lantern Night</title>
+<style>
+/*FONTS*/
+@page { size: 8.5in 11in; margin: 0.6in 0.7in 0.7in 0.7in;
+  @bottom-center { content: "Running Lantern Night  ·  " counter(page) " of " counter(pages); font-family: "Alegreya Sans", sans-serif; font-size: 8pt; color: #777; letter-spacing: 0.06em; } }
+:root { --ink: #222; --muted: #5d5d5d; --rule: #c9c4ba; --accent: #8a2c1d; --panel: #f3efe7; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); font-family: "Alegreya", Georgia, serif; font-size: 10.5pt; line-height: 1.38; }
+h1 { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-size: 26pt; margin: 0; line-height: 1.05; }
+.sub { font-family: "Alegreya Sans", sans-serif; color: var(--muted); margin: 4pt 0 12pt; font-size: 10pt; }
+h2 { font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 14.5pt; margin: 14pt 0 5pt; padding-bottom: 2pt; border-bottom: 1.2pt solid var(--ink); break-after: avoid; }
+h3 { font-family: "Alegreya Sans", sans-serif; font-weight: 800; font-size: 10.5pt; margin: 9pt 0 3pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); break-after: avoid; }
+p { margin: 0 0 5pt; }
+ul, ol { margin: 0 0 6pt; padding-left: 16pt; }
+li { margin: 0 0 2.5pt; }
+.check { list-style: none; padding-left: 0; }
+.check li { padding-left: 17pt; position: relative; }
+.check li::before { content: ""; position: absolute; left: 0; top: 2.5pt; width: 9pt; height: 9pt; border: 1pt solid var(--ink); border-radius: 1.5pt; }
+.note { font-family: "Alegreya Sans", sans-serif; color: var(--muted); font-size: 9.5pt; }
+table { width: 100%; border-collapse: collapse; margin: 3pt 0 8pt; font-size: 10pt; break-inside: avoid; }
+td, th { text-align: left; vertical-align: top; padding: 3.5pt 6pt; border-bottom: 0.6pt solid var(--rule); }
+th { font-family: "Alegreya Sans", sans-serif; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 1pt solid var(--ink); }
+td.pg { width: 0.8in; font-family: "Alegreya Sans", sans-serif; font-weight: 700; white-space: nowrap; }
+td.btn { width: 1.55in; font-family: "Alegreya Sans", sans-serif; font-weight: 700; }
+.box { background: var(--panel); border-left: 3pt solid var(--accent); padding: 7pt 10pt 4pt; margin: 8pt 0 8pt; break-inside: avoid; }
+.box h3 { margin-top: 0; }
+.keep { break-inside: avoid; }
+.time { font-family: "Alegreya Sans", sans-serif; font-weight: 500; color: var(--muted); font-size: 9.5pt; text-transform: none; letter-spacing: 0; }
+.page2 { break-before: page; }
+</style>
+</head>
+<body>
+
+<h1>Running Lantern Night</h1>
+<p class="sub">Your guide for Wednesday. Page numbers are the one-shot’s (<em>Lantern Night in Hallowby</em>, 32 pages). The whole night takes about 1½ to 2 hours.</p>
+
+<h2>Before Wednesday</h2>
+<ul class="check">
+  <li><strong>Print the Entity cards</strong> (pages 28–31) and cut them out, and <strong>the tracker</strong> (page 32).</li>
+  <li><strong>Print the player map</strong> (the separate one-page Hallowby map) for the middle of the table. It shows the places, but none of your Difficulties.</li>
+  <li><strong>Dice.</strong> Each player needs a d4, d6, d8, d10 and d12, plus a second d6 (the Mask) and a second d10 (the Monster). Players can share. You need one d6.</li>
+  <li><strong>Read pages 4–6</strong> (Before You Play and Hallowby at a Glance). Everything after that you read aloud as you go.</li>
+  <li><strong>Foundry: update to 0.1.3.</strong> On the setup screen, open Game Systems and click Update on Don’t Get Forked. If you installed the zip by hand, you already have it.</li>
+  <li><strong>Foundry: bring in the Demo.</strong> In your world, open the Compendium tab, then the <strong>Demo</strong> folder. Right-click each of the four packs and choose <strong>Import All Content</strong>, the script first. If it asks to keep the IDs, say yes, because the map’s pins need them.</li>
+  <li><strong>Foundry: a 15-minute dry run</strong> with a second browser window logged in as a player. Give ownership, run the macro, make one roll and click Next Turn.</li>
+  <li><strong>Then, if you like, make the repository private.</strong> Do it after the update, because a private repository can’t update Foundry by itself.</li>
+</ul>
+
+<h2>The Maps in Foundry</h2>
+<p>Nothing to make. The Demo has two scenes, ready to use.</p>
+<ul>
+  <li><strong>The Castle</strong> is a moonlit castle for Part One. Its one pin opens Part One of the script.</li>
+  <li><strong>Hallowby</strong> is the night map of the town: the four shops, the lock-up and the bridge out (The Way Out), each with a yard to stand tokens in. There’s no grid and no fog. Where a token stands only says which place it’s at, and every move takes one Turn, wherever it goes.</li>
+  <li><strong>The pins are yours alone.</strong> Players don’t see them. Click one to open that place’s page of the script.</li>
+  <li><strong>Players move their own tokens</strong> once they own their Entity.</li>
+</ul>
+
+<h2>On the Night</h2>
+
+<h3>Part One: The Castle <span class="time">· 20–25 minutes · pages 7–10</span></h3>
+<p>Show <strong>The Castle</strong> scene and read the boxes in order. You welcome them, read the shopping list and introduce the eight monsters, and each player picks one. Then come their card, a practice roll, powers, Castle Duties and setting off.</p>
+<p style="break-after: avoid"><strong>In Foundry, once everyone has chosen:</strong></p>
+<ol>
+  <li>Give each player <strong>Owner</strong> of their Entity. Right-click it in the Actors list and choose Configure Ownership.</li>
+  <li>Change <strong>Castle Duties</strong> on the sheets if anyone swapped.</li>
+  <li>Run the macro <strong>Hallowby: Start the Raid</strong>. Drag it to the hotbar and click it. The Raid window shows an Easy raid, Suspicion 0 of 11, Turn 1 and the shopping list. It has to come after step 1, because the raid takes every Entity a player owns.</li>
+  <li>Switch to the <strong>Hallowby</strong> scene and drag each Entity onto the yard at <strong>The Way Out</strong>.</li>
+</ol>
+<p class="note">This is the natural place for a break.</p>
+
+<h3>Part Two: Into Hallowby <span class="time">· 45–90 minutes · pages 11–24</span></h3>
+<p>Read The Edge of Town and How the Night Works (pages 11–12), and walk them through their first roll with the box on page 12. Then run every Turn the same way. The loop is on the tracker too.</p>
+<ol>
+  <li><strong>Say the Turn,</strong> as in “Turn 3.”</li>
+  <li><strong>Go round the table.</strong> Ask, “What does your monster do?” Each does one thing: roll, move, pick up, or wait.</li>
+  <li><strong>A move:</strong> turn to that place (pages 13–18) and read its arrival box. The first time anyone reaches a watched place, make a <strong>Tell check</strong> (page 20).</li>
+  <li><strong>A roll:</strong> ask which trait, Mask or Monster, and whether anyone spends a charge. They roll, and you read the result line on the place’s page.</li>
+  <li><strong>End of the Turn:</strong> if the mirror has been taken and is still in town, Suspicion +1. Move the Turn marker. In Foundry, click <strong>Next Turn</strong>.</li>
+</ol>
+
+<div class="keep">
+<h3>When the Dice Do Something <span class="time">· When It Happens, pages 19–24</span></h3>
+<table>
+  <tr><th>What happened</th><th>Page</th></tr>
+  <tr><td><strong>A Cost</strong>, 1 or 2 short. They do it, but you pick a cost.</td><td class="pg">19</td></tr>
+  <tr><td><strong>Trouble</strong>, 3 or more short. Suspicion +1. If the obstacle is watched, they’re caught.</td><td class="pg">19</td></tr>
+  <tr><td><strong>The Monster shows</strong>, when its d10 is higher than the trait die.</td><td class="pg">19</td></tr>
+  <tr><td><strong>A Critical</strong>, doubles on a Success.</td><td class="pg">20</td></tr>
+  <tr><td><strong>A Tell check</strong>, the first time anyone reaches a watched place.</td><td class="pg">20</td></tr>
+  <tr><td><strong>A group check</strong>, when two or more roll the florist’s crowd in one Turn.</td><td class="pg">21</td></tr>
+  <tr><td><strong>Caught</strong>: the local chase.</td><td class="pg">21–22</td></tr>
+  <tr><td><strong>Captured</strong>, cornered in a chase.</td><td class="pg">22–23</td></tr>
+  <tr><td><strong>A rescue, or slipping free</strong> from the lock-up.</td><td class="pg">23</td></tr>
+  <tr><td><strong>Suspicion reaches 4, 7, 9 or 10.</strong> Read its line.</td><td class="pg">24</td></tr>
+  <tr><td><strong>Turn 10, Turn 12 and dawn.</strong></td><td class="pg">24</td></tr>
+</table>
+</div>
+
+<h3>The Final Flight <span class="time">· pages 25–26</span></h3>
+<p>When Suspicion reaches 11, or Turn 12 ends with anyone still in town, stop wherever you are and turn to page 25. The whole party runs together from the mob.</p>
+
+<h3>Part Three: How the Year Went <span class="time">· 5–10 minutes · page 27</span></h3>
+<p>Work out what came home, then read the result’s line, a line for each item that didn’t make it, and the goodnight.</p>
+
+<h2 class="page2">Foundry: What Does What</h2>
+<table>
+  <tr><th>Button or window</th><th>What it does</th></tr>
+  <tr><td class="btn">A trait on the sheet</td><td>Players roll by clicking a trait. The dialog asks for the Mask or the Monster and the Difficulty (read it from the place’s page), and offers abilities and a friend’s help. It has ticks for Castle Duty, the loud way, watched, the way out, the mirror’s obstacle and the lock-up. Suspicion goes on the Raid window by itself.</td></tr>
+  <tr><td class="btn">Next Turn</td><td>On the Raid window. Click it at the end of every Turn. After the 12th comes dawn.</td></tr>
+  <tr><td class="btn">Tell check</td><td>On the Raid window. Click it when the script says to make one.</td></tr>
+  <tr><td class="btn">Group check</td><td>On the Raid window. Click it before two or more roll the florist’s crowd in the same Turn.</td></tr>
+  <tr><td class="btn">The Chase</td><td>Opens for everyone on Trouble at a watched obstacle. The final flight runs on it too. Captures show on the Raid window at the lock-up.</td></tr>
+  <tr><td class="btn">How the year went</td><td>On the card at the end. It gives the result and the epilogue, the same words as Part Three.</td></tr>
+  <tr><td class="btn">Fixing things by hand</td><td>The Raid window has Suspicion and Turn buttons for anything the dice didn’t do. Every automation has an off switch in Configure Settings.</td></tr>
+</table>
+
+<div class="box">
+  <h3>The Rules Most Likely to Trip You Up</h3>
+  <ul>
+    <li><strong>One roll raises Suspicion only once,</strong> by its biggest trigger.</li>
+    <li><strong>The Monster shows when its d10 is higher than the trait die:</strong> Suspicion +2, even on a Success. A tie doesn’t count, and the Mask never shows.</li>
+    <li><strong>Trouble at a watched obstacle means caught,</strong> and a chase. Where nobody’s watching, it’s just Suspicion +1 and they can try again next Turn.</li>
+    <li><strong>Tell check:</strong> the first time anyone arrives at a watched place, roll a d6. On 4–6 a Tell goes off, Suspicion +1.</li>
+    <li><strong>The mirror</strong> adds Suspicion +1 at the end of every Turn once it’s taken, until it’s out of town.</li>
+    <li><strong>Leaving town:</strong> everyone who isn’t locked up has to be at the bridge, and then one of them rolls for all, at Difficulty 6.</li>
+    <li><strong>Not sure?</strong> Make a quick ruling and keep the night moving. The script says the same.</li>
+  </ul>
+</div>
+
+<div class="box">
+  <h3>Playing at a Table Instead</h3>
+  <p>Everything above works without Foundry. Players use their printed cards, you keep Suspicion, the Turns and the Lead on the printed tracker with a coin on each track, and players move a coin or a token on the player map to show where their monster is.</p>
+</div>
+
+</body>
+</html>
