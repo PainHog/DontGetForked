@@ -56,7 +56,12 @@ const PRINT = process.argv.includes("--print");
 // --white: a printer-friendly copy for home printers, white paper and no tinted page ground
 // (book/dist/<name>_v<version>_printer-friendly.pdf)
 const WHITE = process.argv.includes("--white");
-const WHITE_CSS = `:root { --paper: #ffffff; --paper-light: #ffffff; --paper-2: #eeeeee; --paper-edge: #cccccc; }`;
+const WHITE_CSS = `:root { --paper: #ffffff; --paper-light: #ffffff; --paper-2: #eeeeee; --paper-edge: #cccccc; }
+@page part { background: #ffffff; }
+.part { background: #ffffff; color: var(--ink); }
+.part h1 { color: var(--dark-deep); }
+.part-lede { color: var(--ink-soft); }
+.part-kicker { color: var(--accent-deep); }`;  // the part openers print light too; the covers stay as they are
 // Until the game is published, every page's footer asks readers not to pass the PDF on (Richard, 2026-10-13).
 const PLAYTEST_NOTICE = process.argv.includes("--final") ? "" : "Playtest copy: please don’t share";
 const BLEED_IN = PRINT ? 0.125 : 0;

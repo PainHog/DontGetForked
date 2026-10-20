@@ -44,7 +44,7 @@ td.btn { width: 1.55in; font-family: "Alegreya Sans", sans-serif; font-weight: 7
   <li><strong>Print the player map</strong> (the separate one-page Hallowby map) for the middle of the table. It shows the places, but none of your Difficulties.</li>
   <li><strong>Dice.</strong> Each player needs a d4, d6, d8, d10 and d12, plus a second d6 (the Mask) and a second d10 (the Monster). Players can share. You need one d6.</li>
   <li><strong>Read pages 4–6</strong> (Before You Play and Hallowby at a Glance). Everything after that you read aloud as you go.</li>
-  <li><strong>Foundry: update to 0.1.3.</strong> On the setup screen, open Game Systems and click Update on Don’t Get Forked. If you installed the zip by hand, you already have it.</li>
+  <li><strong>Foundry: update to 0.1.4.</strong> On the setup screen, open Game Systems and click Update on Don’t Get Forked. It carries the new rules (the one-chase rise, Give up, Limit 9). If you install the zip by hand instead, delete the old system first.</li>
   <li><strong>Foundry: bring in the Demo.</strong> In your world, open the Compendium tab, then the <strong>Demo</strong> folder. Right-click each of the four packs and choose <strong>Import All Content</strong>, the script first. If it asks to keep the IDs, say yes, because the map’s pins need them.</li>
   <li><strong>Foundry: a 15-minute dry run</strong> with a second browser window logged in as a player. Give ownership, run the macro, make one roll and click Next Turn.</li>
   <li><strong>Then, if you like, make the repository private.</strong> Do it after the update, because a private repository can’t update Foundry by itself.</li>
@@ -93,9 +93,9 @@ td.btn { width: 1.55in; font-family: "Alegreya Sans", sans-serif; font-weight: 7
   <tr><td><strong>A Tell check</strong>, the first time anyone reaches a watched place.</td><td class="pg">20</td></tr>
   <tr><td><strong>A group check</strong>, when two or more roll the florist’s crowd in one Turn.</td><td class="pg">21</td></tr>
   <tr><td><strong>Caught</strong>: the local chase.</td><td class="pg">21–22</td></tr>
-  <tr><td><strong>Captured</strong>, cornered in a chase.</td><td class="pg">22–23</td></tr>
+  <tr><td><strong>Captured</strong>, cornered in a chase, or gave up.</td><td class="pg">23</td></tr>
   <tr><td><strong>A rescue, or slipping free</strong> from the lock-up.</td><td class="pg">23</td></tr>
-  <tr><td><strong>Suspicion reaches 4, 7, 9 or 10.</strong> Read its line.</td><td class="pg">24</td></tr>
+  <tr><td><strong>Suspicion reaches 3, 5, 7 or 8.</strong> Read its line.</td><td class="pg">24</td></tr>
   <tr><td><strong>Turn 10, Turn 12 and dawn.</strong></td><td class="pg">24</td></tr>
 </table>
 </div>
@@ -113,7 +113,7 @@ td.btn { width: 1.55in; font-family: "Alegreya Sans", sans-serif; font-weight: 7
   <tr><td class="btn">Next Turn</td><td>On the Raid window. Click it at the end of every Turn. After the 12th comes dawn.</td></tr>
   <tr><td class="btn">Tell check</td><td>On the Raid window. Click it when the script says to make one.</td></tr>
   <tr><td class="btn">Group check</td><td>On the Raid window. Click it before two or more roll the florist’s crowd in the same Turn.</td></tr>
-  <tr><td class="btn">The Chase</td><td>Opens for everyone on Trouble at a watched obstacle. The final flight runs on it too. Captures show on the Raid window at the lock-up.</td></tr>
+  <tr><td class="btn">The Chase</td><td>Opens for everyone on Trouble at a watched obstacle. The final flight runs on it too. A runner who wants out clicks <strong>Give up</strong> at the start of a round, before anyone rolls. Captures show on the Raid window at the lock-up.</td></tr>
   <tr><td class="btn">How the year went</td><td>On the card at the end. It gives the result and the epilogue, the same words as Part Three.</td></tr>
   <tr><td class="btn">Fixing things by hand</td><td>The Raid window has Suspicion and Turn buttons for anything the dice didn’t do. Every automation has an off switch in Configure Settings.</td></tr>
 </table>

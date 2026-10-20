@@ -7,7 +7,7 @@
 
   <div class="if" id="if-cost">
     <h3>A Cost</h3>
-    <p class="cue">The roller does it, but you pick one cost. Never pick one that costs nothing right then, such as Suspicion +1 on a roll that already raised Suspicion, “drop an item” from someone carrying nothing, or a lost Turn when nothing is waiting, or a smaller die when the roller’s next roll is a d12 at its own Duty’s place (the bigger die cancels it). Check the roller’s Perk too, since the Mummy never loses a Turn as its Cost.</p>
+    <p class="cue">The roller does it, but you pick one cost. Never pick one that costs nothing right then, such as Suspicion +1 on a roll that already raised Suspicion (an overdraw’s +2 doesn’t count here, since it goes on top), “drop an item” from someone carrying nothing, or a lost Turn when nothing is waiting, or a smaller die when the roller’s next roll is a d12 at its own Duty’s place (the bigger die cancels it). Check the roller’s Perk too, since the Mummy never loses a Turn as its Cost.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><th>Suspicion +1</th><td class="say">You do it, but somebody noticed something odd about you. Suspicion goes up by 1.</td></tr>
       <tr><th>Drop an item</th><td class="say">You do it, but in the scramble you drop something. It’s lying right here.</td></tr>
@@ -15,6 +15,7 @@
       <tr><th>Smaller die</th><td class="say">You do it, but you’ve twisted something. Your next roll’s trait die is one size smaller.</td></tr>
     </table>
     <p class="cue"><strong>Drop an item:</strong> one item of loot the roller carries, which you pick, though never what this roll wins and never the mirror. It stays in this place, and picking up dropped items is an action. Mix the Costs up; a dropped item is the most fun, because someone has to come back for it.</p>
+    <p class="cue">A lost Turn still owed when the final flight starts is forgotten.</p>
   </div>
 
   <div class="if" id="if-trouble">
@@ -24,7 +25,7 @@
 
   <div class="if" id="if-monster">
     <h3>The Monster Shows</h3>
-    <p class="cue">When the Monster d10 rolls higher than the trait die, Suspicion +2, whatever the result. Not on a tie, and never with the Mask. If an ability let them roll the Monster without risking Suspicion (the Werewolf’s Good Dog, the Invisible Man’s Unseen, some Gifts), its showing adds nothing. One Perk changes this, Dracula’s Hypnotic Eyes, on his Charm rolls. When the Monster shows on one of Jekyll’s rolls, the roll stands, and then Hyde takes over, free. In a chase, a show counts toward the chase’s one rise instead (Caught).</p>
+    <p class="cue">When the Monster d10 rolls higher than the trait die, Suspicion +2, whatever the result. Not on a tie, and never with the Mask. If an ability let them roll the Monster without risking Suspicion (the Werewolf’s Good Dog, the Invisible Man’s Unseen, some Gifts), its showing adds nothing. One Perk changes this, Dracula’s Hypnotic Eyes, on his Charm rolls. When the Monster shows on one of Jekyll’s rolls, the roll stands, and then Hyde takes over, free. In a chase, a show counts towards the chase’s one rise instead (Caught).</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><th>Dracula</th><td class="say">His shadow stretches the wrong way across the street, and it has wings.</td></tr>
       <tr><th>The Creature</th><td class="say">It straightens to its full height, and keeps on straightening.</td></tr>
@@ -71,7 +72,7 @@
       <p>They’ve seen you. Somebody shouts, and somebody else grabs a broom. Run!</p>
       <p>This is a chase. Your <strong>Lead</strong> starts at 1. Get it to 4 and you’ve lost them. If it drops to 0, they’ve cornered you.</p>
       <p>Every round, I’ll tell you what the ground is like, and it gives you two traits to choose from. Roll one of them, with the Mask or the Monster, against the mob. A Success puts your Lead up by 1. Trouble puts it down by 1. A Cost leaves it where it is.</p>
-      <p>Whatever happens, Suspicion goes up only once, when the chase is over: by 2 if your Monster showed at any point, by 1 if you had any Trouble. And at the start of any round, you can give up and let them take you to the lock-up.</p>
+      <p>Suspicion doesn’t move until the chase is over. Then it goes up once: by 2 if your Monster showed at any point, or else by 1 if you had any Trouble, and not at all if neither. And at the start of any round, you can give up and let them take you, and everything you carry, to the lock-up.</p>
     </div>
     <ol>
       <li><strong>The Lead</strong> starts at 1. <span class="cue">With the Werewolf’s Night Runner, fleeing alone, it starts at 2.</span></li>
@@ -80,8 +81,8 @@
       <li><strong>Move the Lead:</strong> a Success +1 (a Critical +2), a Cost no change, Trouble −1.</li>
       <li><strong>One chase, one rise.</strong> Note the biggest trigger among the chase’s rolls (Trouble +1, the Monster showing +2). When the chase ends, add it to Suspicion, with +2 more for each overdraw made in the chase.</li>
       <li><strong>The Weakness:</strong> from round 1 for Dracula and a Ghost, from round 3 for everyone else, the runner’s trait die is one size smaller to the end of the chase. Read its line when it starts. A bigger die from an ability cancels it for that roll.</li>
-      <li><strong>Escape at 4</strong> puts them back where they were caught, with this Turn used up. <strong>Cornered at 0</strong>, they’re captured (below). A runner may also <strong>give up</strong> at the start of any round: captured, no roll.</li>
-      <li><strong>If the rise brings Suspicion to 9,</strong> turn to The Final Flight once the chase is settled. A runner who escaped joins the flight; anyone cornered, or who gave up, is in the lock-up and stays there.</li>
+      <li><strong>Escape at 4</strong> puts them back where they were caught, with this Turn used up. <strong>Cornered at 0</strong>, they’re captured (below). A runner may also <strong>give up</strong> at the start of any round, once the ground is read and before anyone rolls: captured, no roll.</li>
+      <li><strong>If the rise brings Suspicion to 9,</strong> turn to The Final Flight once the chase is settled. A runner who escaped joins the flight; anyone cornered, or who gave up, is in the lock-up and stays there. If that leaves nobody outside the lock-up, nobody runs. Turn to Part Three, where the year is Forked.</li>
     </ol>
     <p class="cue"><strong>Caught together.</strong> When several get Trouble in the same group check, they’re caught together. Each of them rolls each round, in any order they like, and the Lead moves once for the round by the majority rule (The Final Flight). The chase still rises once, when it ends, by the biggest trigger among all their rolls. Anyone may give up at the start of a round, and the rest carry on. A Perk that changes a local chase only works for someone fleeing alone.</p>
   </div>
@@ -114,7 +115,7 @@
 
   <div class="if" id="if-captured">
     <h3>Captured</h3>
-    <p class="cue">Cornered in a local chase. The town takes back everything the captive carried, the mirror included. All of it is gone for the night, and nobody can take any of it again. Put the captive’s token in the lock-up.</p>
+    <p class="cue">Cornered in a local chase, or gave up. The town takes back everything the captive carried, the mirror included. All of it is gone for the night, and nobody can take any of it again. Put the captive’s token in the lock-up.</p>
     <div class="read">
       <p>Hands grab you from every side, and somebody sits on you. When you get your breath back, you’re in the lock-up, and the constable is very pleased with himself. Everything you were carrying is gone.</p>
     </div>
@@ -138,7 +139,7 @@
     <div class="ob">
       <h4>Slipping free <span class="tag">watched</span></h4>
       <p class="roll">The captive, once a Turn, from the Turn after its capture. Sly or Nimble, or Brawn, the loud way. Difficulty 10. Watched.</p>
-      <p><strong>Success:</strong> free, and acts again next Turn, from the lock-up. <strong>A Cost:</strong> nothing happens. <strong>Trouble:</strong> Suspicion +1, but no chase.</p>
+      <p><strong>Success:</strong> free, and acts again next Turn, from the lock-up. If this roll’s Suspicion reaches 9, it’s still free, and it joins the final flight. <strong>A Cost:</strong> nothing happens. <strong>Trouble:</strong> Suspicion +1, but no chase.</p>
       <div class="read"><p>The bars, it turns out, are only a suggestion.</p></div>
     </div>
     <p class="cue">The lock-up is watched, so Dracula’s Mesmerise works on both. A captive may also slip free by a way of its own (its card’s ability, at a Difficulty 2 lower). A rescue frees only those held at that moment.</p>
@@ -151,7 +152,7 @@
 
   <div class="if keep" id="if-suspicion">
     <h3>Suspicion Rising</h3>
-    <p class="cue">Flavour only. Read each line the first time Suspicion reaches or passes that number, so the players feel the town waking up.</p>
+    <p class="cue">Flavour only. Read each line the first time Suspicion reaches or passes that number, so the players feel the town waking up. At 9, skip them and turn to The Final Flight.</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><td class="n">3</td><td class="say">Somewhere a dog starts barking, and doesn’t stop.</td></tr>
       <tr><td class="n">5</td><td class="say">The church bell starts ringing, though it isn’t the hour. In the square, someone says, quite loudly, “Those aren’t costumes.”</td></tr>

@@ -1,4 +1,4 @@
-Now: Version 0.2 of the rulebook, after an outside review: chases are fairer, the rules are clearer, two stand-in pictures were replaced, and the pages are tidier.
+Now: Version 0.2 of the rulebook and the Halloween one-shot, after an outside review and a last test game: chases are fairer, the rules are clearer, the town's alarm tops out sooner, and the online version matches.
 Next: Richard runs the one-shot for his group on Wednesday, and writes his foreword when he has time.
 Number: Design decisions made = 125
 Number: Open design questions = 0
