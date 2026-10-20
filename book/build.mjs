@@ -53,6 +53,10 @@ const DRAFT = process.argv.includes("--draft");
 // --print: print-on-demand files — an interior with 0.125in bleed on every edge
 // (no covers, even page count) plus separate front and back covers with bleed.
 const PRINT = process.argv.includes("--print");
+// --white: a printer-friendly copy for home printers, white paper and no tinted page ground
+// (book/dist/<name>_v<version>_printer-friendly.pdf)
+const WHITE = process.argv.includes("--white");
+const WHITE_CSS = `:root { --paper: #ffffff; --paper-light: #ffffff; --paper-2: #eeeeee; --paper-edge: #cccccc; }`;
 // Until the game is published, every page's footer asks readers not to pass the PDF on (Richard, 2026-10-13).
 const PLAYTEST_NOTICE = process.argv.includes("--final") ? "" : "Playtest copy: please don’t share";
 const BLEED_IN = PRINT ? 0.125 : 0;
@@ -203,8 +207,8 @@ for (const m of body.matchAll(/<section class="(part|chapter|sheet)[^"]*" id="([
     const num = strip((inner.match(/class="chapter-num">([\s\S]*?)</) ?? [, ""])[1]);
     const title = strip((inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) ?? [, id])[1]);
     entries.push({ kind, id, label: num, title });
-    // a heading marked data-toc gets a line of its own under its chapter
-    for (const h of inner.matchAll(/<h3\b[^>]*\bdata-toc\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h3>/g)) entries.push({ kind: "sub", id: h[1], label: "", title: strip(h[2]) });
+    // a heading marked data-toc gets a line of its own under its chapter (the rulebook only)
+    if (!DEMO) for (const h of inner.matchAll(/<h3\b[^>]*\bdata-toc\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h3>/g)) entries.push({ kind: "sub", id: h[1], label: "", title: strip(h[2]) });
   } else {
     const title = strip((inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) ?? [, "Sheet"])[1]);
     entries.push({ kind, id, label: "", title });
@@ -378,6 +382,7 @@ function page(pages, markers, spots = {}, { only = null, padBlank = false } = {}
 <style>${css}</style>
 <style>${FOOTER_CSS}</style>
 ${PRINT ? `<style>${PRINT_CSS}</style>` : ""}
+${WHITE ? `<style>${WHITE_CSS}</style>` : ""}
 </head><body>
 ${content}
 </body></html>`;
@@ -462,7 +467,7 @@ try {
     if (shifted.length && !moved.length) spots = {};
   }
 
-  const out = join(DIST, PRINT ? `${FILE_STEM}_v${VERSION}_print-interior.pdf` : `${FILE_STEM}_v${VERSION}.pdf`);
+  const out = join(DIST, PRINT ? `${FILE_STEM}_v${VERSION}_print-interior.pdf` : WHITE ? `${FILE_STEM}_v${VERSION}_printer-friendly.pdf` : `${FILE_STEM}_v${VERSION}.pdf`);
   let html = page(p1.found, false, spots);
   if (!PRINT) writeFileSync(join(DIST, HTML_NAME), html);
   await printPdf(browser, html, out);

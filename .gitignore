@@ -28,6 +28,7 @@ book/dist/*.pass2.pdf
 book/dist/*.print.html
 book/dist/*.html
 book/dist/*_print-*.pdf
+book/dist/*_printer-friendly.pdf
 
 # Python bytecode from the book tools
 __pycache__/

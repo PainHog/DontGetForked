@@ -24,7 +24,7 @@
 
   <div class="if" id="if-monster">
     <h3>The Monster Shows</h3>
-    <p class="cue">When the Monster d10 rolls higher than the trait die, Suspicion +2, whatever the result. Not on a tie, and never with the Mask. If an ability let them roll the Monster without risking Suspicion (the Werewolf’s Good Dog, the Invisible Man’s Unseen, some Gifts), its showing adds nothing. One Perk changes this, Dracula’s Hypnotic Eyes, on his Charm rolls. When the Monster shows on one of Jekyll’s rolls, the roll stands, and then Hyde takes over, free.</p>
+    <p class="cue">When the Monster d10 rolls higher than the trait die, Suspicion +2, whatever the result. Not on a tie, and never with the Mask. If an ability let them roll the Monster without risking Suspicion (the Werewolf’s Good Dog, the Invisible Man’s Unseen, some Gifts), its showing adds nothing. One Perk changes this, Dracula’s Hypnotic Eyes, on his Charm rolls. When the Monster shows on one of Jekyll’s rolls, the roll stands, and then Hyde takes over, free. In a chase, a show counts toward the chase’s one rise instead (Caught).</p>
     <table class="lines say"><caption>Read the line aloud</caption>
       <tr><th>Dracula</th><td class="say">His shadow stretches the wrong way across the street, and it has wings.</td></tr>
       <tr><th>The Creature</th><td class="say">It straightens to its full height, and keeps on straightening.</td></tr>
@@ -71,17 +71,19 @@
       <p>They’ve seen you. Somebody shouts, and somebody else grabs a broom. Run!</p>
       <p>This is a chase. Your <strong>Lead</strong> starts at 1. Get it to 4 and you’ve lost them. If it drops to 0, they’ve cornered you.</p>
       <p>Every round, I’ll tell you what the ground is like, and it gives you two traits to choose from. Roll one of them, with the Mask or the Monster, against the mob. A Success puts your Lead up by 1. Trouble puts it down by 1. A Cost leaves it where it is.</p>
+      <p>Whatever happens, Suspicion goes up only once, when the chase is over: by 2 if your Monster showed at any point, by 1 if you had any Trouble. And at the start of any round, you can give up and let them take you to the lock-up.</p>
     </div>
     <ol>
       <li><strong>The Lead</strong> starts at 1. <span class="cue">With the Werewolf’s Night Runner, fleeing alone, it starts at 2.</span></li>
-      <li><strong>The mob’s Difficulty</strong> is 8 plus half the Suspicion, rounded down, at most 12. Work it out again at the start of every round. <span class="cue">Suspicion 0–1: 8 · 2–3: 9 · 4–5: 10 · 6–7: 11 · 8–10: 12.</span></li>
+      <li><strong>The mob’s Difficulty</strong> is 8 plus half the Suspicion, rounded down, at most 12, worked out when the chase starts. It stays the same for the whole chase. <span class="cue">Suspicion 0–1: 8 · 2–3: 9 · 4–5: 10 · 6–7: 11 · 8–10: 12.</span></li>
       <li><strong>Each round,</strong> roll a d6 on the ground table below and read the line. The runner picks one of its two traits, and the Mask or the Monster (no Mask, and Nimble one size smaller, carrying the mirror). Abilities go on the runner’s own roll only, and nobody else can spend a charge on it. No Castle Duty in a chase, and no opening a way of your own.</li>
       <li><strong>Move the Lead:</strong> a Success +1 (a Critical +2), a Cost no change, Trouble −1.</li>
-      <li><strong>Suspicion still rises in a local chase,</strong> once per roll, by its biggest trigger. Trouble +1, the Monster showing +2, an overdraw +2.</li>
+      <li><strong>One chase, one rise.</strong> Note the biggest trigger among the chase’s rolls (Trouble +1, the Monster showing +2). When the chase ends, add it to Suspicion, with +2 more for each overdraw made in the chase.</li>
       <li><strong>The Weakness:</strong> from round 1 for Dracula and a Ghost, from round 3 for everyone else, the runner’s trait die is one size smaller to the end of the chase. Read its line when it starts. A bigger die from an ability cancels it for that roll.</li>
-      <li><strong>Escape at 4</strong> puts them back where they were caught, with this Turn used up. <strong>Cornered at 0</strong>, they’re captured (below).</li>
+      <li><strong>Escape at 4</strong> puts them back where they were caught, with this Turn used up. <strong>Cornered at 0</strong>, they’re captured (below). A runner may also <strong>give up</strong> at the start of any round: captured, no roll.</li>
+      <li><strong>If the rise brings Suspicion to 11,</strong> turn to The Final Flight once the chase is settled. A runner who escaped joins the flight; anyone cornered, or who gave up, is in the lock-up and stays there.</li>
     </ol>
-    <p class="cue"><strong>Caught together.</strong> When several get Trouble in the same group check, they’re caught together. Each of them rolls each round, in any order they like, and the Lead moves once for the round by the majority rule (The Final Flight). Suspicion rises once a round, by the biggest trigger. A Perk that changes a local chase only works for someone fleeing alone. <strong>If Suspicion reaches 11</strong> during the chase, it ends at once and the runners join the final flight; anyone cornered that same round is captured first.</p>
+    <p class="cue"><strong>Caught together.</strong> When several get Trouble in the same group check, they’re caught together. Each of them rolls each round, in any order they like, and the Lead moves once for the round by the majority rule (The Final Flight). The chase still rises once, when it ends, by the biggest trigger among all their rolls. Anyone may give up at the start of a round, and the rest carry on. A Perk that changes a local chase only works for someone fleeing alone.</p>
   </div>
 
   <div class="if" id="if-ground">
@@ -116,7 +118,7 @@
     <div class="read">
       <p>Hands grab you from every side, and somebody sits on you. When you get your breath back, you’re in the lock-up, and the constable is very pleased with himself. Everything you were carrying is gone.</p>
     </div>
-    <p class="cue">If the final flight starts this same round, stop here. Nobody can slip free or come back for the captive now. Otherwise, read on.</p>
+    <p class="cue">If this chase’s rise brought Suspicion to 11, stop here: nobody can slip free or come back for the captive now. If every Entity is now in the lock-up, the night is over; turn to Part Three, where the year is Forked. Otherwise, read on.</p>
     <div class="read">
       <p>From next Turn, once a Turn, you can try to slip free. Or the others can come and get you. Anyone still in here when they leave town is left behind.</p>
     </div>
@@ -128,7 +130,7 @@
     <div class="ob">
       <h4>A rescue <span class="tag">watched</span></h4>
       <p class="roll">Anyone not held, at the lock-up (getting there is a move). Sly to sneak past the constable, or Brawn, the loud way: tear the door off. Difficulty 10. Watched.</p>
-      <p><strong>Success or Cost:</strong> every captive there is free (pick a Cost as usual). The freed act again next Turn, from the lock-up.</p>
+      <p><strong>Success or Cost:</strong> every captive there is free (pick a Cost as usual). The freed act again next Turn, from the lock-up. If this roll’s Suspicion reaches 11, they’re still free, and they join the final flight.</p>
       <div class="read"><p>The way is clear, and the constable snores on.</p></div>
       <p><strong>Trouble:</strong> Suspicion +1, and the rescuer is caught in a local chase.</p>
       <div class="read"><p>The constable’s hat falls off, and underneath it he is wide awake.</p></div>
@@ -160,7 +162,7 @@
 
   <div class="if" id="if-overdraw">
     <h3>Overdraw</h3>
-    <p class="cue">At zero charges an Entity can still use an ability, paying Suspicion +2 instead (part of that roll’s one rise). In the final flight it costs the Weakness instead (The Final Flight).</p>
+    <p class="cue">At zero charges an Entity can still use an ability, paying Suspicion +2 instead, on top of the roll’s other rise (in a local chase, on top of the chase’s one rise). In the final flight it costs the Weakness instead (The Final Flight).</p>
   </div>
 
   <div class="if" id="if-dawn">
@@ -171,6 +173,6 @@
       <tr><th>Start of Turn 12</th><td class="say">This is the last Turn before dawn. The first birds are singing. Anyone still in town when the sun comes up will have to run for it.</td></tr>
       <tr><th>End of Turn 12</th><td class="say">The sun comes up over Hallowby, and every costume in the street turns back into a person. All except yours, that is.</td></tr>
     </table>
-    <p class="cue">After the end of Turn 12, everyone still in town who isn’t locked up goes to The Final Flight. If everyone is in the lock-up, at dawn or at Suspicion 11, nobody runs. Turn to Part Three, where nothing came home.</p>
+    <p class="cue">After the end of Turn 12, everyone still in town who isn’t locked up goes to The Final Flight. If every Entity is in the lock-up at once, the night ends there. Turn to Part Three: the year is Forked.</p>
   </div>
 </section>

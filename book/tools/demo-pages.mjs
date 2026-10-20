@@ -66,7 +66,7 @@ export function pregenCard(e, ch2 = readFileSync(CH2, "utf8")) {
     `<p class="pw-meta"><strong>Castle Duty</strong> (default): ${duty.name}, who shops for ${duty.kind}. Your trait die is one size bigger on your own rolls at a location whose item is that kind (never in a chase).</p>`,
     `<p class="pw-meta"><strong>Weakness: ${e.weakness.name}.</strong> ${weaknessTiming[e.weakness.timing]}${em(e.weakness.text)}</p>`,
     `<p class="pw-meta"><strong>Tell: ${e.tell.name}.</strong>${em(e.tell.text)}</p>`,
-    `<p class="pg-help">Spend a charge before rolling, on your own roll or a friend’s in the same place (in a local chase, only your own). One raise per roll. With no charges left you can still overdraw: Suspicion +2 (${e.weakness.timing === "always" ? "never in the final flight, where your Weakness is already in play" : "in the final flight, your Weakness instead"}).</p>`,
+    `<p class="pg-help">Spend a charge before rolling, on your own roll or a friend’s in the same place (in a local chase, only your own). One raise per roll. In the final flight, any ability can be a raise. With no charges left you can still overdraw: Suspicion +2 on top (${e.weakness.timing === "always" ? "never in the final flight, where your Weakness is already in play" : "in the final flight, your Weakness instead"}).</p>`,
     `</div>`,
     `</article>`,
   ];
