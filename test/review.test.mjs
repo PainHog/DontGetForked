@@ -280,7 +280,7 @@ test("D6b: in the final flight a Gift that usually switches the trait, and a fri
   await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true, [`ability:${dracula.id}:gift:raise`]: true }, [9, 4], { seen: (c) => { content = c; } });
   assert.match(content, /any ability may be spent as a raise/);
   assert.match(content, new RegExp(`name="ability:${dracula.id}:gift:raise"`));
-  assert.match(content, new RegExp(`name="ability:${witch.id}:gift:raise"`), "the Witch's Broomstick (an approach of her own) too, as a raise");
+  assert.match(content, new RegExp(`name="ability:${witch.id}:gift:raise"`), "the Witch's A Potion for That (her default Gift since 2026-10-20) too, as a raise");
   let card = lastRoll();
   assert.deepEqual([card.trait, card.traitDie, card.abilities.map((a) => [a.name, a.asRaise])], ["charm", 12, [["Bat", true]]]);
   assert.match(cards(CARD.roll).at(-1).content, /Bat \(as a raise\)/);
@@ -294,6 +294,36 @@ test("D6b: in the final flight a Gift that usually switches the trait, and a fri
   assert.equal(chase().lead, 4, "two Successes: +2");
   await asUser(GM, () => currentHud().runAction("toggleHunt"));
   await settle();
+});
+
+test("Wall-Crawler (2026-10-20): in a chase Dracula's Nimble die is one size bigger, the roll's one raise; the dialog says so and the card names it", async () => {
+  await newRaid();
+  await asUser(GM, () => dracula.update({ "system.perk": "wallCrawler" }));
+  diceQueue.push(3); // the flight's ground: the market stalls (Brawn, Nimble)
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  assert.equal(chase().kind, "final");
+  // refused: the Witch's Hedge Spell on his Nimble roll (Wall-Crawler is already its one raise)
+  const w = await refusedRoll(BEN, dracula, { trait: "nimble", second: "monster", chase: true, [hedge()]: true });
+  assert.ok(w.some((x) => x.includes("Wall-Crawler already makes this Nimble die one size bigger")), w.join(" | "));
+  // Nimble d10, one size bigger (Wall-Crawler) and one smaller (Garlic, from round 1): a d10; 9 + 5 = 14 against 11
+  let content = "";
+  await rollAs(BEN, dracula, { trait: "nimble", second: "monster", chase: true }, [9, 5], { seen: (c) => { content = c; } });
+  assert.match(content, new RegExp(`Wall-Crawler: in a chase you can always roll Nimble, and your Nimble die is one size bigger \\(the roll${apos}s one raise`));
+  assert.match(content, /d10 \+ d10 against 11/, "the odds line: his Nimble stays a d10 with Garlic");
+  const card = lastRoll();
+  assert.deepEqual([card.trait, card.baseDie, card.traitDie, card.raises, card.perkRaise, card.band], ["nimble", 10, 10, 1, "Wall-Crawler", "success"]);
+  assert.match(cards(CARD.roll).at(-1).content, /Raised one size \(Wall-Crawler\)/);
+  assert.match(cards(CARD.roll).at(-1).content, /One size smaller \(the Weakness\)/);
+  assert.equal(dracula.system.charges.value, 3, "a Perk costs no charge");
+  // on his Brawn, no raise from the Perk: Brawn d8, Garlic, a d6
+  await rollAs(ANN, witch, { trait: "nimble", second: "monster", chase: true }, [2, 1, 3]); // ends the round (her Nimble d4: no Perk of his); the next ground: the market stalls again
+  assert.equal(lastRoll().perkRaise, "", "only the roller's own Perk");
+  await rollAs(BEN, dracula, { trait: "brawn", second: "monster", chase: true }, [3, 3]);
+  assert.deepEqual([lastRoll().traitDie, lastRoll().perkRaise], [6, ""]);
+  await asUser(GM, () => currentHud().runAction("toggleHunt"));
+  await settle();
+  await asUser(GM, () => dracula.update({ "system.perk": "hypnoticEyes" }));
 });
 
 test("R1: a rescue whose Suspicion brings the Limit frees the captives first; they join the final flight", async () => {

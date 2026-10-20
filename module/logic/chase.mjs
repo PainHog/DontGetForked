@@ -21,7 +21,8 @@
  * Source: rulebook Chapter 6 (The Lead; The Ground; One chase, one rise; Your
  * Weakness; The Local Chase; Giving up; The Final Flight and the Majority Rule; the
  * chase table) and Chapter 5 (At the Limit). Perks from Chapter 2 via DGF.perkRules:
- * Wall-Crawler and Fly by Night (a trait you can always roll in a chase), Night Runner
+ * Wall-Crawler and Fly by Night (a trait you can always roll in a chase; Wall-Crawler's Nimble
+ * one size bigger there is the roll plan's, module/logic/roll-plan.mjs), Night Runner
  * and Fear the Curse (when you flee alone: Lead 2, the mob 1 easier; F14: `aloneOnly`,
  * judged when the chase starts), Fetch (the final flight starts at Lead 3), Already Dead
  * (cornered in a local chase, you lose your next Turn instead).

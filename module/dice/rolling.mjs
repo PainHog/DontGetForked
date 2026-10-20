@@ -183,6 +183,12 @@ function dialogContext(actor, values, raid) {
   // a lost Turn (a Cost), and V25 rolling again in the Turn it picked up
   if (turnMarkApplies(raid, sys.skipTurn, { chaseRoll: !!c?.ok })) notices.push(t("DGF.Roll.notice.skipTurn", { turn: raid.turn }));
   if (turnMarkApplies(raid, sys.pickedUpTurn, { chaseRoll: !!c?.ok })) notices.push(t("DGF.Roll.notice.pickedUp", { items: sys.pickedUp }));
+  // Wall-Crawler: in a chase his Nimble die is one size bigger, the roll's one raise (the plan applies it; this says so)
+  const chaseRaise = DGF.perkRules[sys.perk]?.chaseRaise;
+  if (chaseRaise && (c?.ok || raid.hunt)) {
+    const perk = findEntity(sys.entityKey)?.perks?.find((k) => k.key === sys.perk)?.name ?? sys.perk;
+    notices.push(t("DGF.Roll.notice.chaseRaise", { perk, trait: traitLabel(chaseRaise) }));
+  }
   if (c?.ok) {
     const ground = DGF.chaseTable[c.ground.face - 1]?.name ?? "";
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));
@@ -351,7 +357,7 @@ export async function performRoll(actor, values) {
     actorId: actor.id, actorName: actor.name, userId: game.user.id, turn: raid.turn,
     calledTrait: plan.calledTrait, trait: plan.trait, baseDie: plan.baseDie, traitDie: plan.traitDie,
     second: plan.second, secondDie: plan.secondDie, baseDifficulty: plan.baseDifficulty, difficulty: plan.difficulty,
-    diffParts: plan.diffParts, downParts: plan.downParts, raises: plan.raises, duty: plan.duty, open: plan.open, hidden: plan.hidden,
+    diffParts: plan.diffParts, downParts: plan.downParts, raises: plan.raises, duty: plan.duty, perkRaise: plan.perkRaise, open: plan.open, hidden: plan.hidden,
     loud: plan.loud, watched: plan.watched, wayOut: plan.wayOut, chase: plan.chase, hunt: plan.hunt,
     abilities: plan.abilities.map((a) => ({ name: a.name, effect: a.effect, trait: a.trait, payerId: a.payerId, payerName: a.payerName, own: a.payerId === actor.id, asRaise: !!a.asRaise })),
     payments: plan.payments.map((p) => ({ payerId: p.payerId, payerName: p.payerName, own: p.own, uses: p.uses, spend: p.spend, overdraw: p.overdraw, weakness: p.weakness })),

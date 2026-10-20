@@ -377,7 +377,9 @@ export const PARAMS = {
  * Measuring switches for the Entity tuning after the outside review (sim/tuning-check.mjs, report sim/TUNING-2026-10-20.md).
  * Kept out of PARAMS on purpose: they are candidate texts and measuring aids, not readings of the book, so run.mjs doesn't
  * sweep them and defaults() doesn't set them. The engine reads each with its default when it is absent, so leaving them
- * out plays the book exactly as before (and test/sim.test.mjs is unchanged).
+ * out plays the book. Decided on 2026-10-20: wallCrawler "bigger" (W-e) is now the default, the book's Perk; the new
+ * default Gift and Perks (Tireless, Fear the Curse, A Potion for That) come from module/config.mjs, so kitPolicy
+ * "default" plays them and the C-b, M-a and Wi-a options measure nothing new.
  */
 export const TUNING = {
   kitPolicy: { default: "random", values: ["random", "default"], doc: "random = each Entity's Gift and Perk at random, a Castle Duty at random (the simulator's standard); default = every Entity on its marked default Gift, Perk and Castle Duty (a clash: the later one takes another at random), what a first-time table and the one-shot's Entity cards play." },
@@ -386,7 +388,7 @@ export const TUNING = {
   giftTraits: { default: null, doc: "{ versionName: trait }: a Gift version rolls another trait (Wi-b: { Broomstick: \"wits\" })." },
   hypnoticEyes: { default: "beat2", values: ["beat2", "never"], doc: "beat2 = on Charm rolls the Monster shows only if it beats the trait die by 2 or more (the book); never = on Charm rolls the Monster never shows (D-a)." },
   perkAware: { default: false, values: [false, true], doc: "false = the players price Dracula's Charm Monster rolls as if Hypnotic Eyes didn't exist (the simulator so far; the Perk still works when the dice are read); true = they price \"by 2 or more\" exactly." },
-  wallCrawler: { default: "plain", values: ["plain", "carry", "wayIn", "bigger"], doc: "plain = in a chase you can always roll Nimble (the book); carry = and carrying doesn't make your Nimble smaller (W-b); wayIn = and at a way in (a location's first obstacle) you may roll Nimble instead of the trait it calls for, no charge (W-d); bigger = and your Nimble is one size bigger in a chase, the roll's one raise (W-e)." },
+  wallCrawler: { default: "bigger", values: ["bigger", "plain", "carry", "wayIn"], doc: "bigger = in a chase you can always roll Nimble, and your Nimble is one size bigger there, the roll's one raise (W-e; the book since 2026-10-20); plain = only the first edge (the book before 2026-10-20); carry = plain, and carrying doesn't make your Nimble smaller (W-b); wayIn = plain, and at a way in (a location's first obstacle) you may roll Nimble instead of the trait it calls for, no charge (W-d)." },
   strongBack: { default: "huge", values: ["huge", "mask"], doc: "huge = you carry a Huge piece alone (the book); mask = and carrying furniture doesn't stop you choosing the Mask (C-a)." },
   raiseD12: { default: "none", values: ["none", "plus2", "plus1"], doc: "none = a d12 can't go higher (the book); plus2 = a raise on a d12 (after netting against steps down) adds +2 to the total instead; the Monster showing and a Critical still read the faces (G-a); plus1 = the same with +1 (the review's other candidate, measured for context). Applies to every raise: abilities, Castle Duty, the final flight's, Wall-Crawler \"bigger\"." },
   tuneStats: { default: false, values: [false, true], doc: "true = count raises, rolls on a d12, carriers' Mask rolls and each Entity's lone chases for the tuning report (no effect on play)." },

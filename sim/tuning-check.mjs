@@ -3,7 +3,11 @@
  * Entity tuning after the outside review (docs/reviews/2026-10-19-outside/REVIEW.md, Section 4), measured at today's
  * defaults (the review's package with Limits 9 / 10 / 13, 12 Turns). A measuring job: nothing here changes the game.
  * The options are switches the simulator reads only when this script sets them (sim/params.mjs TUNING), so the
- * defaults and test/sim.test.mjs are unchanged. Report: sim/TUNING-2026-10-20.md.
+ * defaults and test/sim.test.mjs were unchanged. Report: sim/TUNING-2026-10-20.md.
+ * Decided the same day (docs/DESIGN.md, 2026-10-20): W-e, C-b, M-a, Wi-a and T3 are now the game, so "base" is them
+ * (Wall-Crawler "bigger" is the engine's default; the defaults come from module/config.mjs; Thistlewick from towns.json)
+ * and those options measure nothing new. The report's numbers are from the rules before; to reproduce them, run this
+ * script at the commit that wrote the report.
  *
  *   node sim/tuning-check.mjs [--runs 2000] [--entity-runs 4000] [--town-runs 3000] [--seeds 1,7,11] [--jobs 4]
  *                             [--only rolled,entity,town,thistle] [--out sim/TUNING-2026-10-20.md] [--save results.json]

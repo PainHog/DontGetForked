@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { band, isCritical, monsterShows, stepUp, stepDown, outcomeDist, majorityMove, leadMove, MASK, MONSTER } from "../sim/rules.mjs";
 import { ROSTER, validateEntity, makeParty, TRAITS } from "../sim/entities.mjs";
 import { makeRng } from "../sim/rng.mjs";
-import { PARAMS, PRESETS, NUMBERS, defaults } from "../sim/params.mjs";
+import { PARAMS, PRESETS, NUMBERS, TUNING, defaults } from "../sim/params.mjs";
 import { runConfig, metrics, merge } from "../sim/run.mjs";
 
 test("P2 bands: meet the Difficulty = Success, 1–2 short = Cost, 3+ short = Trouble", () => {
@@ -117,7 +117,8 @@ test("--numbers overrides merge deeply", () => {
 // ---------------------------------------------------------------- conformance (docs/audits/SIM-AUDIT.md)
 
 import { readFileSync } from "node:fs";
-import { ROSTERS } from "../sim/entities.mjs";
+import { ROSTERS, ENTITY_DEFAULTS } from "../sim/entities.mjs";
+import { DGF } from "../module/config.mjs";
 import { CHASE_TABLES } from "../sim/town.mjs";
 import { internals as E } from "../sim/engine.mjs";
 import { Recorder } from "../sim/recorder.mjs";
@@ -219,6 +220,32 @@ function state(party, obstacles = [], { params = {}, faces = [], prefer = [] } =
   const S = E.makeState({ party, town, params: { ...defaults(), furniturePolicy: "never", ...params }, numbers: NUMBERS, rng: script(faces, prefer), rec: new Recorder() });
   return { S, loc };
 }
+
+test("the simulator's default kits and Wall-Crawler are the book's (Chapter 2, decided 2026-10-20)", () => {
+  // the marked defaults a first-time table plays (kitPolicy "default"), read from module/config.mjs
+  assert.deepEqual(Object.fromEntries(Object.entries(ENTITY_DEFAULTS).map(([k, d]) => [k, [d.gift, d.perk, d.duty]])), {
+    dracula: ["Bat", "hypnoticEyes", "butler"],
+    creature: ["Mountain Stride", "tireless", "handyman"],
+    mummy: ["Royal Bearing", "fearTheCurse", "librarian"],
+    werewolf: ["Keen Nose", "nightRunner", "gardener"],
+    invisible: ["Through the Gap", "outOfSight", "tailor"],
+    ghost: ["Chill", "spectral", "butler"],
+    witch: ["A Potion for That", "familiarsWarning", "cook"],
+    "jekyll-hyde": ["Doctor’s Bag", "practisedHand", "librarian"],
+  });
+  // Wall-Crawler's second edge: the engine plays "bigger" unless a measuring run asks otherwise
+  assert.equal(TUNING.wallCrawler.default, "bigger");
+  assert.equal(DGF.perkRules.wallCrawler.chaseRaise, "nimble");
+  const drac = member("dracula", { perk: "wallCrawler" }); // Nimble d10
+  const ctx = (weakness, phase = "local") => ({ phase, options: [{ trait: "nimble", loud: false }], difficulty: 9, witnessed: false, helpers: [], locKind: null, weakness });
+  const { S } = state([drac]);
+  for (const phase of ["local", "final"]) {
+    assert.deepEqual([E.planRoll(S, drac, ctx(false, phase)).traitDie, E.planRoll(S, drac, ctx(false, phase)).raise], [12, "wallCrawler"], phase);
+    assert.equal(E.planRoll(S, drac, ctx(true, phase)).traitDie, 10, `${phase}: Garlic cancels it`);
+  }
+  const plain = state([drac], [], { params: { wallCrawler: "plain" } }).S;
+  assert.equal(E.planRoll(plain, drac, ctx(false)).traitDie, 10, "the measuring switch still plays the Perk before 2026-10-20");
+});
 
 test("a switch never dodges the loud way, and a helper's switch helps anyone's roll except in a local chase", () => {
   const creature = member("creature"), wolf = member("werewolf"); // Brute Force (Brawn); Keen Nose (Wits)

@@ -97,7 +97,7 @@ test("the Storyteller creates an Entity from the eight (sidebar button, book def
   assert.equal(witch.type, "entity");
   assert.deepEqual({ ...witch.system.traits }, { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 });
   assert.deepEqual({ ...witch.system.charges }, { value: 3, start: 3, extra: 0 }); // extra: castle upgrades this raid (campaign play)
-  assert.equal(witch.system.gift, "broomstick");
+  assert.equal(witch.system.gift, "potionForThat"); // the default Gift since 2026-10-20 (was Broomstick)
   assert.equal(witch.system.perk, "familiarsWarning");
   assert.equal(witch.system.duty, "cook");
   assert.equal(witch.system.status, "active");
@@ -115,7 +115,7 @@ test("the sheet shows the book: dice, signature, Gift, Perk, Duty, Weakness, Tel
   await asUser(ANN, () => sheet.render());
   const html = sheet.renderedParts.sheet;
   // each power spelled out as Chapter 2 does (test/sheet-powers.test.mjs compares every line with the book)
-  for (const s of ["Hedge Spell", "Your trait die is one size bigger for this roll", "Broomstick", "doesn’t list Nimble, roll Nimble at a Difficulty 2 lower", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
+  for (const s of ["Hedge Spell", "Your trait die is one size bigger for this roll", "Old village magic", "A Potion for That", "Roll Wits instead of the trait the obstacle calls for", "Broomstick", "doesn’t list Nimble, roll Nimble at a Difficulty 2 lower", "Familiar’s Warning", "Cook", "Rowan", "A Black Cat", "d12", 'data-action="rollTrait"', 'data-action="spendCharge"'])
     assert.ok(html.includes(s), `the sheet shows ${s}`);
   assert.ok(!html.includes('data-action="drinkDraught"'), "only Jekyll & Hyde has the Draught");
   const jh = new EntitySheet({ document: jekyll });

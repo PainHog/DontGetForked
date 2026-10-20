@@ -1,9 +1,9 @@
-Now: Version 0.2 of the rulebook and the Halloween one-shot, after an outside review and a last test game: chases are fairer, the rules are clearer, the town's alarm tops out sooner, and the online version matches.
-Next: Richard runs the one-shot for his group on Wednesday, and writes his foreword when he has time.
-Number: Design decisions made = 125
-Number: Open design questions = 0
+Now: Fine-tuning the monsters after the outside review: three of them start with better choices, Dracula climbs his way out of chases, and the middle town is a little harder, in the rulebook, the one-shot and the online version.
+Next: Richard runs the one-shot for his group on Wednesday, then settles two questions left open (a bigger roll on a twelve-sided die, and Jekyll & Hyde's starting choices) and writes his foreword when he has time.
+Number: Design decisions made = 133
+Number: Open design questions = 2
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 330
+Number: Automated checks passing = 333
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 Download: book/dist/Dont_Get_Forked_v0.2.pdf = The rulebook, version 0.2, a work in progress (PDF)
@@ -66,6 +66,7 @@ Download: downloads/Dont_Get_Forked_Foundry_v0.1.4.zip = The online version for 
 - [x] A Halloween one-shot: a word-for-word script, a town map and monster tokens
 - [x] A final test game of the one-shot before the first real table
 - [x] An outside review of the rulebook, and version 0.2 with its fixes
+- [x] The monsters fine-tuned after the outside review, and the middle town evened out
 - [ ] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice
 - [ ] Richard's own foreword

@@ -58,7 +58,21 @@ The review is `REVIEW.md` here, with its three detailed reports. Richard's calls
 
 ## 4. Entity tuning
 
-Not part of this round. Under the package, every Entity is within ±2.5 win points on average over three seeds (`sim/FINDINGS.md`). The review's suggestions (Hypnotic Eyes, Strong Back, Wall-Crawler, the Witch's defaults, "+2 on a d12") are still open for Richard.
+Measured on 2026-10-20 (`sim/TUNING-2026-10-20.md`: three seeds, on random kits and on the default kits a first-time table plays) and decided the same day under Richard's delegation (DESIGN.md, 2026-10-20; `book/REVIEW.md` rows 102–106).
+
+| Finding | Outcome |
+|---|---|
+| Dracula: Hypnotic Eyes barely matters; make Mist the default or let the Monster never show on Charm | **Kept.** He is already the strongest default kit (+2.9). "Never shows" makes him +6.0; Old Money as the default changes nothing (−0.1 / −0.2); Mist as the default lifts default-kit Hard forked to 11.9% (12.2% on one seed). |
+| Dracula: Wall-Crawler adds little; give it a second edge | **Done.** "…and your Nimble die is one size bigger (the roll’s one raise)", in every chase. His lone chases escape 50.5% (43.3% with Hypnotic Eyes, 43.8% with the Perk as it was); the levels move 0.2 point at most. |
+| The Creature: Strong Back does nothing with Bulky pieces | **Tireless is the default**; Strong Back stays a pick. "Strong Back keeps the Mask" measured 0.0 everywhere (a carrier rolls 0.075 times a raid). |
+| The Mummy: Patience of Ages rarely matters | **Fear the Curse is the default** (+0.6 / +1.3 for her party; her lone chases 47.7 → 58.0%). |
+| The Invisible Man: narrow Out of Sight to "you carry" | **Kept** (V17). Narrowing it is +3.2 / +4.7 for the Entity already strongest on default kits (+3.1 → +5.5). |
+| The Ghost: Spectral and Through the Wall switch off once she carries | **Noted**, no change (both decided, V19 and C8). |
+| The Witch: Broomstick rolls her d4; make A Potion for That the default, or let Broomstick roll Wits | **A Potion for That is the default** (−2.5 → −0.7). Broomstick still rolls Nimble: rolling Wits is +5.1 / +8.6 and pushes default-kit Standard and Hard out of their targets. |
+| Hedge Spell has no flavour line | **Written**, for Richard's approval: "Old village magic: a muttered word, a pinch of salt, and luck leans her way." (and Trample's: "Hyde doesn’t wait to be let in.") |
+| "+2 on a d12" | **Not now; open for Richard after the playtest.** +2 pushes every level, Hallowby and all three printed towns out of their targets; +1 still needs a Limits pass. Castle Duty's raise is lost on a d12 on 25–32% of the rolls it applies to. |
+| (Not in the review) Jekyll & Hyde is the weakest default kit (−3.5) | **Open for Richard**, with the question whether the targets apply to random kits (as set) or to default kits. |
+| (Not in the review) Thistlewick 1.5–1.9 over its 78% top | **The ironmonger's strongbox 8 → 10**: 76.3% won, 4.9% forked; the example of play is unchanged. |
 
 ## 5. Layout
 

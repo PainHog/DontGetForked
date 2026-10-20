@@ -429,6 +429,7 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   says(perk("nightRunner"), `when you flee alone, your local chase starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
   says(perk("fearTheCurse"), `when you flee alone, the mob’s Difficulty in your local chase is ${R.fearTheCurse.localMobEase} lower`, "Fear the Curse");
   says(perk("wallCrawler"), `in a chase you can always roll ${TRAIT[R.wallCrawler.chaseTrait]}`, "Wall-Crawler");
+  says(perk("wallCrawler"), `and your ${TRAIT[R.wallCrawler.chaseRaise]} die is one size bigger (the roll’s one raise)`, "Wall-Crawler's second edge (2026-10-20)");
   says(perk("flyByNight"), `in a chase you can always roll ${TRAIT[R.flyByNight.chaseTrait]}`, "Fly by Night");
   says(perk("familiarsWarning"), `a second d${DGF.tell.die} also rolls ${DGF.tell.goesOffOn}–${DGF.tell.die}`, "Familiar’s Warning");
 });

@@ -386,6 +386,44 @@ test("D6b: in the final flight any Signature or Gift (own, or a friend's in the 
   assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
 });
 
+test("Wall-Crawler (2026-10-20): in a chase Dracula's Nimble die is one size bigger, the roll's one raise; a smaller die cancels it", () => {
+  assert.equal(DGF.perkRules.wallCrawler.chaseRaise, "nimble");
+  const drac = roller("dracula", { perk: "wallCrawler" }); // Nimble d10
+  const local = (opts) => plan(drac, { chase: true, chaseTraits: ["sly", "charm", "nimble"], second: "monster", difficulty: 9, ...opts });
+  // a local chase: Nimble d10 → d12, no charge, nothing ticked; the card names the Perk
+  let p = local({ trait: "nimble" });
+  assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+  assert.deepEqual([p.baseDie, p.traitDie, p.raises, p.perkRaise, p.payments.length], [10, 12, 1, "Wall-Crawler", 0]);
+  // Garlic (from round 1): bigger and smaller cancel one for one, so his Nimble stays a d10
+  p = local({ trait: "nimble", weakness: true });
+  assert.deepEqual([p.raises, p.downs, p.traitDie], [1, 1, 10]);
+  // and a Cost's smaller die as well: d10 − 2 + 1 = d8
+  p = plan(roller("dracula", { perk: "wallCrawler", nextRollSmaller: 1 }), { chase: true, chaseTraits: ["nimble", "sly"], trait: "nimble", difficulty: 9, weakness: true });
+  assert.equal(p.traitDie, 8);
+  // only on Nimble: another trait in the chase isn't raised
+  p = local({ trait: "sly" });
+  assert.deepEqual([p.traitDie, p.raises, p.perkRaise], [6, 0, ""]);
+  // Bat's switch to Nimble in a chase is raised too (the trait rolled is Nimble)
+  p = local({ trait: "charm", chaseTraits: ["sly", "charm"], abilities: [ownAbility(drac, "gift")] });
+  assert.deepEqual([p.trait, p.traitDie], ["nimble", 12]);
+  // not outside a chase, not with another Perk
+  assert.equal(plan(drac, { trait: "nimble" }).traitDie, 10, "at an obstacle: no raise");
+  assert.equal(plan(roller("dracula"), { chase: true, chaseTraits: ["nimble", "sly"], trait: "nimble", difficulty: 9 }).traitDie, 10, "Hypnotic Eyes: no raise");
+  assert.equal(plan(roller("witch", { perk: "flyByNight" }), { chase: true, chaseTraits: ["sly", "charm", "wits"], trait: "wits", difficulty: 9 }).traitDie, 12, "Fly by Night: a trait, no raise (Wits d12 as it is)");
+  assert.equal(plan(roller("witch", { perk: "flyByNight", traits: { ...entitySystem("witch").traits, wits: 8 } }), { chase: true, chaseTraits: ["sly", "charm", "wits"], trait: "wits", difficulty: 9 }).traitDie, 8, "Fly by Night never raises");
+  // the final flight too; an ability's raise can't go on top (the roll's one raise), but cancels nothing either
+  const flight = (opts) => plan(drac, { chase: true, hunt: true, chaseTraits: ["brawn", "nimble"], second: "monster", difficulty: 11, ...opts });
+  p = flight({ trait: "nimble", weakness: true });
+  assert.deepEqual([p.ok, p.traitDie, p.perkRaise], [true, 10, "Wall-Crawler"]);
+  p = flight({ trait: "nimble", abilities: [{ ...ownAbility(drac, "signature"), asRaise: true }] });
+  assert.ok(p.errors.some((e) => e.code === "perkRaiseTaken" && e.perk === "Wall-Crawler" && e.trait === "nimble"), p.errors.map((e) => e.code).join());
+  const hedge = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch", payerName: "A Witch", payer: { charges: 3 } };
+  assert.ok(flight({ trait: "nimble", abilities: [hedge] }).errors.some((e) => e.code === "perkRaiseTaken"), "a friend's raise neither");
+  assert.equal(flight({ trait: "brawn", abilities: [hedge] }).ok, true, "on his Brawn, a raise as usual");
+  // the odds the dialog shows follow the d12
+  assert.equal(planOdds(local({ trait: "nimble" })).success > planOdds(plan(roller("dracula"), { chase: true, chaseTraits: ["nimble", "sly"], second: "monster", trait: "nimble", difficulty: 9 })).success, true);
+});
+
 test("R4: the way out is rolled once a Turn: a second roll that Turn is refused", () => {
   const ww = roller("werewolf");
   assert.ok(plan(ww, { wayOut: true, trait: "nimble", wayOutRolled: true }).errors.some((e) => e.code === "wayOutOncePerTurn"));

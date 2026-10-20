@@ -278,7 +278,7 @@ function followsBehind(S, members) {
  * Perks (C5: narrow, always on). The engine plays all 24 of the book's (C6–C9; Fetch as B5), by key:
  *  oldMoney      a Cost on a Charm roll is never Suspicion +1
  *  hypnoticEyes  on Charm rolls the Monster shows only if it beats the trait die by 2+
- *  wallCrawler   in a chase you can always roll Nimble
+ *  wallCrawler   in a chase you can always roll Nimble, and your Nimble is one size bigger there (the roll's one raise; 2026-10-20)
  *  strongBack    carries a Huge piece alone
  *  tireless      carrying doesn't make Nimble smaller
  *  builtToLast   slips free from the lock-up on a Success or a Cost
@@ -1021,7 +1021,7 @@ function planRoll(S, m, ctx) {
   // "never" is always known); raiseD12 "plus2": a raise past a d12 adds +2 to the total (G-a).
   const eyesMin = (trait) => (hasPerk(m, "hypnoticEyes") && trait === "charm" ? (P.hypnoticEyes === "never" ? Infinity : P.perkAware ? 2 : 1) : 1);
   const raiseD12 = P.raiseD12 === "plus2" ? 2 : P.raiseD12 === "plus1" ? 1 : 0; // plus1: the review's other candidate (context)
-  const wc = hasPerk(m, "wallCrawler") ? (P.wallCrawler ?? "plain") : null;
+  const wc = hasPerk(m, "wallCrawler") ? (P.wallCrawler ?? "bigger") : null; // "bigger": the book since 2026-10-20 (TUNING)
 
   // D1 (chaseRule "oneRise"): inside a local chase the rise waits for the chase's end, so a roll is weighed by what it adds
   // to the chase's biggest trigger so far (ctx.chase.maxTrig), against the headroom left after the rise already pending.
@@ -1047,7 +1047,8 @@ function planRoll(S, m, ctx) {
     if (duty) up += 1;
     if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless") && !(hasPerk(m, "bruteStrength") && m.form === "hyde") && wc !== "carry") down += 1; // carriers roll Nimble one size smaller (tuning W-b: not with Wall-Crawler "carry")
     if (ctx.weakness) down += 1; // the mob brought your Weakness: one size smaller in the chase
-    // wallCrawler "bigger" (tuning W-e): "your Nimble is one size bigger in a chase", the roll's one raise.
+    // wallCrawler "bigger" (the book since 2026-10-20, tuning W-e): in a chase (local or final) "your Nimble die is one size
+    // bigger", the roll's one raise: no ability raise on top, and a step down (Garlic) cancels it one for one.
     const wcBig = wc === "bigger" && (phase === "local" || phase === "final") && c.trait === "nimble" && !duty;
     if (wcBig) up += 1;
     const traitRaised = duty || wcBig; // counts toward P7's cap
@@ -1240,7 +1241,7 @@ function chaseGround(S) {
   return table[row].map((t) => ({ trait: t, loud: false }));
 }
 
-/** wallCrawler: in a chase you can always roll Nimble. */
+/** wallCrawler: in a chase you can always roll Nimble (its bigger Nimble die is planRoll's, wallCrawler "bigger"). */
 function groundFor(m, ground) {
   const extra = hasPerk(m, "wallCrawler") ? "nimble" : hasPerk(m, "flyByNight") ? "wits" : null;
   return extra && !ground.some((o) => o.trait === extra) ? [...ground, { trait: extra, loud: false }] : ground;

@@ -40,10 +40,12 @@
  */
 import { DGF } from "../config.mjs";
 import { stepUp, stepDown, resolveRoll, leadMove, furnitureObstacleDifficulty } from "./rules.mjs";
-import { formsOf, payFor, TRAITS } from "./entity.mjs";
+import { formsOf, payFor, TRAITS, findEntity } from "./entity.mjs";
 import { slipProblems, slipFrees, rescueFrees } from "./lockup.mjs";
 
 const perkRule = (perk) => DGF.perkRules[perk] ?? {};
+/** The roller's Perk by name (Chapter 2), for the words the dialog and the card show. */
+const perkName = (sys) => findEntity(sys.entityKey)?.perks?.find((k) => k.key === sys.perk)?.name ?? sys.perk ?? "";
 
 export function buildRollPlan(input) {
   const errors = [];
@@ -121,8 +123,13 @@ export function buildRollPlan(input) {
   // At most one raise per roll, from any source, Castle Duty included (R2). The Duty's edge is "not in a chase"
   // (Chapter 2, F19): not in a local chase, not once the hunt is on, whether or not the tracker runs the chase.
   const duty = !!input.duty && !chase;
-  const raiseSources = abilities.filter((a) => a.effect === "raise").length + (duty ? 1 : 0);
-  if (raiseSources > 1) errors.push({ code: "tooManyRaises" });
+  // Wall-Crawler (Chapter 2, 2026-10-20): in a chase, a local one or the final flight, his Nimble die is one size bigger,
+  // with no charge and nothing to tick. It is the roll's one raise, so an ability's raise can't go on top (a smaller die
+  // still cancels it one for one: Garlic leaves his Nimble a d10).
+  const perkRaise = chase && !!P.chaseRaise && P.chaseRaise === trait;
+  const abilityRaises = abilities.filter((a) => a.effect === "raise").length;
+  const raiseSources = abilityRaises + (duty ? 1 : 0) + (perkRaise ? 1 : 0);
+  if (raiseSources > 1) errors.push(perkRaise ? { code: "perkRaiseTaken", perk: perkName(sys), trait } : { code: "tooManyRaises" });
   const raises = Math.min(1, raiseSources);
 
   // Steps down: a Cost's "next roll one size smaller", carrying (Nimble), the Weakness in a chase.
@@ -202,6 +209,7 @@ export function buildRollPlan(input) {
     raises,
     downs,
     downParts,
+    perkRaise: perkRaise ? perkName(sys) : "", // the Perk that raised this roll (Wall-Crawler), for the card
     second,
     secondDie: DGF.second[second],
     baseDifficulty,

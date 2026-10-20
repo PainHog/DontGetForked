@@ -144,7 +144,7 @@
             { "obstacle": "gardenWall", "difficulty": 8 }
           ],
           "then": [
-            { "obstacle": "strongbox", "difficulty": 8, "watched": true }
+            { "obstacle": "strongbox", "difficulty": 10, "watched": true }
           ],
           "furniture": {
             "piece": "mirror",

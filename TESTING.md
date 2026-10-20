@@ -1,6 +1,6 @@
 # Testing the Foundry system in real Foundry — slices 1 and 2, and the compendiums
 
-The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15; sections 20–21 (the audit's fixes, who is in the raid, Out of Sight, Mesmerise, Spectral, status, campaign play, dropping loot) about 50; section 22 (the Halloween demo) about 15; section 23 (the outside review's rules: one chase one rise, giving up, overdraw on top, any ability as a raise in the flight, everyone held, result first, the way out once a Turn) about 45. Dice are random, so some steps say "roll until…".
+The automated tests run the system on a stand-in for Foundry. This script checks the same things in the real thing, with two browsers: you as the **Storyteller (GM)** and one **player**. Sections 1–9 (slice 1) take about 30 minutes; sections 10–18 (slice 2) about 45; section 19 (the compendiums) about 15; sections 20–21 (the audit's fixes, who is in the raid, Out of Sight, Mesmerise, Spectral, status, campaign play, dropping loot) about 50; section 22 (the Halloween demo) about 15; section 23 (the outside review's rules: one chase one rise, giving up, overdraw on top, any ability as a raise in the flight, everyone held, result first, the way out once a Turn) about 45; section 24 (Wall-Crawler and the new defaults) about 10. Dice are random, so some steps say "roll until…".
 
 **What slice 1 covers:** the Entity sheets, the roll dialog and roll cards, charges and abilities, Costs, Jekyll & Hyde's change of form, and the Raid HUD (Suspicion, the Limit, the Turns, dawn and the hunt).
 **What slice 2 covers:** chases (the local chase and the final flight, with the chase tracker: the Lead, the ground, the mob, Weaknesses, the majority rule), the lock-up (capture, slipping free, rescue, left behind), group checks (one Suspicion rise), Tell checks, carried furniture's Suspicion, the shopping list and how the year went.
@@ -26,7 +26,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 
 1. **GM:** Actors sidebar → **New Entity**. Pick **A Witch**, player **Ann** → *Create*. Her sheet opens:
    - dice **Brawn d6 · Nimble d4 · Sly d10 · Charm d8 · Wits d12**; **Charges 3 / 3**;
-   - each power spelled out as Chapter 2 does: **Signature: Hedge Spell** *1 charge*, its rule; **Gift: Witchcraft** *pick one · 1 charge a use*, its three versions each with its rule and its flavour in italics, *Broomstick (default)* chosen; **Perk** *pick one · always on*, its three, *Familiar's Warning (default)* chosen; **Castle Duty** *Cook (default)*. Compare a line or two with the Witch's entry in the book: the same words;
+   - each power spelled out as Chapter 2 does: **Signature: Hedge Spell** *1 charge*, its rule; **Gift: Witchcraft** *pick one · 1 charge a use*, its three versions each with its rule and its flavour in italics, *A Potion for That (default)* chosen (the default since 20 October; Broomstick before); the signature's line has its flavour in italics, *Old village magic: a muttered word, a pinch of salt, and luck leans her way.*; **Perk** *pick one · always on*, its three, *Familiar's Warning (default)* chosen; **Castle Duty** *Cook (default)*. Compare a line or two with the Witch's entry in the book: the same words;
    - **Weakness: Rowan.** *Soon: from the third round of any chase, your trait die is one size smaller.* and its flavour in italics; **Tell: A Black Cat.** and its flavour;
    - Status *Active*, Carrying furniture (unticked), *Carrying: Nothing yet*, Notes.
    - Change the Gift to *Black Cat* (the *Chosen:* menu): the marked version moves to Black Cat. Change it back.
@@ -35,7 +35,7 @@ The automated tests run the system on a stand-in for Foundry. This script checks
 
 ## 3. A plain roll
 
-1. **Ann:** on the Witch's sheet, click **Sly d10**. The roll dialog shows: Trait called (Sly), Second die (Mask d6 / Monster d10), Difficulty (just the numbers 6, 8, 10 and 12, with no words; 8 selected); her abilities (Hedge Spell, Broomstick); *Help from the others* (Dracula's Bat, "3 left"); the situation (Castle Duty, the loud way, watched, the way out, a chase roll); and an odds line at the bottom.
+1. **Ann:** on the Witch's sheet, click **Sly d10**. The roll dialog shows: Trait called (Sly), Second die (Mask d6 / Monster d10), Difficulty (just the numbers 6, 8, 10 and 12, with no words; 8 selected); her abilities (Hedge Spell, A Potion for That); *Help from the others* (Dracula's Bat, "3 left"); the situation (Castle Duty, the loud way, watched, the way out, a chase roll); and an odds line at the bottom.
 2. Change the second die to **Monster d10**: the odds line updates and adds "The Monster shows …%". *(If it doesn't update, note it: the line is meant to follow every change.)*
 3. Click **Roll**. In **both** browsers a card appears: both dice with their faces, the total "against 8", and **Success**, **Cost** or **Trouble**.
    - If the Monster die rolled higher than the Sly die: *The Monster shows.* and **Suspicion +2 (the Monster shows) — on the track**, and the Raid window shows **2 / 10** in both browsers.
@@ -242,7 +242,8 @@ The one-shot *Lantern Night in Hallowby* (its PDF is `book/dist/Lantern_Night_in
 4. **GM:** each demo Entity's sheet shows its round portrait. Drag **Dracula** onto Hallowby, onto the yard at *The Way Out*: a round token with a red ring and his name on a ribbon, about a fifth as wide as the yard; his name shows on hover; **Link Actor Data** is ticked. Do the same with **A Witch**.
 5. **GM:** give **Ann** Owner of the demo **Witch**. Drag the macro to the hotbar and run it: both Raid windows show a new **Easy** raid, Suspicion 0 of **9**, Turn 1, and **The shopping list (4)** with *a cask of red wine (“for the guests”)* essential.
 6. **Ann:** move the Witch's token to the tavern's yard and roll **Sly** with the Mask at Difficulty **6** (the goose yard), *Castle Duty* ticked if she is the Cook: the card reads like the script's result. **GM:** **Next Turn**.
-7. **GM:** open *Running the Demo in Foundry*: every button it names is where it says. Delete the imported demo documents afterwards if you like.
+7. **GM:** open *Running the Demo in Foundry*: every button it names is where it says.
+8. **GM:** open the demo **Frankenstein's Creature**, **The Mummy** and **A Witch** (the defaults changed on 20 October): the Creature's Perk is *Tireless (default)*, the Mummy's *Fear the Curse (default)*, the Witch's Gift *A Potion for That (default)*; the script's *Part One: The Castle* says the Creature's Tireless means carrying the mirror doesn't make its Nimble smaller. Delete the imported demo documents afterwards if you like.
 
 ## 23. The outside review's rules (about 45 minutes)
 
@@ -266,7 +267,7 @@ The rules Richard approved on 19 and 20 October: one chase, one rise (D1), givin
    - Get the Witch caught (*Watched*, Trouble). In her chase round, tick Hedge Spell (0 charges): the card says *A Witch overdraws (+2 on top of the chase's one rise, when it ends)*; nothing on the Raid window yet; *rise so far* +2. Then press **Spend a charge** on her sheet: the confirm says the overdraw adds +2 on top of the chase's one rise; the tracker's rise goes up by 2 more. **GM:** **Escaped** on the tracker: the end card says *One chase, one rise: Suspicion +4 (overdraw)* and the Raid window rises by 4. Put her charges back to 3.
 5. **Any ability as a raise in the final flight (D6b).** **GM:** New raid, then **Start the hunt**: the final flight.
    - Before that (or after **Stop the hunt**), Ann's roll dialog has no *or as a raise* ticks.
-   - In the flight, **GM** opens Dracula's roll dialog: a notice *The final flight: any ability may be spent as a raise…*; under **Bat** a tick *or as a raise (trait die one size bigger)*; **Mesmerise** (an approach of his own, never in a chase) shows only *as a raise …*; so does the Witch's **Broomstick** among his helpers.
+   - In the flight, **GM** opens Dracula's roll dialog: a notice *The final flight: any ability may be spent as a raise…*; under **Bat** a tick *or as a raise (trait die one size bigger)*; **Mesmerise** (an approach of his own, never in a chase) shows only *as a raise …*; the Witch's **A Potion for That** among his helpers has its own *or as a raise* tick.
    - Roll Dracula's **Charm** with Bat ticked *as a raise*: Garlic makes his Charm a d10 and the raise brings it back to a **d12** (the card: *Bat (as a raise)*, *Raised one size*, *One size smaller (the Weakness)*); his charges 3 → 2.
    - **Ann** rolls Sly with *Mesmerise (Dracula)* ticked: Sly d10 → **d12**, the card says *Mesmerise (as a raise) (Dracula)*, Dracula's charges go down by 1 (the helper pays).
    - Refused: Bat ticked both ways (*Bat goes on a roll once…*); Hedge Spell and a raise from Dracula together (*At most one raise per roll…*). **GM:** **Stop the hunt**.
@@ -286,6 +287,15 @@ The rules Richard approved on 19 and 20 October: one chase, one rise (D1), givin
 | The way out once a Turn | A second way-out roll the same Turn goes through (step 8) |
 | Raise Suspicion automatically | A chase's end card offers **Apply Suspicion** for its one rise (step 11) |
 | Run the lock-up automatically | **Give up** takes the runner out of the chase but leaves it *Active*: the Storyteller captures it by hand |
+
+## 24. Wall-Crawler and the new defaults (about 10 minutes)
+
+Decided on 20 October: Dracula's Wall-Crawler also makes his Nimble die one size bigger in any chase (the roll's one raise), and three Entities have new defaults. All switches on. **GM:** New raid → *Standard*; the Witch (Ann) and Dracula (Ben, the GM rolls for him), both *Active*, 3 charges.
+
+1. **New defaults.** **GM:** New Entity → **Frankenstein's Creature** and **The Mummy** (any player): their sheets show *Tireless (default)* and *Fear the Curse (default)* chosen; Strong Back and Patience of Ages are still in the menus. Delete them afterwards.
+2. **Not in a chase.** On Dracula's sheet set the Perk to **Wall-Crawler**: its line ends *and your Nimble die is one size bigger (the roll's one raise).* Roll his **Nimble** at an obstacle: the card says *rolls Nimble (d10)*, with no *Raised* line.
+3. **A local chase.** Roll his Sly with *Watched* ticked until Trouble: caught. In his chase round the roll dialog has a notice *Wall-Crawler: in a chase you can always roll Nimble, and your Nimble die is one size bigger (the roll's one raise…)*, and Nimble is offered whatever the ground. Roll **Nimble** with the Monster: the card says *rolls Nimble (d10)*, *Raised one size (Wall-Crawler) · One size smaller (the Weakness)* (Garlic, from round 1: they cancel), and no charge is spent. Next round, roll a trait other than Nimble: no *Raised* line. Finish or call off the chase.
+4. **The final flight.** **GM:** **Start the hunt**. Dracula's Nimble roll shows the same notice and the same card lines. Tick **Bat** *or as a raise* on that Nimble roll: refused, *Wall-Crawler already makes this Nimble die one size bigger: that's the roll's one raise, so no ability can raise it further.* On his Charm, Bat as a raise works as before (section 23 step 5). **GM:** **Stop the hunt**; set his Perk back to *Hypnotic Eyes*.
 
 ## What to send back
 

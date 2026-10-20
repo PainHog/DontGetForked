@@ -46,7 +46,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "hypnoticEyes", name: "Hypnotic Eyes", text: "On Charm rolls, the Monster shows only if it beats your trait die by 2 or more.", default: true },
       { key: "oldMoney", name: "Old Money", text: "A Cost on a Charm roll is never Suspicion +1." },
-      { key: "wallCrawler", name: "Wall-Crawler", text: "In a chase you can always roll Nimble, whatever the ground." },
+      { key: "wallCrawler", name: "Wall-Crawler", text: "In a chase you can always roll Nimble, whatever the ground, and your Nimble die is one size bigger (the roll’s one raise)." },
     ],
     weakness: { name: "Garlic", timing: "always", text: "Every kitchen in town has some, and the mob knows it." },
     tell: { name: "No Reflection", text: "A shop window shows everyone but him." },
@@ -61,8 +61,8 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "strongBack", name: "Strong Back", text: "You carry a Huge piece alone.", default: true },
-      { key: "tireless", name: "Tireless", text: "Carrying doesn’t make your Nimble smaller." },
+      { key: "strongBack", name: "Strong Back", text: "You carry a Huge piece alone." },
+      { key: "tireless", name: "Tireless", text: "Carrying doesn’t make your Nimble smaller.", default: true },
       { key: "builtToLast", name: "Built to Last", text: "You slip free from the lock-up on a Success or a Cost." },
     ],
     weakness: { name: "Fire", timing: "soon", text: "Someone has to light the torches." },
@@ -78,9 +78,9 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost.", default: true },
+      { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost." },
       { key: "keeperOfTreasures", name: "Keeper of Treasures", text: "“Drop an item” is never your Cost." },
-      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob’s Difficulty in your local chase is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close" },
+      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob’s Difficulty in your local chase is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close", default: true },
     ],
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
@@ -136,13 +136,13 @@ DGF.entities = Object.freeze([
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
   },
-  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers)." },
+  { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers). Old village magic: a muttered word, a pinch of salt, and luck leans her way.", flavour: "Old village magic: a muttered word, a pinch of salt, and luck leans her way." },
     gift: {
       name: "Witchcraft",
       versions: [
-        { key: "broomstick", name: "Broomstick", effect: "open", trait: "nimble", text: "In over the rooftops, quiet as an owl.", default: true },
+        { key: "broomstick", name: "Broomstick", effect: "open", trait: "nimble", text: "In over the rooftops, quiet as an owl." },
         { key: "blackCat", name: "Black Cat", effect: "hidden", text: "Everyone blames the cat." },
-        { key: "potionForThat", name: "A Potion for That", effect: "switch", trait: "wits", text: "There’s a potion for everything." },
+        { key: "potionForThat", name: "A Potion for That", effect: "switch", trait: "wits", text: "There’s a potion for everything.", default: true },
       ],
     },
     perks: [
@@ -161,7 +161,7 @@ DGF.entities = Object.freeze([
       versions: [
         { key: "doctorsBag", name: "Doctor’s Bag", effect: "raise", text: "The right instrument for the job.", default: true },
         { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "On Jekyll’s rolls, Hyde still takes over if the Monster shows.", text: "A respectable doctor having a funny turn." },
-        { key: "trample", name: "Trample", effect: "open", trait: "brawn", note: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", text: "" },
+        { key: "trample", name: "Trample", effect: "open", trait: "brawn", note: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", text: "Hyde doesn’t wait to be let in." },
       ],
     },
     perks: [
@@ -317,8 +317,8 @@ DGF.perkRules = Object.freeze({
   steadyNerves: Object.freeze({ formMargin: 2 }), // Hyde takes over only if the Monster beats your trait die by 2 or more.
   bruteStrength: Object.freeze({ form: "hyde", carryNimble: false }), // As Hyde, carrying doesn’t make your Nimble smaller.
   fetch: Object.freeze({ finalLead: 3, partyExitEase: 1 }), // B2: a final flight you're in starts at Lead 3; B5: the way out's Difficulty is 1 lower while you're there.
-  // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs):
-  wallCrawler: Object.freeze({ chaseTrait: "nimble" }), // In a chase you can always roll Nimble.
+  // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs; chaseRaise: roll-plan.mjs):
+  wallCrawler: Object.freeze({ chaseTrait: "nimble", chaseRaise: "nimble" }), // In a chase you can always roll Nimble, and your Nimble die is one size bigger there, the roll's one raise (2026-10-20).
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob's Difficulty in your local chase is 1 lower.
