@@ -55,6 +55,10 @@ export const OPTIONS = {
   "I-a": { title: "Out of Sight narrowed to \"you carry\" (the text before V17)", p: { outOfSightRule: "carry" }, kits: ["random", "default"], ent: "invisible" },
   "Wi-a": { title: "A Potion for That becomes the Witch's default Gift", p: { kitOverride: { witch: { gift: "A Potion for That" } } }, kits: ["default"], ent: "witch" },
   "Wi-b": { title: "Broomstick rolls Wits instead of Nimble", p: { giftTraits: { Broomstick: "wits" } }, kits: ["random", "default"], ent: "witch" },
+  PKG: { title: "M-a and Wi-a together (Fear the Curse and A Potion for That as the defaults)", p: { kitOverride: { mummy: { perk: "fearTheCurse" }, witch: { gift: "A Potion for That" } } }, kits: ["default"], ent: null, towns: true },
+  PKG2: { title: "(context) M-a, Wi-a and J-c together", p: { kitOverride: { mummy: { perk: "fearTheCurse" }, witch: { gift: "A Potion for That" }, "jekyll-hyde": { gift: "Pillar of Society" } } }, kits: ["default"], ent: null, towns: true },
+  "J-c": { title: "(context) Pillar of Society as Jekyll & Hyde's default Gift", p: { kitOverride: { "jekyll-hyde": { gift: "Pillar of Society" } } }, kits: ["default"], ent: "jekyll-hyde" },
+  FbN: { title: "(context) The Witch picks Fly by Night, the review's yardstick for Wall-Crawler", p: { kitOverride: { witch: { perk: "flyByNight" } } }, kits: ["random", "default"], ent: "witch", pick: true },
   "G-a": { title: "A raise on a d12 adds +2 to the total instead", p: { raiseD12: "plus2" }, kits: ["random", "default"], ent: null, general: true },
   "G-b": { title: "(context) A raise on a d12 adds +1 to the total instead", p: { raiseD12: "plus1" }, kits: ["random", "default"], ent: null, general: true },
 };
@@ -111,7 +115,7 @@ export function jobList({ seeds, only, opts = null }) {
         }
       }
       for (const t of PREMADE) for (const opt of ["base", "aware", "D-a", "C-a", "I-a", "Wi-b", ...GENERAL]) jobs.push({ kind: "town", kit: "random", opt, target: t.key, seed });
-      for (const t of PREMADE) jobs.push({ kind: "town", kit: "default", opt: "base", target: t.key, seed });
+      for (const t of PREMADE) for (const opt of ["base", ...Object.keys(OPTIONS).filter((k) => OPTIONS[k].towns)]) jobs.push({ kind: "town", kit: "default", opt, target: t.key, seed });
     }
     if (want("thistle")) {
       for (const c of Object.keys(THISTLE)) jobs.push({ kind: "thistle", kit: "random", opt: c, target: "thistlewick", seed });
@@ -193,7 +197,7 @@ const tick = (ok) => (ok ? "" : " ✗");
 const table = (head, rows) => [`| ${head.join(" | ")} |`, `|${head.map(() => "---").join("|")}|`, ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n");
 const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 
-export function report(res, { runs, entityRuns, townRuns, seeds }) {
+export function report(res, { runs, entityRuns, townRuns, seeds }, { titled = true } = {}) {
   const get = (j) => res[jobId(j)];
   const S = seeds;
   const L = [];
@@ -258,15 +262,17 @@ export function report(res, { runs, entityRuns, townRuns, seeds }) {
   };
   const townHead = ["Option", "Win (Δ pts)", "Forked (Δ pts)", "Win on each seed", "Win with 3 · 4 · 5", "Grand Year", "Captures"];
 
-  L.push("# Entity tuning after the outside review: measurements (2026-10-20)", "");
-  L.push("A measuring job for Richard's calls: nothing in the game, the book or the Foundry system was changed. The options are switches the simulator reads only when `sim/tuning-check.mjs` sets them (`sim/params.mjs` TUNING); the defaults, `test/sim.test.mjs` and every earlier report are unchanged.", "");
+  if (titled) {
+    L.push("# Entity tuning after the outside review: measurements (2026-10-20)", "");
+    L.push("A measuring job for Richard's calls: nothing in the game, the book or the Foundry system was changed. The options are switches the simulator reads only when `sim/tuning-check.mjs` sets them (`sim/params.mjs` TUNING); the defaults, `test/sim.test.mjs` and every earlier report are unchanged.", "");
+  } else L.push("# The measurements", "", "Everything below is printed by the command under Reproducing.", "");
   L.push("## How it was measured", "");
   L.push(`- **Rules and numbers:** today's defaults (the outside review's package D1–D7 with R1 and D4, Suspicion Limits 9 / 10 / 13, 12 Turns; \`sim/params.mjs\`).`);
   L.push(`- **Seeds:** ${S.join(", ")}. Every option runs on the same parties, towns and dice streams as its baseline (common random numbers), so a difference is the option, not a different draw. Run-to-run noise between seeds is about ±0.5–1 point on a level's win rate (more on one Entity's).`);
   L.push(`- **Rolled towns:** ${runs.toLocaleString("en-GB")} raids per label and party size (3, 4 and 5 Entities) per seed, ${(runs * 9).toLocaleString("en-GB")} raids a run.`);
   L.push(`- **One Entity's win rate (party of 4):** that Entity in every party of 4, the other three at random: the same parties as "raids that include it" in a rolled run, ${entityRuns.toLocaleString("en-GB")} per label per seed (${(entityRuns * 3 * S.length).toLocaleString("en-GB")} per row).`);
   L.push(`- **Towns:** Hallowby (the one-shot), Puddlecombe, Thistlewick and Gallowsmere as printed, ${townRuns.toLocaleString("en-GB")} raids per party size (3, 4, 5) per seed.`);
-  L.push("- **Kits.** *Random kits* is the simulator's standard: each Entity's Gift and Perk at random (as Chapter 2's d6 would), a Castle Duty at random; every target so far was measured on it. Changing which option is the **default** changes nothing there. *Default kits* gives every Entity its marked default Gift, Perk and Castle Duty (if two defaults clash, the later one takes another at random): what a first-time table plays, and what the one-shot's Entity cards have (Hallowby is measured on default kits).");
+  L.push("- **Kits.** *Random kits* is the simulator's standard: each Entity's Gift and Perk at random (as Chapter 2's d6 would), a Castle Duty at random; every target so far was measured on it. Changing which option is the **default** changes nothing there. *Default kits* gives every Entity its marked default Gift, Perk and Castle Duty (if two defaults clash, the later one takes another at random): what a first-time table plays, and what the one-shot's Entity cards have (Hallowby is measured on both).");
   L.push("- **Hypnotic Eyes and the players.** The simulated players price the Monster die from exact odds. Before this job they priced Dracula's Charm Monster rolls as if Hypnotic Eyes didn't exist (the Perk still worked when the dice were read). `aware` is the baseline with players who know it; option D-a is compared with both.");
   L.push("- ✗ marks a number outside its target. Δ is in points against today's defaults on the same seeds; the per-seed Δs show the noise.", "");
   L.push("```", `node sim/tuning-check.mjs --runs ${runs} --entity-runs ${entityRuns} --town-runs ${townRuns} --seeds ${S.join(",")} --jobs 4`, "```", "");
@@ -299,6 +305,15 @@ export function report(res, { runs, entityRuns, townRuns, seeds }) {
   }
   L.push(table(["Town", "Win", "Forked", "Win on each seed", "Win with 3 · 4 · 5", "Grand Year", "Captures"], tb), "");
 
+  L.push("### Every Entity's with-vs-without under each option (the ±2.5 measure)", "");
+  L.push("Win points, parties with the Entity against parties without, same label and party size, rolled towns, averaged over the seeds (target: every Entity within ±2.5). Read down a column to see what an option does to its own Entity and to the others.", "");
+  for (const kit of ["random", "default"]) {
+    const os = Object.keys(OPTIONS).filter((o) => !OPTIONS[o].pick && get({ kind: "rolled", kit, opt: o, seed: S[0] }) && S.every((s) => get({ kind: "rolled", kit, opt: o, seed: s })));
+    const d = (o, e) => seedAvg((s) => get({ kind: "rolled", kit, opt: o, seed: s }).outliers.find((x) => x.what === `entity ${NAME[e]}`)?.delta);
+    const rows = os.map((o) => [o === "base" ? "**Today's defaults**" : o, ...ENTS.map((e) => { const v = d(o, e); return `${pts(v)}${Math.abs(v) > TARGETS.outlier ? " ✗" : ""}`; })]);
+    L.push(`**${kit === "random" ? "Random kits" : "Default kits"}:**`, "", table(["Option", ...ENTS.map((e) => NAME[e].replace(/^(The|A) /, ""))], rows), "");
+  }
+
   // Per item
   const item = (title, opts, ent, note) => {
     L.push(`## ${title}`, "");
@@ -326,7 +341,7 @@ export function report(res, { runs, entityRuns, townRuns, seeds }) {
   item("4. The Creature: Strong Back", ["C-a", "C-b", "C-c"], "creature", strongNote(res, S));
   item("5. The Mummy: Patience of Ages", ["M-a", "M-b"], "mummy", null);
   item("6. The Invisible Man: Out of Sight", ["I-a"], "invisible", null);
-  item("7. The Witch: Broomstick", ["Wi-a", "Wi-b"], "witch", null);
+  item("7. The Witch: Broomstick", ["Wi-a", "Wi-b", "FbN"], "witch", null);
 
   // G-a
   L.push("## 8. General: a raise on a d12 adds +2 (G-a; +1 as G-b, for context)", "");
@@ -348,8 +363,25 @@ export function report(res, { runs, entityRuns, townRuns, seeds }) {
   L.push("**The towns:**", "", table(townHead, trows), "");
   L.push(raiseNote(res, S), "");
 
+  // the recommended default changes together, and the Jekyll context
+  if (get({ kind: "rolled", kit: "default", opt: "PKG", seed: S[0] })) {
+    L.push("## 9. The two default changes together (M-a and Wi-a), default kits", "");
+    L.push(table(levelHead, levelRows("default", ["base", "M-a", "Wi-a", "PKG", "PKG2"])), "");
+    const prow = [];
+    for (const [target, nm] of [["hallowby", "Hallowby (Easy)"], ...PREMADE.map((t) => [t.key, `${t.name} (${t.labelName})`])]) for (const o of ["base", "PKG", "PKG2"]) { const r = townRow("town", "default", o, target, `${nm}, ${o === "base" ? "today" : o === "PKG" ? "M-a + Wi-a" : "M-a + Wi-a + J-c"}`); if (r) prow.push(r); }
+    L.push("**The towns, default kits:**", "", table(townHead, prow), "");
+  }
+  if (get({ kind: "entity", kit: "default", opt: "J-c", target: "jekyll-hyde", seed: S[0] })) {
+    L.push("## 10. Context: Jekyll & Hyde on default kits", "");
+    L.push("Not asked for and not proposed: measured because Jekyll & Hyde is the weakest Entity on default kits (with-vs-without above). Pillar of Society is one of his three printed Gifts.", "");
+    L.push(table(optHead, ["base", "J-c"].map((o) => optRow("default", o, "jekyll-hyde"))), "");
+    L.push(table(levelHead, levelRows("default", ["base", "J-c"])), "");
+    const hr = ["base", "J-c"].map((o) => townRow("town", "default", o, "hallowby", o === "base" ? "Hallowby, today" : "Hallowby, J-c")).filter(Boolean);
+    if (hr.length) L.push(table(townHead, hr), "");
+  }
+
   // Thistlewick
-  L.push("## 9. Thistlewick", "");
+  L.push("## 11. Thistlewick", "");
   const th = Object.keys(THISTLE).map((c) => townRow("thistle", "random", c, "thistlewick", `${c}: ${THISTLE[c].title}`)).filter(Boolean);
   L.push("**Default players, random kits** (Standard targets: win 72–78%, forked 3–7%):", "", table(townHead, th), "");
   const styles = [];
@@ -418,7 +450,7 @@ if (process.argv[1] && resolve(process.argv[1]) === here) {
   const only = opt("--only", null)?.split(",") ?? null;
   const out = opt("--out", null), save = opt("--save", null), from = opt("--from", null);
   const opts = opt("--opts", null)?.split(",") ?? null, mergeFiles = opt("--merge", null)?.split(",") ?? null;
-  const one = opt("--job", null), json = opt("--json", null);
+  const one = opt("--job", null), json = opt("--json", null), summary = opt("--summary", null);
   const sizes = { runs, entityRuns, townRuns };
   if (one) {
     writeFileSync(json, JSON.stringify(runJob(JSON.parse(one), sizes)));
@@ -453,7 +485,7 @@ if (process.argv[1] && resolve(process.argv[1]) === here) {
       if (save) writeFileSync(save, JSON.stringify(res));
     }
     const m = res.__meta ?? { runs, entityRuns, townRuns, seeds };
-    const text = report(res, m);
+    const text = (summary ? readFileSync(summary, "utf8").trimEnd() + "\n\n" : "") + report(res, m, { titled: !summary });
     if (out) writeFileSync(out, text);
     else console.log(text);
   }
