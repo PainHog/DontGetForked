@@ -657,3 +657,41 @@ Seed 1, 3,000 raids per label and party size (the same numbers as F12 above, as 
 | Hallowby (the one-shot, Easy) | 87–93% · ≤2% | 88.9% · 1.3% | **90.9% · 1.5%** (91.0% · 1.5% at 6,000; 88 · 92 · 93%) |
 
 **Still outside a target:** Hard captures 0.48 a raid (0.18 over 0.3, 0.14 over the accepted 0.34; the Lead-2 fallback, not taken, was the only lever found); Thistlewick 1.5 points over (a town change for Richard); Hard wins at the floor (54.7–56.3% over the seeds and run sizes tried) and the three-Entity Hard party 10 points behind five, as before. Everything else holds.
+
+## The Entity tuning (2026-10-20, after the outside review's Section 4)
+
+Measured in `sim/TUNING-2026-10-20.md` (three seeds, on random kits and on the default kits a first-time table plays) and decided the same day under Richard's delegation (DESIGN 2026-10-20). **In the game now:**
+- **W-e, Dracula's Wall-Crawler:** "In a chase you can always roll Nimble, whatever the ground, and your Nimble die is one size bigger (the roll's one raise)", in every chase, the final flight included. In the simulator it is `wallCrawler: "bigger"`, now the engine's default (`sim/params.mjs` TUNING; "plain" plays the Perk as it was). Measured: his lone local chases escape 50.5% (43.3% with Hypnotic Eyes, 43.8% with the old Perk), Hard forked with him 9.6 → 7.5% when he picks it, the levels within 0.2 point, Dracula as a random pick +2.1 → +2.3. With Garlic in play from round 1, the raise and the step down cancel: his Nimble stays a d10 in every chase.
+- **C-b, the Creature's default Perk is Tireless** (was Strong Back): +0.1 / 0.0 for his party (Standard / Hard, default kits). Strong Back did nothing measurable in any form (C-a "keeps the Mask": 0.0 everywhere; a carrier rolls 0.075 times a raid).
+- **M-a, the Mummy's default Perk is Fear the Curse** (was Patience of Ages): +0.6 / +1.3, her lone chases 47.7 → 58.0% escaped, with-vs-without −0.4 → +0.5.
+- **Wi-a, the Witch's default Gift is A Potion for That** (was Broomstick): +0.6 / +1.5, with-vs-without −2.5 → −0.7.
+- **T3, Thistlewick's strongbox at the ironmonger 8 → 10:** 79.9 → 76.3% won (75.8 / 76.9 / 76.1 on the seeds), forked 4.9%.
+
+The new defaults come from `module/config.mjs` (`kitPolicy: "default"` reads the marked defaults), and Thistlewick from `book/src/towns.json`, so nothing else in the simulator changed; on random kits a default changes nothing. **Kept:** Hypnotic Eyes and Bat (D-a +6.0 for Dracula; D-b neutral; D-c worse); Out of Sight as V17 has it (I-a +5.5); Broomstick on Nimble (Wi-b pushes default-kit Standard and Hard out). **Open for Richard:** "+2 on a d12" (G-a pushes every level and town out; G-b needs a Limits pass) and Jekyll & Hyde's default kit (−3.5), with which kind of party the targets apply to.
+
+### The check with everything in
+
+```
+node sim/run.mjs                                   # sim/REPORT.md: seed 1, 2,000 raids per label and party size
+node sim/premade-check.mjs 3000                    # the three printed towns, seed 1
+node sim/demo-check.mjs 6000                       # Hallowby (sim/DEMO.md)
+node sim/full-table.mjs 6000                       # five players and play styles (sim/FULL-TABLE.md)
+node sim/tuning-check.mjs --runs 2000 --town-runs 3000 --seeds 1,7,11 --only rolled,town --opts base
+```
+
+Three seeds (1, 7, 11); rolled towns 2,000 raids per label and party size per seed, towns 3,000 per party size per seed. Before = `sim/TUNING-2026-10-20.md`'s baseline on the same seeds.
+
+| Measure | Target | Before | Now |
+|---|---|---|---|
+| Win / forked, random kits (the standard) | 87–93 / 72–78 / 55–60% · ≤2 / 3–7 / 8–12% | 92.4 / 76.0 / 55.4% · 1.0 / 3.4 / 9.5% | **92.5 / 76.0 / 55.6% · 0.9 / 3.3 / 9.2%** (each seed inside) |
+| Win / forked, default kits (a first-time table) | the same | 92.8 / 75.5 / 55.9% · 0.9 / 3.5 / 10.9% | **93.5 ✗ / 77.1 / 57.3% · 0.9 / 3.3 / 10.6%** (Easy 0.5 over; Standard 78.4% on seed 7, 0.4 over) |
+| Each Entity with vs without, random kits | within ±2.5 | +2.5 (A Ghost) to −1.9 | +2.5 (A Ghost) to −1.9; Dracula +2.1 → +2.3 |
+| Each Entity with vs without, default kits | within ±2.5 | +3.1 / +2.9 / −3.5 outside (Invisible Man, Dracula, Jekyll & Hyde) | the Invisible Man +2.5 (at the line), Jekyll & Hyde −3.5 ✗; the Mummy +0.3, the Witch −1.0, Dracula +2.3 |
+| Puddlecombe (Easy), random · default kits | 87–93% · ≤2% | 91.2% · 93.2% ✗ | **91.3% · 93.0%**, forked 0.6 · 0.5% |
+| Thistlewick (Standard), random · default kits | 72–78% · 3–7% | 79.9% ✗ · 79.4% ✗ | **76.4% · 75.9%**, forked 4.8 · 5.0% (76.0 / 77.0 / 76.3 on the seeds) |
+| Gallowsmere (Hard), random · default kits | 55–60% · 8–12% | 57.7% · 56.7% | **57.8% · 59.5%**, forked 9.7 · 11.0% |
+| Hallowby (the one-shot), random · default kits | 87–93% · ≤2% | 90.8% · 90.9% | **90.9% · 91.2%**, forked 1.6 · 1.8% |
+
+Seed 1 alone (the commands above): rolled towns **92.3 / 74.7 / 55.2% won, 0.9 / 3.5 / 9.2% forked** (`sim/REPORT.md`, now at 2,000 raids per label and party size; Hard captures 0.47 a raid, as before; on this seed Dracula +3.1 and A Ghost +2.9 with vs without, against +2.3 and +2.5 on the three-seed average, and Book-Learned −3.7, the old single-seed edge case). The printed towns at 3,000 per party size: Puddlecombe 91.2% / 0.5%, **Thistlewick 76.0% / 4.8%** (70.6 · 77.7 · 79.7% with 3 · 4 · 5), Gallowsmere 58.5% / 9.6%. Hallowby at 6,000: 91% / 1% (88 · 92 · 94%; daredevils 90% / 2%; `sim/DEMO.md`). A full table of five at Thistlewick (`sim/FULL-TABLE.md`): default players 84 → 80%, cautious 85 → 82%, daredevils 76 → 74% (Grand Year 60 → 54%), a party that stays together 91 → 88%.
+
+**Still outside a target:** on default kits only, Easy 93.5% (0.5 over) and Standard 78.4% on seed 7; with vs without, Jekyll & Hyde −3.5 and the Invisible Man at +2.5. The targets were set on random kits, where every level, town and Entity is inside; which kind of party they should hold for is the open question for Richard (DESIGN, open questions). Hard captures 0.47 and Book-Learned as before.
