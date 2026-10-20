@@ -299,12 +299,12 @@ test("D6b: in the final flight a Gift that usually switches the trait, and a fri
 test("R1: a rescue whose Suspicion brings the Limit frees the captives first; they join the final flight", async () => {
   await newRaid();
   await op(GM, OPS.lockupSet, { actorId: dracula.id, captured: true });
-  await adjust(10);
+  await adjust(view().limit - 1); // one below the Limit
   // Sly d10 and the Monster at the lock-up: 6 + 7 = 13 against 10, beaten; the Monster shows: +2, the Limit
   await rollAs(ANN, witch, { trait: "sly", second: "monster", lockup: true }, [6, 7, 1]); // then the flight's ground
   const card = lastRoll();
   assert.deepEqual([card.lockup, card.rescued, card.suspicion, card.freedNames], ["rescue", true, 2, ["Dracula"]]);
-  assert.deepEqual([view().value, view().hunt, view().huntCause], [11, true, "limit"]);
+  assert.deepEqual([view().value, view().hunt, view().huntCause], [view().limit, true, "limit"]);
   assert.equal(dracula.system.status, "active", "freed first");
   assert.deepEqual(chase().members.map((m) => m.name), ["A Witch", "Dracula"], "and he flees with her");
   await asUser(GM, () => currentHud().runAction("toggleHunt"));

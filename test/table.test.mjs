@@ -69,12 +69,12 @@ let witch, dracula, jekyll;
 test("boot: settings registered, a raid seeded, the HUD shows the Storyteller's controls", () => {
   for (const key of Object.values(SETTINGS)) assert.ok(game.settings.settings.has(`${SYSTEM_ID}.${key}`), `setting ${key} registered`);
   assert.ok(raid().raidId, "the GM seeded a raid");
-  assert.equal(raid().limit, 11); // Standard (B3)
+  assert.equal(raid().limit, 10); // Standard (F12)
   assert.equal(raid().turn, 1);
   const hud = currentHud();
   assert.ok(hud?.rendered, "the GM's HUD is open");
   assert.match(hud.renderedParts.body, /data-action="suspicionUp"/);
-  assert.match(hud.renderedParts.body, /data-value="0" data-limit="11"/);
+  assert.match(hud.renderedParts.body, /data-value="0" data-limit="10"/);
   assert.deepEqual(log.errors, []);
 });
 
@@ -151,7 +151,7 @@ test("a player rolls: dialog → dice → card; the GM's client applies the Susp
   assert.deepEqual(buttonLabels(msg, GM), ["Cancel Suspicion"]);
   // the HUD on a player's client
   const hud = await asUser(ANN, () => openHud());
-  assert.match(hud.renderedParts.body, /data-value="2" data-limit="11"/);
+  assert.match(hud.renderedParts.body, /data-value="2" data-limit="10"/);
   assert.doesNotMatch(hud.renderedParts.body, /suspicionUp/, "no controls for players");
 });
 
@@ -353,7 +353,7 @@ test("a new raid; the Limit starts the hunt; the track never goes past it", asyn
   dialogResponders.push(press("ok", { difficulty: "easy" }));
   await asUser(GM, () => hud.runAction("newRaid"));
   await settle();
-  assert.equal(raid().limit, 11); // Easy (B3)
+  assert.equal(raid().limit, 9); // Easy (F12)
   assert.equal(raid().value, 0);
   assert.equal(jekyll.system.form, "jekyll", "M3: Jekyll & Hyde starts each raid as Jekyll");
   assert.equal(jekyll.system.traits.charm, 12);
@@ -365,9 +365,9 @@ test("a new raid; the Limit starts the hunt; the track never goes past it", asyn
   assert.deepEqual(await asUser(GM, () => api.runOp(OPS.raidApplyCard, { messageId: old.id })), { ok: false, reason: "otherRaid" });
   assert.deepEqual(buttonLabels(old, GM), [], "no Suspicion buttons on a card from an earlier raid");
 
-  for (let i = 0; i < 12; i++) await asUser(GM, () => api.runOp(OPS.raidAdjust, { delta: 1 }));
+  for (let i = 0; i < 10; i++) await asUser(GM, () => api.runOp(OPS.raidAdjust, { delta: 1 }));
   await settle();
-  assert.equal(raid().value, 11, "the track never goes past the Limit");
+  assert.equal(raid().value, 9, "the track never goes past the Limit");
   assert.equal(raid().hunt, true);
   assert.equal(raid().huntCause, "limit");
   assert.match(hud.renderedParts.body, /The whole town hunts/);

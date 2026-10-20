@@ -466,21 +466,21 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
 test("two caught in one group check flee on a shared Lead; D1: their chase rises once, at its end, and if that brings the Limit the escaped join the final flight", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
-  for (let i = 0; i < 8; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 7; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  assert.equal(view().value, 8);
+  assert.equal(view().value, 7);
   await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id], label: "the rooftops" });
   await settle();
   await rollAs(ANN, witch, { trait: "nimble", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1]);
   assert.equal(raid().chase, null, "no chase until the whole group check is in");
   await rollAs(BEN, dracula, { trait: "sly", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1, 5]); // then the ground: the parade
-  assert.equal(view().value, 9, "the group check rose once");
+  assert.equal(view().value, 8, "the group check rose once");
   const c = chase();
   assert.equal(c.kind, "local");
   assert.deepEqual(c.members.map((m) => m.name), ["A Witch", "Dracula"], "caught together, they flee together");
   assert.equal(c.groupId, raid().group.id);
   assert.equal(c.lead, 1, "a shared Lead starts at 1");
-  assert.equal(c.mob, 12, "8 + half of 9, set as the chase starts");
+  assert.equal(c.mob, 12, "8 + half of 8, set as the chase starts");
   const caughtCards = game.messages.filter((m) => cardOf(m)?.groupId === c.groupId);
   assert.ok(caughtCards.every((m) => cardOf(m).chaseStarted === c.id));
   // round 1: the Witch's Trouble (1) and Dracula's Monster (2): Suspicion doesn't move; 1 Success, 1 Trouble: Lead 0 move
@@ -489,16 +489,16 @@ test("two caught in one group check flee on a shared Lead; D1: their chase rises
   assert.match(lastMessage().content, /majority rule/);
   await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true }, [8, 10, 5]); // Charm d12 → d10 (Garlic); then round 2's ground
   assert.equal(cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1)).chaseRise, 2);
-  assert.equal(view().value, 9, "nothing on the track until the chase ends");
+  assert.equal(view().value, 8, "nothing on the track until the chase ends");
   assert.deepEqual([chase().lead, chase().round, chase().mob], [1, 2, 12]);
   // rounds 2 and 3: both Succeed (+2 each): clear at 4
   await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [8, 5]);
   await rollAs(BEN, dracula, { trait: "charm", second: "mask", chase: true }, [10, 6, 5]);
   assert.equal(chase().lead, 3);
-  assert.equal(view().value, 9);
+  assert.equal(view().value, 8);
   await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [6, 6]); // round 3: Rowan (Soon) makes her Charm a d6
   await rollAs(BEN, dracula, { trait: "charm", second: "mask", chase: true }, [10, 6, 2]); // then the flight's ground
-  // escaped; the chase rises once, by its biggest trigger (the Monster, +2): 11, the Limit: the hunt; the escaped join the flight
+  // escaped; the chase rises once, by its biggest trigger (the Monster, +2): 10, the Limit: the hunt; the escaped join the flight
   assert.equal(view().value, view().limit);
   assert.equal(view().hunt, true);
   assert.equal(view().huntCause, "limit");
@@ -521,18 +521,18 @@ test("two caught in one group check flee on a shared Lead; D1: their chase rises
 test("D1: cornered, and the chase's one rise brings the Limit: captured first, and the final flight starts without her", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
-  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 8; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  // caught (+1 → 10): alone in a local chase at Lead 1; the ground: the crowded square
+  // caught (+1 → 9, one below Standard's Limit of 10): alone in a local chase at Lead 1; the ground: the crowded square
   await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
   const local = chase();
   assert.equal(local.kind, "local");
   assert.equal(local.lead, 1);
-  assert.equal(local.mob, 12, "8 + half of 10 is 13: at most 12");
-  assert.equal(view().value, 10);
-  // Trouble at Lead 1: cornered; the chase rises once (+1 → 11, the Limit) after she is captured
+  assert.equal(local.mob, 12, "8 + half of 9");
+  assert.equal(view().value, 9);
+  // Trouble at Lead 1: cornered; the chase rises once (+1 → 10, the Limit) after she is captured
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1, 2]); // then the flight's ground
-  assert.equal(view().value, 11);
+  assert.equal(view().value, 10);
   assert.equal(view().hunt, true);
   assert.equal(raid().endedChase.id, local.id);
   assert.equal(raid().endedChase.outcome, "cornered");
@@ -719,13 +719,13 @@ test("V5: a Ghost that is Already Dead, cornered when the chase's rise brings th
   await asUser(GM, () => ghost.update({ "system.perk": "alreadyDead" }));
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
-  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 8; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  // the Ghost is caught (+1 → 10) and flees alone at Lead 1; the ground: back alleys (Nimble, Sly)
+  // the Ghost is caught (+1 → 9) and flees alone at Lead 1; the ground: back alleys (Nimble, Sly)
   await rollAs(BEN, ghost, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 2]);
   const local = chase();
   assert.deepEqual(local.members.map((m) => m.name), ["A Ghost"]);
-  // Trouble corners it; the chase's one rise (+1 → 11, the Limit) brings the hunt: Already Dead just joins the flight
+  // Trouble corners it; the chase's one rise (+1 → 10, the Limit) brings the hunt: Already Dead just joins the flight
   await rollAs(BEN, ghost, { trait: "nimble", second: "mask", chase: true }, [1, 1, 3]); // Nimble d12 → d10 (Cold Iron); then the flight's ground
   assert.equal(view().hunt, true);
   assert.equal(raid().endedChase.outcome, "cornered");
@@ -756,13 +756,13 @@ test("D7b: cornered with everyone else held: captured, and everyone held at once
   for (const a of [dracula, ghost]) await op(GM, OPS.lockupSet, { actorId: a.id, captured: true });
   await settle();
   assert.equal(view().over, null, "the Witch is still free: the night goes on");
-  for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 8; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  // caught (+1 → 10): alone at Lead 1; the ground: the crowded square
+  // caught (+1 → 9): alone at Lead 1; the ground: the crowded square
   await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
   const local = chase();
   const from = game.messages.length;
-  // Trouble corners her: captured; the chase's rise (+1 → 11) is the Limit, but everyone is held: the night ends, Forked
+  // Trouble corners her: captured; the chase's rise (+1 → 10) is the Limit, but everyone is held: the night ends, Forked
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1]);
   assert.equal(witch.system.status, "captured");
   assert.equal(chase().id, local.id, "no final flight");

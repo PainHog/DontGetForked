@@ -496,6 +496,7 @@ hr { border: none; height: 0; margin: 0.1in 0; }
 
 /* heading + first block, bound together at build time */
 .keep { break-inside: avoid; }
+.tbl.nosplit { break-inside: avoid; }
 .keep > :last-child { margin-bottom: 0.075in; }
 /* a full-width table kept with its heading: the pair spans both columns together */
 .keep:has(> .tbl.wide) { column-span: all; }

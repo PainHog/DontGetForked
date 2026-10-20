@@ -185,8 +185,8 @@ test("At the Table's numbers table is DGF.labels", () => {
 test("the labels' numbers in the chapters' prose (Chapters 4, 5, 6) are DGF.labels", () => {
   const [eItems, shItems] = match(TXT.ch4, /(\d+) items on Easy, (\d+) on Standard and Hard/, "Chapter 4, The Shopping List");
   assert.deepEqual([L.easy.items, L.standard.items, L.hard.items], [eItems, shItems, shItems]);
-  const [esLimit, hLimit] = match(TXT.ch5, /Limit: (\d+) on Easy and Standard, (\d+) on Hard/, "Chapter 5's opener");
-  assert.deepEqual([L.easy.limit, L.standard.limit, L.hard.limit], [esLimit, esLimit, hLimit]);
+  const [eLimit, sLimit, hLimit] = match(TXT.ch5, /Limit: (\d+) on Easy, (\d+) on Standard and (\d+) on Hard/, "Chapter 5's opener");
+  assert.deepEqual([L.easy.limit, L.standard.limit, L.hard.limit], [eLimit, sLimit, hLimit]);
   const lockRow = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Difficulty");
   assert.ok(lockRow, "Chapter 6's lock-up table has a Difficulty row");
   const [lock] = match(lockRow[1], /^The lock-up’s: (\d+)$/, "Chapter 6, Captured (rescue)"); // B7: one lock-up Difficulty for every label

@@ -81,12 +81,12 @@ Each Entity left behind drops the result one step (Bust is the floor short of Fo
 ## Rulings R1–R11 (S11, provisional)
 Approved on 2026-10-04 to be tested and changed later (R3 and R10 confirmed or refined by T9 and T10 on 2026-10-05): R1 loud way +1 Suspicion · R2 one raise per roll · R3 the town takes a captive's loot · R4 a shared Lead when several are caught · R5 a local chase takes no extra Turns · R6 nothing below a d4 · R7 several tries per obstacle per Turn · R8 unique Castle Duties · R9 the lock-up · R10 "drop an item" only when someone carries loot · R11 Suspicion stops at the Limit.
 
-## Starting numbers (S9, approved 2026-10-04; Limits raised in S10; retuned in B1, 2026-10-06)
+## Starting numbers (S9, approved 2026-10-04; Limits raised in S10; retuned in B1, 2026-10-06; Limits 9 / 10 / 13 after the outside review, F12, 2026-10-20)
 | | Easy | Standard | Hard |
 |---|---|---|---|
 | List size (essentials) | 4 (1) | 5 (1–2) | 5 (2) |
 | Obstacle Difficulties (share of 6 · 8 · 10 · 12) | 15 · 50 · 30 · 5% | 15 · 50 · 30 · 5% | 0 · 40 · 45 · 15% |
-| Suspicion Limit | 11 | 11 | 15 |
+| Suspicion Limit | 9 | 10 | 13 |
 | Final flight: escape at Lead | 5 | 5 | 6 |
 | Exit Difficulty | 6 | 8 | 10 |
 | Final-flight mob Difficulty | 10 | 11 | 11 |

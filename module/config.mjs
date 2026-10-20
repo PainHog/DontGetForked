@@ -394,13 +394,13 @@ DGF.epilogue = Object.freeze({
   }),
 });
 
-/** S9 / S10 starting numbers, retuned in B1 (lists 4 / 5 / 5, Hard way out 10) and B3 (Easy and Standard Limits 11, flights escaping at 5). */
+/** S9 / S10 starting numbers, retuned in B1 (lists 4 / 5 / 5, Hard way out 10) and B3 (Easy and Standard Limits 11, flights escaping at 5); Limits 9 / 10 / 13 after the outside review's rule package (F12, 2026-10-20). */
 DGF.charges = 3;
 DGF.turns = 12;
 DGF.lead = Object.freeze({ localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 });
 DGF.localMob = Object.freeze({ base: 8, perSuspicion: 0.5, max: 12 }); // B3: base 8 (was 10)
 DGF.labels = Object.freeze({
-  easy: Object.freeze({ items: 4, essentials: [1], limit: 11, finalEscape: 5, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 11, finalEscape: 5, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
-  hard: Object.freeze({ items: 5, essentials: [2], limit: 15, finalEscape: 6, exit: 10, finalMob: 11, lockup: 10, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
+  easy: Object.freeze({ items: 4, essentials: [1], limit: 9, finalEscape: 5, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 10, finalEscape: 5, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
+  hard: Object.freeze({ items: 5, essentials: [2], limit: 13, finalEscape: 6, exit: 10, finalMob: 11, lockup: 10, mix: { 8: 0.4, 10: 0.45, 12: 0.15 } }),
 });
