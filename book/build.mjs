@@ -275,7 +275,7 @@ const SPOTS = DEMO ? {
   "ch-05": ["spot-watchman"],
   "ch-06": ["spot-windmill"],
   "ch-07": ["spot-cart"],
-  "ch-08": ["spot-bonfire"],
+  // ch-08: no gap since v0.2, so the bonfire spot (and Andriessen in the credits) is out
   "ch-09": ["spot-owl"],
 };
 const PT_PER_IN = 72;

@@ -315,7 +315,7 @@ The credits page (`book/src/chapters/01-credits.html`, "Stand-in illustrations")
 | Jacobus Ludovicus Cornet | spot-lantern | keep |
 | Thomas Bewick | spot-owl | keep |
 | Johannes van Cuylenburgh | spot-windmill | keep |
-| Christiaan Andriessen | spot-bonfire | keep |
+| Christiaan Andriessen | spot-bonfire, but the 2026-10-20 build has no room for it at the end of Chapter 8, so it is not printed | keep only if the spot is printed again; otherwise **remove** |
 | Charles Rochussen | dracula-costume | keep |
 | Jan Vervloet | nothing (creature-costume replaced) | **remove** |
 | Thomas Charles Wageman, Nathaniel Whittock | creature-revealed | keep |

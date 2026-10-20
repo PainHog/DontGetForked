@@ -86,4 +86,20 @@ Not part of this round. Under the package, every Entity is within ±2.5 win poin
 
 ## 6–7. Art, rights and credits
 
+| # | Outcome |
+|---|---|
+| A1, A2 | Replaced (S1, S2 above). |
+| A3 Dracula Revealed | **Open:** no clean pre-1930 vampire found yet (the Varney woodcuts read wrongly at portrait size). |
+| A4 Invisible Man Revealed | **Open:** content swap still wanted. Its rights are now confirmed (Strimpl, *L'Homme invisible*, Calmann-Lévy, 1912). |
+| A5 Chapter 1 castle | **Open:** no sharper scan found yet. |
+| A6 soft spots | Re-scanned: the windmill, the cart (trimmed inside its plate mark) and the bonfire at 280 ppi; the owl at its full scan. |
+| A7, A8, A10, A11 | Left for the commissioned art. |
+| A9 crops | Dracula's costume and the Mummy's Revealed re-cropped. |
+| L17 lantern | Cropped tighter. |
+| L12 back-cover picture | **Open:** no new picture yet (the candidates repeat chapter headers). |
+| R2, R3 image log | Already kept: `book/art/stand-in/SOURCES.md` (work, artist, source, licence, audit for every printed picture, the cover included). Commons non-museum files: the NGA has CC0 copies of two Palmer prints, not yet switched. |
+| R4 dates | Strimpl 1912, Woodward 1897 (*Red Apple and Silver Bells*), Koster in the Rijksmuseum by 1892 and dead since 1937: all clear. |
+| R5 | Added to the legal page. |
+| R6 | Credits corrected to what is printed. |
+
 See the stand-in section of `book/art/stand-in/SOURCES.md` for every picture's source, licence and audit. That per-image log already existed; the reviewer only had the PDF. The storefront-disclosure suggestion was not taken up: Richard's standing instruction is that no AI credit goes in the book or the repository. The maps are credited to Richard. The legal page now says the stand-in illustrations remain in the public domain.
