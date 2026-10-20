@@ -295,3 +295,42 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Source:** https://commons.wikimedia.org/wiki/File:Jekyll.and.Hyde.Ch2.Drawing2.jpg
 - **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark, PD-Art missing SDC copyright status, PD-old missing SDC copyright status). Artist died 1934; published 1904; Commons: PD-old-80-expired / PD-Art.
 - **Audit:** Mr Hyde stands in profile by a door in a top hat and heavy coat, one arm bent behind his back; the door on its frame at the left; legs run out of the frame at the bottom. Character: profile (one eye), one arm visible, the other hidden by the coat. Low contrast: reference only.
+
+## Credits page check (2026-10-20)
+
+The credits page (`book/src/chapters/01-credits.html`, "Stand-in illustrations") against what the book now prints:
+
+| Credited on the page | Printed now | Change |
+|---|---|---|
+| Anton Louis Koster | cover-castle | keep |
+| Samuel Palmer | part1-tower, ch05-bellman, ch07-dawn, back-moonrise | keep |
+| Carl Bloch | part2-village | keep |
+| Gustave Doré | ch01-castle, werewolf-costume | keep |
+| Félix Vallotton | ch06-crowd | keep |
+| Jacob Folkema | ch04-parade | keep |
+| Michael Wolgemut, Wilhelm Pleydenwurff | ch08-town | keep |
+| Jan de Visscher after Adriaen van Ostade | ch09-fair | keep |
+| Daniel Chodowiecki | spot-watchman | keep |
+| Gerrit Claesz. Bleker | spot-cart | keep |
+| Jacobus Ludovicus Cornet | spot-lantern | keep |
+| Thomas Bewick | spot-owl | keep |
+| Johannes van Cuylenburgh | spot-windmill | keep |
+| Christiaan Andriessen | spot-bonfire | keep |
+| Charles Rochussen | dracula-costume | keep |
+| Jan Vervloet | nothing (creature-costume replaced) | **remove** |
+| Thomas Charles Wageman, Nathaniel Whittock | creature-revealed | keep |
+| Martin van Maële | mummy-revealed | keep |
+| Maurice Sand | werewolf-revealed | keep |
+| Paul Gavarni, Pierre Verdeil | nothing (invisible-costume replaced) | **remove both** |
+| Ludvík Strimpl | invisible-revealed | keep |
+| John Leech | ghost-revealed | keep |
+| Alice B. Woodward | witch-costume | keep |
+| John D. Batten | witch-revealed | keep |
+| Charles Raymond Macauley | jekyll-hyde-costume, jekyll-hyde-revealed | keep |
+| W. Duke, Sons & Co. (publishers) | mummy-costume | keep (the Met also names the lithographers, Knapp & Company, which could be added) |
+| unknown 16th–19th-century engravers | ch02-curiosities (1599), ch03-dice (17th c.), dracula-revealed (1821), ghost-costume (1804), and the wood engraver of creature-costume (c. 1891) | keep |
+| — | creature-costume: Charles Morel | **add** |
+| — | invisible-costume: Giovanni David | **add** |
+| Institutions: the Rijksmuseum, the National Gallery of Art, the Metropolitan Museum of Art, Paris Musées, the British Library, Wikimedia Commons | all still used (Paris Musées now for creature-costume; the National Gallery of Art also for invisible-costume) | keep |
+
+So the line should drop **Jan Vervloet, Paul Gavarni and Pierre Verdeil** and add **Charles Morel and Giovanni David**.
