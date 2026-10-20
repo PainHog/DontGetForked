@@ -108,10 +108,46 @@ export const PARAMS = {
     ref: "CORE-RULES The raid; PT1 A2, PT2 A23",
   },
   overdrawStack: {
-    kind: "rule", default: "merge", values: ["merge", "stack"],
-    title: "Overdraw and \"one roll, one rise\"",
-    doc: "merge = overdraw's +2 is one of the roll's triggers (only the biggest counts), as in the Foundry logic; stack = overdraw is paid on top of the roll's own rise.",
-    ref: "CORE-RULES Suspicion; PT3 M5",
+    kind: "rule", default: "stack", values: ["stack", "merge"],
+    title: "Overdraw and \"one roll, one rise\" (D3, 2026-10-19: stack)",
+    doc: "stack = outside the final flight every overdraw adds +2 on top of the roll's other rise (two overdraws on one roll +4; in a group check, on top of the group's one rise; in a local chase under chaseRule \"oneRise\", on top of the chase's one rise) (D3); merge = overdraw's +2 is one of the roll's triggers (only the biggest counts), the rule before D3. The final flight's overdraw is unchanged either way (overdrawAtLimit).",
+    ref: "CORE-RULES Suspicion; PT3 M5; DESIGN D3 (outside review 2026-10-19)",
+  },
+  chaseRule: {
+    kind: "rule", default: "oneRise", values: ["oneRise", "perRoll"],
+    title: "One chase, one rise (D1, 2026-10-19: oneRise)",
+    doc: "oneRise = the local mob's Difficulty is set when the chase starts (8 + half the Suspicion, at most 12) and stays put; chase rolls raise nothing as they happen; when the chase ends it raises Suspicion once, by the biggest trigger among all its rolls (every runner's, in a shared chase), plus +2 for each overdraw made in it (D3); if that brings the Limit, anyone cornered was captured first and an escaped runner joins the final flight (D1); perRoll = the rule before D1: each chase roll raises Suspicion as it happens (chaseSusp), the mob is worked out again every round, and the Limit can come mid-chase (corneredAtLimit).",
+    ref: "Chapter 6 (Suspicion in a chase, the local chase); DESIGN D1 (outside review 2026-10-19)",
+  },
+  giveUp: {
+    kind: "policy", default: "odds", values: ["odds", "simple", "never"],
+    title: "When a runner gives up (D2, 2026-10-19: at the start of any round a runner may give up: captured, no roll)",
+    doc: "odds = at the start of a round with the Lead at 1, a runner gives up when stopping now keeps Suspicion under the Limit and carrying on is more likely to end with the chase's rise reaching the Limit than with a clean escape (both worked out exactly from the runners' own plans on the chase table; in a shared chase the weakest runner gives up first, then the rest look again); simple = the outside review's candidate: the Lead is 1, the chance of escaping is under 1 in 2, and the chase's rise so far plus a Monster showing would reach the Limit while stopping now would not; never = nobody gives up (the rules before D2). Either way nobody gives up who would leave every Entity held (D7b), and a Ghost with Already Dead never does (cornered costs her only a Turn).",
+    ref: "Chapter 6 (the local chase); DESIGN D2 (outside review 2026-10-19)",
+  },
+  flightRaise: {
+    kind: "rule", default: "any", values: ["any", "raiseOnly"],
+    title: "Any ability as a raise in the final flight (D6b, 2026-10-19: any)",
+    doc: "any = in the final flight any Signature or Gift may be spent as a raise (trait die one size bigger) instead of its usual effect, on anyone's roll; still one raise per roll, and a raise and a step down still cancel (D6b); raiseOnly = only raise abilities raise (the rule before D6b).",
+    ref: "Chapter 6 (the final flight); DESIGN D6 (outside review 2026-10-19)",
+  },
+  allHeld: {
+    kind: "rule", default: "forked", values: ["forked", "continue"],
+    title: "Everyone held (D7b, 2026-10-19: forked)",
+    doc: "forked = if every Entity is held in the lock-up at once, the night ends at once and the year is Forked (D7b); continue = the night goes on, the captives try to slip free each Turn, and anyone still held at the end is left behind (the rule before D7b).",
+    ref: "Chapter 6 (Captured), Chapter 7; DESIGN D7 (outside review 2026-10-19)",
+  },
+  limitOrder: {
+    kind: "rule", default: "result", values: ["result", "limit"],
+    title: "A roll's result before its Suspicion (R1, 2026-10-20: result)",
+    doc: "result = a roll's result happens first, then its Suspicion: a roll that gets the party out at the way out (Success or Cost) gets it out even if its Suspicion reaches the Limit; a rescue that frees the captives frees them, and they join the final flight; beating a location's last obstacle puts its loot in hand before the hunt (the same order) (R1); limit = the hunt comes first and the result is lost (the simulator before R1).",
+    ref: "Chapter 4 (Getting out), Chapter 6 (Rescue); outside review R1",
+  },
+  spectralWhen: {
+    kind: "rule", default: "arrive", values: ["arrive", "work"],
+    title: "When a Ghost's Spectral pass happens (D4, 2026-10-20: arrive)",
+    doc: "arrive = the pass needs no roll and no action, so the Ghost passes a group obstacle the moment she reaches it, on the Turn she arrives too (with the loot at once if it was the last obstacle); a Spectral pass never picks the location's way in, which the others pick when they first roll there (an own-approach roll does pick it) (D4, as the book has it); work = only on a Turn spent at the location, and the way in is picked first (the simulator before D4).",
+    ref: "Chapter 2 (Spectral), Chapter 4 (ways in); DESIGN D4; outside review R10, R13",
   },
   lootHandover: {
     kind: "rule", default: "free", values: ["free", "none"],
@@ -169,8 +205,8 @@ export const PARAMS = {
   },
   chaseSusp: {
     kind: "rule", default: "yes", values: ["yes", "no", "cap2", "cap3", "cap4"],
-    title: "Do local-chase rolls raise Suspicion? (S6: yes)",
-    doc: "yes = as written: trouble and the Monster showing raise Suspicion in a chase like anywhere else; no = you are already caught, so chase rolls only move the Lead; capN = as yes, but one local chase raises Suspicion by at most N in all (PT5 candidates).",
+    title: "Do local-chase rolls raise Suspicion? (S6: yes; only read under chaseRule \"perRoll\")",
+    doc: "yes = as written before D1: trouble and the Monster showing raise Suspicion in a chase like anywhere else; no = you are already caught, so chase rolls only move the Lead; capN = as yes, but one local chase raises Suspicion by at most N in all (PT5 candidates). Under chaseRule \"oneRise\" (D1) the chase rises once, when it ends, and this switch isn't read.",
     ref: "DESIGN Suspicion package; Chase",
   },
   slipRule: {
@@ -187,8 +223,8 @@ export const PARAMS = {
   },
   corneredAtLimit: {
     kind: "rule", default: "captured", values: ["captured", "flight"],
-    title: "Cornered in the round the Limit comes (B3, 2026-10-06: captured)",
-    doc: "captured = you are captured first, then the final flight starts without you; flight = the chase ends at once and you join the flight (the rule before B3).",
+    title: "Cornered in the round the Limit comes (B3, 2026-10-06: captured; only read under chaseRule \"perRoll\")",
+    doc: "captured = you are captured first, then the final flight starts without you; flight = the chase ends at once and you join the flight (the rule before B3). Under chaseRule \"oneRise\" (D1) Suspicion doesn't move during a chase, so the Limit can only come with the chase's one rise when it ends, after anyone cornered was captured.",
     ref: "DESIGN B3; PT4 m29",
   },
   fetchRule: {
@@ -371,17 +407,17 @@ export const NUMBERS = {
   labels: {
     // S9 (approved 2026-10-04); Limits raised in S10. `difficulty` is the share of each Difficulty among a label's obstacles.
     easy: {
-      items: 4, essentials: [1], limit: 11, turns: 12, finalMob: 10, lockup: 10, exit: 6, finalEscape: 5, // B1: 4 items (was 3); B3: Limit 11, flight escapes at 5
+      items: 4, essentials: [1], limit: 9, turns: 12, finalMob: 10, lockup: 10, exit: 6, finalEscape: 5, // B1: 4 items (was 3); B3: flight escapes at 5; F12 (2026-10-20): Limit 9 (B3 11)
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.5, 2: 0.4, 3: 0.1 }, witnessed: 0.4, group: 0.25, twoTraits: 0.6,
     },
     standard: {
-      items: 5, essentials: [1, 2], limit: 11, turns: 12, finalMob: 11, lockup: 10, exit: 8, finalEscape: 5, // B1: 5 items (was 4); B3: Limit 11 (B1 12), flight escapes at 5
+      items: 5, essentials: [1, 2], limit: 10, turns: 12, finalMob: 11, lockup: 10, exit: 8, finalEscape: 5, // B1: 5 items (was 4); B3: flight escapes at 5; F12 (2026-10-20): Limit 10 (B3 11)
       difficulty: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 },
       obstacles: { 1: 0.3, 2: 0.45, 3: 0.25 }, witnessed: 0.5, group: 0.25, twoTraits: 0.6,
     },
     hard: {
-      items: 5, essentials: [2], limit: 15, turns: 12, finalMob: 11, lockup: 10, exit: 10, // B1: 5 items, way out 10 (were 4, 8); B7: lock-up 10 (was 12)
+      items: 5, essentials: [2], limit: 13, turns: 12, finalMob: 11, lockup: 10, exit: 10, // B1: 5 items, way out 10 (were 4, 8); B7: lock-up 10 (was 12); F12 (2026-10-20): Limit 13 (S10 15)
       difficulty: { 8: 0.4, 10: 0.45, 12: 0.15 },
       obstacles: { 1: 0.2, 2: 0.45, 3: 0.35 }, witnessed: 0.6, group: 0.25, twoTraits: 0.6,
     },
@@ -408,8 +444,21 @@ export const TARGETS = {
  * The draft 0.2 packages (T1, T2) and the S9 proposal (D1) are in the git
  * history; new candidate packages go here as rule changes are proposed.
  */
+/**
+ * The switch back to the rules before the outside review's package (D1–D7, R1, D4; DESIGN 2026-10-19/20), for
+ * before-and-after runs: BEFORE_REVIEW for the rules, OLD_LIMITS for the Suspicion Limits they were tuned with
+ * (11 / 11 / 15; F12, adopted 2026-10-20 with the package, made them 9 / 10 / 13). Package V0 is both.
+ */
+export const BEFORE_REVIEW = Object.freeze({ chaseRule: "perRoll", giveUp: "never", overdrawStack: "merge", flightRaise: "raiseOnly", allHeld: "continue", limitOrder: "limit", spectralWhen: "work" });
+export const OLD_LIMITS = Object.freeze({ labels: { easy: { limit: 11 }, standard: { limit: 11 }, hard: { limit: 15 } } });
+/** D5b: the 10-Turn night tried for Easy and Standard (Hard stays 12) with the old Limits; not adopted (the targets didn't hold, 2026-10-20). */
+export const TEN_TURNS = Object.freeze({ labels: { easy: { turns: 10, limit: 11 }, standard: { turns: 10, limit: 11 }, hard: { limit: 15 } } });
+
 export const PACKAGES = {
-  P0: { title: "The rules as decided (through V30, 2026-10-07) with the current numbers", params: {}, numbers: {} },
+  P0: { title: "The rules as decided (through the outside review's package, D1–D7 with R1 and D4, and F12's Limits 9 / 10 / 13, 2026-10-20) with the current numbers", params: {}, numbers: {} },
+  V0: { title: "The rules and Limits before the outside review (through V30 and the clarity pass, 2026-10-14)", params: { ...BEFORE_REVIEW }, numbers: OLD_LIMITS },
+  P12: { title: "The outside review's package with the old Limits 11 / 11 / 15 (before F12)", params: {}, numbers: OLD_LIMITS },
+  T10: { title: "Not adopted (D5b): the package with a 10-Turn night on Easy and Standard and the old Limits", params: {}, numbers: TEN_TURNS },
   N1: {
     title: "Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
     params: {},

@@ -165,7 +165,7 @@ test("the simulator's numbers and chase table are the book's (Chapters 4–6 and
   const row = (k) => ["easy", "standard", "hard"].map((l) => L[l][k]);
   assert.deepEqual(row("items"), [4, 5, 5]);
   assert.deepEqual(row("essentials"), [[1], [1, 2], [2]]);
-  assert.deepEqual(row("limit"), [11, 11, 15]);
+  assert.deepEqual(row("limit"), [9, 10, 13]); // F12 (2026-10-20, with the outside review's package; were 11 / 11 / 15)
   assert.deepEqual(row("exit"), [6, 8, 10]);
   assert.deepEqual(row("finalMob"), [10, 11, 11]);
   assert.deepEqual(row("lockup"), [10, 10, 10]); // B7
@@ -183,11 +183,13 @@ test("every rule switch defaults to the decided rule", () => {
   const decided = {
     critRule: "doubles", critEffect: "both", costChoice: "mixed", dropRule: "recover", loudRule: "suspicion", openApproach: "easier",
     overdrawAtLimit: "once", furnitureNoise: "carried", finalMove: "margin2", openEase: 2, raiseCap: "perRoll", raiseDie: "trait",
-    openTrait: "unlisted", waysIn: "two", overdrawStack: "merge", lootHandover: "free", chaseTable: "approved", captiveItems: "lost",
+    openTrait: "unlisted", waysIn: "two", overdrawStack: "stack", lootHandover: "free", chaseTable: "approved", captiveItems: "lost",
     multiCaught: "shared", monsterRule: "plus2", chaseSusp: "yes", slipRule: "success", furnitureRule: "noisySlowHard",
     corneredAtLimit: "captured", fetchRule: "flightExit", alreadyDeadTurns: 1, furniturePlace: "onList", exitRule: "gateSingle",
     groupRule: "all", tellScope: "party", triesPerTurn: "each", exitTries: "one", openedRule: "onlyOpener", mesmeriseRule: "watched", spectralRule: "noLoot", slipWatched: true, roster: "approved", dutyEdge: true,
     tellPartyChance: 0.5, weaknessRule: "timing",
+    // the outside review's package (DESIGN 2026-10-19: D1, D3, D6b, D7b; 2026-10-20: R1, D4)
+    chaseRule: "oneRise", flightRaise: "any", allHeld: "forked", limitOrder: "result", spectralWhen: "arrive",
   };
   const D = defaults();
   for (const [k, v] of Object.entries(decided)) assert.equal(D[k], v, k);
@@ -343,4 +345,129 @@ test("PT10 policies: anyone can set loot down before watched rolls (guard), and 
   const c = counts({ furniturePolicy: "always", pieceSetDown: "action" });
   assert.ok((c["piece set down before a roll (PT10)"] ?? 0) > 0);
   assert.equal(c["carrier rolls: other obstacles"] ?? 0, 0); // set down first, so no carrier rolls there
+});
+
+// ---------------------------------------------------------------- the outside review's package (DESIGN 2026-10-19, 2026-10-20)
+
+test("D1: a local chase rises once, when it ends, by its biggest trigger, against a mob set when it starts", () => {
+  const run = (chaseRule) => {
+    const creature = member("creature", { charges: 9 }), wolf = member("werewolf"); // charges enough never to overdraw
+    // 4 + 9 against 10: a Success, the Monster showing; then 5 + 5 = 10, a Critical against the mob still at 10, but only a
+    // Cost against 11 once the first roll's +2 has raised it (before D1); then two Troubles
+    const { S } = state([creature, wolf], [], { faces: [4, 9, 5, 5, 1, 1, 1, 1], params: { chaseRule, giveUp: "never" } });
+    creature.furniture = { size: "bulky" }; // a carrier can't use the Mask, so its second die is the Monster
+    S.susp = 4; S.turn = 1;
+    E.localChase(S, creature);
+    return { susp: S.susp, status: creature.status, rolls: S.rec.rolls.local.n };
+  };
+  assert.deepEqual(run("oneRise"), { susp: 6, status: "active", rolls: 2 }); // escaped; one rise of 2
+  assert.deepEqual(run("perRoll"), { susp: 8, status: "captured", rolls: 4 }); // +2, +0, +1, +1 as they happened
+});
+
+test("D2: a runner at Lead 1 gives up rather than bring the hunt, but never the last one free", () => {
+  const run = (giveUp, alone = false) => {
+    const creature = member("creature", { charges: 0 }), wolf = member("werewolf");
+    const { S } = state(alone ? [creature] : [creature, wolf], [], { faces: [1, 1, 1, 1], params: { giveUp } });
+    S.susp = S.limit - 1; S.turn = 1; // one below the Limit: any Trouble in this chase brings the hunt
+    E.localChase(S, creature);
+    return { status: creature.status, rolls: S.rec.rolls.local.n, below: S.limit - S.susp, gaveUp: S.rec.counts["gave up (D2)"] ?? 0 };
+  };
+  assert.deepEqual(run("odds"), { status: "captured", rolls: 0, below: 1, gaveUp: 1 });
+  assert.deepEqual(run("simple"), { status: "captured", rolls: 0, below: 1, gaveUp: 1 });
+  const never = run("never");
+  assert.equal(never.rolls, 1);
+  assert.equal(never.below, 0); // the Trouble that cornered him brought the hunt
+  assert.equal(run("odds", true).gaveUp, 0); // alone, giving up would leave every Entity held (D7b)
+});
+
+test("D3: outside the final flight every overdraw adds +2 on top of the roll's rise", () => {
+  const run = (overdrawStack, phase) => {
+    const creature = member("creature", { charges: 0 });
+    const { S } = state([creature], [], { faces: [1, 1], params: { overdrawStack } });
+    const ab = { effect: "switch", trait: "brawn", source: "signature" };
+    const plan = { uses: [{ owner: creature, ability: ab }, { owner: creature, ability: ab }], overdraws: 2, fixedSusp: overdrawStack === "stack" ? 0 : 2,
+      traitDie: 12, secondDie: 6, second: 6, difficulty: 8, cand: { trait: "brawn" }, hidden: false, under: 0, over: 0, witnessed: false };
+    const r = E.executeRoll(S, creature, plan, phase);
+    return [r.trigger, r.odRise, r.suspGain];
+  };
+  assert.deepEqual(run("stack", "raid"), [1, 4, 5]); // Trouble +1, and +2 for each of the two overdraws
+  assert.deepEqual(run("merge", "raid"), [2, 0, 2]); // before D3: the overdraw was one of the roll's triggers
+  assert.deepEqual(run("stack", "final"), [1, 0, 1]); // in the flight an overdraw costs the Weakness, not Suspicion
+});
+
+test("D6b: in the final flight any ability can be spent as a raise, still one raise per roll", () => {
+  const plan = (flightRaise) => {
+    const wolf = member("werewolf"); // Good Dog (the Monster without risking Suspicion) and Keen Nose (use Wits instead)
+    const { S } = state([wolf], [], { params: { flightRaise } });
+    const ctx = { phase: "final", options: [{ trait: "sly", loud: false }, { trait: "charm", loud: false }], difficulty: 11, witnessed: false, helpers: [], locKind: null, weakness: false, weakOf: () => false };
+    return E.planRoll(S, wolf, ctx);
+  };
+  const any = plan("any"), only = plan("raiseOnly");
+  assert.ok(any.uses.some((u) => u.asRaise && u.ability.effect !== "raise"), "a non-raise ability spent as the raise");
+  assert.equal(any.uses.filter((u) => u.asRaise).length, 1);
+  assert.equal(only.uses.filter((u) => u.asRaise).length, 0);
+  assert.ok(any.traitDie > only.traitDie);
+});
+
+test("D7b: when every Entity is held at once the night ends and the year is Forked", () => {
+  for (const allHeld of ["forked", "continue"]) {
+    const creature = member("creature");
+    const { S } = state([creature], [], { faces: [1, 1], params: { allHeld, giveUp: "never" } });
+    S.turn = 1;
+    E.localChase(S, creature); // 1 + 1: Trouble at Lead 1, cornered and captured
+    assert.equal(S.phase, allHeld === "forked" ? "done" : "raid", allHeld);
+    assert.equal(S.forked, allHeld === "forked", allHeld);
+  }
+});
+
+test("R1: a roll's result comes before its Suspicion, at the way out and at a rescue", () => {
+  const exit = (limitOrder) => {
+    const creature = member("creature"), mummy = member("mummy");
+    const { S } = state([creature, mummy], [], { faces: [3, 9], params: { limitOrder } });
+    const piece = { size: "bulky" };
+    creature.furniture = mummy.furniture = piece; // carriers can't use the Mask: the Monster shows (9 over 3)
+    S.susp = S.limit - 2; S.turn = 5;
+    E.workLocation(S, E.exitLocation(S)); // 3 + 9 = 12 against 8: out, and the Monster's +2 reaches the Limit
+    return { phase: S.phase, trigger: S.finalTrigger };
+  };
+  assert.deepEqual(exit("result"), { phase: "done", trigger: null }); // the party is out
+  assert.deepEqual(exit("limit"), { phase: "done", trigger: "limit" }); // before R1: the hunt instead
+  const rescue = (limitOrder) => {
+    const mummy = member("mummy"), creature = member("creature"); // the Mummy rescues (no ability of hers hides the Monster)
+    const { S } = state([mummy, creature], [], { faces: [3, 9], params: { limitOrder, caughtWeight: 0.4 } });
+    mummy.furniture = { size: "bulky" };
+    creature.status = "captured"; creature.capturedTurn = 0;
+    S.susp = S.limit - 2; S.turn = 2;
+    E.workLocation(S, E.lockupLocation(S)); // 3 + 9 = 12 against 10: the rescue works, and the Monster's +2 reaches the Limit
+    return { trigger: S.finalTrigger, captive: creature.status };
+  };
+  assert.deepEqual(rescue("result"), { trigger: "limit", captive: "home" }); // freed first, he flees with them
+  assert.deepEqual(rescue("limit"), { trigger: "limit", captive: "left" });
+});
+
+test("D4: Spectral needs no action, so the Ghost passes a group way in on her arrival Turn, without picking the way in", () => {
+  const run = (spectralWhen) => {
+    const ghost = member("ghost", { perk: "spectral" }), wolf = member("werewolf");
+    const way = ob(["nimble"], 10, { group: true }); // the rooftops, a group way in
+    way.alt = ob(["charm"], 8, { watched: true }); // the other way in
+    const { S, loc } = state([ghost, wolf], [way], { params: { spectralWhen } });
+    S.turn = 1;
+    const acted = E.spectralPass(S, loc, [ghost, wolf]);
+    return { acted, done: loc.done, ghostItems: ghost.items.length, wayInOpen: !!loc.obstacles[0].alt, wolfOutside: loc.behind?.has(wolf) ?? false };
+  };
+  assert.deepEqual(run("arrive"), { acted: true, done: true, ghostItems: 1, wayInOpen: true, wolfOutside: true });
+  assert.deepEqual(run("work"), { acted: false, done: false, ghostItems: 0, wayInOpen: true, wolfOutside: false });
+});
+
+test("the switch back: package V0 is the rules and the Limits before the outside review (F12 made them 9 / 10 / 13)", async () => {
+  const { PACKAGES, BEFORE_REVIEW, OLD_LIMITS } = await import("../sim/params.mjs");
+  const { mergeNumbers } = await import("../sim/run.mjs");
+  const nb = mergeNumbers(NUMBERS, PACKAGES.V0.numbers);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => nb.labels[l].limit), [11, 11, 15]);
+  assert.deepEqual(PACKAGES.V0.numbers, OLD_LIMITS);
+  assert.deepEqual(PACKAGES.V0.params, { ...BEFORE_REVIEW });
+  for (const [k, v] of Object.entries(BEFORE_REVIEW)) {
+    assert.ok(PARAMS[k].values.includes(v), `${k}: ${v} is one of its values`);
+    assert.notEqual(defaults()[k], v, `${k}: the default is the package's reading`);
+  }
 });

@@ -184,24 +184,24 @@
   "name": "spot-cart",
   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Boerin_op_een_paardenkar_met_twee_wielen%2C_RP-P-BI-1178.jpg",
   "crop": [
-   0.02,
+   0.03,
    0.1,
-   0.975,
-   0.955
+   0.955,
+   0.945
   ],
-  "width": 900,
+  "width": 2000,
   "quality": 70
  },
  {
   "name": "spot-lantern",
   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Lantaarn%2C_RP-P-BI-6405X.jpg",
   "crop": [
-   0.11,
-   0.13,
-   0.885,
-   0.83
+   0.36,
+   0.25,
+   0.7,
+   0.64
   ],
-  "width": 900,
+  "width": 1306,
   "quality": 70
  },
  {
@@ -213,7 +213,7 @@
    0.97,
    0.74
   ],
-  "width": 900,
+  "width": 1865,
   "quality": 70,
   "cutoff": [
    1,
@@ -229,19 +229,19 @@
    0.935,
    0.87
   ],
-  "width": 900,
+  "width": 2000,
   "quality": 70
  },
  {
   "name": "spot-bonfire",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Kinderen_bij_een_vreugdevuur_op_St._Maarten%2C_RP-T-2016-35.jpg/1920px-Kinderen_bij_een_vreugdevuur_op_St._Maarten%2C_RP-T-2016-35.jpg",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Kinderen_bij_een_vreugdevuur_op_St._Maarten%2C_RP-T-2016-35.jpg/3840px-Kinderen_bij_een_vreugdevuur_op_St._Maarten%2C_RP-T-2016-35.jpg",
   "crop": [
    0.145,
    0.17,
    0.855,
    0.775
   ],
-  "width": 900,
+  "width": 2000,
   "quality": 70
  },
  {
@@ -274,17 +274,17 @@
  },
  {
   "name": "creature-costume",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout%2C_1825_De_Reuse_Familie_%28titel_op_object%29%2C_BI-B-FM-117-12.jpg/1920px-Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout%2C_1825_De_Reuse_Familie_%28titel_op_object%29%2C_BI-B-FM-117-12.jpg",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Paris._-_Le_d%C3%A9part_de_Dornon%2C_se_rendant_de_Paris_%C3%A0_Moscou_sur_des_%C3%A9chasses._Paris_Mus%C3%A9es_20231102103448.jpg/1920px-Paris._-_Le_d%C3%A9part_de_Dornon%2C_se_rendant_de_Paris_%C3%A0_Moscou_sur_des_%C3%A9chasses._Paris_Mus%C3%A9es_20231102103448.jpg",
   "crop": [
-   0.59,
-   0.33,
-   0.95,
+   0.175,
+   0.12,
+   0.83,
    1
   ],
   "aspect": 0.85,
   "width": 640,
   "quality": 70,
-  "source_file": "commons: BI-B-FM-117-12"
+  "source_file": "paris-musees: Carnavalet, Dornon (c.1891)"
  },
  {
   "name": "creature-revealed",
@@ -366,25 +366,17 @@
  },
  {
   "name": "invisible-costume",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/3/30/-Qui_diable_%C3%A7a_peut-il_%C3%AAtre._G.31461.jpg",
+  "url": "https://api.nga.gov/iiif/86d41746-6177-4f03-8dfe-9c00f765c16a/full/3000,/0/default.jpg",
   "crop": [
-   0.18,
-   0.235,
-   0.8,
+   0.275,
+   0.03,
+   0.805,
    1
   ],
   "aspect": 0.85,
   "width": 640,
   "quality": 70,
-  "source_file": "jekyll-costume-1.jpg",
-  "erase": [
-   [
-    0.852,
-    0.888,
-    0.935,
-    0.97
-   ]
-  ]
+  "source_file": "nga: 2013.173.1"
  },
  {
   "name": "invisible-revealed",

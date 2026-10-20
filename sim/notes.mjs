@@ -37,17 +37,28 @@ export const GAPS = [
     note: "RESOLVED by R9 (S11): one lock-up per town, a new rescue obstacle for each capture." },
   { id: "G15", title: "Getting out of town costs nothing", ref: "CORE-RULES The raid", param: "exitRule",
     note: "RESOLVED by S4 (CORE-RULES 0.6): the way out is one watched obstacle, rolled by one Entity for the party." },
+  { id: "G17", title: "A roll that succeeds and also fills the Limit", ref: "Chapters 4 and 6; outside review R1", param: "limitOrder",
+    note: "RESOLVED by R1 (2026-10-20): the result happens first, then its Suspicion: out at the way out, freed by a rescue (and into the final flight), the loot in hand." },
+  { id: "G18", title: "Several tries at the way out in one Turn", ref: "Chapter 4; outside review R4", param: "exitTries",
+    note: "RESOLVED by R4 (2026-10-20): one try a Turn (the simulator's reading since the audit)." },
+  { id: "G19", title: "Spectral during a move, and the way in", ref: "Chapters 2 and 4; outside review R10, R13", param: "spectralWhen",
+    note: "RESOLVED by D4 (2026-10-19/20): the pass needs no roll and no action, so it works on the arrival Turn, and it never picks the way in." },
+  { id: "G20", title: "Several overdraws on one roll; an overdraw where the Monster may show anyway", ref: "Chapter 3; outside review D3", param: "overdrawStack",
+    note: "RESOLVED by D3 (2026-10-19): outside the final flight every overdraw adds +2 on top of the roll's other rise." },
+  { id: "G21", title: "No way to stop a local chase", ref: "Chapter 6; outside review D2", param: "giveUp",
+    note: "RESOLVED by D2 (2026-10-19): at the start of any round a runner may give up: captured, no roll. When the simulated runners do it is a policy." },
 ];
 
 // Brought up to date by the conformance audit (docs/audits/SIM-AUDIT.md, 2026-10-06); the rule-by-rule table is there.
 export const MODELLED = [
   "Rolling (Chapter 3): trait die + Mask d6 / Monster d10 against 6 · 8 · 10 · 12; Success, Cost, Trouble; a Critical (doubles on a Success) gives a charge back, or counts as two Successes in a chase.",
-  "The Monster shows when it rolls higher than the trait die: Suspicion +2; one roll raises Suspicion once, by its biggest trigger (loud way, Trouble, the Monster, a Cost, overdraw).",
-  "Abilities: the four standard effects and the Draught, one charge each, helping anyone at the same place (only an opened approach is your own roll's), one raise per roll (Castle Duty included), overdraw (+2 Suspicion; once the hunt is on, once per flight, the Weakness).",
+  "The Monster shows when it rolls higher than the trait die: Suspicion +2; one roll raises Suspicion once, by its biggest trigger (loud way, Trouble, the Monster, a Cost), and every overdraw adds +2 on top (D3); a roll's result happens before its Suspicion (R1).",
+  "Abilities: the four standard effects and the Draught, one charge each, helping anyone at the same place (only an opened approach is your own roll's), one raise per roll (Castle Duty included), overdraw (+2 Suspicion on top, D3; once the hunt is on, once per flight, the Weakness); in the final flight any ability may be spent as a raise (D6b).",
   "The approved roster (module/config.mjs): the eight Entities' dice, signatures, all 24 Gifts and 24 Perks with their book effects, Weakness timings (Always / Soon); random picks; unique Castle Duties with their raise.",
   "Rolled towns from Chapter 8's tables (obstacle table, counts, Difficulties, watched, the ceiling on 12s, two ways in) and the three premade towns of Chapter 9 (sim/premade.mjs).",
-  "Turns, dawn, group checks (Costs picked after the rolls, F23), beaten obstacles, the way out (one roll a Turn for the party), Tells (once per watched location, 4–6), loot handed over, the lock-up (rescue, slipping free on a Success), left behind, results and the epilogue's ladder.",
-  "Local chases (Lead 1 to 4 against 8 + half the Suspicion), shared local chases and the final flight (the majority rule moving 1 or 2, B6), the chase table, Weaknesses, the Limit coming during a chase, Already Dead.",
+  "Turns, dawn, group checks (Costs picked after the rolls, F23; one rise by the biggest trigger, every overdraw on top), beaten obstacles, the way out (one roll a Turn for the party, R4), Tells (once per watched location, 4–6), loot handed over, the lock-up (rescue, slipping free on a Success), everyone held ending the night Forked (D7b), left behind, results and the epilogue's ladder.",
+  "Local chases (Lead 1 to 4 against 8 + half the Suspicion, set when the chase starts; one rise when it ends, by the biggest trigger among its rolls plus +2 for each overdraw, D1), giving up at the start of a round (D2; when, a policy), shared local chases and the final flight (the majority rule moving 1 or 2, B6), the chase table, Weaknesses, the Limit coming with a chase's rise, Already Dead.",
+  "Spectral (D4): no roll and no action, so on the Turn the Ghost arrives too; the pass never picks the way in, which the others pick when they first roll there.",
   "Furniture: on the list's locations behind one extra obstacle 2 harder, Bulky / Huge carriers, no Mask, Nimble smaller, moves of two Turns, +1 Suspicion every Turn from taking it until it leaves town or is lost.",
   "The party splits into pairs by default (or singles, or stays together); players follow the documented policies in sim/params.mjs.",
 ];

@@ -180,12 +180,12 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### creature-costume: Frankenstein’s Creature, in costume
 
-- **Work:** Reuzenfiguren in de optocht voor de Heilige Rombout, 1825. De Reuse Familie, BI-B-FM-117-12.jpg (Mechelen's festival giants in the 1825 procession)
-- **Artist:** Jan Vervloet (Flemish, 1798-1869), lithograph; printed by Burggraaff, published by Van Velsen-Van der Elst, Mechelen, 1825
-- **Source:** https://commons.wikimedia.org/wiki/File:Reuzenfiguren_in_de_optocht_voor_de_Heilige_Rombout,_1825_De_Reuse_Familie_(titel_op_object),_BI-B-FM-117-12.jpg (prepared from Commons' 1920 px rendition)
-- **Licence:** CC0 (Rijksmuseum Amsterdam scan released CC0), checked 2026-10-06; artist died 1869, published 1825.
-- **Replaces** (2026-10-06): Pietro Longhi's *Il gigante Magrat* (Ca' Rezzonico, Venice), because Italian law lets state museums charge for commercial reproductions of works they hold, even out of copyright.
-- **Audit:** Three festival giants standing on the cobbles, their skirts reaching the ground; a fifer (fife held to his mouth) and a drummer (drum hung at his side, sticks in hand) standing at their feet, two legs each, both feet down. Faces turned to us show two eyes. The other two giants and the printed caption are cropped off. A fold line in the scan runs down through the left giant (book audit BA-41; an erase would cut the drawing, so it stays until the illustrator's art).
+- **Work:** *Paris. – Le départ de Dornon, se rendant de Paris à Moscou sur des échasses* (Paris: Dornon setting off from Paris for Moscow on stilts); wood engraving for an illustrated periodical, Musée Carnavalet, Paris
+- **Artist:** Charles Morel (French, 1860–1908; BnF and Getty ULAN authority records), draughtsman ("Dessin de M. Charles Morel" on the sheet); the wood engraver is unrecorded; c. 1891 (Sylvain Dornon walked from Paris to Moscow on stilts in 1891)
+- **Source:** https://commons.wikimedia.org/wiki/File:Paris._-_Le_d%C3%A9part_de_Dornon,_se_rendant_de_Paris_%C3%A0_Moscou_sur_des_%C3%A9chasses._Paris_Mus%C3%A9es_20231102103448.jpg (Paris Musées' own upload of https://www.parismuseescollections.paris.fr/fr/musee-carnavalet/oeuvres/paris-le-depart-de-dornon-se-rendant-de-paris-a-moscou-sur-des-echasses; prepared from Commons' 1920 px rendition)
+- **Licence:** CC0 (Commons: CC-0; Paris Musées open-content release), checked 2026-10-20. Morel died 1908; published c. 1891.
+- **Replaces** (2026-10-20, outside review of v0.1): Jan Vervloet's *De Reuse Familie* (Mechelen's festival giants, 1825), because one giant's face, dark at print size, can read as blackface, and a fold crease ran through the picture. One tall figure above a crowd sells "a head above the crowd" better.
+- **Audit:** Object table: the stilt-walker stands with his foot on the stilt's footrest, and that stilt runs down through the crowd to its foot on the pavement (the other leg and stilt are hidden behind the crowd); the long balancing pole lies across his shoulders, held in both hands; the beret is on his head; the sheepskin coat hangs from his shoulders. A street lamp on its post; a statue (one of the Marly horses) on its pedestal; trees rooted behind the crowd; a man holds his hat up in his raised hand; a policeman stands in front with both hands raised. The crowd's legs run out of the bottom edge with the pavement, and the crowd runs out of both side edges, deliberately (the street continues); the bowler-hatted man at the right is cut by the right edge through his back, his face whole; only small background heads are cut at the left edge. Character rows: the stilt-walker has two eyes, two arms (both hands on the pole), two legs (one on its stilt, one hidden); the foreground faces show two eyes when frontal and one in profile; arms join at the shoulders. The caption, Morel's signature and the engraver's mark are cropped off. A news engraving of a real event, not a caricature.
 
 ### creature-revealed: Frankenstein’s Creature, revealed
 
@@ -230,11 +230,12 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### invisible-costume: the Invisible Man, in costume
 
-- **Work:** -Qui diable ça peut-il être. G.31461.jpg
-- **Artist:** Paul Gavarni (designer, 1804-1866); engraved by Pierre Verdeil (1812-after 1874); 1840s ('Le Carnaval à Paris: bals masqués par Gavarni', Œuvres de Gavarni)
-- **Source:** https://commons.wikimedia.org/wiki/File:-Qui_diable_%C3%A7a_peut-il_%C3%AAtre._G.31461.jpg
-- **Licence:** CC0 (CC-Zero). Designer died 1866; engraver born 1812; Paris Musées (Musée Carnavalet) scan released CC0.
-- **Audit:** Two gentlemen in top hats and evening coats stand on the floor, both feet down, each in a false nose and moustache; one whispers to the other; a crowd in the doorway behind. Character rows: two eyes, two arms, two legs each. A collector's stamp on the blank paper at bottom right is painted out (`erase` in the manifest); the caption is cropped off.
+- **Work:** *Le Masque au caffé* (The Masked Man Taking Coffee), from Giovanni David's series of Venetian figures (Venice, 1775); etching and aquatint
+- **Artist:** Giovanni David (Italian, 1743–1790); 1775
+- **Source:** https://www.nga.gov/collection/art-object-page.163476.html (National Gallery of Art, Washington, 2013.173.1; image from the NGA's IIIF server, https://api.nga.gov/iiif/86d41746-6177-4f03-8dfe-9c00f765c16a, at 3000 px wide)
+- **Licence:** CC0 (National Gallery of Art Open Access; the NGA open-data image record is marked open access), checked 2026-10-20. David died 1790; published 1775.
+- **Replaces** (2026-10-20, outside review of v0.1): Paul Gavarni and Pierre Verdeil's *—Qui diable ça peut-il être* (1840s), two men in long hooked false noses whispering, which at print size reads like a 19th-century antisemitic caricature.
+- **Audit:** A Venetian carnival-goer muffled in the *bauta*: the tricorn hat sits on his head; the white carnival mask is pushed up and rests on the hat; the black lace hood and cape fall from under the hat over his head and shoulders to below the frame. His right hand holds a coffee cup on its saucer (thumb over the rim, fingers under the saucer); his left arm is hidden under the cape. A shelf at the left with jars and cakes standing on it, cut by the left edge deliberately (the counter continues out of frame); a curtain swag on the wall behind. Character row: frontal face, two eyes, one nose, one mouth; one hand visible (thumb and four fingers); body runs out of the bottom edge at the hip. The plate's lettering, the counter with its title panel, the man's left hand at the counter and the chair at the right are cropped off, so no lettering, cut hand or chair fragment shows. No caricature: the mask is a plain white carnival mask.
 
 ### invisible-revealed: the Invisible Man, revealed
 

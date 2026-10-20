@@ -11,6 +11,7 @@ This file describes the method that worked on *Heisty Spideys*, which the simula
 node sim/run.mjs                      # P0 + package table + presets + sweeps → sim/REPORT.md (~10 min)
 node sim/run.mjs --package N1         # the same for a package → sim/REPORT-N1.md
 node sim/premade-check.mjs 2000       # the three premade towns against their targets
+node sim/review-check.mjs 3000        # the outside review's package against the rules before it (~15 min)
 node sim/tune.mjs --params '{…}'      # search label numbers toward the targets
 npm test                              # includes test/sim.test.mjs
 ```
@@ -128,4 +129,5 @@ package’s rule switches.
 | `tune.mjs` | Searches label numbers toward the targets (a proposal tool, not a decision) |
 | `premade.mjs` | The premade towns of Chapter 9 (C21), read from `book/src/towns.json` through `book/tools/towns.mjs`, built into the same shape `makeTown` returns |
 | `premade-check.mjs` | Plays each premade town as printed against its label's targets |
+| `review-check.mjs` | The outside review's package (D1–D7 with R1 and D4, 2026-10-19/20) against the rules before it (`BEFORE_REVIEW` in `params.mjs`, package V0), piece by piece, with the 10-Turn night (D5b), the number fixes proposed for the misses, the ready-made towns and Hallowby |
 | `FINDINGS.md` | Every simulation's findings in plain words, newest last |

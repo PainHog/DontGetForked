@@ -45,6 +45,7 @@ export function playRaid({ party, town, params, numbers, rng, rec }) {
       S.at = target;
       arrive(S, target);
       if (S.phase !== "raid") break;
+      spectralPass(S, target, active(S)); // D4: on the Turn she arrives
       captivesAct(S);
       if (S.phase !== "raid") break;
       if (moving) noisyFurniture(S, "move"); // the end of the move's last Turn
@@ -78,6 +79,13 @@ function makeState({ party, town, params: P, numbers: N, rng, rec }) {
     wentForFurniture: false,
     furnitureCarried: null,
     skipped: new Set(),
+    held: false, // D7b: every Entity held at once ended the night (Forked)
+    // Per-raid tallies for the summary (the recorder's counts are summed over a whole run).
+    st: {
+      overdraws: { raid: 0, slip: 0, local: 0, final: 0 }, charges: { raid: 0, slip: 0, local: 0, final: 0 },
+      solo: 0, soloEscaped: 0, soloCaptured: 0, shared: 0, sharedEscaped: 0, sharedCaptured: 0, chaseRise: 0, soloRise: 0, sharedRise: 0, chaseHunt: 0,
+      giveUps: 0, giveUpsShared: 0, rescues: 0, slips: 0, resultFirst: { exit: 0, lockup: 0, loot: 0 }, spectralArrive: 0, spectralLoot: 0,
+    },
   };
   // furnitureRule "hardLoc"/"both" (S7 candidate): the furniture's location is 2 harder (at most 12).
   if (P.furnitureRule === "hardLoc" || P.furnitureRule === "both") for (const o of town.furnitureLoc.obstacles) o.difficulty = Math.min(12, o.difficulty + 2);
@@ -145,6 +153,7 @@ function playSplit(S) {
           S.arrivers = g.members.filter((m) => arrived(S, m));
           arrive(S, dest);
           S.arrivers = null;
+          if (S.phase === "raid" && dest !== exit) { S.here = g.members; spectralPass(S, dest, g.members); S.here = null; if (dest.done) releaseClaim(S, g, dest); } // D4: on the Turn she arrives
           continue;
         }
         if (dest === exit) continue; // waiting for the others
@@ -282,7 +291,7 @@ function followsBehind(S, members) {
  *  outOfSight    Trouble gets you caught only while you or anyone with you carries loot or furniture (V17)
  *  hiddenPockets captured, you keep what you carry
  *  lightStep     the loud way costs you no Suspicion
- *  spectral      you get past group obstacles without rolling
+ *  spectral      you get past group obstacles without rolling (D4: no action either, so on the Turn you arrive too; it never picks the way in)
  *  rattle        the Monster showing on your roll is +1 Suspicion, not +2
  *  alreadyDead   cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight)
  *  familiarsWarning  a Tell check where you arrive goes off only if a second d6 also does
@@ -526,6 +535,7 @@ function workLocation(S, loc) {
   const acted = new Set();
   const tried = new Set();
   for (const m of hereOf(S)) if (m.loseTurn) { m.loseTurn = typeof m.loseTurn === "number" && m.loseTurn > 1 ? m.loseTurn - 1 : false; acted.add(m); S.rec.count("lost turns"); }
+  if (spectralPass(S, loc, hereOf(S)) && (S.phase !== "raid" || loc.done)) return; // D4: no action, so first (it may finish the location)
 
   // T5: past an obstacle someone opened, only the opener goes on (if it's caught, the way closes again).
   if (loc.solo && loc.solo.status !== "active") {
@@ -540,11 +550,14 @@ function workLocation(S, loc) {
     const ob = loc.behindOb;
     for (const m of [...loc.behind]) if (m.status !== "active") loc.behind.delete(m);
     const alone = pastHere(S, loc).length === 0; // nobody here is past it: they must roll to get anywhere
-    if (loc.behindOpened) {
+    // D4: outside a way in a Ghost passed with Spectral, the others pick their way in when they first roll (her pass didn't).
+    if (loc.behindSpectral && ob.alt) { const who = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m)); if (who.length) pickWayIn(S, ob, loc, who); }
+    if (loc.behindOpened || (loc.behindSpectral && !ob.group)) {
       // Policy: while the opener is at work past it, the others follow only where nobody is watching (no capture risk)
-      // and there's still work past it to share; once nobody here is past it, they must.
-      const worth = alone || (!ob.witnessed && loc.obstacles.some((o) => !o.cleared));
-      while (S.phase === "raid" && loc.behind.size && worth) {
+      // and there's still work past it to share; once nobody here is past it, they must. (D4: outside a single way in a
+      // Ghost passed, the best placed tries it when it's worth a roll, as at any obstacle.)
+      const worth = loc.behindSpectral || alone || (!ob.witnessed && loc.obstacles.some((o) => !o.cleared));
+      while (S.phase === "raid" && !S.limitPending && loc.behind.size && worth) {
         let best = null;
         for (const m of hereOf(S)) {
           if (!loc.behind.has(m) || acted.has(m)) continue;
@@ -559,17 +572,20 @@ function workLocation(S, loc) {
           if (best.plan.cand.via && best.plan.cand.via.ability.effect === "open") loc.behind.delete(best.m);
           else loc.behind.clear();
         }
-        if (limitHit(S)) return finalFlight(S, "limit");
+        if (limitHit(S)) {
+          if ((S.P.limitOrder ?? "result") === "result" && r.band !== "trouble") { S.limitPending = true; break; } // R1: the result first (below)
+          return finalFlight(S, "limit");
+        }
         if (r.caught) { localChase(S, best.m); if (S.phase !== "raid") return; }
       }
     } else {
-      const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || (!loc.behindWaits && planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0)));
+      const rollers = hereOf(S).filter((m) => loc.behind.has(m) && !acted.has(m) && (alone || loc.behindSpectral || (!loc.behindWaits && planRoll(S, m, ctxFor(S, m, ob, loc, "raid")).value > 0))); // D4: as the main loop, everyone outside rolls
       if (rollers.length && !groupCheck(S, loc, ob, rollers, acted)) return;
       for (const m of [...loc.behind]) if (ob.passed.has(m.id)) loc.behind.delete(m);
     }
-    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; loc.behindOpened = false; loc.behindWaits = false; }
+    if (!loc.behind.size) { loc.behind = null; loc.behindOb = null; loc.behindOpened = false; loc.behindWaits = false; loc.behindSpectral = false; }
   }
-  while (S.phase === "raid") {
+  while (S.phase === "raid" && !S.limitPending) {
     const ob = loc.obstacles.find((o) => !o.cleared);
     if (!ob) break;
     const avail = past().filter((m) => !acted.has(m));
@@ -607,6 +623,7 @@ function workLocation(S, loc) {
       if (!groupCheck(S, loc, ob, rollers, acted)) return;
       if (past().length === 0) break;
       if (passedNow() >= Math.min(cap, past().length)) ob.cleared = true;
+      else if (S.limitPending && passedNow() > 0) { loc.behind = new Set([...(loc.behind ?? []), ...past().filter((m) => !ob.passed.has(m.id))]); loc.behindOb = ob; ob.cleared = true; } // R1: those past it are past it
       continue;
     }
 
@@ -656,7 +673,12 @@ function workLocation(S, loc) {
         } else { loc.solo = best.m; ob.openedOnly = true; S.rec.count("opened: only the opener goes on"); }
       }
     }
-    if (limitHit(S)) return finalFlight(S, "limit");
+    if (limitHit(S)) {
+      // R1 (limitOrder "result"): a roll's result happens first, then its Suspicion: a Success or Cost at the way out gets
+      // the party out, a rescue frees the captives (who join the flight), the last obstacle puts the loot in hand (below).
+      if ((S.P.limitOrder ?? "result") === "result" && r.band !== "trouble") { S.limitPending = true; break; }
+      return finalFlight(S, "limit");
+    }
     if (r.caught) {
       localChase(S, best.m);
       pickUpLoot(S, best.m, setDown);
@@ -665,7 +687,49 @@ function workLocation(S, loc) {
     }
   }
 
-  if (S.phase === "raid" && hereOf(S).length && loc.obstacles.every((o) => o.cleared)) completeLocation(S, loc);
+  const pending = S.limitPending;
+  if (S.phase === "raid" && hereOf(S).length && loc.obstacles.every((o) => o.cleared)) {
+    if (pending) { const k = loc.id === "exit" ? "exit" : loc.id === "lockup" ? "lockup" : "loot"; S.st.resultFirst[k]++; S.rec.count(`R1: result before the Limit (${k})`); }
+    completeLocation(S, loc);
+  }
+  if (pending) { S.limitPending = false; if (S.phase === "raid") finalFlight(S, "limit"); }
+}
+
+/**
+ * D4 (spectralWhen "arrive"): Spectral needs no roll and no action, so a Ghost passes the group obstacle in front of her
+ * as soon as she's there, on the Turn she arrives too, with the loot at once if it was the last obstacle. A Spectral pass
+ * never picks the way in: at a first obstacle whose way in isn't picked yet she passes its group version, and the others
+ * there stay outside it and pick their way in when they first roll (an own-approach roll picks it, pickWayIn). Elsewhere
+ * the others roll the group obstacle at their next Turn there, as before. (spectralWhen "work", before D4: she passed only
+ * on a Turn spent at the location, after the way in was picked.)
+ */
+function spectralPass(S, loc, members) {
+  if ((S.P.spectralWhen ?? "arrive") !== "arrive" || S.phase !== "raid") return false;
+  if (!loc || loc.id === "exit" || loc.id === "lockup" || loc.done || loc.behind || loc.solo) return false;
+  const ob = loc.obstacles.find((o) => !o.cleared);
+  if (!ob) return false;
+  const alt = ob.alt && S.P.waysIn === "two" ? ob.alt : null;
+  if (!ob.group && !(alt && alt.group)) return false;
+  const here = members.filter((m) => m.status === "active" && arrived(S, m));
+  const can = (m) => hasPerk(m, "spectral") && !(S.P.spectralRule === "noLoot" && carrying(m));
+  const ghosts = here.filter((m) => can(m) && !ob.passed.has(m.id));
+  if (!ghosts.length) return false;
+  for (const g of ghosts) ob.passed.add(g.id);
+  S.st.spectralArrive++;
+  S.rec.count("spectral: passed with no action (D4)");
+  const outside = here.filter((m) => !can(m) && !(ob.group && !alt && ob.passed.has(m.id)));
+  const last = loc.obstacles.filter((o) => !o.cleared).length === 1;
+  if (outside.length && !alt && !last) return true; // the others roll it at their next Turn here, as before
+  ob.cleared = true;
+  if (outside.length) { loc.behind = new Set(outside); loc.behindOb = ob; loc.behindWaits = false; loc.behindSpectral = true; }
+  if (loc.obstacles.every((o) => o.cleared)) {
+    const prev = S.here;
+    S.here = here;
+    if (!loc.itemsTaken) { S.st.spectralLoot++; S.rec.count("spectral: loot in hand with no action (D4)"); }
+    completeLocation(S, loc);
+    S.here = prev;
+  }
+  return true;
 }
 
 /** The Entities here who are past this location's obstacles so far: not behind a group obstacle, and (T5) only the opener past an opened approach. */
@@ -686,13 +750,13 @@ function groupCheck(S, loc, ob, rollers, acted) {
   const planned = rollers.map((m) => {
     const plan = planRoll(S, m, ctxFor(S, m, ob, loc, "raid"));
     for (const u of plan.uses) {
-      if (u.ability.effect === "form" && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) continue; // costs no charge
+      if (u.ability.effect === "form" && !u.asRaise && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) continue; // costs no charge
       if (u.owner.charges > 0) { u.owner.charges -= 1; promised.set(u.owner, (promised.get(u.owner) || 0) + 1); }
     }
     return { m, plan };
   });
   for (const [o, n] of promised) o.charges += n;
-  let worst = 0;
+  let worst = 0, odSum = 0; // D3: the group's rise is its biggest trigger, plus every overdraw on top
   const caught = [];
   const results = [];
   for (const { m, plan } of planned) {
@@ -701,7 +765,8 @@ function groupCheck(S, loc, ob, rollers, acted) {
     const r = executeRoll(S, m, plan, "raid", { deferCost: true });
     if (!r.caught) { pickUpLoot(S, m, setDown.get(m)); setDown.delete(m); }
     results.push({ m, r });
-    worst = Math.max(worst, r.suspGain);
+    worst = Math.max(worst, r.trigger);
+    odSum += r.odRise;
     if (r.band !== "trouble") ob.passed.add(m.id);
     if (r.caught) caught.push(m);
   }
@@ -711,8 +776,12 @@ function groupCheck(S, loc, ob, rollers, acted) {
     if (r.costKind === "suspicion") worst = Math.max(worst, 1);
   }
   S.rec.count("group checks");
-  addSusp(S, worst, "roll");
-  if (limitHit(S)) { finalFlight(S, "limit"); return false; }
+  addSusp(S, worst + odSum, "roll");
+  if (limitHit(S)) {
+    // R1 (limitOrder "result"): the results stand (who got past); the caller finishes the location, then the hunt.
+    if ((S.P.limitOrder ?? "result") === "result") { S.limitPending = true; return true; }
+    finalFlight(S, "limit"); return false;
+  }
   const pickUpAfter = () => { for (const [m, items] of setDown) pickUpLoot(S, m, items); setDown.clear(); };
   if (caught.length > 1 && S.P.multiCaught === "shared") {
     groupChase(S, caught); // R4: one chase on a shared Lead (majority rule)
@@ -857,7 +926,7 @@ function sources(S, m, ctx, effect) {
   const owners = ctx.phase === "local" || ctx.phase === "slip" ? [m] : [m, ...ctx.helpers]; // P7: same location
   for (const o of owners) {
     for (const ab of abilitiesOf(o)) {
-      if (ab.effect !== effect) continue;
+      if (effect !== null && ab.effect !== effect) continue; // null: any ability (D6b, spent as a raise)
       if (o.charges > 0 || overdrawAllowed(S, ctx.phase, o, ctx)) out.push({ owner: o, ability: ab });
     }
   }
@@ -923,7 +992,8 @@ function planRoll(S, m, ctx) {
   const P = S.P;
   const phase = ctx.phase;
   const cands = rollCandidates(S, m, ctx);
-  const raiseSrc = sources(S, m, ctx, "raise");
+  // D6b (flightRaise "any"): in the final flight any Signature or Gift may be spent as a raise instead of its usual effect.
+  const raiseAll = phase === "final" && (P.flightRaise ?? "any") === "any" ? sources(S, m, ctx, null) : sources(S, m, ctx, "raise");
   const hiddenSrc = sources(S, m, ctx, "hidden");
   const carrying = !!m.furniture;
   let seconds;
@@ -935,7 +1005,10 @@ function planRoll(S, m, ctx) {
   const tie = P.monsterRule === "tie";
   const showVal = P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1;
 
-  const headroom = S.limit - S.susp;
+  // D1 (chaseRule "oneRise"): inside a local chase the rise waits for the chase's end, so a roll is weighed by what it adds
+  // to the chase's biggest trigger so far (ctx.chase.maxTrig), against the headroom left after the rise already pending.
+  const chase = ctx.chase ?? null;
+  const headroom = S.limit - S.susp - (chase ? chase.maxTrig + chase.odRise : 0);
   const lambda = phase === "final" ? (ctx.furyLambda || 0) : 1.2 / Math.max(0.5, headroom);
   const mu = phase === "raid" ? P.caughtWeight : 0;
   const cc = chargeCost(S, phase);
@@ -947,6 +1020,8 @@ function planRoll(S, m, ctx) {
 
   let best = null;
   for (const c of cands) {
+    // An ability spent as this roll's switch isn't also its raise (D6b makes the same ability a possible raise source).
+    const raiseSrc = c.via ? raiseAll.filter((r) => !(r.owner === c.via.owner && r.ability.source === c.via.ability.source)) : raiseAll;
     const base = c.die ?? diceOf(m)[c.trait];
     let up = 0;
     let down = m.nextStepDown;
@@ -974,7 +1049,7 @@ function planRoll(S, m, ctx) {
           // Ability uses for this plan, and how many must be overdrawn.
           const uses = [];
           if (c.via) uses.push(c.via);
-          for (let k = 0; k < ro.t + ro.s; k++) uses.push(raiseSrc[k]);
+          for (let k = 0; k < ro.t + ro.s; k++) uses.push({ ...raiseSrc[k], asRaise: true });
           if (hid) uses.push(hiddenSrc[0]);
           const need = new Map();
           for (const u of uses) need.set(u.owner, (need.get(u.owner) || 0) + 1);
@@ -987,12 +1062,20 @@ function planRoll(S, m, ctx) {
           // Expected Suspicion: one roll raises it once, by its biggest trigger.
           const loudS = c.loud && loudSusp && !hasPerk(m, "lightStep") ? 1 : 0;
           const fixed = P.overdrawStack === "stack" ? loudS : Math.max(loudS, odSusp);
-          const odExtra = P.overdrawStack === "stack" ? odSusp : 0;
+          const odExtra = P.overdrawStack === "stack" ? overdraws * S.N.overdrawSuspicion : 0; // D3: +2 for each overdraw
           const showS = d.show.success, showC = d.show.cost, showT = d.show.trouble;
-          const eSusp =
-            (d.success - showS) * fixed + showS * Math.max(fixed, showVal) +
-            (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
-            (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1) + odExtra;
+          let eSusp;
+          if (chase) {
+            // D1: what this roll adds to the chase's one rise (no Storyteller Cost in a chase).
+            const cm = chase.maxTrig, add = (x) => Math.max(cm, fixed, x) - cm;
+            eSusp = (d.success - showS) * add(0) + showS * add(showVal) + (d.cost - showC) * add(0) + showC * add(showVal) +
+              (d.trouble - showT) * add(1) + showT * add(Math.max(showVal, 1)) + odExtra;
+          } else {
+            eSusp =
+              (d.success - showS) * fixed + showS * Math.max(fixed, showVal) +
+              (d.cost - showC) * (fixed >= 1 ? fixed : costSuspP) + showC * Math.max(fixed, showVal) +
+              (d.trouble - showT) * Math.max(fixed, 1) + showT * Math.max(fixed, showVal, 1) + odExtra;
+          }
           // monsterRule "maskSafe" (S2 candidate): trouble on a Mask roll never gets you caught.
           const seenP = seenChance(S, m);
           const witnessed = phase === "raid" && ((ctx.witnessed && !c.quiet) || (c.loud && loudWitness)) && !(P.monsterRule === "maskSafe" && !isMon) && seenP > 0;
@@ -1019,9 +1102,9 @@ function executeRoll(S, m, plan, phase, { noCost = false, deferCost = false } = 
   const P = S.P;
   const overdrawn = [];
   for (const u of plan.uses) {
-    if (u.ability.effect === "form" && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) { S.rec.count("practised hand"); continue; }
-    if (u.owner.charges > 0) { u.owner.charges -= 1; S.rec.count("charges spent"); }
-    else { S.rec.count(`overdraws:${phase}`); overdrawn.push(u.owner); }
+    if (u.ability.effect === "form" && !u.asRaise && u.owner === m && m.form === "hyde" && hasPerk(m, "practisedHand")) { S.rec.count("practised hand"); continue; }
+    if (u.owner.charges > 0) { u.owner.charges -= 1; S.rec.count("charges spent"); S.rec.count(`charges spent:${phase}`); S.st.charges[phase]++; }
+    else { S.rec.count(`overdraws:${phase}`); S.st.overdraws[phase]++; overdrawn.push(u.owner); }
     S.rec.count(`ability:${u.ability.effect}`);
   }
   if (plan.overdraws && phase === "final" && P.overdrawAtLimit === "free") S.rec.detect("overdraw in the final flight (its Suspicion cost means nothing)");
@@ -1059,10 +1142,15 @@ function executeRoll(S, m, plan, phase, { noCost = false, deferCost = false } = 
     margin: t + s - plan.difficulty,
     entity: m.id,
   });
-  if (P.overdrawStack === "stack" && plan.overdraws) gain += S.N.overdrawSuspicion; // paid on top of the roll's rise
+  // D3 (overdrawStack "stack"): outside the final flight every overdraw adds +2 on top of the roll's other rise. `trigger`
+  // is the roll's own rise (its biggest trigger), `odRise` the overdraws on top: a group check and a local chase under D1
+  // take the biggest trigger among their rolls and add every overdraw (before D3, overdraw was one of the triggers).
+  const trigger = gain;
+  const odRise = P.overdrawStack === "stack" && plan.overdraws && phase !== "final" ? plan.overdraws * S.N.overdrawSuspicion : 0;
+  gain += odRise;
   // Out of Sight, outOfSightRule "half": seen on a 1–3 on a d6.
   const caught = b === "trouble" && plan.witnessed && (plan.seenP === undefined || plan.seenP >= 1 || S.rng.die(6) <= 3);
-  return { band: b, critical, show, suspGain: gain, caught, costKind, costPending, overdrawn };
+  return { band: b, critical, show, suspGain: gain, trigger, odRise, caught, costKind, costPending, overdrawn };
 }
 
 /** P3: the Storyteller picks a Cost (costChoice). */
@@ -1142,71 +1230,244 @@ function weakNow(S, m, was, round) {
 /** A local chase, with its length and the Suspicion it raised kept as histograms ("hist local …"). */
 function localChase(S, m) {
   const s0 = S.susp, t = { r: 0 };
-  try { return localChaseBody(S, m, t); } finally { S.rec.count(`hist local rounds ${t.r}`); S.rec.count(`hist local susp ${S.susp - s0}`); }
+  try { return localChaseBody(S, m, t); } finally { S.rec.count(`hist local rounds ${t.r}`); S.rec.count(`hist local susp ${S.susp - s0}`); S.st.chaseRise += S.susp - s0; S.st.soloRise += S.susp - s0; }
+}
+
+const oneRise = (S) => (S.P.chaseRule ?? "oneRise") === "oneRise";
+const corner = (S, m) => {
+  if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); return false; }
+  capture(S, m);
+  return true;
+};
+
+/**
+ * D1 (chaseRule "oneRise"): the chase is over; it raises Suspicion once, by the biggest trigger among all its rolls
+ * (Trouble +1, the Monster showing +2), plus +2 for each overdraw made in it (D3). Anyone cornered was captured first;
+ * if this brings the Limit, the hunt is on and an escaped runner joins the final flight.
+ */
+function chaseRise(S, ch) {
+  if (S.phase !== "raid") return; // D7b: everyone held ended the night
+  addSusp(S, ch.maxTrig + ch.odRise, "chase");
+  if (limitHit(S)) { S.st.chaseHunt++; S.rec.count("local chase brought the hunt (D1)"); finalFlight(S, "limit"); }
 }
 
 function localChaseBody(S, m, t) {
   const N = S.N;
   S.rec.count("local chases");
   S.chases = (S.chases ?? 0) + 1;
+  S.st.solo++;
+  const one = oneRise(S);
   let weak = weakStart(S, m, false);
   let lead = N.lead.localStart + (hasPerk(m, "nightRunner") ? 1 : 0);
   const curse = hasPerk(m, "fearTheCurse") ? 1 : 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
+  const mobNow = () => Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion)) - curse;
+  // D1: the mob's Difficulty is set when the chase starts and stays put; the chase's rise waits for its end.
+  const ch = one ? { maxTrig: 0, odRise: 0, mob: mobNow(), curse } : null;
   for (let round = 0; round < N.maxChaseRounds; round++) {
+    // D2: at the start of any round a runner may give up: captured, no roll.
+    if (giveUps(S, [m], lead, ch, new Map([[m, weak]])).length) {
+      S.st.giveUps++; S.rec.count("gave up (D2)");
+      capture(S, m); S.st.soloCaptured++;
+      if (one) chaseRise(S, ch);
+      return;
+    }
     t.r = round + 1;
-    const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion)) - curse;
+    const mobD = one ? ch.mob : mobNow();
     const options = chaseGround(S);
     weak = weakNow(S, m, weak, round);
-    const ctx = { phase: "local", options: groundFor(m, options), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak };
+    const ctx = { phase: "local", options: groundFor(m, options), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak, chase: ch };
     const plan = planRoll(S, m, ctx);
     const r = executeRoll(S, m, plan, "local");
     lead += leadMove(r, critW);
+    if (one) {
+      ch.maxTrig = Math.max(ch.maxTrig, r.trigger);
+      ch.odRise += r.odRise;
+      if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; return chaseRise(S, ch); }
+      if (lead <= 0) { if (corner(S, m)) S.st.soloCaptured++; return chaseRise(S, ch); }
+      continue;
+    }
+    // chaseRule "perRoll" (the rule before D1): every chase roll raises Suspicion as it happens, and the Limit can come mid-chase.
     if (S.P.chaseSusp === "yes") addSusp(S, r.suspGain, "chase"); // chaseSusp "no" (S6 candidate): chase rolls don't raise Suspicion
     else if (S.P.chaseSusp.startsWith("cap")) { const add = Math.min(r.suspGain, Number(S.P.chaseSusp.slice(3)) - (t.gain ?? 0)); if (add > 0) { t.gain = (t.gain ?? 0) + add; addSusp(S, add, "chase"); } } // PT5 candidate: at most N per chase
     // B3: cornered in the round the Limit comes, you're captured first; then the final flight starts without you.
     if (lead <= 0 && S.P.corneredAtLimit === "captured") {
-      if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); }
-      else capture(S, m);
+      if (corner(S, m)) S.st.soloCaptured++;
       if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); finalFlight(S, "limit"); }
       return;
     }
     if (limitHit(S)) { S.rec.count("local chase ended by the Limit"); return finalFlight(S, "limit"); }
-    if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); return; }
-    if (lead <= 0) {
-      if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); return; }
-      return capture(S, m);
-    }
+    if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; return; }
+    if (lead <= 0) { if (corner(S, m)) S.st.soloCaptured++; return; }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
 }
 
 /** multiCaught "shared" (S11 candidate): several Entities caught by one roll flee together on one Lead. */
 function groupChase(S, group) {
+  const s0 = S.susp;
+  try { return groupChaseBody(S, [...group]); } finally { S.rec.count(`hist shared susp ${S.susp - s0}`); S.st.chaseRise += S.susp - s0; S.st.sharedRise += S.susp - s0; }
+}
+
+function groupChaseBody(S, group) {
   const N = S.N;
   S.rec.count("local chases (shared)");
   S.chases = (S.chases ?? 0) + 1;
+  S.st.shared++;
+  const one = oneRise(S);
   const weak = new Map(group.map((m) => [m, weakStart(S, m, false)]));
   let lead = N.lead.localStart, gained = 0;
   const critW = S.P.critEffect === "lead2" || S.P.critEffect === "both" ? 2 : 1;
+  const mobNow = () => Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
+  const ch = one ? { maxTrig: 0, odRise: 0, mob: mobNow(), curse: 0 } : null; // D1: set when the chase starts
+  let captured = false;
   for (let round = 0; round < N.maxChaseRounds; round++) {
-    const mobD = Math.min(N.localMob.max, N.localMob.base + Math.floor(S.susp * N.localMob.perSuspicion));
+    // D2: at the start of any round a runner may give up (captured, no roll); the others carry on.
+    for (const m of giveUps(S, group, lead, ch, weak)) {
+      S.st.giveUpsShared++; S.rec.count("gave up in a shared chase (D2)");
+      group.splice(group.indexOf(m), 1);
+      capture(S, m); captured = true;
+    }
+    if (!group.length || S.phase !== "raid") { if (captured) S.st.sharedCaptured++; if (one) chaseRise(S, ch); return; }
+    const mobD = one ? ch.mob : mobNow();
     const ground = chaseGround(S);
     for (const m of group) weak.set(m, weakNow(S, m, weak.get(m), round));
-    const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) }), "local"));
+    const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m), chase: ch }), "local"));
     lead += majorityMove(results, critW, S.P.finalMove ?? "majority");
-    if (S.P.chaseSusp === "yes") addSusp(S, Math.max(0, ...results.map((r) => r.suspGain)), "chase");
-    else if (S.P.chaseSusp.startsWith("cap")) { const add = Math.min(Math.max(0, ...results.map((r) => r.suspGain)), Number(S.P.chaseSusp.slice(3)) - gained); if (add > 0) { gained += add; addSusp(S, add, "chase"); } }
+    // The round's rise: its biggest trigger, plus every overdraw on top (D3; under "merge" an overdraw is one of the triggers).
+    const roundRise = Math.max(0, ...results.map((r) => r.trigger)) + results.reduce((a, r) => a + r.odRise, 0);
+    if (one) {
+      ch.maxTrig = Math.max(ch.maxTrig, ...results.map((r) => r.trigger));
+      ch.odRise += results.reduce((a, r) => a + r.odRise, 0);
+      if (lead >= N.lead.localEscape) { S.st.sharedEscaped++; S.rec.count("shared chase escaped"); if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
+      if (lead <= 0) { for (const m of group) if (corner(S, m)) captured = true; if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
+      continue;
+    }
+    if (S.P.chaseSusp === "yes") addSusp(S, roundRise, "chase");
+    else if (S.P.chaseSusp.startsWith("cap")) { const add = Math.min(roundRise, Number(S.P.chaseSusp.slice(3)) - gained); if (add > 0) { gained += add; addSusp(S, add, "chase"); } }
     if (lead <= 0 && S.P.corneredAtLimit === "captured") {
-      for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); }
+      for (const m of group) if (corner(S, m)) captured = true;
+      if (captured) S.st.sharedCaptured++;
       if (limitHit(S)) finalFlight(S, "limit");
       return;
     }
-    if (limitHit(S)) return finalFlight(S, "limit");
-    if (lead >= N.lead.localEscape) return;
-    if (lead <= 0) { for (const m of group) { if (hasPerk(m, "alreadyDead")) m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; else capture(S, m); } return; }
+    if (limitHit(S)) { if (captured) S.st.sharedCaptured++; return finalFlight(S, "limit"); }
+    if (lead >= N.lead.localEscape) { S.st.sharedEscaped++; S.rec.count("shared chase escaped"); if (captured) S.st.sharedCaptured++; return; }
+    if (lead <= 0) { for (const m of group) if (corner(S, m)) captured = true; if (captured) S.st.sharedCaptured++; return; }
   }
   S.rec.detect("local chase stalled (no end after max rounds)");
+}
+
+// ---------------------------------------------------------------- giving up (D2)
+
+/**
+ * D2 (policy giveUp): who gives up at the start of a round. Only with the Lead at 1, under D1's one rise, while stopping
+ * now keeps Suspicion under the Limit and the chase could still reach it. "odds": carrying on must be more likely to end
+ * with the chase's rise at the Limit than with a clean escape; "simple" (the outside review's candidate): escape under
+ * 1 in 2 and a Monster showing would reach the Limit. In a shared chase the weakest runner gives up first, then the rest
+ * look again. Nobody gives up who'd leave every Entity held (D7b), and a Ghost with Already Dead never does.
+ * Uses no dice: the odds are worked out exactly from the plans the runners would make (chaseOdds).
+ */
+function giveUps(S, runners, lead, ch, weak) {
+  const pol = S.P.giveUp ?? "odds";
+  if (pol === "never" || !ch || lead !== 1) return [];
+  const room = S.limit - S.susp - ch.maxTrig - ch.odRise; // stopping now: the chase rises by what's pending
+  if (room <= 0) return [];
+  // Screen: could the chase still reach the Limit? (a trigger up to +2, or an overdraw by a runner out of charges)
+  if (Math.max(0, 2 - ch.maxTrig) < room && runners.every((m) => m.charges > 0)) return [];
+  const out = [];
+  const group = runners.filter((m) => !hasPerk(m, "alreadyDead"));
+  const solo = runners.length === 1;
+  while (group.length) {
+    const odds = chaseOdds(S, runners.filter((m) => !out.includes(m)), ch, weak, solo);
+    let stop;
+    if (pol === "simple") {
+      const showMax = Math.max(...runners.filter((m) => !out.includes(m)).map((m) => (S.P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1)));
+      stop = odds.pEsc < 0.5 && Math.max(ch.maxTrig, showMax) - ch.maxTrig >= room;
+    } else stop = odds.pHunt > odds.pClean;
+    if (!stop) break;
+    // the weakest runner first
+    const m = group.reduce((a, b) => (odds.edge.get(b) < odds.edge.get(a) ? b : a));
+    if (S.party.every((o) => o === m || out.includes(o) || o.status === "captured")) break; // D7b: never the last one free
+    out.push(m);
+    group.splice(group.indexOf(m), 1);
+  }
+  return out;
+}
+
+/**
+ * The odds of a local chase from the Lead at 1 under D1, worked out exactly (a Markov chain over the Lead, the chase's
+ * biggest trigger so far and its overdraws), from the plan each runner would make on each row of the chase table at each
+ * trigger level, the rows equally likely and shared by the runners. Returns the chance of escaping (pEsc), of escaping
+ * with the rise still short of the Limit (pClean), of the chase's rise reaching the Limit (pHunt), and each runner's
+ * expected Lead edge (Successes minus Trouble per roll).
+ */
+function chaseOdds(S, runners, ch, weak, solo) {
+  const N = S.N, P = S.P;
+  const table = CHASE_TABLES[P.chaseTable] || CHASE_TABLE;
+  const critW = P.critEffect === "lead2" || P.critEffect === "both" ? 2 : 1;
+  const escape = N.lead.localEscape;
+  const room = S.limit - S.susp;
+  const edge = new Map(runners.map((m) => [m, 0]));
+  // Per trigger level k and row: the distribution of (Lead move, biggest trigger, overdraw rise) for the round.
+  const rounds = [0, 1, 2].map((k) => {
+    const dist = new Map();
+    for (const row of table) {
+      const ground = row.map((tr) => ({ trait: tr, loud: false }));
+      let comb = new Map([["0|0|0", 1]]); // up−down | trigger | overdraw rise
+      for (const m of runners) {
+        const ctx = { phase: "local", options: groundFor(m, ground), difficulty: ch.mob, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) ?? false, chase: { maxTrig: k, odRise: ch.odRise } };
+        const plan = planRoll(S, m, ctx);
+        const d = outcomeDist(plan.traitDie, plan.secondDie, plan.difficulty, { monster: plan.second !== MASK, hidden: plan.hidden, tie: P.monsterRule === "tie" });
+        const fixed = plan.fixedSusp, sv = Math.max(fixed, P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1);
+        const od = P.overdrawStack === "stack" ? plan.overdraws * N.overdrawSuspicion : 0;
+        const crit = P.critRule === "doubles" ? d.critDoubles : 0;
+        const outs = [
+          [crit, critW, fixed], [d.show.success, 1, sv], [d.success - d.show.success - crit, 1, fixed],
+          [d.show.cost, 0, sv], [d.cost - d.show.cost, 0, fixed],
+          [d.show.trouble, -1, Math.max(sv, 1)], [d.trouble - d.show.trouble, -1, Math.max(fixed, 1)],
+        ];
+        if (k === ch.maxTrig) edge.set(m, edge.get(m) + (d.success + crit * (critW - 1) - d.trouble) / table.length);
+        const next = new Map();
+        for (const [key, p] of comb) {
+          const [df, tg, o] = key.split("|").map(Number);
+          for (const [q, mv, tr] of outs) {
+            if (q <= 1e-12) continue;
+            const nk = `${df + mv}|${Math.max(tg, tr)}|${o + od}`;
+            next.set(nk, (next.get(nk) ?? 0) + p * q);
+          }
+        }
+        comb = next;
+      }
+      for (const [key, p] of comb) {
+        const [df, tg, o] = key.split("|").map(Number);
+        const move = solo ? df : majorityMove([...Array(Math.max(0, df))].map(() => ({ band: "success" })).concat([...Array(Math.max(0, -df))].map(() => ({ band: "trouble" }))), 1, P.finalMove ?? "majority");
+        const nk = `${move}|${tg}|${o}`;
+        dist.set(nk, (dist.get(nk) ?? 0) + p / table.length);
+      }
+    }
+    return [...dist].map(([key, p]) => { const [mv, tg, o] = key.split("|").map(Number); return { p, mv, tg, o }; });
+  });
+  // Propagate from the Lead at 1 (states: Lead, biggest trigger, overdraw rise so far, the last capped at the room left).
+  let mass = new Map([[`1|${ch.maxTrig}|${Math.min(room, ch.odRise)}`, 1]]);
+  let pEsc = 0, pClean = 0, pHunt = 0;
+  for (let r = 0; r < 60 && mass.size; r++) {
+    const next = new Map();
+    for (const [key, p] of mass) {
+      if (p < 1e-7) continue;
+      const [lead, k, o] = key.split("|").map(Number);
+      for (const t of rounds[k]) {
+        const l = lead + t.mv, nk = Math.max(k, t.tg), no = Math.min(room, o + t.o), q = p * t.p;
+        const hunt = nk + no >= room;
+        if (l >= escape) { pEsc += q; if (hunt) pHunt += q; else pClean += q; continue; }
+        if (l <= 0) { if (hunt) pHunt += q; continue; }
+        const key2 = `${l}|${nk}|${no}`;
+        next.set(key2, (next.get(key2) ?? 0) + q);
+      }
+    }
+    mass = next;
+  }
+  return { pEsc, pClean, pHunt, edge };
 }
 
 function capture(S, m) {
@@ -1221,11 +1482,22 @@ function capture(S, m) {
   }
   if (S.P.captiveItems === "lost" && !hasPerk(m, "hiddenPockets")) m.items = [];
   if (m.furniture) dropFurniture(S, "carrier captured");
+  // D7b (allHeld "forked"): if every Entity is held in the lock-up at once, the night ends at once and the year is Forked.
+  if ((S.P.allHeld ?? "forked") === "forked" && S.phase === "raid" && S.party.every((o) => o.status === "captured")) {
+    S.phase = "done";
+    S.forked = true;
+    S.held = true;
+    S.finalTrigger = "held";
+    for (const o of S.party) o.status = "forked";
+    S.rec.count("everyone held: Forked (D7b)");
+  }
 }
 
 function freeCaptive(S, m, how) {
   m.status = "active";
   S.rec.count(`captive ${how}`);
+  if (how === "rescued") S.st.rescues++;
+  else S.st.slips++;
 }
 
 /** DESIGN Captured: once per Turn a captive may try to slip free (a failed attempt: Suspicion +1). */
@@ -1355,9 +1627,11 @@ function summarise(S) {
     turnsUsed: S.turn,
     chases: S.chases ?? 0, // local chases in this raid (a shared chase counts once)
     flightRounds: S.flightRounds ?? 0, // rounds of the final flight, 0 if there was none
+    held: S.held, // D7b: the night ended with every Entity held (counted as Forked)
+    st: S.st,
     spend: S.party.map((m) => ({ id: m.id, gift: m.gift, duty: m.duty, frac: m.chargesStart ? (m.chargesStart - Math.max(0, m.charges)) / m.chargesStart : 0 })),
   };
 }
 
 /** Internals for test/sim.test.mjs (not part of the simulator's interface). */
-export const internals = { makeState, rollCandidates, planRoll, executeRoll, pickCost, workLocation, groupCheck, exitLocation, captivesAct, ctxFor, followsBehind, hereOf };
+export const internals = { makeState, rollCandidates, planRoll, executeRoll, pickCost, workLocation, groupCheck, exitLocation, lockupLocation, captivesAct, ctxFor, followsBehind, hereOf, localChase, groupChase, spectralPass, giveUps, chaseOdds };
