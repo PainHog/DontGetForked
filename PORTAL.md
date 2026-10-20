@@ -6,6 +6,9 @@ Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 330
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
+Download: book/dist/Dont_Get_Forked_v0.2.pdf = The rulebook, version 0.2, a work in progress (PDF)
+Download: book/dist/Lantern_Night_in_Hallowby_v0.2.pdf = Lantern Night in Hallowby, the Halloween one-shot, version 0.2 (PDF)
+Download: downloads/Dont_Get_Forked_Foundry_v0.1.4.zip = The online version for Foundry VTT, release 0.1.4 (unzip into Foundry's Data/systems folder)
 
 - [x] Decide the engine
 - [x] Choose the Entities
