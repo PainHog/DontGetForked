@@ -248,9 +248,9 @@
   "name": "dracula-costume",
   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Sc%C3%A8ne_uit_toneeldrama_De_kinderroofster%2C_RP-P-1877-A-168.jpg",
   "crop": [
-   0.45,
-   0.185,
-   0.84,
+   0.36,
+   0.195,
+   0.85,
    1
   ],
   "aspect": 0.85,
@@ -318,9 +318,9 @@
   "name": "mummy-revealed",
   "url": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg",
   "crop": [
-   0.13,
+   0.3,
    0.0,
-   0.75,
+   0.92,
    1
   ],
   "aspect": 0.85,

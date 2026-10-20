@@ -4,7 +4,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 
 `book/tools/prep-art.py` downloads each scan, crops it (fractions in `manifest.json`), turns it into a two-tone image from the book's ink to its paper colour, and saves the JPEG used by the build. The pieces are credited on the credits page.
 
-**Rights rule used:** keep a print only if its Commons licence is CC0 or public domain, the artist died before 1955 and the work was published before 1930. Rejected during the search: a CC-BY-SA photo, a scan from a commercial print seller, and an etching whose artist couldn't be confirmed. Rejected for content: a gallows, a blackface mask, crude scenes, an anti-Catholic print, torture devices and a corpse.
+**Rights rule used:** keep a print only if its Commons licence is CC0 or public domain, the artist died before 1955 and the work was published before 1930. Rejected during the search: a CC-BY-SA photo, a scan from a commercial print seller, and an etching whose artist couldn't be confirmed. Rejected for content: a gallows, a blackface mask, crude scenes, an anti-Catholic print, torture devices and a corpse. Swapped out after the outside review of v0.1 (2026-10-20): Gavarni and Verdeil's two men in long hooked false noses (invisible-costume), which read like a 19th-century antisemitic caricature, and Vervloet's Mechelen festival giants (creature-costume), where one dark face read as blackface and a fold crease ran through the print. Rejected in that search: Toulouse-Lautrec's *The Motorist* (goggled and muffled, but the face is drawn as a dark caricature), Gavarni's *Un honnête Domino* (the companion wears a long false nose), the *Varney the Vampire* woodcuts (at portrait size the frontispiece reads as a couple in bed, and the part-cover vampire is tangled in lettering), a 1690 broadside "Figure d'un antropophage" (an anti-Irish caricature), Mechelen's seated giant *Groot-Vader* (reads as a statue, with no crowd for scale, and fold creases) and a pen sketch of the Antwerp giant in the 1685 ommegang (too sketchy at 1.66 in).
 
 ## cover-castle: Front cover
 
@@ -12,6 +12,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Anton Louis Koster (Dutch, 1859-1937); 1869-1892 (in the Rijksmuseum by 1892)
 - **Source:** https://commons.wikimedia.org/wiki/File:Kasteel_op_een_klif,_RP-P-1892-A-17662.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1937 (more than 70 years ago) and the print dates from before 1892.
+- **Publication (checked 2026-10-20, outside review of v0.1):** the Rijksmuseum dates the etching 1869–1892 and records this impression as part of the bequest of Jhr. P. A. van den Velden, The Hague, received in 1892 (collector's mark Lugt 2228 on the back), so impressions were in circulation by 1892, well before 1930. Even if it were treated as never formally published, Koster died in 1937, so its term (life + 70 years) ended in 2008.
 - **Audit:** Castle on its cliff, bridge on its piers over water, roofs on the bank, moon and clouds in the sky: all supported. No figures. Inventory number and signature cropped off.
 
 ## part1-tower: Part One title page
@@ -124,7 +125,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Gerrit Claesz. Bleker (Dutch, c.1592-1656); 1643
 - **Source:** https://commons.wikimedia.org/wiki/File:Boerin_op_een_paardenkar_met_twee_wielen,_RP-P-BI-1178.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1656.
-- **Audit:** Horse in harness with all four hooves on the ground, cart wheels on the road, the driver walking beside it, a woman seated on the load. Inscription cropped off.
+- **Audit:** Horse in harness with all four hooves on the ground, cart wheels on the road, the driver walking beside it, a woman seated on the load. Inscription cropped off. Re-prepared on 2026-10-20 (outside review of v0.1): 2000 px wide from the 3840 px scan (was 900 px, about 126 ppi at full text width), and trimmed inside the plate mark on all four sides, so no plate edge shows.
 
 ## spot-lantern: Spot (Chapter 1 end)
 
@@ -132,7 +133,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Jacobus Ludovicus Cornet (Dutch, 1815-1882); 1825-1882
 - **Source:** https://commons.wikimedia.org/wiki/File:Lantaarn,_RP-P-BI-6405X.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1882.
-- **Audit:** A lantern standing on a ledge in a dark room; the ledge is visible under it, but not what holds the ledge (lost in the dark; book audit BA-43, accepted for a stand-in).
+- **Audit:** A lantern standing on a ledge in a dark room; the ledge is visible under it, but not what holds the ledge (lost in the dark; book audit BA-43, accepted for a stand-in). Re-cropped on 2026-10-20 (outside review of v0.1: it printed as a near-black block at 2.1 in): the crop now holds the lantern, its glow and the ledge, so the lantern fills about half the width.
 
 ## spot-owl: Spot (Chapter 2 end)
 
@@ -140,7 +141,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Thomas Bewick (British, 1753-1828); A History of British Birds, vol. 1, 1797 (scan from the 1847 edition)
 - **Source:** https://commons.wikimedia.org/wiki/File:Bewick_Thomas_Barn_Owl_Tyto_alba.png
 - **Licence:** Public domain (PD-old-auto-expired|deathyear=1828). Bewick died 1828; PD-old-auto-expired.
-- **Audit:** Owl perched on a stump, talons gripping the bark; stump rooted, leaves attached to branches. Two eyes, two feet. Printed caption cropped off. The text printed on the back of the page showed through faintly; the levelling now clips the lightest 35% to paper (`cutoff` in the manifest, 2026-10-06, book audit BA-35), which removes it and keeps the engraving.
+- **Audit:** Owl perched on a stump, talons gripping the bark; stump rooted, leaves attached to branches. Two eyes, two feet. Printed caption cropped off. The text printed on the back of the page showed through faintly; the levelling now clips the lightest 35% to paper (`cutoff` in the manifest, 2026-10-06, book audit BA-35), which removes it and keeps the engraving. Re-prepared on 2026-10-20 at the scan's full width (1864 px; was 900 px, about 174 ppi at the 5.3 in it prints at).
 
 ## spot-windmill: Spot (Chapter 6 end)
 
@@ -148,13 +149,13 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Johannes van Cuylenburgh (Dutch, c.1772-1841); 1803-1841
 - **Source:** https://commons.wikimedia.org/wiki/File:Landschap_met_molen_bij_maanlicht,_RP-P-BI-6653.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1841.
-- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects. Plate margin at the top and right cropped off (2026-10-06, book audit BA-39).
+- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects. Plate margin at the top and right cropped off (2026-10-06, book audit BA-39). Re-prepared on 2026-10-20 (outside review of v0.1): 2000 px wide from the 3840 px scan (was 900 px, about 126 ppi at full text width); same crop.
 
 ## spot-bonfire: Spot (Chapter 8 end)
 
 - **Work:** Kinderen bij een vreugdevuur op St. Maarten, RP-T-2016-35.jpg ("van St. Martens Vuurtje", children at a St Martin's Day bonfire, the Dutch lantern festival; added 2026-10-05 with Lantern Night)
 - **Artist:** Christiaan Andriessen (Dutch, 1775-1846); 1805-1808, pen and watercolour
-- **Source:** https://commons.wikimedia.org/wiki/File:Kinderen_bij_een_vreugdevuur_op_St._Maarten,_RP-T-2016-35.jpg (prepared from Commons' 1920 px rendition; the full scan is throttled)
+- **Source:** https://commons.wikimedia.org/wiki/File:Kinderen_bij_een_vreugdevuur_op_St._Maarten,_RP-T-2016-35.jpg (prepared from Commons' 3840 px rendition since 2026-10-20; it was the 1920 px one, about 126 ppi at full text width)
 - **Licence:** CC0 (CC-zero), checked 2026-10-05. Rijksmuseum Amsterdam scan released CC0; artist died 1846.
 - **Audit:** Seven figures standing or kneeling on the ground round a bonfire, their shadows running out from the fire across the ground; the fire on the ground among their feet; a tree rooted at the left, its branches overhead; fence posts set in the ground at the right. Faces that turn to us show two eyes. The artist's handwritten date and title are cropped off.
 
@@ -168,7 +169,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Charles Rochussen (1814-1894); 1868 (playbill for 'De Kinderroofster', Amsterdam Stadsschouwburg)
 - **Source:** https://commons.wikimedia.org/wiki/File:Sc%C3%A8ne_uit_toneeldrama_De_kinderroofster,_RP-P-1877-A-168.jpg
 - **Licence:** CC0 (CC-Zero). Artist died 1894; Rijksmuseum scan released CC0 (CC-Zero).
-- **Audit:** A masked man in a broad-brimmed hat and cloak, his right hand resting on a table among papers; a candle burning in a bottle on the table. Character: two eyes behind the half-mask, two arms (one hand on the table, fingers spread on the papers; the other under the cloak), legs run out of the frame at the bottom. The pleading woman is cut by the left frame edge, deliberately; the playbill's lettering is cropped off.
+- **Audit:** A masked man in a broad-brimmed hat and cloak, his right hand resting on a table among papers; a candle burning in a bottle on the table, the bottle standing on the tabletop. A woman in a straw bonnet clings to him, both hands on his chest. Character rows: the man — two eyes behind the half-mask, two arms (one hand on the table, fingers spread on the papers; the other under the cloak), two legs, both feet on the floor; the woman — profile, one eye, two arms, both hands on the man, her skirt running out of the left and bottom edges. Re-cropped on 2026-10-20 (outside review of v0.1: the old crop sliced her vertically through the face): her head and face are now whole, and no partial face remains. The playbill's lettering is cropped off.
 
 ### dracula-revealed: Dracula, revealed
 
@@ -210,7 +211,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Martin van Maële (1863-1926); 1906 (French edition of Conan Doyle's 'Lot No. 249', Société d'Édition et de Publications)
 - **Source:** https://commons.wikimedia.org/wiki/File:Lot_No._249_by_Martin_van_Ma%C3%ABle_1.jpg
 - **Licence:** Public domain (CC-PD-Mark, PD-old-95-expired). Artist died 1926; published 1906; Commons: PD-old-95-expired.
-- **Audit:** The mummy sits up in its sarcophagus, both hands on the rim; a hieroglyph frieze on the sarcophagus; a bird-headed statue standing behind, and another statue cut by the left edge, deliberately. Character: two eyes, two arms (re-cropped on 2026-10-06 so the right arm shows whole from shoulder to the hand on the rim, and the printed rule along the top erased; book audit BA-42), head-wrapping on. Low-resolution scan: reference only. Not the film look.
+- **Audit:** The mummy sits up in its sarcophagus; its right arm runs from the shoulder out of the left edge (to the hand on the rim, beyond the frame); its long left leg is drawn up over the rim, whole from the hip to the foot resting against the sarcophagus front; a hieroglyph frieze on the sarcophagus; a bird-headed statue standing behind. Character: two eyes, two arms (one leaving the frame at the left, attached at the shoulder), two legs, head-wrapping on. Re-cropped on 2026-10-20 (outside review of v0.1: the old crop cut the drawn-up limb at the right edge so it read as a disembodied arm): the crop now runs from the mummy's right shoulder to past its foot, so every limb in the frame is attached to the body. The printed rule along the top is erased (BA-42). Low-resolution scan (496 px wide, about 300 ppi at 1.66 in): reference only. Not the film look.
 
 ### werewolf-costume: the Werewolf, in costume
 
@@ -243,6 +244,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Ludvík Strimpl (1880-1937); 1912 (cover of 'L'Homme invisible', Calmann-Lévy, Nouvelle Collection illustrée)
 - **Source:** https://commons.wikimedia.org/wiki/File:Wells_Strimpl_-_L%27homme_invisible.jpg
 - **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark). Artist died 1937; published 1912; Commons: PD-old-80-expired / PD-Art.
+- **Publication (checked 2026-10-20, outside review of v0.1):** Calmann-Lévy, Paris, *Nouvelle Collection illustrée* no. 71, dépôt légal 1912 (library catalogue of the Médiathèques of Bar-le-Duc: "Calmann-Lévy, 1912"; ISFDB and nooSFere: cover and interior illustrations by Louis Strimpl). Strimpl died 1937, so the term (life + 70) ended in 2008.
 - **Audit:** A skeleton crouches on a ledge by a window in a beam of light, its pelvis and one foot on the ledge, the other leg hanging over it, its hands reaching out into the light. Character: two arms, two legs, the skull turned away. Nothing floats.
 
 ### ghost-costume: a Ghost, in costume
@@ -267,6 +269,7 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 - **Artist:** Alice B. Woodward (1862-1951); 1897 (Hamish Hendry, 'Red Apple and Silver Bells', Blackie)
 - **Source:** https://commons.wikimedia.org/wiki/File:Page_10_of_%27Red_Apple_and_Silver_Bells._A_book_of_verse_for_children_..._Illustrated_by_A._B._Woodward%27_(11149264234).jpg
 - **Licence:** Public domain (Author died more than 70 years ago public domain images, CC-PD-Mark). Artist died 1951 (before 1955), published 1897; Commons: author died more than 70 years ago (British Library scan).
+- **Publication (checked 2026-10-20, outside review of v0.1):** first published 1897 by Blackie & Son, London and Glasgow (British Library catalogue; HathiTrust record 103399010 lists the 1897 and 1899 printings; Blackie's 1899 catalogue advertises it with "over 150 illustrations by Miss Alice B. Woodward").
 - **Audit:** A child dressed as a witch (pointed hat, cloak) holds a tall staff topped with a ball, a large moon disc behind her; she runs out of the frame at the bottom. Character: two eyes, one hand on the staff, the other at her cloak.
 
 ### witch-revealed: a Witch, revealed
