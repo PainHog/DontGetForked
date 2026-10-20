@@ -9,20 +9,25 @@
  *
  *   chase = { id, kind: "local" | "final", cause: "caught" | "limit" | "dawn" | "manual",
  *             label, turn, groupId, where,
- *             members: [{ actorId, name, entityKey, perk, timing }],
+ *             members: [{ actorId, name, entityKey, perk, timing }],   // those still running
+ *             gaveUp: [{ actorId, name, round }],                       // D2: gave up (captured, no roll)
  *             lead, start, escape, round, mob, ground: { face, key, traits } | null,
- *             rolls: { [actorId]: { messageId, band, critical } },
- *             history: [{ round, face, key, mob, rolls: [{ actorId, name, band, critical }], move, lead }],
- *             outcome: "" | "escaped" | "cornered" | "ended" | "dropped" }
+ *             rolls: { [actorId]: { messageId, band, critical, rise, riseKeys, overdraws } },
+ *             history: [{ round, face, key, mob, rolls: [{ actorId, name, band, critical, rise, riseKeys, overdraws }], move, lead }],
+ *             extraOverdraws: [{ messageId, n }],   // overdraws made in the chase outside a chase roll (the sheet)
+ *             endRise: null | { rise, keys, overdraws, overdrawRise, total, applied, beforeHunt },
+ *             outcome: "" | "escaped" | "cornered" | "gaveUp" | "ended" | "dropped" }
  *
- * Source: rulebook Chapter 6 (The Lead; The Ground; Your Weakness; The Local
- * Chase; The Final Flight and the Majority Rule; the chase table) and Chapter 5
- * (At the Limit). Perks from Chapter 2 via DGF.perkRules: Wall-Crawler and Fly by
- * Night (a trait you can always roll in a chase), Night Runner and Fear the Curse
- * (when you flee alone: Lead 2, the mob 1 easier; F14: `aloneOnly`), Fetch (the
- * final flight starts at Lead 3), Already Dead (cornered in a local chase, you
- * lose your next Turn instead). F13: in a shared local chase, Suspicion rises once
- * a round, by the biggest trigger among that round's rolls (chaseEventId).
+ * Source: rulebook Chapter 6 (The Lead; The Ground; One chase, one rise; Your
+ * Weakness; The Local Chase; Giving up; The Final Flight and the Majority Rule; the
+ * chase table) and Chapter 5 (At the Limit). Perks from Chapter 2 via DGF.perkRules:
+ * Wall-Crawler and Fly by Night (a trait you can always roll in a chase), Night Runner
+ * and Fear the Curse (when you flee alone: Lead 2, the mob 1 easier; F14: `aloneOnly`,
+ * judged when the chase starts), Fetch (the final flight starts at Lead 3), Already Dead
+ * (cornered in a local chase, you lose your next Turn instead).
+ * D1 (2026-10-19): a local chase's mob is set when it starts and stays put, and the
+ * chase raises Suspicion once, when it ends, by the biggest trigger among all its rolls
+ * (every runner's), plus +2 for each overdraw made in it (D3): chaseRise().
  */
 import { DGF } from "../config.mjs";
 import { leadMove, majorityMove, localMobDifficulty, weaknessInPlay } from "./rules.mjs";
@@ -38,19 +43,18 @@ function perkValue(chase, member, key) {
   return r[key] ?? 0;
 }
 
-/** Several fleeing on one Lead in a local chase (caught together in one group check). */
+/** Several fleeing on one Lead in a local chase (caught together in one group check), counting only those still running. */
 export function isSharedLocal(chase) {
   return !!chase && chase.kind === "local" && chase.members.length > 1;
 }
 
-/**
- * F13: the Suspicion event a chase roll belongs to. In a shared local chase every roll of
- * a round shares one event (it rises once, by the biggest trigger); otherwise null (one
- * roll, one rise; in the final flight Suspicion has stopped anyway).
- */
-export function chaseEventId(chase, round = chase?.round) {
-  return isSharedLocal(chase) ? `chase:${chase.id}:${round}` : null;
+/** D1: the Suspicion event of a local chase's one rise (it comes when the chase ends). */
+export function riseEventId(chase) {
+  return `chase:${chase?.id ?? ""}`;
 }
+
+/** D1: the outcomes that end a local chase with its one rise (called off and the Limit's own ending aside). */
+export const RISE_OUTCOMES = Object.freeze(["escaped", "cornered", "gaveUp"]);
 
 /** A chase member from an Entity actor's id, name and system data (its Perk and its Weakness's timing). */
 export function memberOf({ id, name = "", system = {} }) {
@@ -64,26 +68,29 @@ export function finalEscape(label = "standard") {
 }
 
 /**
- * A new chase. Local: Lead 1, escape at 4 (Night Runner, fleeing alone: starts at Lead 2).
- * Final flight: Lead 2, escape at the label's number (B3: 5 on Easy and Standard, 6 on Hard);
- * Fetch: it starts at Lead 3 (DGF.perkRules finalLead).
+ * A new chase. Local: Lead 1, escape at 4 (Night Runner, fleeing alone: starts at Lead 2); D1: the mob's
+ * Difficulty is set now, from the Suspicion as the chase starts, and stays put for the whole chase.
+ * Final flight: Lead 2, escape at the label's number (B3: 5 on Easy and Standard, 6 on Hard), the mob the
+ * label's; Fetch: it starts at Lead 3 (DGF.perkRules finalLead).
  */
-export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "", label = "standard" }) {
+export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "", label = "standard", suspicion = 0 }) {
   if (!CHASE_KINDS.includes(kind)) throw new Error(`unknown chase kind: ${kind}`);
   if (!id) throw new Error("a chase needs an id");
   const L = DGF.lead;
   const chase = {
     id, kind, cause, label, turn, groupId, where,
     members: members.map((m) => ({ ...m })),
+    gaveUp: [],
     lead: kind === "final" ? L.finalStart : L.localStart,
     start: 0,
     escape: kind === "final" ? finalEscape(label) : L.localEscape,
-    round: 1, mob: null, ground: null, rolls: {}, history: [], outcome: "",
+    round: 1, mob: null, ground: null, rolls: {}, history: [], extraOverdraws: [], endRise: null, outcome: "",
   };
   // Night Runner: "when you flee alone, your local chase starts at Lead 2" (F14); Fetch: the final flight starts at Lead 3.
   const perkLead = Math.max(0, ...chase.members.map((m) => perkValue(chase, m, kind === "final" ? "finalLead" : "localLead")));
   chase.lead = Math.max(chase.lead, perkLead);
   chase.start = chase.lead;
+  chase.mob = mobDifficulty(chase, { suspicion, label });
   return chase;
 }
 
@@ -108,8 +115,9 @@ export function groundOn(face) {
 }
 
 /**
- * The mob's Difficulty. Local: 8 plus half the Suspicion (B3), at most 12, checked each
- * round (Fear the Curse, fleeing alone: 1 easier). Final flight: the town's label, whatever the party's size.
+ * The mob's Difficulty with this Suspicion. Local: 8 plus half the Suspicion (B3), at most 12 (Fear the Curse,
+ * fleeing alone: 1 easier); D1: newChase works it out once, as the chase starts, and it stays put. Final flight:
+ * the town's label, whatever the party's size.
  */
 export function mobDifficulty(chase, { suspicion = 0, label = "standard" } = {}) {
   if (chase.kind === "final") {
@@ -121,11 +129,14 @@ export function mobDifficulty(chase, { suspicion = 0, label = "standard" } = {})
   return localMobDifficulty(suspicion) - ease;
 }
 
-/** Start the round: roll on the chase table (one roll for everyone) and check the mob. Only before anyone rolls. */
+/**
+ * Start the round: roll on the chase table (one roll for everyone). Only before anyone rolls. The mob stays what it
+ * was set to when the chase started (D1); a chase kept from before that rule gets it set now, once.
+ */
 export function startRound(chase, { face, suspicion = 0, label = "standard" }) {
   if (!isRunning(chase)) throw new Error("the chase is over");
   if (Object.keys(chase.rolls).length) throw new Error("someone has already rolled this round");
-  return { ...chase, ground: groundOn(face), mob: mobDifficulty(chase, { suspicion, label }) };
+  return { ...chase, ground: groundOn(face), mob: chase.mob ?? mobDifficulty(chase, { suspicion, label }) };
 }
 
 /** The member's record, or null. */
@@ -178,18 +189,77 @@ export function roundDone(chase) {
 }
 
 /**
- * Record a member's roll for this round. The same message again is a no-op; a
- * second roll by the same member, a roll for another round, or after the end is refused.
+ * Record a member's roll for this round: its band, and (D1) what it adds to the chase's one rise: `rise` (its
+ * biggest trigger: Trouble 1, the Monster showing 2), `riseKeys` (which) and `overdraws` (D3: +2 each). The same
+ * message again is a no-op; a second roll by the same member, a roll for another round, or after the end is refused.
  * Returns { ok, reason?, chase }.
  */
-export function recordRoll(chase, actorId, { messageId = "", round, band, critical = false }) {
+export function recordRoll(chase, actorId, { messageId = "", round, band, critical = false, rise = 0, riseKeys = [], overdraws = 0 }) {
   if (!isRunning(chase)) return { ok: false, reason: "chaseOver", chase };
   if (!memberIn(chase, actorId)) return { ok: false, reason: "notInChase", chase };
   if (round !== undefined && round !== chase.round) return { ok: false, reason: "otherRound", chase };
   const had = chase.rolls[actorId];
   if (had) return had.messageId === messageId ? { ok: true, reason: "noop", chase } : { ok: false, reason: "alreadyRolled", chase };
   if (!chase.ground) return { ok: false, reason: "noGround", chase };
-  return { ok: true, chase: { ...chase, rolls: { ...chase.rolls, [actorId]: { messageId, band, critical: !!critical } } } };
+  const roll = { messageId, band, critical: !!critical, rise: Math.max(0, Number(rise) || 0), riseKeys: [...(riseKeys ?? [])], overdraws: Math.max(0, Math.trunc(Number(overdraws)) || 0) };
+  return { ok: true, chase: { ...chase, rolls: { ...chase.rolls, [actorId]: roll } } };
+}
+
+/**
+ * D1 + D3: an overdraw made in a local chase outside a chase roll (an ability used from the sheet) adds +2 to the
+ * chase's one rise. The same message again is a no-op.
+ */
+export function addOverdraw(chase, { messageId = "", n = 1 }) {
+  if (!isRunning(chase) || chase.kind !== "local") return chase;
+  const list = chase.extraOverdraws ?? [];
+  if (messageId && list.some((o) => o.messageId === messageId)) return chase;
+  return { ...chase, extraOverdraws: [...list, { messageId, n: Math.max(0, Math.trunc(Number(n)) || 0) }] };
+}
+
+/**
+ * D1 (Chapter 6, One chase, one rise): what a local chase raises when it ends: the biggest trigger among all its rolls
+ * (every runner's, however many rounds; Trouble +1, the Monster showing +2), plus +2 for each overdraw made in it (D3).
+ * Returns { rise, keys, overdraws, overdrawRise, total } (keys: the biggest trigger's kind, "trouble" | "monster").
+ */
+export function chaseRise(chase) {
+  const all = [...(chase?.history ?? []).flatMap((h) => h.rolls ?? []), ...Object.values(chase?.rolls ?? {})];
+  let rise = 0, keys = new Set(), overdraws = 0;
+  for (const r of all) {
+    const n = r.rise ?? 0;
+    if (n > rise) { rise = n; keys = new Set(r.riseKeys ?? []); }
+    else if (n > 0 && n === rise) for (const k of r.riseKeys ?? []) keys.add(k);
+    overdraws += r.overdraws ?? 0;
+  }
+  for (const o of chase?.extraOverdraws ?? []) overdraws += o.n ?? 0;
+  const overdrawRise = overdraws * DGF.suspicion.overdraw;
+  return { rise, keys: [...keys], overdraws, overdrawRise, total: rise + overdrawRise };
+}
+
+/**
+ * D2 (Chapter 6, Giving up): may this runner give up now? Only in a running local chase, at the start of a round
+ * (before anyone has rolled in it). Returns { ok, reason? }.
+ */
+export function canGiveUp(chase, actorId) {
+  if (!isRunning(chase)) return { ok: false, reason: "noChase" };
+  if (chase.kind !== "local") return { ok: false, reason: "notLocal" };
+  if (!memberIn(chase, actorId)) return { ok: false, reason: "notInChase" };
+  if (Object.keys(chase.rolls ?? {}).length) return { ok: false, reason: "roundStarted" };
+  return { ok: true };
+}
+
+/**
+ * D2: the runner gives up: captured, with no roll (the Storyteller's client captures it). It leaves the runners, so
+ * the others carry on and the majority rule counts only those still running; its rolls so far still count toward the
+ * chase's one rise. If nobody is left running, the chase is over ("gaveUp"). Returns { ok, reason?, chase }.
+ */
+export function giveUp(chase, actorId) {
+  const can = canGiveUp(chase, actorId);
+  if (!can.ok) return { ...can, chase };
+  const m = memberIn(chase, actorId);
+  const members = chase.members.filter((x) => x.actorId !== actorId);
+  const next = { ...chase, members, gaveUp: [...(chase.gaveUp ?? []), { actorId, name: m.name, round: chase.round }] };
+  if (!members.length) next.outcome = "gaveUp";
+  return { ok: true, chase: next };
 }
 
 /**
@@ -221,11 +291,12 @@ export function resolveRound(chase) {
   const { lead, outcome } = applyLead(chase, move);
   const entry = {
     round: chase.round, face: chase.ground.face, key: chase.ground.key, mob: chase.mob,
-    rolls: chase.members.map((m) => ({ actorId: m.actorId, name: m.name, band: chase.rolls[m.actorId].band, critical: chase.rolls[m.actorId].critical })),
+    rolls: chase.members.map((m) => ({ actorId: m.actorId, name: m.name, ...chase.rolls[m.actorId] })),
     move, lead,
   };
   const next = { ...chase, lead, history: [...chase.history, entry], outcome };
-  if (!outcome) Object.assign(next, { round: chase.round + 1, ground: null, mob: null, rolls: {} });
+  // the next round rolls a new ground; the mob stays what it was set to when the chase started (D1)
+  if (!outcome) Object.assign(next, { round: chase.round + 1, ground: null, rolls: {} });
   return { chase: next, move, outcome };
 }
 
@@ -236,7 +307,7 @@ export function adjustLead(chase, delta) {
   return { ...chase, lead, outcome };
 }
 
-/** End the chase by hand, or because the Limit came during a local chase ("ended"). */
+/** End the chase by hand, or because the hunt started during a local chase ("ended"). */
 export function endChase(chase, outcome) {
   if (!DGF.chaseOutcomes.includes(outcome)) throw new Error(`unknown chase outcome: ${outcome}`);
   return { ...chase, outcome, lead: outcome === "escaped" ? chase.escape : outcome === "cornered" ? 0 : chase.lead };
@@ -256,9 +327,9 @@ export function removeMember(chase, actorId) {
 }
 
 /**
- * What being cornered does to each member. Local chase: captured (Already Dead: loses
- * its next Turn instead; V5: in the round the Limit comes, Already Dead simply joins
- * the final flight). Final flight: the party is forked.
+ * What being cornered does to each member still running. Local chase: captured (Already Dead: loses its next Turn
+ * instead; V5: when the chase's rise brings the Limit, or the hunt ends the chase, Already Dead simply joins the final
+ * flight: `atLimit`). Final flight: the party is forked.
  * Returns [{ actorId, name, fate: "captured" | "loseTurn" | "flees" | "forked" }].
  */
 export function corneredFates(chase) {
@@ -269,28 +340,38 @@ export function corneredFates(chase) {
   }));
 }
 
-/** Chapter 5: the Limit came during a local chase: it ends at once and they join the flight. */
+/**
+ * D1 + D2: who of a local chase that just ended stays behind when the hunt starts with it: anyone it captured
+ * (cornered; Already Dead isn't, V5) and anyone who gave up in it. An escaped runner joins the flight.
+ */
+export function staysBehind(chase) {
+  if (!chase || chase.kind !== "local") return [];
+  const cornered = chase.outcome === "cornered" ? corneredFates({ ...chase, atLimit: true }).filter((f) => f.fate === "captured").map((f) => f.actorId) : [];
+  return [...new Set([...cornered, ...(chase.gaveUp ?? []).map((g) => g.actorId)])];
+}
+
+/** F25: the hunt started (dawn, the Storyteller, or the Limit from elsewhere) during a local chase: it ends at once and they join the flight. */
 export function limitEndsLocal(chase) {
   return isRunning(chase) && chase.kind === "local";
 }
 
 /**
- * B3 (Chapter 5, At the Limit): the Limit came during a local chase. It ends at once and
- * its Entities join the final flight — but if the roll that brought the Limit completed a
- * round that corners them, they are captured first and stay behind (V5: Already Dead isn't
- * captured and loses no Turn: it simply joins the flight). Returns { chase (the local chase,
- * ended or cornered, marked atLimit), staysBehind: [actorIds captured] }.
+ * F25 (and B3): the hunt started during a local chase. It ends at once and its Entities join the final flight — but
+ * if its round was complete and corners them, they are captured first and stay behind (V5: Already Dead isn't captured
+ * and loses no Turn: it simply joins the flight), and anyone who gave up stays behind. Returns { chase (the local
+ * chase, ended or cornered, marked atLimit), staysBehind: [actorIds] }. The chase's rise so far is applied by the caller.
  */
 export function endLocalAtLimit(chase) {
   if (!limitEndsLocal(chase)) return { chase, staysBehind: [] };
+  const gave = (chase.gaveUp ?? []).map((g) => g.actorId);
   if (roundDone(chase)) {
     const out = resolveRound(chase);
     if (out.outcome === "cornered") {
       const cornered = { ...out.chase, atLimit: true };
-      return { chase: cornered, staysBehind: corneredFates(cornered).filter((f) => f.fate === "captured").map((f) => f.actorId) };
+      return { chase: cornered, staysBehind: staysBehind(cornered) };
     }
-    if (out.outcome === "escaped") return { chase: out.chase, staysBehind: [] };
-    return { chase: endChase(out.chase, "ended"), staysBehind: [] };
+    if (out.outcome === "escaped") return { chase: { ...out.chase, atLimit: true }, staysBehind: gave };
+    return { chase: { ...endChase(out.chase, "ended"), atLimit: true }, staysBehind: gave };
   }
-  return { chase: endChase(chase, "ended"), staysBehind: [] };
+  return { chase: { ...endChase(chase, "ended"), atLimit: true }, staysBehind: gave };
 }

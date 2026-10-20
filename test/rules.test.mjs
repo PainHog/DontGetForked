@@ -31,13 +31,29 @@ test("S2: the Monster shows only when it rolls higher, and costs +2", () => {
   assert.equal(resolveRoll({ traitFace: 3, secondFace: 7, difficulty: 8, second: "monster", hidden: true }).suspicion, 0);
 });
 
-test("one roll raises Suspicion once, by its biggest trigger (R1, S2, overdraw, P3)", () => {
+test("one roll raises Suspicion once, by its biggest trigger (R1, S2, P3); D3: an overdraw adds its +2 on top", () => {
   assert.equal(suspicionForRoll({ band: "trouble" }), 1);
   assert.equal(suspicionForRoll({ band: "trouble", show: true }), 2);
   assert.equal(suspicionForRoll({ band: "success", loud: true }), 1);
-  assert.equal(suspicionForRoll({ band: "trouble", loud: true, overdraw: true }), 2);
+  assert.equal(suspicionForRoll({ band: "trouble", loud: true, overdraw: true }), 3, "D3: no longer folded into the biggest (was 2)");
+  assert.equal(suspicionForRoll({ band: "success", show: true, overdraw: true }), 4);
+  assert.equal(suspicionForRoll({ band: "success", overdraw: 2 }), 4, "two overdraws on one roll: +2 each");
+  assert.equal(suspicionForRoll({ band: "success", overdraw: true }), 2);
   assert.equal(suspicionForRoll({ band: "cost", costSuspicion: true }), 1);
   assert.equal(suspicionForRoll({ band: "success" }), 0);
+  assert.equal(resolveRoll({ traitFace: 2, secondFace: 9, difficulty: 8, second: "monster", overdraw: true }).suspicion, 4);
+  assert.equal(resolveRoll({ traitFace: 2, secondFace: 9, difficulty: 8, second: "monster", overdraw: true, hunt: true }).suspicion, 0, "once the hunt is on, nothing");
+});
+
+test("D3: the ledger adds an entry's extra (an overdraw's +2) on top of its event's biggest trigger, each entry once", () => {
+  let L = [];
+  L = addEntry(L, { eventId: "group1", amount: 1, source: "roll", messageId: "a" });
+  L = addEntry(L, { eventId: "group1", amount: 2, extra: 2, source: "roll", messageId: "b" }); // the Monster shows, and an overdraw
+  L = addEntry(L, { eventId: "group1", amount: 0, extra: 2, source: "roll", messageId: "c" }); // only an overdraw
+  assert.equal(foldSuspicion(L, 15).value, 6, "the group's one rise (2), plus two overdraws on top");
+  assert.equal(foldSuspicion(cancelEvent(L, "group1"), 15).value, 0, "cancelling the event cancels its overdraws too");
+  assert.throws(() => foldSuspicion([{ eventId: "x", amount: 1, extra: -2, source: "roll" }], 15));
+  assert.deepEqual(foldSuspicion(L, 5), { value: 5, atLimit: true, lost: 1, events: 1 });
 });
 
 test("S1: once the hunt is on, rolls raise no Suspicion", () => {

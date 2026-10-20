@@ -7,7 +7,8 @@
  *
  * Source: rulebook Chapter 6 (Captured: the town takes back what you were
  * carrying; rescue frees every captive there; slipping free once per Turn from
- * the Turn after the capture, only a Success frees you; left behind) and
+ * the Turn after the capture, only a Success frees you; left behind; D7b everyone
+ * held: the night ends and the year is Forked) and
  * Chapter 2's Perks: Built to Last (slip free on a Success or a Cost), Hidden
  * Pockets (captured, you keep what you carry). U1: a captive may open its own
  * way out (the roll plan allows "open an approach" when slipping free).
@@ -99,6 +100,14 @@ export function lockupTraits(kind) {
 /** The captives among these Entities ([{ id, name, system }]): anyone still held when the party leaves is left behind. */
 export function captivesOf(entities) {
   return entities.filter((e) => isCaptive(e.system));
+}
+
+/**
+ * D7b (Chapter 6, Everyone held): is every Entity in the raid held at the lock-up at once? Then the night ends there
+ * and then, and the year is Forked. `entities` = [{ system }] (the Entities in the raid); none at all is never "held".
+ */
+export function everyoneHeld(entities) {
+  return (entities?.length ?? 0) > 0 && entities.every((e) => isCaptive(e.system));
 }
 
 /**

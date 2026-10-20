@@ -5,12 +5,16 @@
  * trigger" and cancels fall out naturally. Every change to Suspicion is an
  * entry; the value is a pure fold of the entries.
  *
- *   entry = { eventId, amount, source, cancelled?, hunt? }
+ *   entry = { eventId, amount, extra?, source, cancelled?, hunt? }
  *
  * CORE-RULES 1.0, Suspicion:
  *  - one roll raises it once, by its biggest trigger → entries sharing an
  *    eventId apply only their largest amount (a group check shares one eventId,
- *    so Suspicion rises once, by the worst result — P6);
+ *    so Suspicion rises once, by the worst result — P6; a local chase rises once,
+ *    when it ends, by the biggest trigger among its rolls — D1);
+ *  - D3: an overdraw always adds its +2 on top of the roll's other rise → an
+ *    entry's `extra` is added to its event, never folded into the biggest (each
+ *    entry once: a retried request replaces its entry, so it never counts twice);
  *  - good results never lower it; only a few specific abilities or Perks can
  *    (negative amounts are accepted only from sources "ability" or "perk", and
  *    from "storyteller": the Storyteller's own correction on the Raid HUD, which
@@ -29,13 +33,17 @@ export function foldSuspicion(entries, limit) {
   for (const e of entries) {
     if (e.cancelled || e.hunt) continue;
     if (e.amount < 0 && !LOWERING.has(e.source)) throw new Error(`only abilities or Perks lower Suspicion (event ${e.eventId})`);
+    const extra = e.extra ?? 0;
+    if (!(extra >= 0)) throw new Error(`an overdraw's extra rise is never negative (event ${e.eventId})`);
     const prev = byEvent.get(e.eventId);
-    // Raises: the biggest trigger wins. Lowerings are their own events.
-    if (prev === undefined || e.amount > prev) byEvent.set(e.eventId, e.amount);
+    // Raises: the biggest trigger wins, and each overdraw adds on top (D3). Lowerings are their own events.
+    if (prev === undefined) byEvent.set(e.eventId, { top: e.amount, extra });
+    else { if (e.amount > prev.top) prev.top = e.amount; prev.extra += extra; }
   }
   let value = 0;
   let lost = 0;
-  for (const amount of byEvent.values()) {
+  for (const { top, extra } of byEvent.values()) {
+    const amount = top + extra;
     const next = value + amount;
     if (next > limit) { lost += next - limit; value = limit; }
     else value = Math.max(0, next);

@@ -2,6 +2,8 @@
   <header class="dgf-card-head"><h3>{{headline}}</h3></header>
   {{#if who}}<p>{{who}}</p>{{/if}}
   {{#if start}}<p class="dgf-card-meta">{{start}}</p>{{/if}}
+  {{#if mobSet}}<p class="dgf-card-meta">{{mobSet}}</p>{{/if}}
+  {{#if gaveUpLine}}<p class="dgf-card-caught">{{gaveUpLine}}</p>{{/if}}
   {{#if ground}}<p class="dgf-chase-ground"><strong>{{ground}}</strong>{{#if groundText}} <em>{{groundText}}</em>{{/if}}</p>{{/if}}
   {{#each extras}}<p class="dgf-card-note">{{this}}</p>{{/each}}
   {{#if mob}}<p>{{mob}}</p>{{/if}}
@@ -10,5 +12,6 @@
   {{#if move}}<p class="dgf-chase-move">{{move}}</p>{{/if}}
   {{#if outcome}}<p class="dgf-chase-outcome">{{outcome}}</p>{{/if}}
   {{#each fates}}<p class="dgf-card-caught">{{this}}</p>{{/each}}
+  {{#if riseLine}}<p class="dgf-card-suspicion">{{riseLine}}{{#if riseStatus}} <span class="dgf-card-status">{{riseStatus}}</span>{{/if}}</p>{{/if}}
   <div class="dgf-card-actions"></div>
 </div>

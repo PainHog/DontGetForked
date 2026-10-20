@@ -13,14 +13,14 @@
   </div>
   <fieldset>
     <legend>{{localize "DGF.Roll.abilities"}}</legend>
-    {{#each own}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}{{#if disabled}} disabled{{/if}}{{#if watchedOnly}} data-watched-only{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{/each}}
+    {{#each own}}<div class="dgf-ability">{{#if raiseOnly}}<label class="dgf-check"><input type="checkbox" name="{{raiseId}}"{{#if raiseChecked}} checked{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{else}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}{{#if disabled}} disabled{{/if}}{{#if watchedOnly}} data-watched-only{{/if}}> <strong>{{name}}</strong>: {{effectText}}</label>{{#if canRaise}}<label class="dgf-check dgf-as-raise" data-tooltip="{{localize "DGF.Roll.asRaiseHint"}}"><input type="checkbox" name="{{raiseId}}"{{#if raiseChecked}} checked{{/if}}> {{localize "DGF.Roll.asRaise"}}</label>{{/if}}{{/if}}</div>{{/each}}
     {{#unless own.length}}<p class="dgf-hint">{{localize "DGF.Roll.noAbilities"}}</p>{{/unless}}
     <p class="dgf-hint">{{localize "DGF.Roll.abilityHint"}}</p>
   </fieldset>
   {{#if hasHelpers}}
   <fieldset>
     <legend>{{localize "DGF.Roll.helpers"}}</legend>
-    {{#each helpers}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}> <strong>{{name}}</strong> ({{helper}}, {{localize "DGF.Roll.chargesLeft" n=charges}}): {{effectText}}</label>{{/each}}
+    {{#each helpers}}<div class="dgf-ability">{{#if raiseOnly}}<label class="dgf-check"><input type="checkbox" name="{{raiseId}}"{{#if raiseChecked}} checked{{/if}}> <strong>{{name}}</strong> ({{helper}}, {{localize "DGF.Roll.chargesLeft" n=charges}}): {{effectText}}</label>{{else}}<label class="dgf-check"><input type="checkbox" name="{{id}}"{{#if checked}} checked{{/if}}> <strong>{{name}}</strong> ({{helper}}, {{localize "DGF.Roll.chargesLeft" n=charges}}): {{effectText}}</label>{{#if canRaise}}<label class="dgf-check dgf-as-raise" data-tooltip="{{localize "DGF.Roll.asRaiseHint"}}"><input type="checkbox" name="{{raiseId}}"{{#if raiseChecked}} checked{{/if}}> {{localize "DGF.Roll.asRaise"}}</label>{{/if}}{{/if}}</div>{{/each}}
   </fieldset>
   {{/if}}
   <fieldset>

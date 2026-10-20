@@ -6,23 +6,34 @@
  * write queue; players reach it with GM operations (runOp).
  *
  *  - raid.roll: a roll card reached the GM — its Suspicion (when automatic), its
- *    place in an open group check, its round in the chase, a caught Entity's
- *    local chase, and the lock-up (slipping free, a rescue);
- *  - the hunt starting starts the final flight (a local chase still running ends
- *    and its Entities join the flight);
- *  - each round the ground is rolled, and once everyone has rolled the Lead moves
- *    (the majority rule for a shared Lead); escape or cornered ends the chase:
- *    cornered in a local chase is captured (the town takes back the loot; Already
- *    Dead loses its next Turn instead), in the final flight it is forked;
+ *    place in an open group check, its round in the chase (D1: what it adds to the
+ *    chase's one rise), a caught Entity's local chase, the lock-up (slipping free, a
+ *    rescue: R1, the result first, so the freed join a flight its Suspicion starts)
+ *    and the way out (R4: rolled once a Turn);
+ *  - D1: a local chase's mob is set when it starts; when it ends (escaped, cornered,
+ *    or everyone gave up) it raises Suspicion once, by the biggest trigger among all
+ *    its rolls, plus +2 for each overdraw in it (D3). If that brings the Limit, the
+ *    hunt starts once the chase is settled: an escaped runner joins the final flight;
+ *    anyone cornered (Already Dead aside, V5) or who gave up was captured first;
+ *  - the hunt starting starts the final flight (F25: a local chase still running ends,
+ *    its rise so far goes on the track, and its Entities join the flight);
+ *  - each round the ground is rolled, and once everyone still running has rolled the
+ *    Lead moves (the majority rule for a shared Lead); escape or cornered ends the
+ *    chase: cornered in a local chase is captured (the town takes back the loot;
+ *    Already Dead loses its next Turn instead), in the final flight it is forked;
+ *  - D2: at the start of a round a runner may give up (its owner or the Storyteller):
+ *    captured, no roll; the others carry on;
+ *  - D7b: everyone in the raid held at the lock-up at once ends the night: Forked
+ *    (checked at each capture, and when the hunt or dawn would start);
  *  - the Storyteller's hand on the tracker: start, roll the ground, resolve the
  *    round, Lead ±1, end, add or take out a member, capture or free.
- * Every automation is switchable (autoChase, autoLockup, autoGroupChecks, autoYear).
+ * Every automation is switchable (autoChase, autoLockup, autoGroupChecks, autoYear, autoAllHeld).
  */
 import { SETTINGS, OPS, CARD, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
 import * as R from "../logic/raid.mjs";
 import * as C from "../logic/chase.mjs";
-import { captureUpdate, freeUpdate, isCaptive } from "../logic/lockup.mjs";
+import { captureUpdate, freeUpdate, isCaptive, everyoneHeld } from "../logic/lockup.mjs";
 import { groupRecord, groupDone, closeGroup, groupCaught, groupWithout } from "../logic/checks.mjs";
 import { isInRaid } from "../logic/entity.mjs";
 import { registerOp, isActiveGM, runOp } from "../net/gm-ops.mjs";
@@ -66,7 +77,10 @@ function pieceCarried() {
 
 /* ------------------------------------------------------------ starting -- */
 
-/** A local chase for these caught Entities (one, or several caught in one group check, on a shared Lead). */
+/**
+ * A local chase for these caught Entities (one, or several caught in one group check, on a shared Lead). D1: the mob's
+ * Difficulty is set now, from the Suspicion as the chase starts.
+ */
 export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (state.over) return { state, started: false, reason: "raidOver" };
   if (state.partyOut) return { state, started: false, reason: "partyOut" };
@@ -74,16 +88,45 @@ export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (C.isRunning(state.chase)) return { state, started: false, reason: "chaseRunning" };
   const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a)).map(memberFor);
   if (!members.length) return { state, started: false, reason: "nobody" };
-  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty });
+  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty, suspicion: R.suspicionOf(state).value });
   return { state: R.setChase(state, chase), started: true, chase };
 }
 
+/** Did this write just end the local chase (it was running before, and has its outcome now)? */
+function justEndedLocal(state, before) {
+  const c = state.chase, b = before?.chase;
+  return !!c && c.kind === "local" && !!c.outcome && !!b && b.id === c.id && C.isRunning(b);
+}
+
+/** D1: the chase's one rise on the chase (its `endRise`, for the cards), applied to the track if Suspicion is automatic. */
+function settleRise(state, chase, { beforeHunt = false } = {}) {
+  const r = C.chaseRise(chase);
+  const auto = r.total > 0 && setting(SETTINGS.autoSuspicion);
+  const s = auto ? R.applyChaseRise(state, chase, { beforeHunt }) : state;
+  return { state: s, chase: { ...chase, endRise: { ...r, applied: auto, beforeHunt } } };
+}
+
 /**
- * The final flight: everyone who isn't captured flees together. A local chase still running
- * ends at once and its Entities join the flight — except anyone the same round cornered:
- * captured first, they stay behind (B3; the capture itself is a follow-up, see consequences()).
+ * Inside every raid write, before the hunt is checked (D1, Chapter 6, One chase, one rise): a local chase that has just
+ * ended — escaped, cornered, or everyone gave up — raises Suspicion once, by the biggest trigger among all its rolls,
+ * plus +2 for each overdraw in it. Called off by the Storyteller ("dropped"), it raises nothing. Its rise can bring the
+ * Limit: then the hunt starts in this same write, once the chase is settled (huntTransform → startFinal).
  */
-export function startFinal(state, cause = "manual") {
+function settleTransform(state, before) {
+  if (!justEndedLocal(state, before) || !C.RISE_OUTCOMES.includes(state.chase.outcome) || state.chase.endRise) return state;
+  const out = settleRise(state, state.chase);
+  return R.setChase(out.state, out.chase);
+}
+
+/**
+ * The final flight: everyone who isn't captured flees together.
+ *  - D1: a local chase whose own rise just brought the Limit (it ended in this write): an escaped runner joins the
+ *    flight; anyone it cornered (Already Dead aside, V5) or who gave up was captured first and stays behind.
+ *  - F25: a local chase still running (dawn, the hunt by hand, or the Limit from elsewhere) ends at once, its rise so
+ *    far goes on the track, and its Entities join the flight — except anyone a complete round cornered, or who gave up.
+ * The capture itself is a follow-up (consequences()).
+ */
+export function startFinal(state, cause = "manual", before = null) {
   if (state.over) return { state, started: false, reason: "raidOver" };
   if (state.partyOut) return { state, started: false, reason: "partyOut" };
   if (C.isRunning(state.chase) && state.chase.kind === "final") return { state, started: false, reason: "chaseRunning" };
@@ -91,8 +134,13 @@ export function startFinal(state, cause = "manual") {
   let behind = [];
   if (C.limitEndsLocal(s.chase)) {
     const out = C.endLocalAtLimit(s.chase);
-    s = { ...R.setChase(s, out.chase), endedChase: out.chase };
+    const settled = settleRise(s, out.chase, { beforeHunt: true });
+    s = { ...R.setChase(settled.state, settled.chase), endedChase: settled.chase };
     behind = out.staysBehind;
+  } else if (justEndedLocal(s, before)) {
+    const ended = { ...s.chase, atLimit: true };
+    s = { ...R.setChase(s, ended), endedChase: ended };
+    behind = C.staysBehind(ended);
   }
   const members = partyForFlight().filter((m) => !behind.includes(m.actorId));
   if (!members.length) return { state: s, started: false, reason: "nobody" };
@@ -107,7 +155,7 @@ export function startFinal(state, cause = "manual") {
  */
 function huntTransform(state, before) {
   if (!setting(SETTINGS.autoChase)) return state;
-  if (state.hunt && !before.hunt) return startFinal(state, state.huntCause || "manual").state;
+  if (state.hunt && !before.hunt) return startFinal(state, state.huntCause || "manual", before).state;
   if (!state.hunt && before.hunt && C.isRunning(state.chase) && state.chase.kind === "final") return R.setChase(state, C.endChase(state.chase, "dropped"));
   return state;
 }
@@ -118,31 +166,51 @@ function chaseFacts(chase, state, extra = {}) {
   return {
     v: 1, kind: CARD.chase, raidId: state.raidId, chaseId: chase.id, chaseKind: chase.kind, cause: chase.cause,
     round: chase.round, lead: chase.lead, start: chase.start, escape: chase.escape, mob: chase.mob,
-    ground: chase.ground ? { ...chase.ground } : null, members: chase.members.map((m) => m.name), outcome: chase.outcome, ...extra,
+    ground: chase.ground ? { ...chase.ground } : null, members: chase.members.map((m) => m.name), outcome: chase.outcome,
+    gaveUp: (chase.gaveUp ?? []).map((g) => g.name), ...extra,
   };
 }
 
-/** What being cornered or getting clear means, for the card. */
-function outcomeFacts(chase) {
-  if (chase.outcome === "cornered") return { fates: C.corneredFates(chase).map((f) => ({ name: f.name, fate: f.fate })) };
-  return {};
+/** What being cornered or getting clear means, for the card; and (D1) the chase's one rise, on the card that ends it. */
+function outcomeFacts(chase, state) {
+  const out = chase.outcome === "cornered" ? { fates: C.corneredFates(chase).map((f) => ({ name: f.name, fate: f.fate })) } : {};
+  return { ...out, ...riseFacts(chase, state) };
 }
 
-/** Inside every raid write, after the save: the chase cards (start, each round's Lead, the end). */
+/**
+ * D1: a local chase's one rise, as card facts (the card that ends the chase): with Suspicion automatic it is on the
+ * track already; otherwise the Storyteller's Apply Suspicion puts it there (raid.applyCard reads these facts).
+ */
+function riseFacts(chase, state) {
+  const r = chase.endRise;
+  if (!r || chase.kind !== "local") return {};
+  const names = [...(chase.members ?? []), ...(chase.gaveUp ?? [])].map((m) => m.name).filter(Boolean);
+  return {
+    riseShown: true, eventId: C.riseEventId(chase), suspicion: r.total, rise: r.rise, overdrawRise: r.overdrawRise, overdraws: r.overdraws,
+    riseKeys: [...r.keys], suspicionLabel: [...r.keys, ...(r.overdraws ? ["overdraw"] : [])].join(","), actorName: [...new Set(names)].join(", "),
+    applied: !!r.applied, cancelled: false, hunt: false, riseBeforeHunt: !!r.beforeHunt, turn: state.turn,
+  };
+}
+
 /** A round's card facts from a chase's last history entry. */
 function roundFacts(chase, state) {
   const h = chase.history.at(-1);
-  return chaseFacts(chase, state, { event: "round", round: h.round, mob: h.mob, ground: C.groundOn(h.face), move: h.move, rolls: h.rolls.map((r) => ({ name: r.name, band: r.band, critical: r.critical })), ...outcomeFacts(chase) });
+  return chaseFacts(chase, state, { event: "round", round: h.round, mob: h.mob, ground: C.groundOn(h.face), move: h.move, rolls: h.rolls.map((r) => ({ name: r.name, band: r.band, critical: r.critical })), ...outcomeFacts(chase, state) });
 }
 
+/** Inside every raid write, after the save: the chase cards (start, who gave up, each round's Lead, the end and its rise). */
 async function announceChase(before, state) {
   if (state.raidId !== before.raidId) return; // a new raid: nothing to say about the last one's chase
   const c = state.chase, b = before.chase;
   const ended = state.endedChase && state.endedChase.id !== before.endedChase?.id ? state.endedChase : null;
+  // D2: who gave up in this write, first
+  const same = (x) => !!x && !!b && x.id === b.id;
+  const now = same(ended) ? ended : same(c) ? c : null;
+  for (const g of (now?.gaveUp ?? []).slice(b?.gaveUp?.length ?? 0)) await postCard(chaseFacts(now, state, { event: "gaveUp", names: [g.name], outcome: "" }));
   if (ended && b?.id === ended.id) {
-    // the Limit ended a local chase: its last round (if the Limit's roll completed it), else its end
+    // the hunt followed (or ended) a local chase: its last round (if this write completed it), else its end
     if (ended.history.length > b.history.length) await postCard(roundFacts(ended, state));
-    else await postCard(chaseFacts(ended, state, { event: "end" }));
+    else await postCard(chaseFacts(ended, state, { event: "end", ...outcomeFacts(ended, state) }));
   } else if (b && C.isRunning(b) && (!c || c.id !== b.id)) await postCard(chaseFacts({ ...b, outcome: "ended" }, state, { event: "end" }));
   if (!c || c.id === ended?.id) return; // nobody left to flee: the ended chase is still the raid's, and was just announced
   if (!b || b.id !== c.id) {
@@ -152,7 +220,7 @@ async function announceChase(before, state) {
   if (c.history.length > b.history.length) {
     await postCard(roundFacts(c, state));
   } else if (c.outcome && !b.outcome) {
-    await postCard(chaseFacts(c, state, { event: "end", ...outcomeFacts(c) }));
+    await postCard(chaseFacts(c, state, { event: "end", ...outcomeFacts(c, state) }));
   }
 }
 
@@ -226,6 +294,19 @@ async function capture(actor, turn) {
   return { name: actor.name, taken: c.taken, kept: c.kept, furniture: c.furniture };
 }
 
+/**
+ * D7b (Chapter 6, Everyone held): if every Entity in the raid is held at the lock-up at once, the night ends there and
+ * then, and the year is Forked (setting autoAllHeld). Checked at each capture, and when the hunt or dawn would start.
+ * Returns true if it ended the night. Active Storyteller only.
+ */
+export async function checkAllHeld() {
+  if (!isActiveGM() || !setting(SETTINGS.autoAllHeld)) return false;
+  const raid = getRaid();
+  if (!raid.raidId || raid.over || raid.partyOut || !everyoneHeld(entities())) return false;
+  const { finishForked } = await import("./raid-checks.mjs");
+  return !!(await finishForked({ cause: "allHeld" }));
+}
+
 /** What a chase's end does to the Entities and the raid (once, when its outcome is first known). */
 async function consequences(chase, state) {
   if (chase.outcome === "cornered" && chase.kind === "local" && setting(SETTINGS.autoLockup)) {
@@ -237,6 +318,7 @@ async function consequences(chase, state) {
       else if (f.fate === "loseTurn") { await actor.update({ "system.skipTurn": state.turn + 1 }); fates.push({ name: actor.name, fate: "loseTurn", skipTurn: state.turn + 1 }); }
     }
     if (fates.length) await postCard(chaseFacts(chase, state, { event: "captured", fates }));
+    if (fates.some((f) => f.fate === "captured")) await checkAllHeld(); // D7b
   }
   if (chase.kind === "final" && ["escaped", "cornered", "dropped"].includes(chase.outcome) && setting(SETTINGS.autoChase)) {
     // the Weakness an overdraw brought lasts to the end of the flight; so does the one overdraw it allows (B3)
@@ -265,11 +347,15 @@ async function chaseFollowUp(state, before) {
   if (ended?.outcome === "cornered") await consequences(ended, state);
   // nobody left to flee: the ended chase is still the raid's chase; its consequences came once, above
   if (c?.outcome && c.id !== ended?.id && !(b && b.id === c.id && b.outcome)) await consequences(c, state);
-  // the whole town hunts, but everyone is held at the lock-up: nobody flees, the raid is over
-  if (isActiveGM() && state.hunt && !before.hunt && !state.over && setting(SETTINGS.autoChase) && setting(SETTINGS.autoYear)
-    && !(C.isRunning(c) && c.kind === "final") && !partyForFlight().length && entities().length) {
-    const { promptHome } = await import("./raid-checks.mjs");
-    await promptHome("nobody");
+  // the whole town would hunt (or dawn comes), but everyone is held at the lock-up: D7b, the night ends, Forked;
+  // with that switch off, nobody flees and the Storyteller is asked about the year (as before D7b)
+  if (isActiveGM() && ((state.hunt && !before.hunt) || (state.dawn && !before.dawn)) && !getRaid().over) {
+    if (await checkAllHeld()) return;
+    if (state.hunt && !before.hunt && !setting(SETTINGS.autoAllHeld) && setting(SETTINGS.autoChase) && setting(SETTINGS.autoYear)
+      && !(C.isRunning(c) && c.kind === "final") && !partyForFlight().length && entities().length) {
+      const { promptHome } = await import("./raid-checks.mjs");
+      await promptHome("nobody");
+    }
   }
   await driveChase();
 }
@@ -333,7 +419,7 @@ async function dropDeleted(actorId) {
 }
 
 export function registerChaseOps() {
-  onRaidMutation({ transform: huntTransform, announce: announceChase, followUp: chaseFollowUp });
+  onRaidMutation({ settle: settleTransform, transform: huntTransform, announce: announceChase, followUp: chaseFollowUp });
 
   // Only the active Storyteller's client writes: a deleted Entity leaves the chase and the group check.
   Hooks.on("deleteActor", (actor) => {
@@ -364,19 +450,25 @@ export function registerChaseOps() {
       const autoChase = setting(SETTINGS.autoChase);
       const autoGroup = setting(SETTINGS.autoGroupChecks);
       const carried = card.wayOutBeaten && pieceCarried();
+      // R1 (the result first): a slip or a rescue frees its captives before its Suspicion counts, so if that brings the
+      // Limit, the freed flee in the final flight with everyone else (the flight starts inside the write below)
+      const freed = card.gmSeen ? [] : await lockupEffects(card, raid.turn); // once per card (a replay frees nobody captured since)
       const { state, result } = await mutateRaid((s0) => {
         let s = s0;
         const res = { suspicion: false, chase: "", group: "", started: "" };
         if (autoSusp) {
-          s = R.recordEvent(s, { eventId: card.eventId, amount: card.suspicion, source: card.kind, label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId });
+          // the roll's biggest trigger, and D3 each overdraw on top (a card from before D3 has only `suspicion`)
+          s = R.recordEvent(s, { eventId: card.eventId, amount: card.rise ?? card.suspicion, extra: card.rise === undefined ? 0 : (card.overdrawRise ?? 0), source: card.kind, label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId });
           res.suspicion = true;
         }
+        // R4: the way out has been rolled this Turn (it can be rolled once a Turn)
+        if (card.wayOut && !card.chase) s = R.markWayOut(s, card.turn ?? s.turn);
         // the way out beaten: the party is out of town (no hunt or chase starts, dawn included); a carried piece
         // goes with it, one set down stays put, abandoned (V4): no more furniture noise either way
         if (card.wayOutBeaten) s = R.leaveTown(s, "wayOut", { carried });
-        // its round in the chase (the Limit may have just ended a local chase: then it no longer counts)
+        // its round in the chase, and (D1) what it adds to the chase's one rise (a chase the hunt has ended no longer counts it)
         if (card.chaseId && s.chase?.id === card.chaseId) {
-          const r = C.recordRoll(s.chase, card.actorId, { messageId, round: card.chaseRound, band: card.band, critical: card.critical });
+          const r = C.recordRoll(s.chase, card.actorId, { messageId, round: card.chaseRound, band: card.band, critical: card.critical, rise: card.chaseRise ?? 0, riseKeys: card.chaseRiseKeys ?? [], overdraws: card.chaseOverdraws ?? 0 });
           if (r.ok) s = R.setChase(s, r.chase);
           res.chase = r.reason ?? "recorded";
         }
@@ -408,7 +500,6 @@ export function registerChaseOps() {
         const ids = card.groupId && result.group === "closed" ? caughtInGroup(card.groupId, raid.raidId).map((m) => m.id) : [messageId];
         await markChaseStarted(ids, result.started);
       } else if (result.refused && result.refused !== "nobody") warnGM(result.refused);
-      const freed = await lockupEffects(card, state.turn);
       if (freed.length) await updateCard(message, { freedNames: freed });
       if (card.wayOutBeaten && setting(SETTINGS.autoYear) && !state.over) {
         const { promptHome } = await import("./raid-checks.mjs");
@@ -500,6 +591,29 @@ export function registerChaseOps() {
     },
   });
 
+  // D2 (Chapter 6, Giving up): at the start of a round (before anyone has rolled in it) a runner may give up: captured,
+  // no roll; the others carry on (the majority rule counts only those still running). Its owner or the Storyteller.
+  registerOp(OPS.chaseGiveUp, {
+    apply: async ({ actorId } = {}, { user }) => {
+      const actor = game.actors.get(actorId);
+      if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
+      if (!(user?.isGM || actor.testUserPermission?.(user, "OWNER"))) return { ok: false, reason: "notYours" };
+      const { state, result } = await mutateRaid((s) => {
+        const out = C.giveUp(s.chase, actorId);
+        return out.ok ? { state: R.setChase(s, out.chase), result: { ok: true } } : { state: s, result: { ok: false, reason: out.reason } };
+      });
+      if (!result.ok) return result;
+      // captured, as if cornered: the town takes back what it carried (the lock-up by hand: the Storyteller does it)
+      if (setting(SETTINGS.autoLockup)) {
+        const facts = await capture(actor, state.turn);
+        const where = [state.chase, state.endedChase].find((x) => x?.gaveUp?.some((g) => g.actorId === actorId)) ?? state.chase;
+        await postCard(chaseFacts(where, state, { event: "captured", outcome: "", fates: [{ ...facts, fate: "captured" }] }));
+        await checkAllHeld(); // D7b
+      }
+      return { ok: true, outcome: getRaid().chase?.outcome ?? "" };
+    },
+  });
+
   // GM: capture (the rules' way: the town takes back the loot) or free an Entity by hand.
   registerOp(OPS.lockupSet, {
     gmOnly: true,
@@ -508,6 +622,7 @@ export function registerChaseOps() {
       if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
       if (captured) {
         const facts = await capture(actor, getRaid().turn);
+        await checkAllHeld(); // D7b
         return { ok: true, ...facts };
       }
       await actor.update(prefix(freeUpdate()));

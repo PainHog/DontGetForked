@@ -35,6 +35,8 @@ export const SETTINGS = Object.freeze({
   resetOnNewRaid: "resetOnNewRaid",           // world: a new raid frees the Entities, refills charges, clears marks
   chaseTracker: "chaseTracker",               // world: open the chase tracker for everyone when a chase starts
   autoDrops: "autoDrops",                     // world: dropped loot waits where it fell; picking it up spends the next action (V21)
+  autoAllHeld: "autoAllHeld",                 // world: everyone held at the lock-up at once ends the night: Forked (D7b)
+  wayOutOncePerTurn: "wayOutOncePerTurn",     // world: the way out can be rolled once a Turn; a second try that Turn is refused (R4)
   campaign: "campaign",                       // world: the optional campaign rules: castle upgrades (default off)
   castleUpgrades: "castleUpgrades",           // world, hidden: the castle's upgrades (the pieces brought home, three at most)
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
@@ -78,6 +80,7 @@ export const OPS = Object.freeze({
   chaseLead: "chase.lead",               // GM: Lead +1 / −1 by hand
   chaseEnd: "chase.end",                 // GM: end the chase by hand (escaped, cornered, called off)
   chaseMember: "chase.member",           // GM: add an Entity to the chase or take it out
+  chaseGiveUp: "chase.giveUp",           // a runner's owner (or the GM): give up at the start of a round, captured, no roll (D2)
   lockupSet: "lockup.set"                // GM: capture or free an Entity by hand
 });
 

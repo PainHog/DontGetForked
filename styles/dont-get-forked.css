@@ -38,6 +38,8 @@
 .dont-get-forked .dgf-row { display: flex; flex-wrap: wrap; gap: 0.6em 1em; align-items: flex-end; }
 .dont-get-forked .dgf-check { display: block; margin: 0.25em 0; line-height: 1.35; }
 .dont-get-forked .dgf-check input { margin: 0 0.3em 0 0; vertical-align: middle; }
+/* D6b: in the final flight an ability can be spent as a raise instead (its own tick, under the ability) */
+.dont-get-forked .dgf-ability .dgf-as-raise { margin: -0.1em 0 0.3em 1.6em; font-size: 0.9em; font-style: italic; }
 
 /* ------------------------------------------------------------- the sheet -- */
 
@@ -173,6 +175,8 @@
 .dont-get-forked .dgf-member-rolled { font-size: 0.85em; font-variant: small-caps; }
 .dont-get-forked .dgf-chase-member button { flex: 0 0 auto; width: auto; font-size: 0.85em; line-height: 1.4; min-height: 0; padding: 0 0.5em; }
 .dont-get-forked .dgf-chase-history { font-size: 0.8em; color: var(--dgf-ink-soft); margin: 0.3em 0; padding-left: 1.4em; }
+/* D1: a local chase's rise so far (it comes when the chase ends) */
+.dont-get-forked .dgf-chase-rise { color: var(--dgf-alarm); font-size: 0.9em; margin: 0.1em 0 0.3em; }
 
 /* --------------------------------------------- chase, Tell and year cards -- */
 

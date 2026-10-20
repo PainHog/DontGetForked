@@ -131,7 +131,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "spectral", name: "Spectral", text: "Group obstacles (the ones each Entity must get past for itself) don’t stop you: no roll and no action, so you can still move or roll that Turn. Not while you carry loot or furniture.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously.", flavour: "nobody takes rattling chains seriously" },
-      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you aren’t captured: you’re back where you were caught, still carrying what you had, and you lose your next Turn. If the Limit comes that round, you simply join the final flight." },
+      { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you aren’t captured: you’re back where you were caught, still carrying what you had, and you lose your next Turn. If the chase’s rise brings the Limit, you simply join the final flight." },
     ],
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
     tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
@@ -323,7 +323,7 @@ DGF.perkRules = Object.freeze({
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob's Difficulty in your local chase is 1 lower.
   spectral: Object.freeze({ groupPass: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture.
-  alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: at the Limit, you join the flight).
+  alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: if the chase's rise brings the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep the loot you carry (not furniture: V16).
   familiarsWarning: Object.freeze({ tellSecondDie: true }), // When you arrive somewhere that gets a Tell check, a Tell goes off only if a second d6 also rolls 4–6.
@@ -341,8 +341,11 @@ DGF.lockup = Object.freeze({
   slip: Object.freeze({ quiet: Object.freeze(["sly", "nimble"]), loud: Object.freeze(["brawn"]) }),
 });
 
-/** Chapter 6: how a chase ends. "ended": the Limit came during a local chase (it joins the final flight); "dropped": the Storyteller called it off. */
-DGF.chaseOutcomes = Object.freeze(["escaped", "cornered", "ended", "dropped"]);
+/**
+ * Chapter 6: how a chase ends. "gaveUp": every runner of a local chase gave up (D2: captured, no roll); "ended": the
+ * hunt started during a local chase (F25: it joins the final flight); "dropped": the Storyteller called it off.
+ */
+DGF.chaseOutcomes = Object.freeze(["escaped", "cornered", "gaveUp", "ended", "dropped"]);
 
 /** P3: the four Costs the Storyteller picks from, in the book's order. */
 DGF.costs = Object.freeze(["suspicion", "drop", "loseTurn", "smaller"]);
@@ -353,14 +356,17 @@ DGF.statuses = Object.freeze(["active", "captured"]);
 /** CORE-RULES Rolling 2: the second die. */
 DGF.second = Object.freeze({ mask: 6, monster: 10 });
 
-/** P1: the Difficulty ladder. */
+/** P1: an obstacle's Difficulty is one of these numbers (R7: just numbers; the keys are names for the code, never shown). */
 DGF.difficulty = Object.freeze({ easy: 6, standard: 8, hard: 10, daunting: 12 });
 
 /** CORE-RULES Abilities: the four standard effects; "open" is the ability's trait at this much lower Difficulty (S10). */
 DGF.effects = Object.freeze(["raise", "switch", "hidden", "open"]);
 DGF.openApproachEase = 2;
 
-/** CORE-RULES Suspicion: what raises it (one roll raises it once, by its biggest trigger). */
+/**
+ * CORE-RULES Suspicion: what raises it. One roll raises it once, by its biggest trigger, except an overdraw, which
+ * always adds its +2 on top (D3); a local chase raises it once, when it ends (D1).
+ */
 DGF.suspicion = Object.freeze({ trouble: 1, monsterShows: 2, tell: 1, overdraw: 2, loud: 1, cost: 1, furniture: 1 });
 
 /** B2 (Chapters 4, 5 and 8): the furniture's extra obstacle is 2 harder than rolled (at most 12); carrying a piece raises Suspicion each Turn (DGF.suspicion.furniture). */

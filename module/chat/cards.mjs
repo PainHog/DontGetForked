@@ -61,18 +61,37 @@ export function setUpgradeOpener(fn) { upgradeOpener = fn; }
 
 const join = (list) => list.filter(Boolean).join(" · ");
 
+/**
+ * Why Suspicion rose, in words: the biggest trigger(s), and D3 any overdraw on top ("the Monster shows; overdraw +2
+ * on top"). `keys`: the biggest trigger's kinds; `overdrawRise`: the overdraws' +2s.
+ */
+function riseWhy(keys, overdrawRise) {
+  const top = (keys ?? []).filter((k) => k !== "overdraw").map((k) => t(`DGF.Trigger.${k}`)).join(" · ");
+  if (!overdrawRise) return top;
+  return top ? `${top}; ${t("DGF.Card.overdrawOnTop", { n: overdrawRise })}` : t("DGF.Trigger.overdraw");
+}
+
+/** A roll card's reason line: its biggest trigger(s) and its overdraws on top (a card from before D3: its biggest triggers). */
+function rollWhy(card) {
+  if (card.rise === undefined) return join((card.triggers ?? []).filter((x) => x.amount === card.suspicion).map((x) => t(`DGF.Trigger.${x.key}`)));
+  const keys = (card.triggers ?? []).filter((x) => !x.onTop && x.amount === card.rise && card.rise > 0).map((x) => x.key);
+  return riseWhy(keys, card.overdrawRise);
+}
+
 function rollContext(card) {
-  const trigger = (k) => t(`DGF.Trigger.${k}`);
   const stepNotes = [
     ...(card.raises ? [t(card.duty && !card.abilities?.some((a) => a.effect === "raise") ? "DGF.Card.raisedDuty" : "DGF.Card.raised")] : []),
     ...(card.downParts ?? []).map((p) => t(`DGF.Card.smaller.${p.key}`)),
   ];
   const diffNotes = (card.diffParts ?? []).map((p) => t(`DGF.Card.diff.${p.key}`, { n: Math.abs(p.n) }));
-  const abilities = (card.abilities ?? []).map((a) => (a.own ? a.name : t("DGF.Card.helpedBy", { name: a.name, helper: a.payerName })));
+  const abilities = (card.abilities ?? []).map((a) => {
+    const name = a.asRaise ? t("DGF.Card.asRaise", { name: a.name }) : a.name; // D6b: spent as a raise in the final flight
+    return a.own ? name : t("DGF.Card.helpedBy", { name, helper: a.payerName });
+  });
   const payments = (card.payments ?? []).filter((p) => p.uses > 0).map((p) => {
     const bits = [];
     if (p.spend) bits.push(t("DGF.Card.spent", { name: p.payerName, n: p.spend }));
-    if (p.overdraw) bits.push(t(p.weakness ? "DGF.Card.overdrawWeakness" : "DGF.Card.overdraw", { name: p.payerName }));
+    if (p.overdraw) bits.push(t(p.weakness ? "DGF.Card.overdrawWeakness" : card.localChase ? "DGF.Card.overdrawChase" : "DGF.Card.overdraw", { name: p.payerName }));
     return bits.join(", ");
   });
   const status = card.hunt ? t("DGF.Card.huntStops")
@@ -100,7 +119,7 @@ function rollContext(card) {
     monsterNote: card.show ? t("DGF.Card.monsterShows") : card.hiddenShow ? t("DGF.Card.monsterUnseen") : "",
     formNote: card.formShift ? t(card.formTo ? "DGF.Card.hydeTakesOver" : "DGF.Card.hydeWouldTakeOver") : "",
     suspicion: card.suspicion,
-    suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: join((card.triggers ?? []).filter((x) => x.amount === card.suspicion).map((x) => trigger(x.key))) }) : "",
+    suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: rollWhy(card) }) : "",
     suspicionStatus: card.suspicion > 0 ? status : "",
     caughtNote: card.caught ? t("DGF.Card.caught") : card.unseen ? t("DGF.Card.unseen") : card.troubleUnwatched ? t("DGF.Card.unwatched") : "",
     // V17 Out of Sight: who made him visible (his own load, a helper's, or someone with him)
@@ -108,7 +127,11 @@ function rollContext(card) {
     flags: join([card.loud ? t("DGF.Card.loud") : "", card.watched ? t("DGF.Card.watched") : "", card.wayOut ? t("DGF.Card.wayOut") : "", card.chase ? t("DGF.Card.chase") : "",
       card.lockup ? t(`DGF.Card.lockup.${card.lockup}`) : "", card.furniture ? t("DGF.Card.furniture") : "", card.groupId ? t("DGF.Card.group") : ""]),
     chaseNote: card.chaseId ? t("DGF.Card.chaseRound", { round: card.chaseRound, ground: card.groundName ?? "", move: card.leadMove > 0 ? `+${card.leadMove}` : `${card.leadMove}` })
-      + (card.chaseShared ? ` ${t("DGF.Card.majority")}` : "") + (card.roundEvent && card.suspicion > 0 ? ` ${t("DGF.Card.roundRise")}` : "") : "",
+      + (card.chaseShared ? ` ${t("DGF.Card.majority")}` : "") : "",
+    // D1: a local chase roll raises nothing now; what it would counts toward the chase's one rise
+    chaseRiseNote: card.localChase && (card.chaseRise > 0 || card.chaseOverdraws > 0)
+      ? t(card.chaseId ? "DGF.Card.chaseRise" : "DGF.Card.chaseRiseByHand", { n: (card.chaseRise ?? 0) + (card.chaseOverdraws ?? 0) * DGF.suspicion.overdraw, why: riseWhy(card.chaseRiseKeys, (card.chaseOverdraws ?? 0) * DGF.suspicion.overdraw) })
+      : "",
     lockupNote: card.lockup === "slip"
       ? (card.freed ? t("DGF.Card.slipFree") : card.slipTrouble ? t("DGF.Card.slipTrouble") : t("DGF.Card.slipHeld"))
       : card.lockup === "rescue" && card.rescued ? t("DGF.Card.rescued") : "",
@@ -137,7 +160,7 @@ function abilityContext(card) {
       : t("DGF.Card.spendCharge", { name: card.actorName }),
     charges: card.autoCharges ? t("DGF.Card.charges", { from: card.chargesBefore, to: card.chargesAfter }) : "",
     free: card.cost === 0 ? t("DGF.Card.free") : "",
-    overdraw: card.overdraw ? t(card.weakness ? "DGF.Card.overdrawWeakness" : "DGF.Card.overdraw", { name: card.actorName }) : "",
+    overdraw: card.overdraw ? t(card.weakness ? "DGF.Card.overdrawWeakness" : card.chaseId ? "DGF.Card.overdrawChase" : "DGF.Card.overdrawSheet", { name: card.actorName }) : "",
     suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: t("DGF.Trigger.overdraw") }) : "",
     suspicionStatus: card.suspicion > 0 ? status : "",
   };
@@ -158,7 +181,7 @@ function raidContext(card) {
     essentialsLine: card.event === "list" && card.essentials
       ? (card.essentialsFace ? t("DGF.List.essentialsRolled", { face: card.essentialsFace, n: card.essentials }) : t("DGF.List.essentialsFixed", { n: card.essentials }))
       : "",
-    left: card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
+    left: card.event === "home" && card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
     piece: card.event === "backInTown" && card.pieceBack ? t("DGF.RaidCard.backInTown.piece") : "",
     // V19: who Spectral gets past a group obstacle, and who carries and so rolls
     passed: card.passed?.length ? t("DGF.RaidCard.group.passed", { names: card.passed.join(", ") }) : "",
@@ -187,12 +210,20 @@ function chaseContext(card) {
   };
   const fates = card.chaseKind === "final" && card.outcome === "cornered" ? [t("DGF.Chase.fate.forked")] : (card.fates ?? []).map(fate);
   const outcome = card.outcome ? t(`DGF.Chase.outcome.${card.chaseKind}.${card.outcome}`) : "";
+  const status = card.cancelled ? t("DGF.Card.cancelled") : card.applied ? t("DGF.Card.applied") : t("DGF.Card.notApplied");
   return {
     kind: card.kind,
     final: card.chaseKind === "final",
-    headline: t(`DGF.Chase.event.${card.event}`, { kind: kindLabel, round: card.round }),
+    headline: t(`DGF.Chase.event.${card.event}`, { kind: kindLabel, round: card.round, names: (card.names ?? []).join(", ") }),
     who: card.event === "start" ? t("DGF.Chase.who", { names: (card.members ?? []).join(", ") }) : "",
     start: card.event === "start" ? t("DGF.Chase.startText", { lead: card.lead, escape: card.escape, cause: card.cause ? t(`DGF.Chase.cause.${card.cause}`) : "" }) : "",
+    // D1: the local mob is set when the chase starts
+    mobSet: card.event === "start" && card.chaseKind === "local" && card.mob ? t("DGF.Chase.mobSet", { mob: card.mob }) : "",
+    // D2: a runner gave up
+    gaveUpLine: card.event === "gaveUp" ? t("DGF.Chase.gaveUpText", { names: (card.names ?? []).join(", ") }) : "",
+    // D1: the chase's one rise, on the card that ends it
+    riseLine: card.riseShown ? (card.suspicion > 0 ? t("DGF.Chase.riseLine", { n: card.suspicion, why: riseWhy(card.riseKeys, card.overdrawRise) }) : t("DGF.Chase.riseNone")) : "",
+    riseStatus: card.riseShown && card.suspicion > 0 ? status : "",
     ground: card.ground && (card.event === "ground" || card.event === "round") ? t("DGF.Chase.groundLine", { ground: groundName, traits: traitList(card.ground.traits) }) : "",
     groundText: card.event === "ground" ? groundText : "",
     mob: card.mob && card.event === "ground" ? t("DGF.Chase.mobLine", { mob: card.mob, lead: card.lead, escape: card.escape }) : "",
@@ -228,6 +259,7 @@ function yearContext(card) {
     kind: card.kind,
     result: card.result,
     headline: t("DGF.Year.title", { result: t(`DGF.Result.${card.result}`) }),
+    how: card.result === "forked" && card.how === "allHeld" ? t("DGF.Year.allHeld") : "", // D7b
     summary: card.result === "forked" ? "" : t("DGF.Year.summary", { home: card.itemsHome, size: card.listSize }),
     furniture: card.result !== "forked" && card.furnitureHome ? t("DGF.Year.furniture") : "",
     left: card.leftBehind ? t("DGF.Year.left", { n: card.leftBehind, names: (card.leftNames ?? []).join(", ") }) : "",
@@ -298,7 +330,8 @@ export function gmButtons(card, currentRaidId, eventAmount = 0, { campaign = fal
       out.push({ action: "cost", choice: c, label: `DGF.Cost.${c}` });
     }
   }
-  if ([CARD.roll, CARD.ability, CARD.tell].includes(card.kind) && card.suspicion > 0 && !card.hunt && card.raidId === currentRaidId) {
+  // a roll's, an ability's or a Tell's Suspicion, and (D1) a local chase's one rise on the card that ends it
+  if ([CARD.roll, CARD.ability, CARD.tell, CARD.chase].includes(card.kind) && card.suspicion > 0 && !card.hunt && card.raidId === currentRaidId) {
     if (card.cancelled) out.push({ action: "restore", label: "DGF.Card.restoreButton" });
     else if (card.applied) out.push({ action: "cancel", label: "DGF.Card.cancelButton" });
     else out.push({ action: "apply", label: "DGF.Card.applyButton" });

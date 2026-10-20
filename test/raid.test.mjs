@@ -164,3 +164,45 @@ test("the stored ledger folds the same as suspicion.mjs", () => {
   s = recordEvent(s, { eventId: "b", amount: 2, source: "roll" });
   assert.deepEqual(suspicionOf(s), foldSuspicion(s.ledger, 15));
 });
+
+/* ------------------------------------------- the outside review's rules (DESIGN 2026-10-19, 2026-10-20) -- */
+
+test("D3: a roll's overdraw goes on top of its event (a group check's one rise included); the event list shows the sum", async () => {
+  const { eventAmount } = await import("../module/logic/raid.mjs");
+  let s = newRaid({ id: "r" });
+  s = recordEvent(s, { eventId: "group:g", amount: 2, extra: 0, source: "roll", messageId: "a" }); // the Monster shows
+  s = recordEvent(s, { eventId: "group:g", amount: 1, extra: 2, source: "roll", messageId: "b" }); // Trouble and an overdraw
+  assert.equal(suspicionOf(s).value, 4, "the group's one rise (2), plus the overdraw on top");
+  assert.equal(eventsOf(s)[0].amount, 4);
+  assert.equal(eventAmount(s, "group:g"), 2, "what a Cost's Suspicion +1 is weighed against: the triggers only");
+  s = recordEvent(s, { eventId: "group:g", amount: 1, extra: 2, source: "roll", messageId: "b" }); // a retried request
+  assert.equal(suspicionOf(s).value, 4, "a retry never counts twice");
+  assert.throws(() => recordEvent(s, { eventId: "x", amount: 1, extra: -1, source: "roll" }));
+});
+
+test("F25: a rise recorded before the hunt counts though the hunt is on (a local chase's rise so far)", () => {
+  let s = setHunt(newRaid({ id: "r" }), true, "dawn");
+  s = recordEvent(s, { eventId: "late", amount: 2, source: "roll" });
+  assert.equal(suspicionOf(s).value, 0, "once the hunt is on, Suspicion stops");
+  s = recordEvent(s, { eventId: "chase:c", amount: 1, extra: 2, source: "chase", beforeHunt: true });
+  assert.equal(suspicionOf(s).value, 3);
+});
+
+test("R4: the way out is rolled once a Turn: marked for the Turn, free again next Turn, taken back with a mistaken leaving", async () => {
+  const { markWayOut, wayOutRolled } = await import("../module/logic/raid.mjs");
+  let s = newRaid({ id: "r" });
+  assert.equal(s.wayOutTurn, 0);
+  assert.equal(wayOutRolled(s), false);
+  s = markWayOut(s);
+  assert.equal(wayOutRolled(s), true);
+  assert.equal(markWayOut(s), s);
+  s = advanceTurn(s, 1);
+  assert.equal(wayOutRolled(s), false, "Next Turn: it can be rolled again");
+  assert.equal(wayOutRolled(advanceTurn(s, -1)), true, "the Storyteller steps back: that Turn had its roll");
+  assert.equal(normalizeRaid(JSON.parse(JSON.stringify(markWayOut(s)))).wayOutTurn, 2);
+  assert.equal(normalizeRaid({}).wayOutTurn, 0, "an older raid: not rolled");
+  // the way out beaten, then taken back as a mistake: that roll no longer counts as this Turn's
+  const out = leaveTown(markWayOut(s), "wayOut");
+  assert.equal(wayOutRolled(backInTown(out)), false);
+  assert.equal(wayOutRolled(backInTown(leaveTown(markWayOut(s), "flight"))), true, "the flight escaped: the way-out roll stands");
+});

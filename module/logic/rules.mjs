@@ -57,17 +57,24 @@ export function monsterShows(traitFace, monsterFace) {
 /**
  * CORE-RULES Suspicion: one roll raises Suspicion once, by its biggest trigger.
  * Triggers: Trouble +1 · the Monster shows +2 (S2) · the loud way +1 whatever the
- * result (R1) · overdraw +2 · a Cost chosen as Suspicion +1 (P3).
+ * result (R1) · a Cost chosen as Suspicion +1 (P3). D3 (2026-10-19): an overdraw is the
+ * one exception: each one adds its +2 on top of the roll's other rise (`overdraw`: true
+ * for one, or how many).
  */
-export function suspicionForRoll({ band: b, show = false, loud = false, overdraw = false, costSuspicion = false }) {
+export function suspicionForRoll({ band: b, show = false, loud = false, overdraw = 0, costSuspicion = false }) {
   const S = DGF.suspicion;
-  return Math.max(
+  const top = Math.max(
     b === "trouble" ? S.trouble : 0,
     show ? S.monsterShows : 0,
     loud ? S.loud : 0,
-    overdraw ? S.overdraw : 0,
     b === "cost" && costSuspicion ? S.cost : 0,
   );
+  return top + overdrawCount(overdraw) * S.overdraw;
+}
+
+/** How many overdraws a roll made (true is one). */
+export function overdrawCount(overdraw) {
+  return overdraw === true ? 1 : Math.max(0, Math.trunc(Number(overdraw)) || 0);
 }
 
 /**
@@ -136,7 +143,7 @@ export function majorityMove(results) {
   return d >= 2 ? 2 : d <= -2 ? -2 : d;
 }
 
-/** CORE-RULES Chases: the local mob's Difficulty rises with Suspicion (B3: 8 + half, at most 12). */
+/** CORE-RULES Chases: the local mob's Difficulty (B3: 8 + half the Suspicion, at most 12), worked out when the chase starts (D1). */
 export function localMobDifficulty(suspicion) {
   const M = DGF.localMob;
   return Math.min(M.max, M.base + Math.floor(suspicion * M.perSuspicion));

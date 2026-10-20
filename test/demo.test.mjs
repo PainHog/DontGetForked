@@ -50,7 +50,8 @@ test("the script's numbers are Easy's: the list, the Limit, the way out, the loc
   for (const s of [
     `${L.items} items. One is essential`, `Turns: ${DGF.turns}, then dawn`, `Charges: ${DGF.charges} for each Entity`,
     `The Limit is ${L.limit}`, `The way out: Difficulty ${L.exit}`, `The lock-up: Difficulty ${L.lockup}`,
-    `the Lead starts at ${DGF.lead.localStart}, escape at ${DGF.lead.localEscape}, against a mob of ${DGF.localMob.base} plus half the Suspicion (rounded down, at most ${DGF.localMob.max})`,
+    // D1: the mob set when the chase starts, and one rise when it ends
+    `the Lead starts at ${DGF.lead.localStart}, escape at ${DGF.lead.localEscape}, against a mob of ${DGF.localMob.base} plus half the Suspicion when the chase starts (rounded down, at most ${DGF.localMob.max}). The chase raises Suspicion once, when it ends.`,
     `the Lead starts at ${DGF.lead.finalStart}, escape at ${L.finalEscape}, against a mob of ${L.finalMob}`,
   ]) assert.ok(p.includes(s), s);
   const flight = plain(chapter("45-flight.html"));
@@ -61,6 +62,7 @@ test("the script's numbers are Easy's: the list, the Limit, the way out, the loc
   // the local mob by Suspicion, as the tracker and the chase box print it
   const mob = (s) => Math.min(DGF.localMob.max, DGF.localMob.base + Math.floor(s * DGF.localMob.perSuspicion));
   assert.ok(happens.includes(`Suspicion 0–1: ${mob(0)} · 2–3: ${mob(2)} · 4–5: ${mob(4)} · 6–7: ${mob(6)} · 8–10: ${mob(8)}`));
+  assert.ok(happens.includes("worked out when the chase starts. It stays the same for the whole chase."), "D1: the mob is set when the chase starts");
 });
 
 /** Each place's obstacle boxes in order: quiet trait, loud trait, Difficulty, watched. */

@@ -12,8 +12,8 @@
  *    a second d6), whose Tell among those arriving, Suspicion +1 (autoSuspicion).
  *  - the shopping list (Chapter 4): rolled on the d66 table (C14) or set by hand.
  *  - how the year went (Chapter 7): the year card from what came home; when the
- *    party is forked it posts itself (autoYear); when the party gets out, a card
- *    asks the Storyteller to confirm what came home.
+ *    party is forked it posts itself (autoYear; D7b everyone held at once: autoAllHeld);
+ *    when the party gets out, a card asks the Storyteller to confirm what came home.
  */
 import { SYSTEM_ID, SETTINGS, OPS, CARD, HOOKS, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -21,7 +21,7 @@ import * as R from "../logic/raid.mjs";
 import { rollShoppingList, epilogueLines, tellGoesOff, addUpgrade } from "../logic/rules.mjs";
 import { newGroup, closeGroup, needsSecondDie, readTellCheck, placeChecked, spectralPasses } from "../logic/checks.mjs";
 import { yearFromList, homeFromCarried, listShape, listItem, essentialsFor } from "../logic/year.mjs";
-import { isCaptive } from "../logic/lockup.mjs";
+import { isCaptive, everyoneHeld } from "../logic/lockup.mjs";
 import { registerOp, runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid, mutateRaid, castleUpgrades } from "./store.mjs";
@@ -45,7 +45,8 @@ export function yearDefaults(raid = getRaid()) {
     furnitureLost: !!raid.furnitureLost,
     leftBehind: held.length,
     leftNames: held.map((a) => a.name),
-    forked: raid.chase?.kind === "final" && raid.chase.outcome === "cornered",
+    // Forked: cornered in the final flight, or (D7b, with its switch on) every Entity held at once
+    forked: (raid.chase?.kind === "final" && raid.chase.outcome === "cornered") || (setting(SETTINGS.autoAllHeld) && everyoneHeld(entities())),
   };
 }
 
@@ -60,15 +61,23 @@ async function postYear(year, raid, extra = {}) {
   return message;
 }
 
-/** Forked (cornered in the final flight): the raid is lost; the year card posts itself. */
-export async function finishForked() {
+/**
+ * Forked: the raid is lost, and nothing comes home; the year card posts itself. `cause`: "flight" (cornered in the final
+ * flight) or "allHeld" (D7b: every Entity held at the lock-up at once — the night ends there and then, with a card
+ * that says so). Only the call that ends the raid posts (two at once post once). Returns the year card's message, or null.
+ */
+export async function finishForked({ cause = "flight" } = {}) {
   const raid = getRaid();
   if (raid.over) return null;
   const year = raid.list.length
     ? yearFromList({ list: raid.list.map((it) => ({ ...it, home: false })), forked: true })
     : { result: "forked", lines: epilogueLines({ result: "forked" }), listSize: 0, itemsHome: 0, missingDuties: [], leftBehind: 0 };
-  await mutateRaid((s) => R.endRaid(s, { result: "forked" }));
-  return postYear(year, raid);
+  const { before, state } = await mutateRaid((s) => (s.over ? s : R.endRaid(s, { result: "forked" })));
+  if (before.over || !state.over) return null;
+  if (cause === "allHeld") {
+    await postCard({ kind: CARD.raid, event: "allHeld", raidId: raid.raidId, difficulty: raid.difficulty, limit: raid.limit, turns: raid.turns, names: entities().map((a) => a.name) });
+  }
+  return postYear(year, raid, { how: cause });
 }
 
 /** The party got out (the way out beaten, or the final flight escaped): a card asks the Storyteller what came home. */

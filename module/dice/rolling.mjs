@@ -18,8 +18,9 @@ import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
 import { chaseRollContext, chaseWeakness, lockupDifficulty, entities } from "../raid/chase-flow.mjs";
 import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
-import { chaseEventId } from "../logic/chase.mjs";
-import { turnMarkApplies } from "../logic/raid.mjs";
+import { inLocalChase, chaseRise } from "../logic/chase.mjs";
+import { turnMarkApplies, wayOutRolled } from "../logic/raid.mjs";
+import { findEntity } from "../logic/entity.mjs";
 import { postCard } from "../chat/cards.mjs";
 import { t, traitLabel, dieLabel, planText, traitList } from "../helpers/i18n.mjs";
 
@@ -30,26 +31,54 @@ const isEntity = (a) => a?.type === ACTOR_TYPES.entity;
 /* ------------------------------------------------------- input -- */
 
 /**
- * Every ability that could go on this actor's roll: its own (signature and Gift),
- * then the other Entities' (helping costs the helper's charge, Chapter 3).
+ * The abilities an Entity may spend on a roll: its signature and Gift (rollAbilities); in the final flight also the
+ * Draught, which then goes only as a raise (D6b: any ability may be spent as a raise there).
+ */
+function spendable(system, hunt) {
+  const list = rollAbilities(system);
+  const sig = findEntity(system?.entityKey)?.signature;
+  if (hunt && sig?.effect === "form") list.unshift({ slot: "signature", name: sig.name, effect: "form", trait: null, noLoot: false, watchedOnly: false });
+  return list;
+}
+
+/**
+ * Every ability that could go on this actor's roll: its own (signature and Gift), then the other Entities' (helping
+ * costs the helper's charge, Chapter 3). D6b: once the whole town hunts, each one can also be spent as a raise
+ * (`canRaise`, the dialog's "or as a raise" tick); one that can do nothing else on a flight roll (an approach of
+ * one's own, the Draught, a friend's approach) goes only as a raise (`raiseOnly`).
  */
 export function abilityChoices(actor, raid = getRaid()) {
+  const hunt = !!raid.hunt;
   const entry = (a, owner, own) => ({
     ...a,
     id: `ability:${owner.id}:${a.slot}`,
     payerId: owner.id,
     payerName: owner.name,
     own,
+    canRaise: hunt && a.effect !== "raise",
+    raiseOnly: hunt && (a.effect === "form" || a.effect === "open"),
     // "while your Weakness is in play, however it came, you can't overdraw" (the chase's timing counts too)
     payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)), overdrewInFlight: !!owner.system.overdrewInFlight,
       carrying: (owner.system.carried?.length ?? 0) > 0 || !!owner.system.carryingFurniture }, // V17: a helper is at the same place
   });
-  const own = rollAbilities(actor.system).map((a) => entry(a, actor, true));
-  // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help
+  const own = spendable(actor.system, hunt).map((a) => entry(a, actor, true));
+  // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help (and a
+  // friend's approach of its own, or its Draught, only as a raise)
   const flight = raid.hunt && raid.chase && !raid.chase.outcome && raid.chase.kind === "final" ? new Set(raid.chase.members.map((m) => m.actorId)) : null;
   const helpers = game.actors.filter((a) => isEntity(a) && a.id !== actor.id && a.system.entityKey && isInRaid(a.system) && (!flight || flight.has(a.id)))
-    .flatMap((h) => rollAbilities(h.system).filter((a) => a.effect !== "open").map((a) => entry(a, h, false)));
+    .flatMap((h) => spendable(h.system, hunt).filter((a) => hunt || a.effect !== "open").map((a) => entry(a, h, false)));
   return [...own, ...helpers];
+}
+
+/** The abilities chosen in the dialog (ids; "<id>:raise" spends that ability as a raise, D6b), for the roll plan. */
+function chosenAbilities(actor, raid, ids) {
+  const chosen = new Set(ids ?? []);
+  const out = [];
+  for (const a of abilityChoices(actor, raid)) {
+    if (chosen.has(a.id) && !a.raiseOnly) out.push(a);
+    if (chosen.has(`${a.id}:raise`) && a.canRaise) out.push({ ...a, asRaise: true });
+  }
+  return out;
 }
 
 /**
@@ -66,7 +95,6 @@ export function rollSituation(actor, values, raid = getRaid()) {
 
 /** The roll plan's input from the dialog's values (see module/logic/roll-plan.mjs). */
 export function buildInput(actor, values, raid = getRaid()) {
-  const chosen = new Set(values.abilities ?? []);
   const where = rollSituation(actor, values, raid);
   const c = where.chase;
   let difficulty = values.difficulty;
@@ -78,11 +106,12 @@ export function buildInput(actor, values, raid = getRaid()) {
     trait: values.trait,
     second: values.second,
     difficulty,
-    abilities: abilityChoices(actor, raid).filter((a) => chosen.has(a.id)),
+    abilities: chosenAbilities(actor, raid, values.abilities),
     duty: !!values.duty && !c,
     loud: !!values.loud,
     watched: !!values.watched,
     wayOut: !!values.wayOut,
+    wayOutRolled: !!values.wayOut && setting(SETTINGS.wayOutOncePerTurn) && wayOutRolled(raid), // R4: once a Turn
     partyPerks: values.wayOut ? entities().filter((a) => a.id !== actor.id && a.system.status !== "captured").map((a) => a.system.perk) : [], // Fetch (B5)
     chase: !!values.chase,
     hunt: raid.hunt,
@@ -112,7 +141,7 @@ export function readRollForm(form, choices) {
     trait: el("trait")?.value,
     second: el("second")?.value,
     difficulty: Number(el("difficulty")?.value),
-    abilities: choices.filter((c) => on(c.id)).map((c) => c.id),
+    abilities: [...choices.filter((c) => on(c.id)).map((c) => c.id), ...choices.filter((c) => on(`${c.id}:raise`)).map((c) => `${c.id}:raise`)],
     duty: on("duty"),
     loud: on("loud"),
     watched: on("watched"),
@@ -140,7 +169,8 @@ function dialogContext(actor, values, raid) {
   const chosen = new Set(values.abilities ?? []);
   const duty = DGF.duties.find((d) => d.key === sys.duty);
   const notices = [];
-  if (raid.hunt) notices.push(t("DGF.Roll.notice.hunt"));
+  if (raid.hunt) notices.push(t("DGF.Roll.notice.hunt"), t("DGF.Roll.notice.flightRaise"));
+  if (setting(SETTINGS.wayOutOncePerTurn) && wayOutRolled(raid)) notices.push(t("DGF.Roll.notice.wayOutRolled"));
   if (sys.carryingFurniture) notices.push(t("DGF.Roll.notice.carrying"));
   if (sys.nextRollSmaller > 0) notices.push(t("DGF.Roll.notice.smaller", { n: sys.nextRollSmaller }));
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
@@ -157,22 +187,29 @@ function dialogContext(actor, values, raid) {
     const ground = DGF.chaseTable[c.ground.face - 1]?.name ?? "";
     notices.push(t("DGF.Roll.notice.chase", { kind: t(`DGF.Chase.kind.${c.kind}`), round: c.round, ground, traits: traitList(c.traits), mob: c.difficulty }));
     if (c.weakness) notices.push(t("DGF.Roll.notice.chaseWeakness"));
+    if (c.local) notices.push(t("DGF.Roll.notice.chaseRise", { n: chaseRise(raid.chase).total })); // D1
   } else if (c) notices.push(t(`DGF.Plan.${c.reason}`));
   // B7: an approach only at a watched obstacle (Mesmerise) isn't offered until Watched, the way out or the lock-up is ticked
   const watchedHere = !!(values.watched || values.wayOut || values.lockup);
   const describe = (a) => ({
     id: a.id, name: a.name, helper: a.payerName, charges: a.payer.charges,
-    effectText: a.watchedOnly ? t("DGF.Effect.openWatched", { trait: traitLabel(a.trait) }) : t(`DGF.Effect.${a.effect}`, { trait: traitLabel(a.trait) }),
-    watchedOnly: !!a.watchedOnly,
-    disabled: !!a.watchedOnly && !watchedHere,
+    effectText: a.raiseOnly ? t("DGF.Effect.raiseOnly") : a.watchedOnly ? t("DGF.Effect.openWatched", { trait: traitLabel(a.trait) }) : t(`DGF.Effect.${a.effect}`, { trait: traitLabel(a.trait) }),
+    watchedOnly: !!a.watchedOnly && !a.raiseOnly,
+    disabled: !!a.watchedOnly && !a.raiseOnly && !watchedHere,
     checked: chosen.has(a.id) && !(a.watchedOnly && !watchedHere),
+    // D6b: in the final flight, spend it as a raise instead (the only way for raiseOnly ones)
+    raiseOnly: !!a.raiseOnly,
+    canRaise: !!a.canRaise,
+    raiseId: `${a.id}:raise`,
+    raiseChecked: chosen.has(`${a.id}:raise`),
   });
   const plan = buildRollPlan(buildInput(actor, values, raid));
   return {
     actorName: actor.name,
     traits: DGF.traits.map((k) => ({ key: k, label: traitLabel(k), die: dieLabel(sys.traits[k]), selected: k === values.trait })),
     seconds: Object.entries(DGF.second).map(([k, d]) => ({ key: k, label: `${t(`DGF.Second.${k}`)} ${dieLabel(d)}`, selected: k === values.second })),
-    difficulties: Object.entries(DGF.difficulty).map(([k, v]) => ({ value: v, label: `${v} — ${t(`DGF.Ladder.${k}`)}`, selected: v === Number(values.difficulty) })),
+    // R7: an obstacle's Difficulty is just a number (6, 8, 10, 12): no words for it
+    difficulties: Object.values(DGF.difficulty).map((v) => ({ value: v, label: `${v}`, selected: v === Number(values.difficulty) })),
     own: choices.filter((a) => a.own).map(describe),
     helpers: choices.filter((a) => !a.own).map(describe),
     hasHelpers: choices.some((a) => !a.own),
@@ -297,16 +334,14 @@ export async function performRoll(actor, values) {
   }
   if (Object.keys(update).length) await actor.update(update);
 
-  const top = res.triggers.filter((x) => x.amount === res.suspicion).map((x) => x.key);
+  // the HUD's reason: the roll's biggest trigger, and any overdraw on top (D3)
+  const top = [...res.riseKeys, ...(res.overdrawRise ? ["overdraw"] : [])];
   const where = rollSituation(actor, values, raid);
   const chaseCtx = where.chase?.ok && plan.tracked ? where.chase : null;
   const groupId = where.group && setting(SETTINGS.autoGroupChecks) ? where.group.id : "";
-  // F13: a shared local chase rises once a round, by the biggest trigger: its rolls share the round's event
-  const roundEvent = chaseCtx ? chaseEventId(raid.chase, chaseCtx.round) : null;
   const card = {
     v: 1, kind: CARD.roll, raidId: raid.raidId,
-    eventId: groupId ? groupEventId(groupId) : roundEvent ?? `roll:${foundry.utils.randomID()}`,
-    roundEvent: !!roundEvent,
+    eventId: groupId ? groupEventId(groupId) : `roll:${foundry.utils.randomID()}`,
     groupId, lockup: plan.lockup, furniture: plan.furniture,
     chaseId: chaseCtx?.chaseId ?? "", chaseRound: chaseCtx?.round ?? 0, chaseKind: chaseCtx?.kind ?? "",
     groundName: chaseCtx ? DGF.chaseTable[chaseCtx.ground.face - 1]?.name ?? "" : "",
@@ -318,12 +353,14 @@ export async function performRoll(actor, values) {
     second: plan.second, secondDie: plan.secondDie, baseDifficulty: plan.baseDifficulty, difficulty: plan.difficulty,
     diffParts: plan.diffParts, downParts: plan.downParts, raises: plan.raises, duty: plan.duty, open: plan.open, hidden: plan.hidden,
     loud: plan.loud, watched: plan.watched, wayOut: plan.wayOut, chase: plan.chase, hunt: plan.hunt,
-    abilities: plan.abilities.map((a) => ({ name: a.name, effect: a.effect, trait: a.trait, payerId: a.payerId, payerName: a.payerName, own: a.payerId === actor.id })),
+    abilities: plan.abilities.map((a) => ({ name: a.name, effect: a.effect, trait: a.trait, payerId: a.payerId, payerName: a.payerName, own: a.payerId === actor.id, asRaise: !!a.asRaise })),
     payments: plan.payments.map((p) => ({ payerId: p.payerId, payerName: p.payerName, own: p.own, uses: p.uses, spend: p.spend, overdraw: p.overdraw, weakness: p.weakness })),
     warnings: plan.warnings.map((w) => w.code),
     traitFace: res.traitFace, secondFace: res.secondFace, total: res.total, band: res.band, critical: res.critical,
     showed: res.showed, show: res.show, hiddenShow: res.hiddenShow, triggers: res.triggers, suspicion: res.suspicion,
-    suspicionLabel: top.join(","), caught: res.caught, troubleUnwatched: res.troubleUnwatched, unseen: res.unseen,
+    rise: res.rise, overdrawRise: res.overdrawRise, suspicionLabel: top.join(","),
+    // D1: a local chase roll raises nothing now; what it would waits for the chase's one rise when it ends
+    localChase: plan.chase && !plan.hunt, chaseRise: res.chaseRise, chaseRiseKeys: res.chaseRiseKeys, chaseOverdraws: res.chaseOverdraws, caught: res.caught, troubleUnwatched: res.troubleUnwatched, unseen: res.unseen,
     outOfSight: plan.caughtOnlyCarrying, carryingBy: plan.carryingBy, carryingName: plan.carryingName,
     formShift: res.formShift, formTo, chargeBack: res.chargeBack, costs: res.costs,
     autoCharges, chargesBefore: before, chargesAfter: after, helpersPaid: !helpersOwe,
@@ -332,9 +369,9 @@ export async function performRoll(actor, values) {
   const message = await postCard(card, { speaker: ChatMessage.getSpeaker({ actor }), rolls: [traitRoll, secondRoll] });
   // the helpers pay what the card says, once (if no Storyteller is connected, when one returns: reconcile)
   if (helpersOwe) await runOp(OPS.actorSpendCharges, { messageId: message.id });
-  // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) goes to the GM whole;
-  // any other roll only for its Suspicion
-  const tracked = card.groupId || card.chaseId || card.lockup || card.caught || card.wayOutBeaten;
+  // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out: R4 marks it rolled this
+  // Turn) goes to the GM whole; any other roll only for its Suspicion
+  const tracked = card.groupId || card.chaseId || card.lockup || card.caught || card.wayOutBeaten || (card.wayOut && !card.chase);
   if (tracked) await runOp(OPS.raidRoll, { messageId: message.id });
   else if (res.suspicion > 0 && !plan.hunt && setting(SETTINGS.autoSuspicion)) await runOp(OPS.raidApplyCard, { messageId: message.id });
   Hooks.callAll(HOOKS.rollResolved, message, card);
@@ -343,22 +380,33 @@ export async function performRoll(actor, values) {
 
 /* ------------------------------------------- charges outside a roll -- */
 
-async function confirmOverdraw(actor, pay) {
+/** D1 + D3: is this Entity in a running local chase the raid tracks (an overdraw then adds to the chase's one rise)? */
+const inTrackedLocal = (actor, raid) => inLocalChase(raid.chase, actor.id);
+
+async function confirmOverdraw(actor, pay, raid = getRaid()) {
+  const key = pay.weakness ? "DGF.Overdraw.weakness" : inTrackedLocal(actor, raid) ? "DGF.Overdraw.chase" : "DGF.Overdraw.suspicion";
   return foundry.applications.api.DialogV2.confirm({
     window: { title: t("DGF.Overdraw.title") },
-    content: `<p>${t(pay.weakness ? "DGF.Overdraw.weakness" : "DGF.Overdraw.suspicion", { name: foundry.utils.escapeHTML(actor.name), n: DGF.suspicion.overdraw })}</p>`,
+    content: `<p>${t(key, { name: foundry.utils.escapeHTML(actor.name), n: DGF.suspicion.overdraw })}</p>`,
     rejectClose: false,
   });
 }
 
+/**
+ * The card for an ability used outside a roll (the sheet's spend, the Draught). Its overdraw raises Suspicion +2 now
+ * — or, in a local chase, adds +2 to the chase's one rise when it ends (D1 + D3: the card goes to the chase).
+ */
 async function postAbilityCard(actor, fields, raid) {
+  const chase = !raid.hunt && fields.suspicion > 0 && inTrackedLocal(actor, raid) ? raid.chase : null;
   const card = {
     v: 1, kind: CARD.ability, raidId: raid.raidId, eventId: `ability:${foundry.utils.randomID()}`,
     actorId: actor.id, actorName: actor.name, userId: game.user.id, turn: raid.turn, hunt: raid.hunt,
     applied: false, cancelled: false, suspicionLabel: "overdraw", ...fields,
+    ...(chase ? { chaseId: chase.id, chaseOverdraws: fields.overdraw || 1, suspicion: 0 } : {}),
   };
   const message = await postCard(card, { speaker: ChatMessage.getSpeaker({ actor }) });
-  if (card.suspicion > 0 && !raid.hunt && setting(SETTINGS.autoSuspicion)) await runOp(OPS.raidApplyCard, { messageId: message.id });
+  if (chase) await runOp(OPS.raidApplyCard, { messageId: message.id });
+  else if (card.suspicion > 0 && !raid.hunt && setting(SETTINGS.autoSuspicion)) await runOp(OPS.raidApplyCard, { messageId: message.id });
   return message;
 }
 
@@ -369,7 +417,7 @@ export async function spendCharge(actor) {
   const sys = actor.system;
   const pay = payFor({ charges: sys.charges.value, uses: 1, hunt: raid.hunt, weaknessInPlay: sys.weaknessInPlay || (raid.hunt && chaseWeakness(actor.id, raid)), overdrewInFlight: sys.overdrewInFlight });
   if (!pay.allowed) { ui.notifications.warn(planText({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
-  if (pay.overdraw && !(await confirmOverdraw(actor, pay))) return null;
+  if (pay.overdraw && !(await confirmOverdraw(actor, pay, raid))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const update = {};
   if (autoCharges && pay.spend) update["system.charges.value"] = sys.charges.value - pay.spend;
@@ -386,7 +434,7 @@ export async function drinkDraught(actor) {
   const plan = draughtPlan(actor.system, { hunt: raid.hunt });
   if (!plan) return null;
   if (!plan.allowed) { ui.notifications.warn(planText({ code: plan.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
-  if (plan.overdraw && !(await confirmOverdraw(actor, plan))) return null;
+  if (plan.overdraw && !(await confirmOverdraw(actor, plan, raid))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const before = actor.system.charges.value;
   const update = { "system.form": plan.to, "system.traits": plan.traits };

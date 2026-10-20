@@ -19,6 +19,7 @@ import { t } from "../helpers/i18n.mjs";
 import { entities, allEntities, inRaid } from "../raid/chase-flow.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { groupWaiting } from "../logic/checks.mjs";
+import { chaseRise } from "../logic/chase.mjs";
 import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog, castleExtraDialog, refusalText } from "./raid-dialogs.mjs";
 import { openChaseTracker } from "./chase-tracker.mjs";
 
@@ -107,7 +108,10 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       })),
       lockup: v.lockup,
       list: state.list.map((it) => ({ name: it.name, essential: it.essential })),
-      chase: state.chase && !state.chase.outcome ? t("DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape }) : "",
+      // D1: a local chase's rise so far (it comes when the chase ends)
+      chase: state.chase && !state.chase.outcome
+        ? t(state.chase.kind === "local" ? "DGF.Raid.chaseOnRise" : "DGF.Raid.chaseOn", { kind: t(`DGF.Chase.kind.${state.chase.kind}`), lead: state.chase.lead, escape: state.chase.escape, n: chaseRise(state.chase).total })
+        : "",
       over: v.over ? t("DGF.Raid.over", { result: t(`DGF.Result.${v.over.result}`) }) : "",
       partyOut: !!v.partyOut && !v.over,
       furnitureLost: v.furnitureLost,

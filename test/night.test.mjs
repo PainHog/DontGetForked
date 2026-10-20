@@ -215,12 +215,21 @@ test("the local chase through to capture: the ground each round, the Weakness, t
   assert.equal(chase().round, 2);
   assert.deepEqual(chase().ground.traits, ["brawn", "nimble"]);
   assert.ok(cards(CARD.chase).some((m) => cardOf(m).event === "round" && cardOf(m).move === 1));
-  // round 2: Nimble d10 → d6 (Garlic, and carrying): Trouble: Lead 1, Suspicion +1 (a local chase still raises it); the mob for round 3 is 10
+  // round 2: Nimble d10 → d6 (Garlic, and carrying): Trouble: Lead 1. D1: Suspicion doesn't move yet: the Trouble waits
+  // for the chase's one rise; the mob stays what it was set to when the chase started
   await rollAs(BEN, dracula, { trait: "nimble", second: "mask", chase: true }, [1, 1, 6]);
   assert.equal(chase().lead, 1);
-  assert.equal(view().value, 4);
-  assert.equal(chase().mob, 10, "checked each round: 8 + half of 4");
-  // round 3: Trouble again: cornered → captured; the town takes back the candlesticks
+  assert.equal(view().value, 3, "one chase, one rise: nothing until it ends");
+  assert.equal(chase().mob, 9, "set when the chase started (8 + half of 3), for the whole chase");
+  const rollCard = game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1);
+  assert.equal(cardOf(rollCard).suspicion, 0);
+  assert.equal(cardOf(rollCard).chaseRise, 1);
+  assert.match(rollCard.content, /Toward the chase.{1,6}s one rise: \+1 \(Trouble\)/);
+  const tracker = await asUser(BEN, () => openChaseTracker());
+  assert.match(tracker.renderedParts.body, /The chase.{1,6}s rise so far: \+1/);
+  assert.match(tracker.renderedParts.body, /Difficulty 9 \(set when the chase started\)/);
+  assert.match((await asUser(ANN, () => openHud())).renderedParts.body, /its rise so far \+1/);
+  // round 3: Trouble again: cornered → captured; the town takes back the candlesticks; the chase rises once: +1
   await rollAs(BEN, dracula, { trait: "brawn", second: "mask", chase: true }, [2, 1]);
   assert.equal(chase().outcome, "cornered");
   assert.equal(chase().lead, 0);
@@ -228,7 +237,12 @@ test("the local chase through to capture: the ground each round, the Weakness, t
   assert.equal(dracula.system.status, "captured");
   assert.equal(dracula.system.capturedTurn, 1);
   assert.deepEqual(dracula.system.carried, []);
-  assert.equal(view().value, 5);
+  assert.equal(view().value, 4, "the chase's one rise: its biggest trigger, Trouble +1, once");
+  assert.equal(R.eventsOf(raid())[0].eventId, `chase:${chase().id}`);
+  const end = cards(CARD.chase).find((m) => cardOf(m).event === "round" && cardOf(m).outcome === "cornered");
+  assert.match(end.content, /One chase, one rise: Suspicion \+1 \(Trouble\)/);
+  assert.match(end.content, /on the track/);
+  assert.deepEqual(buttonLabels(end, GM), ["Cancel Suspicion"], "the Storyteller can cancel the chase's rise like any other");
   const lock = lastCard(CARD.chase);
   assert.equal(cardOf(lock).event, "captured");
   assert.match(lock.content, /Dracula is captured/);
@@ -263,7 +277,7 @@ test("slipping free: from the Turn after the capture, once per Turn; Trouble rai
   assert.equal(card.suspicion, 1);
   assert.deepEqual(card.costs, []);
   assert.match(lastMessage().content, /Still held: Suspicion rises, but no chase starts/);
-  assert.equal(view().value, 6);
+  assert.equal(view().value, 5);
   assert.equal(dracula.system.status, "captured");
   assert.equal(dracula.system.slipTurn, 2);
   assert.ok(!chase() || chase().outcome, "no chase");
@@ -437,7 +451,8 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
   await rollAs(BEN, dracula, { trait: "nimble", second: "monster", chase: true }, [1, 1]);
   assert.equal(chase().outcome, "cornered");
   assert.equal(chase().history.at(-1).move, -2);
-  assert.match(cards(CARD.chase).at(-1).content, /Forked: the monsters are killed/);
+  assert.match(cards(CARD.chase).at(-1).content, /Forked: the party is forked, and the year is Forked/);
+  assert.doesNotMatch(cards(CARD.chase).at(-1).content, /killed/, "R23");
   const year = cardOf(lastMessage());
   assert.equal(year.kind, CARD.year);
   assert.equal(year.result, "forked");
@@ -448,56 +463,62 @@ test("a new raid resets the Entities; the final flight cornered: forked, and the
   assert.equal(dracula.system.status, "active", "forked is not captured");
 });
 
-test("two caught in one group check flee on a shared Lead; the Limit ends their chase and everyone joins the final flight", async () => {
+test("two caught in one group check flee on a shared Lead; D1: their chase rises once, at its end, and if that brings the Limit the escaped join the final flight", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
-  for (let i = 0; i < 7; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
+  for (let i = 0; i < 8; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
-  assert.equal(view().value, 7);
+  assert.equal(view().value, 8);
   await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id], label: "the rooftops" });
   await settle();
   await rollAs(ANN, witch, { trait: "nimble", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1]);
   assert.equal(raid().chase, null, "no chase until the whole group check is in");
   await rollAs(BEN, dracula, { trait: "sly", second: "mask", difficulty: 8, watched: true, group: true }, [1, 1, 5]); // then the ground: the parade
-  assert.equal(view().value, 8, "the group check rose once");
+  assert.equal(view().value, 9, "the group check rose once");
   const c = chase();
   assert.equal(c.kind, "local");
   assert.deepEqual(c.members.map((m) => m.name), ["A Witch", "Dracula"], "caught together, they flee together");
   assert.equal(c.groupId, raid().group.id);
   assert.equal(c.lead, 1, "a shared Lead starts at 1");
-  assert.equal(c.mob, 12, "8 + half of 8");
+  assert.equal(c.mob, 12, "8 + half of 9, set as the chase starts");
   const caughtCards = game.messages.filter((m) => cardOf(m)?.groupId === c.groupId);
   assert.ok(caughtCards.every((m) => cardOf(m).chaseStarted === c.id));
-  // round 1 (F13): the Witch's Trouble (+1) and Dracula's Monster (+2) rise once, by the biggest; 1 Success, 1 Trouble: Lead 0 move
+  // round 1: the Witch's Trouble (1) and Dracula's Monster (2): Suspicion doesn't move; 1 Success, 1 Trouble: Lead 0 move
   await rollAs(ANN, witch, { trait: "charm", second: "mask", chase: true }, [1, 1]);
-  const wc = cardOf(lastMessage());
-  assert.equal(wc.eventId, `chase:${c.id}:1`);
-  assert.match(lastMessage().content, /rises once a round/);
+  assert.equal(cardOf(lastMessage()).suspicion, 0);
+  assert.match(lastMessage().content, /majority rule/);
+  await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true }, [8, 10, 5]); // Charm d12 → d10 (Garlic); then round 2's ground
+  assert.equal(cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1)).chaseRise, 2);
+  assert.equal(view().value, 9, "nothing on the track until the chase ends");
+  assert.deepEqual([chase().lead, chase().round, chase().mob], [1, 2, 12]);
+  // rounds 2 and 3: both Succeed (+2 each): clear at 4
+  await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [8, 5]);
+  await rollAs(BEN, dracula, { trait: "charm", second: "mask", chase: true }, [10, 6, 5]);
+  assert.equal(chase().lead, 3);
   assert.equal(view().value, 9);
-  await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true }, [8, 10, 5]); // then round 2's ground
-  assert.equal(cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1)).suspicion, 2);
-  assert.equal(view().value, 10, "the round rose once, by its biggest trigger");
-  assert.equal(R.eventsOf(raid()).find((e) => e.eventId === `chase:${c.id}:1`).amount, 2);
-  assert.equal(chase().lead, 1);
-  assert.equal(chase().round, 2);
-  // round 2: the Witch's Monster shows (+2): Suspicion reaches the Limit; the local chase ends at once and the flight begins
-  await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [1, 9, 2]); // then the flight's ground
+  await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [6, 6]); // round 3: Rowan (Soon) makes her Charm a d6
+  await rollAs(BEN, dracula, { trait: "charm", second: "mask", chase: true }, [10, 6, 2]); // then the flight's ground
+  // escaped; the chase rises once, by its biggest trigger (the Monster, +2): 11, the Limit: the hunt; the escaped join the flight
   assert.equal(view().value, view().limit);
   assert.equal(view().hunt, true);
+  assert.equal(view().huntCause, "limit");
+  assert.deepEqual([raid().endedChase.id, raid().endedChase.outcome], [c.id, "escaped"]);
   const f = chase();
   assert.equal(f.kind, "final");
   assert.equal(f.cause, "limit");
   assert.deepEqual(f.members.map((m) => m.name), ["A Witch", "Dracula"]);
   assert.equal(witch.system.status, "active");
-  assert.ok(cards(CARD.chase).some((m) => cardOf(m).chaseId === c.id && cardOf(m).event === "end" && cardOf(m).outcome === "ended"));
-  assert.match(cards(CARD.chase).find((m) => cardOf(m).chaseId === c.id && cardOf(m).outcome === "ended").content, /join the final flight/);
+  const last = cards(CARD.chase).find((m) => cardOf(m).chaseId === c.id && cardOf(m).outcome === "escaped");
+  assert.match(last.content, /Clear!/);
+  assert.match(last.content, /One chase, one rise: Suspicion \+2 \(the Monster shows\)/);
+  assert.equal(R.eventsOf(raid()).find((e) => e.eventId === `chase:${c.id}`).amount, 2);
   // the Storyteller stops the hunt: the flight is called off
   await asUser(GM, () => currentHud().runAction("toggleHunt"));
   await settle();
   assert.equal(chase().outcome, "dropped");
 });
 
-test("B3: cornered in the round the Limit comes, an Entity is captured first and the final flight starts without it", async () => {
+test("D1: cornered, and the chase's one rise brings the Limit: captured first, and the final flight starts without her", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
   for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
@@ -507,8 +528,9 @@ test("B3: cornered in the round the Limit comes, an Entity is captured first and
   const local = chase();
   assert.equal(local.kind, "local");
   assert.equal(local.lead, 1);
+  assert.equal(local.mob, 12, "8 + half of 10 is 13: at most 12");
   assert.equal(view().value, 10);
-  // Trouble (+1 → 11, the Limit) in the round that corners her: captured first; Dracula flees alone
+  // Trouble at Lead 1: cornered; the chase rises once (+1 → 11, the Limit) after she is captured
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1, 2]); // then the flight's ground
   assert.equal(view().value, 11);
   assert.equal(view().hunt, true);
@@ -692,7 +714,7 @@ test("a group check's Cost: Suspicion +1 isn't offered once the group has alread
   assert.deepEqual(gmButtons({ ...card, groupId: "" }, "r", 2).map((b) => b.choice), ["suspicion", "loseTurn"]);
 });
 
-test("V5: a Ghost that is Already Dead, cornered as the Limit comes, isn't captured and loses no Turn: it joins the final flight", async () => {
+test("V5: a Ghost that is Already Dead, cornered when the chase's rise brings the Limit, isn't captured and loses no Turn: it joins the final flight", async () => {
   const ghost = await asUser(GM, () => api.createEntity("ghost", { ownerId: BEN.id }));
   await asUser(GM, () => ghost.update({ "system.perk": "alreadyDead" }));
   await op(GM, OPS.raidReset, { difficulty: "standard" });
@@ -703,7 +725,7 @@ test("V5: a Ghost that is Already Dead, cornered as the Limit comes, isn't captu
   await rollAs(BEN, ghost, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 2]);
   const local = chase();
   assert.deepEqual(local.members.map((m) => m.name), ["A Ghost"]);
-  // Trouble (+1 → 11, the Limit) corners it in the same round: Already Dead just joins the flight
+  // Trouble corners it; the chase's one rise (+1 → 11, the Limit) brings the hunt: Already Dead just joins the flight
   await rollAs(BEN, ghost, { trait: "nimble", second: "mask", chase: true }, [1, 1, 3]); // Nimble d12 → d10 (Cold Iron); then the flight's ground
   assert.equal(view().hunt, true);
   assert.equal(raid().endedChase.outcome, "cornered");
@@ -727,25 +749,32 @@ test("a new raid: nobody carries last year's piece into the new town, so the fir
   assert.equal(view().value, 0, "and quiet");
 });
 
-test("B3: cornered in the Limit's round with nobody else free: its last round and the capture are announced once, and nobody flees", async () => {
+test("D7b: cornered with everyone else held: captured, and everyone held at once ends the night: Forked (no Bust, no flight)", async () => {
   await op(GM, OPS.raidReset, { difficulty: "standard" });
   await settle();
   const ghost = game.actors.find((a) => a.name === "A Ghost");
   for (const a of [dracula, ghost]) await op(GM, OPS.lockupSet, { actorId: a.id, captured: true });
+  await settle();
+  assert.equal(view().over, null, "the Witch is still free: the night goes on");
   for (let i = 0; i < 9; i++) await op(GM, OPS.raidAdjust, { delta: 1 });
   await settle();
   // caught (+1 → 10): alone at Lead 1; the ground: the crowded square
   await rollAs(ANN, witch, { trait: "sly", second: "mask", difficulty: 8, watched: true }, [1, 1, 1]);
   const local = chase();
   const from = game.messages.length;
-  // Trouble (+1 → 11, the Limit) corners her: captured first, and everyone else is held already
+  // Trouble corners her: captured; the chase's rise (+1 → 11) is the Limit, but everyone is held: the night ends, Forked
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1]);
-  assert.equal(view().hunt, true);
   assert.equal(witch.system.status, "captured");
   assert.equal(chase().id, local.id, "no final flight");
-  const after = game.messages.slice(from).map(cardOf).filter((c) => c?.kind === CARD.chase);
-  assert.deepEqual(after.map((c) => c.event), ["round", "captured"], "each card once");
-  assert.equal(cardOf(lastMessage()).how, "nobody");
+  const after = game.messages.slice(from).map(cardOf).filter(Boolean);
+  assert.deepEqual(after.filter((c) => c.kind === CARD.chase).map((c) => c.event), ["round", "captured"], "each card once");
+  assert.ok(after.some((c) => c.kind === CARD.raid && c.event === "allHeld"));
+  assert.ok(!after.some((c) => c.kind === CARD.raid && c.event === "home"), "no 'say what came home' card: nothing comes home");
+  const year = cardOf(lastMessage());
+  assert.deepEqual([year.kind, year.result, year.how], [CARD.year, "forked", "allHeld"]);
+  assert.match(lastMessage().content, /Every Entity was held at the lock-up at once/);
+  assert.equal(view().over.result, "forked");
+  assert.match(game.messages.find((m) => cardOf(m)?.event === "allHeld").content, /the year is Forked/);
 });
 
 test("leaving town: a carried piece goes with the party, one set down stays put (abandoned); once out, dawn starts no hunt, even with the year form off", async () => {

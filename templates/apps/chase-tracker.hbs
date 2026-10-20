@@ -10,6 +10,7 @@
   <p class="dgf-center">{{leadLine}}</p>
   {{#if running}}
   {{#if mobLine}}<p class="dgf-center"><strong>{{mobLine}}</strong></p>{{/if}}
+  {{#if riseLine}}<p class="dgf-center dgf-chase-rise" data-tooltip="{{riseHint}}">{{riseLine}}</p>{{/if}}
   <p class="dgf-chase-ground">{{groundLine}}{{#if groundText}} <em>{{groundText}}</em>{{/if}}</p>
   {{/if}}
   {{#if outcome}}<p class="dgf-chase-outcome">{{outcome}}</p>{{/if}}
@@ -21,10 +22,12 @@
       {{#if weakness}}<span class="dgf-member-weak" data-tooltip="{{localize "DGF.Chase.weaknessTip"}}">{{weaknessName}}</span>{{/if}}
       {{#if rolled}}<span class="dgf-member-rolled">{{rolled}}</span>{{/if}}
       {{#if canRoll}}<button type="button" data-action="rollFor" data-actor-id="{{actorId}}">{{localize "DGF.Chase.roll"}}</button>{{/if}}
+      {{#if canGiveUp}}<button type="button" data-action="giveUp" data-actor-id="{{actorId}}" data-tooltip="{{localize "DGF.Chase.giveUpHint"}}">{{localize "DGF.Chase.giveUp"}}</button>{{/if}}
       {{#if ../isGM}}{{#if ../running}}<button type="button" class="dgf-link" data-action="removeMember" data-actor-id="{{actorId}}" aria-label="{{localize "DGF.Chase.remove"}}">×</button>{{/if}}{{/if}}
     </li>
     {{/each}}
   </ul>
+  {{#if gaveUp}}<p class="dgf-hint">{{localize "DGF.Chase.gaveUpList" names=gaveUp}}</p>{{/if}}
   {{#if waiting}}<p class="dgf-hint">{{localize "DGF.Chase.waiting" names=waiting}}</p>{{/if}}
   {{#if running}}{{#if shared}}<p class="dgf-hint">{{localize "DGF.Chase.majorityHint"}}</p>{{/if}}{{/if}}
   {{#if history.length}}<ol class="dgf-chase-history">{{#each history}}<li>{{text}}</li>{{/each}}</ol>{{/if}}

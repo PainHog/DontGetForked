@@ -289,3 +289,106 @@ test("bad input is refused with codes, not exceptions", () => {
   assert.equal(p.ok, false);
   assert.deepEqual(p.errors.map((e) => e.code).sort(), ["badDifficulty", "badTrait"]);
 });
+
+/* ------------------------------------------- the outside review's rules (DESIGN 2026-10-19, 2026-10-20) -- */
+
+test("D3: an overdraw always adds +2 on top of the roll's other rise (two overdraws +4); in the final flight it costs the Weakness instead", () => {
+  const broke = roller("witch", { charges: { value: 0, start: 3 } });
+  const hedge = ownAbility(broke, "signature");
+  let p = plan(broke, { abilities: [hedge], second: "monster" });
+  assert.equal(p.overdraws, 1);
+  let r = resolvePlannedRoll(p, 2, 9); // the Monster shows (+2), and the overdraw on top
+  assert.deepEqual([r.suspicion, r.rise, r.overdrawRise, r.riseKeys], [4, 2, 2, ["monster"]]);
+  assert.deepEqual(r.triggers.map((x) => [x.key, x.amount, !!x.onTop]), [["monster", 2, false], ["overdraw", 2, true]]);
+  r = resolvePlannedRoll(p, 1, 1); // Trouble (+1) and the overdraw
+  assert.equal(r.suspicion, 3);
+  assert.equal(resolvePlannedRoll(p, 10, 6).suspicion, 2, "nothing else: the overdraw alone");
+  // two abilities at no charges: two overdraws
+  const gift = { ...ownAbility(broke, "signature"), slot: "gift", name: "Black Cat", effect: "hidden" };
+  p = plan(broke, { abilities: [hedge, gift], second: "monster" });
+  assert.equal(p.overdraws, 2);
+  assert.equal(resolvePlannedRoll(p, 10, 6).suspicion, 4);
+  // a helper's overdraw is one of the roll's too
+  const me = roller("dracula");
+  const helper = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch1", payerName: "Witch", payer: { charges: 0, weaknessInPlay: false } };
+  assert.equal(resolvePlannedRoll(plan(me, { abilities: [helper], loud: true }), 6, 6).suspicion, 3, "the loud way (+1) and the helper's overdraw");
+  // the final flight: no Suspicion, the Weakness
+  p = plan(broke, { abilities: [hedge], hunt: true, second: "monster" });
+  assert.equal(p.overdraws, 0);
+  assert.equal(resolvePlannedRoll(p, 1, 9).suspicion, 0);
+  assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
+  // a Cost's Suspicion +1 still adds to a roll whose only rise is its overdraw (the overdraw is on top of the rest)
+  const cost = resolvePlannedRoll(plan(broke, { abilities: [hedge] }), 3, 4); // 7 against 8
+  assert.equal(cost.band, "cost");
+  assert.ok(cost.costs.includes("suspicion"));
+  assert.ok(!resolvePlannedRoll(plan(broke, { abilities: [hedge], loud: true }), 3, 4).costs.includes("suspicion"), "the loud way already raised it");
+});
+
+test("D1: a local chase roll raises nothing now; its Trouble or Monster (and overdraws) wait for the chase's one rise", () => {
+  const broke = roller("witch", { charges: { value: 0, start: 3 } });
+  const hedge = ownAbility(broke, "signature");
+  const p = plan(broke, { chase: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 9, abilities: [hedge], loud: true });
+  const r = resolvePlannedRoll(p, 2, 9); // 11 against 9: a Success, the Monster shows
+  assert.equal(r.suspicion, 0, "nothing on the track now");
+  assert.deepEqual([r.chaseRise, r.chaseRiseKeys, r.chaseOverdraws], [2, ["monster"], 1]);
+  assert.ok(!r.triggers.some((x) => x.key === "loud"), "the ground has no loud way");
+  const t = resolvePlannedRoll(plan(roller("dracula"), { chase: true, chaseTraits: ["sly", "charm"], difficulty: 9 }), 1, 1);
+  assert.deepEqual([t.band, t.suspicion, t.chaseRise, t.chaseRiseKeys, t.caught], ["trouble", 0, 1, ["trouble"], false]);
+  // a Monster without Suspicion still cancels the show's rise on that roll
+  const wolf = roller("werewolf");
+  const good = resolvePlannedRoll(plan(wolf, { chase: true, chaseTraits: ["nimble", "sly"], trait: "nimble", second: "monster", difficulty: 9, abilities: [ownAbility(wolf, "signature")] }), 2, 9);
+  assert.deepEqual([good.hiddenShow, good.chaseRise], [true, 0]);
+  // Rattle: the Monster showing is +1
+  const ghost = roller("ghost", { perk: "rattle" });
+  assert.equal(resolvePlannedRoll(plan(ghost, { chase: true, chaseTraits: ["nimble", "sly"], trait: "nimble", second: "monster", difficulty: 9 }), 2, 9).chaseRise, 1);
+  // the final flight: nothing at all
+  const f = resolvePlannedRoll(plan(roller("dracula"), { chase: true, hunt: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 11 }), 1, 9);
+  assert.deepEqual([f.suspicion, f.chaseRise], [0, 0]);
+});
+
+test("D6b: in the final flight any Signature or Gift (own, or a friend's in the flight) may be spent as a raise instead; still one raise per roll", () => {
+  const drac = roller("dracula", { charges: { value: 2, start: 3 } }); // Bat (switch Nimble), Mesmerise (open Charm)
+  const bat = { ...ownAbility(drac, "gift"), asRaise: true };
+  const flight = (opts) => plan(drac, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 11, ...opts });
+  let p = flight({ trait: "charm", abilities: [bat] });
+  assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+  assert.equal(p.trait, "charm", "a raise, not Bat's switch to Nimble");
+  assert.deepEqual([p.baseDie, p.traitDie, p.raises], [12, 12, 1]);
+  p = flight({ trait: "sly", abilities: [bat] });
+  assert.deepEqual([p.traitDie, p.payments[0].spend], [8, 1], "Sly d6 → d8, for its charge");
+  // an approach of one's own (never in a chase) as a raise
+  const mes = { ...ownAbility(drac, "signature"), asRaise: true };
+  p = flight({ trait: "sly", abilities: [mes] });
+  assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+  assert.equal(p.traitDie, 8);
+  assert.ok(flight({ trait: "sly", abilities: [ownAbility(drac, "signature")] }).errors.some((e) => e.code === "openInChase"), "as itself it still can't");
+  // a friend's ability in the flight, even its approach of its own (only as a raise)
+  const wall = { slot: "signature", name: "Through the Wall", effect: "open", trait: "sly", noLoot: true, payerId: "ghost1", payerName: "A Ghost", payer: { charges: 3 }, asRaise: true };
+  p = flight({ trait: "sly", abilities: [wall] });
+  assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+  assert.equal(p.traitDie, 8);
+  // the Draught: only as a raise, in the flight
+  const draught = { slot: "signature", name: "The Draught", effect: "form", trait: null, payerId: "jh", payerName: "Jekyll & Hyde", payer: { charges: 3 } };
+  assert.equal(flight({ trait: "sly", abilities: [{ ...draught, asRaise: true }] }).traitDie, 8);
+  assert.ok(flight({ trait: "sly", abilities: [draught] }).errors.some((e) => e.code === "draughtNotOnRoll"));
+  // still one raise per roll; a raise and a step down cancel
+  assert.ok(flight({ trait: "sly", abilities: [bat, mes] }).errors.some((e) => e.code === "tooManyRaises"));
+  p = flight({ trait: "charm", abilities: [bat], weakness: true });
+  assert.deepEqual([p.raises, p.downs, p.traitDie], [1, 1, 12], "Garlic's step down and the raise cancel out");
+  // one ability once: its own effect or a raise, not both
+  assert.ok(flight({ trait: "sly", abilities: [ownAbility(drac, "gift"), bat] }).errors.some((e) => e.code === "sameAbilityTwice"));
+  // not before the hunt (nor in a local chase)
+  assert.ok(plan(drac, { trait: "sly", abilities: [bat] }).errors.some((e) => e.code === "raiseOnlyInFlight"));
+  assert.ok(plan(drac, { chase: true, chaseTraits: ["sly", "charm"], trait: "sly", abilities: [bat] }).errors.some((e) => e.code === "raiseOnlyInFlight"));
+  // at no charges, as a raise it is still an overdraw: the Weakness, once per flight
+  const broke = roller("dracula", { charges: { value: 0, start: 3 } });
+  p = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 11, trait: "sly", abilities: [{ ...ownAbility(broke, "gift"), asRaise: true }] });
+  assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
+});
+
+test("R4: the way out is rolled once a Turn: a second roll that Turn is refused", () => {
+  const ww = roller("werewolf");
+  assert.ok(plan(ww, { wayOut: true, trait: "nimble", wayOutRolled: true }).errors.some((e) => e.code === "wayOutOncePerTurn"));
+  assert.equal(plan(ww, { wayOut: true, trait: "nimble" }).ok, true);
+  assert.equal(plan(ww, { trait: "nimble", wayOutRolled: true }).ok, true, "only the way out");
+});

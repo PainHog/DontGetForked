@@ -29,10 +29,10 @@ const chapter = (file) => readFileSync(join(ROOT, "book", "src", "chapters", fil
 /** The rows (cells as plain text) of an HTML table's body. */
 const rowsOf = (tableHtml) => [...tableHtml.replace(/<thead>[\s\S]*?<\/thead>/, "").matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
   .map((m) => [...m[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)].map((c) => plain(c[1])));
-/** The first table after a chapter's <h3>heading</h3>, as rows. */
+/** The first table after a chapter's <h3>heading</h3> (the heading may carry attributes: <h3 data-toc id="…">), as rows. */
 function bookTable(file, heading) {
   const html = chapter(file);
-  const at = html.indexOf(`<h3>${heading}</h3>`);
+  const at = html.search(new RegExp(`<h3(?:\\s[^>]*)?>${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</h3>`));
   assert.ok(at >= 0, `${file} has a "${heading}" heading`);
   return rowsOf(html.slice(at).match(/<table[\s\S]*?<\/table>/)[0]);
 }

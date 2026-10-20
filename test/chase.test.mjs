@@ -23,19 +23,28 @@ const member = (id, key, patch) => memberOf(entity(id, key, patch));
 
 /* ------------------------------------------------------------------ chases -- */
 
-test("a local chase: Lead 1, escape at 4; the mob is 8 + half the Suspicion (at most 12), checked each round", () => {
-  const c = newChase({ id: "c1", members: [member("a", "dracula")] });
+test("a local chase: Lead 1, escape at 4; D1: the mob is 8 + half the Suspicion (at most 12), set when the chase starts and fixed", () => {
+  const c = newChase({ id: "c1", members: [member("a", "dracula")], suspicion: 3 });
   assert.equal(c.kind, "local");
   assert.equal(c.lead, 1);
   assert.equal(c.escape, 4);
   assert.equal(c.round, 1);
+  assert.equal(c.mob, 9, "8 + half of 3, set as the chase starts");
   assert.equal(mobDifficulty(c, { suspicion: 0 }), 8);
   assert.equal(mobDifficulty(c, { suspicion: 5 }), 10);
   assert.equal(mobDifficulty(c, { suspicion: 8 }), 12);
   assert.equal(mobDifficulty(c, { suspicion: 11 }), 12);
-  const r = startRound(c, { face: 3, suspicion: 3 });
+  assert.equal(newChase({ id: "c0", members: [member("a", "dracula")] }).mob, 8, "no Suspicion yet: 8");
+  // the Suspicion the round's ground is rolled with doesn't move it (F20 is gone): it stays what it was set to
+  let r = startRound(c, { face: 3, suspicion: 10 });
   assert.equal(r.mob, 9);
   assert.deepEqual(r.ground, { face: 3, key: "marketStalls", traits: ["brawn", "nimble"] });
+  r = recordRoll(r, "a", { messageId: "m", band: "success" }).chase;
+  r = resolveRound(r).chase;
+  assert.equal(r.mob, 9, "the next round keeps it");
+  assert.equal(startRound(r, { face: 1, suspicion: 11 }).mob, 9, "however high Suspicion is now");
+  // a chase kept from before D1 (no mob yet) gets it set once, at its next round
+  assert.equal(startRound({ ...c, mob: null }, { face: 1, suspicion: 5 }).mob, 10);
   assert.throws(() => newChase({ id: "x", kind: "car" }));
 });
 
@@ -103,11 +112,11 @@ test("the Weakness: Always from round 1, Soon from round 3 (B3: no Dawn timing);
 });
 
 test("rollContext: what a member rolls this round, or why it can't", () => {
-  let c = newChase({ id: "c", members: [member("a", "dracula")] });
+  let c = newChase({ id: "c", members: [member("a", "dracula")], suspicion: 2 });
   assert.equal(rollContext(c, "a").reason, "noGround");
   assert.equal(rollContext(c, "b").reason, "notInChase");
   assert.equal(rollContext(null, "a").reason, "noChase");
-  c = startRound(c, { face: 4, suspicion: 2 });
+  c = startRound(c, { face: 4 });
   const ctx = rollContext(c, "a");
   assert.equal(ctx.ok, true);
   assert.equal(ctx.difficulty, 9);
@@ -518,19 +527,78 @@ test("B2: while furniture is carried, Suspicion rises by 1 at the end of each Tu
 
 /* ------------------------------------------- F13–F16 (approved 2026-10-06) -- */
 
-test("F13: in a shared local chase every roll of a round shares one Suspicion event (once, by the biggest); alone, one roll one rise", async () => {
-  const { chaseEventId, isSharedLocal } = await import("../module/logic/chase.mjs");
-  const shared = newChase({ id: "s", members: [member("a", "dracula"), member("b", "witch")] });
-  assert.equal(isSharedLocal(shared), true);
-  assert.equal(chaseEventId(shared), "chase:s:1");
-  assert.equal(chaseEventId({ ...shared, round: 3 }), "chase:s:3");
-  assert.equal(chaseEventId(newChase({ id: "l", members: [member("a", "dracula")] })), null);
-  assert.equal(chaseEventId(newChase({ id: "f", kind: "final", cause: "limit", members: shared.members })), null);
-  let s = newRaid({ id: "r" });
-  s = recordEvent(s, { eventId: "chase:s:1", amount: 1, source: "roll", messageId: "m1" }); // Trouble
-  s = recordEvent(s, { eventId: "chase:s:1", amount: 2, source: "roll", messageId: "m2" }); // the Monster shows
-  s = recordEvent(s, { eventId: "chase:s:2", amount: 1, source: "roll", messageId: "m3" }); // the next round rises again
-  assert.equal(suspicionOf(s).value, 3);
+test("D1 (replaces F13): one chase, one rise: the biggest trigger among all its rolls, every runner's, every round; +2 for each overdraw on top", async () => {
+  const { chaseRise, riseEventId, isSharedLocal, addOverdraw } = await import("../module/logic/chase.mjs");
+  const { applyChaseRise } = await import("../module/logic/raid.mjs");
+  let c = startRound(newChase({ id: "s", members: [member("a", "dracula"), member("b", "witch")], suspicion: 4 }), { face: 1 });
+  assert.equal(isSharedLocal(c), true);
+  assert.equal(riseEventId(c), "chase:s");
+  assert.deepEqual(chaseRise(c), { rise: 0, keys: [], overdraws: 0, overdrawRise: 0, total: 0 }, "nothing rolled yet");
+  // round 1: Trouble (1) and a Success with an overdraw; round 2: the Monster shows (2) and a Cost
+  c = recordRoll(c, "a", { messageId: "1", band: "trouble", rise: 1, riseKeys: ["trouble"] }).chase;
+  c = recordRoll(c, "b", { messageId: "2", band: "success", overdraws: 1 }).chase;
+  assert.deepEqual(chaseRise(c), { rise: 1, keys: ["trouble"], overdraws: 1, overdrawRise: 2, total: 3 }, "the round so far counts already");
+  c = startRound(resolveRound(c).chase, { face: 2 });
+  c = recordRoll(c, "a", { messageId: "3", band: "cost" }).chase;
+  c = recordRoll(c, "b", { messageId: "4", band: "success", rise: 2, riseKeys: ["monster"] }).chase;
+  c = resolveRound(c).chase;
+  assert.deepEqual(chaseRise(c), { rise: 2, keys: ["monster"], overdraws: 1, overdrawRise: 2, total: 4 }, "the biggest trigger once, however many rounds, plus the overdraw");
+  // an overdraw from the sheet in the chase (the Draught) adds too, once per card
+  c = addOverdraw(c, { messageId: "sheet", n: 1 });
+  assert.equal(addOverdraw(c, { messageId: "sheet", n: 1 }), c, "the same card again changes nothing");
+  assert.equal(chaseRise(c).total, 6);
+  // the ledger: one event for the chase, the overdraws on top of its biggest trigger
+  let s = applyChaseRise(newRaid({ id: "r" }), c);
+  assert.equal(suspicionOf(s).value, 6);
+  assert.deepEqual([s.ledger.length, s.ledger[0].eventId, s.ledger[0].amount, s.ledger[0].extra, s.ledger[0].label], [1, "chase:s", 2, 4, "monster,overdraw"]);
+  assert.equal(suspicionOf(applyChaseRise(s, c)).value, 6, "applied again (a retry): it counts once");
+  assert.equal(applyChaseRise(newRaid({ id: "q" }), newChase({ id: "n", members: [member("a", "dracula")] })).ledger.length, 0, "a chase with nothing to raise records nothing");
+  // ties: Rattle's Monster (+1) and Trouble (+1) are both the biggest
+  let t = startRound(newChase({ id: "t", members: [member("g", "ghost", { perk: "rattle" }), member("w", "witch")] }), { face: 2 });
+  t = recordRoll(t, "g", { messageId: "1", band: "success", rise: 1, riseKeys: ["monster"] }).chase;
+  t = recordRoll(t, "w", { messageId: "2", band: "trouble", rise: 1, riseKeys: ["trouble"] }).chase;
+  assert.deepEqual(chaseRise(t).keys.sort(), ["monster", "trouble"]);
+});
+
+test("D2: at the start of any round a runner may give up: captured, no roll; the others carry on and the majority rule counts only them", async () => {
+  const { canGiveUp, giveUp, staysBehind, chaseRise } = await import("../module/logic/chase.mjs");
+  let c = startRound(newChase({ id: "g", members: [member("a", "dracula"), member("b", "witch"), member("e", "mummy")] }), { face: 1 });
+  assert.equal(canGiveUp(c, "a").ok, true, "round 1, before anyone rolls");
+  assert.equal(canGiveUp(c, "z").reason, "notInChase");
+  assert.equal(canGiveUp(newChase({ id: "f", kind: "final", cause: "limit", members: c.members }), "a").reason, "notLocal", "nobody gives up in the final flight");
+  assert.equal(canGiveUp(endChase(c, "escaped"), "a").reason, "noChase");
+  // round 1: Dracula gives up; the Witch and the Mummy carry on
+  c = giveUp(c, "a").chase;
+  assert.deepEqual(c.members.map((m) => m.actorId), ["b", "e"]);
+  assert.deepEqual(c.gaveUp, [{ actorId: "a", name: "Dracula", round: 1 }]);
+  assert.equal(c.outcome, "");
+  assert.equal(canGiveUp(c, "a").reason, "notInChase", "once is enough");
+  c = recordRoll(c, "b", { messageId: "1", band: "trouble", rise: 1, riseKeys: ["trouble"] }).chase;
+  assert.equal(canGiveUp(c, "e").reason, "roundStarted", "once someone has rolled this round, it waits for the next");
+  assert.equal(giveUp(c, "e").ok, false);
+  assert.equal(recordRoll(c, "a", { messageId: "x", band: "success" }).reason, "notInChase", "who gave up rolls no more");
+  c = recordRoll(c, "e", { messageId: "2", band: "success" }).chase;
+  assert.equal(roundDone(c), true, "everyone still running has rolled");
+  let out = resolveRound(c);
+  assert.equal(out.move, 0, "1 Success against 1 Trouble: only those still running count");
+  // round 2: the Mummy gives up; the Witch flees alone (one roll: Success +1)
+  c = giveUp(startRound(out.chase, { face: 2 }), "e").chase;
+  c = recordRoll(c, "b", { messageId: "3", band: "success" }).chase;
+  out = resolveRound(c);
+  assert.deepEqual([out.move, out.chase.lead], [1, 2]);
+  // round 3: the Witch gives up too: nobody is running, the chase is over ("gaveUp"); its rolls still make its rise
+  c = giveUp(startRound(out.chase, { face: 3 }), "b").chase;
+  assert.equal(c.outcome, "gaveUp");
+  assert.equal(chaseRise(c).total, 1, "the Witch's Trouble in round 1");
+  assert.deepEqual(staysBehind(c), ["a", "e", "b"], "everyone who gave up was captured: nobody joins a flight from it");
+  // cornered: captured first (Already Dead isn't: it joins the flight); escaped: everyone still running joins it
+  let k = startRound(newChase({ id: "k", members: [member("a", "dracula"), member("g", "ghost", { perk: "alreadyDead" }), member("w", "witch")] }), { face: 1 });
+  k = giveUp(k, "w").chase;
+  for (const id of ["a", "g"]) k = recordRoll(k, id, { messageId: id, band: "trouble" }).chase;
+  k = resolveRound(k).chase;
+  assert.equal(k.outcome, "cornered");
+  assert.deepEqual(staysBehind(k), ["a", "w"]);
+  assert.deepEqual(staysBehind({ ...k, outcome: "escaped" }), ["w"]);
 });
 
 test("F14: Night Runner and Fear the Curse work only for an Entity fleeing alone, never in a shared chase", () => {
@@ -542,8 +610,12 @@ test("F14: Night Runner and Fear the Curse work only for an Entity fleeing alone
   assert.equal(newChase({ id: "b", members: [runner, member("d", "dracula")] }).lead, 1);
   assert.equal(mobDifficulty(newChase({ id: "c", members: [curse] }), { suspicion: 0 }), 7);
   assert.equal(mobDifficulty(newChase({ id: "d", members: [curse, runner] }), { suspicion: 0 }), 8);
-  // the Storyteller takes the other one out: now it flees alone, and the mob is easier from the next round
-  assert.equal(mobDifficulty(removeMember(newChase({ id: "e", members: [curse, runner] }), "w"), { suspicion: 0 }), 7);
+  // D1: the mob is set as the chase starts, Fear the Curse with it (fleeing alone then): it stays put
+  assert.equal(newChase({ id: "c2", members: [curse], suspicion: 4 }).mob, 9);
+  const shared = newChase({ id: "e", members: [curse, runner], suspicion: 0 });
+  assert.equal(shared.mob, 8);
+  let alone = startRound(removeMember(shared, "w"), { face: 1 });
+  assert.equal(alone.mob, 8, "the Storyteller takes the other one out: the mob set at the start stays");
 });
 
 test("F15: a captured carrier's furniture is lost for the night: it can't come home", async () => {

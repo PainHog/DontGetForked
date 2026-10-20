@@ -76,7 +76,7 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
  * checks each still appears in its chapter.
  */
 export const BOOK_QUOTES = Object.freeze({
-  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose later picks another or rolls a d6, rerolling any Duty already taken." },
+  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose their Entity later picks another or rolls a d6, rolling again on any Duty already taken." },
   chase: { chapter: "16-ch06.html", html: "The row names two traits that work this round, for everyone in the chase." },
   customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way, so roll a d6 or pick a custom for each town. Customs are flavour and change no rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself." },
@@ -84,9 +84,9 @@ export const BOOK_QUOTES = Object.freeze({
   shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location." },
   furniture: { chapter: "31-ch08.html", html: "Roll a d6 on the table below for the piece. Decor counts as furniture for every rule." },
   villagers: { chapter: "31-ch08.html", html: "Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are flavour. They don’t change an obstacle’s traits or Difficulty." },
-  townRows: { chapter: "32-ch09.html", html: "Each location’s rows run in order: its two ways in (picked the first time anyone tries the location, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”." },
+  townRows: { chapter: "32-ch09.html", html: "Each location’s rows run in order: its two ways in (picked by the first roll at one of them, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”." },
   townTraits: { chapter: "32-ch09.html", html: "<em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for." },
-  townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn (two carrying furniture)." },
+  townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn (one more carrying furniture)." },
   townMap: { chapter: "32-ch09.html", html: "On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture." },
 });
 const Q = (k) => BOOK_QUOTES[k].html;
@@ -259,13 +259,13 @@ function guideDoc() {
   ].join("\n");
   const during = [
     `<ul>`,
-    `<li><strong>Rolling.</strong> Click a trait on the Entity’s sheet. The roll dialog asks for the second die (Mask or Monster) and the Difficulty, offers the Entity’s abilities and help from the others, and has ticks for the situation: Castle Duty, the loud way, watched, the way out of town, the furniture’s extra obstacle and the lock-up. The roll card shows the result, and Suspicion goes on the HUD by itself: one roll, one rise.</li>`,
+    `<li><strong>Rolling.</strong> Click a trait on the Entity’s sheet. The roll dialog asks for the second die (Mask or Monster) and the Difficulty, offers the Entity’s abilities and help from the others, and has ticks for the situation: Castle Duty, the loud way, watched, the way out of town, the furniture’s extra obstacle and the lock-up. The roll card shows the result, and Suspicion goes on the HUD by itself: one roll, one rise, with an overdraw’s +2 on top.</li>`,
     `<li><strong>Costs.</strong> On a Cost, the Storyteller picks one on the roll card, and it applies itself.</li>`,
     `<li><strong>Turns.</strong> Press ${B("DGF.Raid.nextTurn")} at the end of each Turn. After the last Turn comes dawn.</li>`,
     `<li><strong>Undo.</strong> ${B("DGF.Raid.undo")} on the Raid window (or ${B("DGF.Card.cancelButton")} on a card) cancels an event’s Suspicion only. A chase or a capture that event caused stays: undo those with the chase tracker’s own buttons (${B("DGF.Chase.leadUp")}, ${B("DGF.Chase.leadDown")}, ${B("DGF.Chase.drop")}) and the lock-up’s ${B("DGF.Raid.free")}.</li>`,
     `<li><strong>Tell checks.</strong> When the book calls for a Tell check (Chapter 5), press ${B("DGF.Raid.tellCheck")}, tick who is arriving, name the place, then ${B("DGF.Tell.check")}. The system rolls the dice, says whose Tell goes off and raises Suspicion; each place is checked once.</li>`,
     `<li><strong>Group obstacles.</strong> Press ${B("DGF.Raid.groupCheck")} before several Entities roll the same group obstacle: their rolls raise Suspicion once, by the biggest trigger among them, and everyone caught flees together.</li>`,
-    `<li><strong>Chases.</strong> Trouble at a watched obstacle starts a local chase (by itself, or from the roll card when chases are run by hand), and ${B("DGF.Chase.title")} tracker opens for everyone: the Lead, the ground, the mob and who still has to roll. Each fleeing Entity rolls from it. ${B("DGF.Raid.chase")} on the HUD opens it again.</li>`,
+    `<li><strong>Chases.</strong> Trouble at a watched obstacle starts a local chase (by itself, or from the roll card when chases are run by hand), and ${B("DGF.Chase.title")} tracker opens for everyone: the Lead, the ground, the mob (fixed when the chase starts), the Suspicion the chase will add when it ends (one chase, one rise) and who still has to roll. Each fleeing Entity rolls from it, and a runner can give up at the start of a round. ${B("DGF.Raid.chase")} on the HUD opens it again.</li>`,
     `<li><strong>The lock-up.</strong> Cornered in a local chase, an Entity is captured and the HUD shows it at the lock-up. From the next Turn its roll is slipping free (tick <em>${esc(L("DGF.Roll.lockupSlip").replace(/\s*\(.*$/, ""))}</em>); a rescue that beats the lock-up frees every captive there.</li>`,
     `<li><strong>The hunt.</strong> At the Limit, or at dawn, the whole town hunts, and the final flight runs on the chase tracker.</li>`,
     `</ul>`,

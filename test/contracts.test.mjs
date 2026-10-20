@@ -65,6 +65,12 @@ test("lang/en.json has every literal key the code and templates use, and no key 
   assert.deepEqual(shadow, []);
 });
 
+test("R7: no Difficulty words: an obstacle's Difficulty is just a number (the town's Easy, Standard and Hard stay)", () => {
+  assert.equal(Object.keys(lang).some((k) => k.startsWith("DGF.Ladder.")), false);
+  assert.doesNotMatch(Object.values(lang).join("\n"), /\bdaunting\b/i);
+  for (const k of ["easy", "standard", "hard"]) assert.ok(lang[`DGF.Label.${k}`], `the town level ${k} keeps its name`);
+});
+
 test("lang/en.json has the words for every key the code builds from game data", () => {
   const need = [
     ...DGF.traits.map((k) => `DGF.Trait.${k}`),
@@ -74,11 +80,11 @@ test("lang/en.json has the words for every key the code builds from game data", 
     ...DGF.costs.map((k) => `DGF.Cost.${k}`),
     ...DGF.statuses.map((k) => `DGF.Status.${k}`),
     ...Object.keys(DGF.labels).map((k) => `DGF.Label.${k}`),
-    ...Object.keys(DGF.difficulty).map((k) => `DGF.Ladder.${k}`),
     ...Object.keys(DGF.entities.find((e) => e.forms).forms).map((k) => `DGF.Form.${k}`),
     ...["trouble", "monster", "loud", "overdraw", "cost", "furniture", "furnitureDown"].map((k) => `DGF.Trigger.${k}`),
     ...["limit", "dawn", "manual"].map((k) => `DGF.HuntCause.${k}`),
-    ...["newRaid", "hunt", "dawn", "limit", "home", "backInTown"].flatMap((k) => [`DGF.RaidCard.${k}.title`, `DGF.RaidCard.${k}.text`]),
+    ...["newRaid", "hunt", "dawn", "limit", "home", "backInTown", "allHeld"].flatMap((k) => [`DGF.RaidCard.${k}.title`, `DGF.RaidCard.${k}.text`]),
+    ...DGF.chaseOutcomes.map((k) => `DGF.Chase.outcome.local.${k}`),
     ...["cost", "carrying", "weakness"].map((k) => `DGF.Card.smaller.${k}`),
     ...["shortcut", "fetch", "open"].map((k) => `DGF.Card.diff.${k}`),
     ...Object.values(C.SETTINGS).filter((k) => !["systemMigrationVersion", "raidState", "castleUpgrades"].includes(k)).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Hint`]), // hidden settings have no words

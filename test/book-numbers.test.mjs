@@ -14,6 +14,7 @@ import { DGF } from "../module/config.mjs";
 import { powerRule, powerShort, kindRules, perkParts, weaknessTiming } from "../module/logic/power-text.mjs";
 import { rewrite as rewriteEntries } from "../book/tools/entity-entries.mjs";
 import { band, isCritical, monsterShows, suspicionForRoll, leadMove, majorityMove, localMobDifficulty, stepUp, stepDown, tellGoesOff, yearResult } from "../module/logic/rules.mjs";
+import { newChase, memberOf, startRound, recordRoll, resolveRound, chaseRise, canGiveUp, giveUp } from "../module/logic/chase.mjs";
 
 /* ------------------------------------------------------------ helpers -- */
 
@@ -33,10 +34,12 @@ const plain = (html) => String(html)
   .trim();
 const rowsOf = (tableHtml) => [...tableHtml.replace(/<thead>[\s\S]*?<\/thead>/, "").matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
   .map((m) => [...m[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)].map((c) => plain(c[1])));
+/** Where a chapter's <h3>heading</h3> starts (the heading may carry attributes: <h3 data-toc id="…">), or -1. */
+const headingAt = (html, heading) => html.search(new RegExp(`<h3(?:\\s[^>]*)?>${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</h3>`));
 /** The HTML from a chapter's <h3>heading</h3> up to its next <h3> (or the end). */
 function section(file, heading) {
   const html = chapter(file);
-  const at = html.indexOf(`<h3>${heading}</h3>`);
+  const at = headingAt(html, heading);
   assert.ok(at >= 0, `${file} has a "${heading}" heading`);
   const next = html.indexOf("<h3", at + 4);
   return html.slice(at, next < 0 ? undefined : next);
@@ -44,7 +47,7 @@ function section(file, heading) {
 /** The rows of the first table after a heading. */
 const tableAfter = (file, heading) => {
   const html = chapter(file);
-  const at = html.indexOf(`<h3>${heading}</h3>`);
+  const at = headingAt(html, heading);
   assert.ok(at >= 0, `${file} has a "${heading}" heading`);
   return rowsOf(html.slice(at).match(/<table[\s\S]*?<\/table>/)[0]);
 };
@@ -76,11 +79,12 @@ const mixRow = (mix) => `${[6, 8, 10, 12].map((d) => Math.round((mix[d] ?? 0) * 
 
 /* ----------------------------------------------- Chapter 3: the roll -- */
 
-test("the Difficulty ladder (Chapter 3, At the Table) is DGF.difficulty", () => {
-  const D = DGF.difficulty;
-  const ladder = `${D.easy} easy, ${D.standard} standard, ${D.hard} hard, ${D.daunting} daunting`;
-  says(TXT.ch3, `compare the total with the Difficulty: ${ladder}`, "Chapter 3, The Roll");
-  says(TXT.ref, `against the Difficulty: ${ladder}`, "At the Table, The Roll");
+test("an obstacle's Difficulty (Chapter 3, At the Table) is one of DGF.difficulty's numbers; R7: no words for them", () => {
+  const D = Object.values(DGF.difficulty);
+  const list = `${D.slice(0, -1).join(", ")} or ${D.at(-1)}`;
+  says(TXT.ch3, `compare the total with the obstacle’s Difficulty, which is ${list}`, "Chapter 3, The Roll");
+  says(TXT.ref, `against the Difficulty (${list})`, "At the Table, The Roll");
+  for (const k of ["ch3", "ref"]) assert.doesNotMatch(TXT[k], /\bdaunting\b/, `${k}: R7, the Difficulty words are gone`);
 });
 
 test("the result bands (Chapter 3) are what the rules logic reads", () => {
@@ -204,12 +208,37 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   const M = DGF.localMob;
   assert.equal(M.perSuspicion, 0.5, "the book says “half the Suspicion”");
   says(TXT.ch6, `Lead: starts at ${localStart}. You escape at ${localEscape}.`, "Chapter 6, The Local Chase");
-  says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion, rounded down, at most ${M.max}. Work it out again at the start of every round`, "Chapter 6, The Local Chase");
+  // D1: set when the chase starts, for the whole chase (module/logic/chase.mjs newChase)
+  says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion when the chase starts, rounded down, at most ${M.max}. It stays the same for the whole chase.`, "Chapter 6, The Local Chase");
   says(TXT.ch6, `(Suspicion 5: ${M.base} + 2 = ${localMobDifficulty(5)}.)`, "Chapter 6, The Local Chase (the example)");
-  says(TXT.ch8, `The same on Easy, Standard and Hard: ${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw Suspicion +${DGF.suspicion.overdraw}. Local chase: Lead starts at ${localStart}, escape at ${localEscape}; the mob is ${M.base} plus half the Suspicion, rounded down, at most ${M.max}. Final flight: Lead starts at ${DGF.lead.finalStart}.`, "Chapter 8, under the Easy, Standard or Hard table");
-  says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion (at most ${M.max})`, "At the Table, Chases");
+  says(TXT.ch8, `${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw Suspicion +${DGF.suspicion.overdraw} (on top).`, "Chapter 8, The Same on Easy, Standard and Hard");
+  says(TXT.ch8, `Local chase: Lead starts at ${localStart}, escape at ${localEscape}; the mob is ${M.base} plus half the Suspicion when it starts, rounded down, at most ${M.max}.`, "Chapter 8, The Same on Easy, Standard and Hard");
+  says(TXT.ch8, `Final flight: Lead starts at ${DGF.lead.finalStart}.`, "Chapter 8, The Same on Easy, Standard and Hard");
+  says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion as it starts (at most ${M.max})`, "At the Table, Chases");
   assert.equal(localMobDifficulty(3), 9, "8 + half of 3, rounded down");
   assert.equal(localMobDifficulty(100), M.max);
+});
+
+test("the outside review's rules (Chapters 4–6) are what the Foundry logic does: one chase one rise, giving up, any ability as a raise, everyone held, the way out once a Turn", () => {
+  // D1: one chase, one rise
+  says(TXT.ch6, "One chase, one rise. A local chase raises Suspicion once, when it ends, by the biggest trigger among all its rolls, however many rounds it took and whoever rolled them: Trouble +1, the Monster showing +2. An overdraw in the chase adds its +2 on top. Until the chase ends, Suspicion stays where it was.", "Chapter 6, One chase, one rise");
+  says(TXT.ch5, "If a local chase’s rise reaches it, an escaped runner joins the flight; anyone cornered was captured first.", "Chapter 5, At the Limit");
+  // R1: the result first
+  says(TXT.ch5, "A roll’s result comes first, so if the roll that reaches the Limit gets the party out, it’s out, and captives it frees join the flight.", "Chapter 5, At the Limit");
+  let c = startRound(newChase({ id: "x", members: [memberOf({ id: "a", name: "A", system: { entityKey: "witch" } }), memberOf({ id: "b", name: "B", system: { entityKey: "dracula" } })] }), { face: 1 });
+  c = recordRoll(c, "a", { messageId: "1", band: "trouble", rise: DGF.suspicion.trouble, riseKeys: ["trouble"], overdraws: 1 }).chase;
+  c = recordRoll(c, "b", { messageId: "2", band: "success", rise: DGF.suspicion.monsterShows, riseKeys: ["monster"] }).chase;
+  assert.equal(chaseRise(c).total, DGF.suspicion.monsterShows + DGF.suspicion.overdraw, "the biggest trigger, and the overdraw on top");
+  // D2: giving up
+  says(TXT.ch6, "Giving up. At the start of any round, a runner may give up and be captured, with no roll. Anyone caught with it carries on without it.", "Chapter 6, The Local Chase");
+  assert.equal(canGiveUp(c, "a").reason, "roundStarted", "at the start of a round only");
+  assert.deepEqual(giveUp(resolveRound(c).chase, "a").chase.members.map((m) => m.actorId), ["b"], "the other carries on");
+  // D6b: any ability as a raise in the final flight
+  says(TXT.ch6, "Any ability may also be spent as a raise (the trait die one size bigger) instead of doing what it usually does. Still one raise per roll.", "Chapter 6, The Final Flight");
+  // D7b: everyone held
+  says(TXT.ch6, "Everyone held. If every Entity in the party is held at once, the night ends there and then. The town has the lot of you, and the year is Forked.", "Chapter 6, Captured");
+  // R4: the way out once a Turn
+  says(TXT.ch4, "The way out can be rolled once a Turn, so try again next Turn.", "Chapter 4, Getting Out");
 });
 
 test("the Lead and the majority rule (Chapter 6, At the Table) are what the rules logic does", () => {
@@ -237,13 +266,13 @@ test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
   const want = DGF.chaseTable.map((r, i) => [`${i + 1}`, `${r.name}. ${r.text}`, r.traits.map((t) => TRAIT[t]).join(", ")]);
   assert.deepEqual(tableAfter(CH.ch6, "The Chase Table"), want);
   const ref = chapter(CH.ref).match(/<table class="tbl ref-numbers">[\s\S]*?<\/table>/g)[1];
-  assert.deepEqual(rowsOf(ref), want, "At the Table's chase table");
+  assert.deepEqual(rowsOf(ref), want.map(([n, , traits], i) => [n, DGF.chaseTable[i].name, traits]), "At the Table's chase table (names only)");
   assert.ok(DGF.chaseTable.every((r) => r.traits.some((t) => t !== "nimble")), "every ground offers a trait that isn't Nimble (Chapter 6)");
 });
 
 test("the way out and the lock-up's traits (Chapters 4 and 6, At the Table) are DGF.wayOut and DGF.lockup", () => {
   says(TXT.ch4, `The way out is one watched obstacle: ${ways(DGF.wayOut)}, at Difficulty ${L.easy.exit} on Easy, ${L.standard.exit} on Standard and ${L.hard.exit} on Hard.`, "Chapter 4, Getting Out");
-  says(TXT.ref, `The way out (watched): ${ways(DGF.wayOut)}; one roll for all, everyone not captured there.`, "At the Table, Turns");
+  says(TXT.ref, `The way out (watched): ${ways(DGF.wayOut)}; one roll for all, once a Turn, everyone not captured there.`, "At the Table, Turns");
   const traits = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Traits");
   assert.deepEqual(traits, ["Traits", ways(DGF.lockup.rescue), ways(DGF.lockup.slip)], "Chapter 6, Captured: the rescue's and slipping free's traits");
   says(TXT.ch6, "The lock-up is always watched", "Chapter 6, Captured");
@@ -253,7 +282,7 @@ test("the way out and the lock-up's traits (Chapters 4 and 6, At the Table) are 
 
 test("what raises Suspicion (Chapter 5's table, Chapter 3, At the Table, Entity Sheet) is DGF.suspicion", () => {
   const S = DGF.suspicion;
-  const KEY = [[/^Trouble$/, "trouble"], [/Monster shows/, "monsterShows"], [/loud way/, "loud"], [/^A Cost/, "cost"], [/^Overdraw$/, "overdraw"], [/Tell/, "tell"], [/furniture/i, "furniture"]];
+  const KEY = [[/^Trouble$/, "trouble"], [/Monster shows/, "monsterShows"], [/loud way/, "loud"], [/^A Cost/, "cost"], [/^Overdraw( \(on top of the rest\))?$/, "overdraw"], [/Tell/, "tell"], [/furniture/i, "furniture"]];
   const rows = tableAfter(CH.ch5, "What Raises It");
   const seen = rows.map(([label, value]) => {
     const k = KEY.find(([re]) => re.test(label))?.[1];
@@ -264,11 +293,15 @@ test("what raises Suspicion (Chapter 5's table, Chapter 3, At the Table, Entity 
   assert.deepEqual([...seen].sort(), Object.keys(S).sort(), "Chapter 5's table lists every trigger once");
   says(TXT.ch3, `the Monster shows: Suspicion +${S.monsterShows}, whatever the result`, "Chapter 3, The Monster Shows");
   says(TXT.ch3, `overdrawing: it costs Suspicion +${S.overdraw} instead of a charge`, "Chapter 3, Abilities");
-  says(TXT.ref, `Trouble +${S.trouble} · the Monster shows +${S.monsterShows} · the loud way +${S.loud} · a Cost chosen as Suspicion +${S.cost} · overdraw +${S.overdraw} · a Tell +${S.tell}`, "At the Table, Suspicion");
+  says(TXT.ref, `Trouble +${S.trouble} · the Monster shows +${S.monsterShows} · the loud way +${S.loud} · a Cost chosen as Suspicion +${S.cost} · overdraw +${S.overdraw} on top · a Tell +${S.tell}`, "At the Table, Suspicion");
   says(TXT.ref, `furniture, each Turn once taken +${S.furniture}`, "At the Table, Suspicion");
   says(TXT.sheet, `it shows if its number beats your trait die’s: Suspicion +${S.monsterShows}`, "the Entity Sheet");
   says(TXT.sheet, `overdraw: Suspicion +${S.overdraw}`, "the Entity Sheet");
   assert.equal(suspicionForRoll({ band: "trouble", show: true }), Math.max(S.trouble, S.monsterShows), "one roll, one rise");
+  // D3: the one exception: an overdraw adds its +2 on top
+  says(TXT.ch5, "The one exception is an overdraw, which always adds its +2 on top.", "Chapter 5, One Roll, One Rise");
+  says(TXT.ch3, `it costs Suspicion +${S.overdraw} instead of a charge, on top of anything else the roll raises`, "Chapter 3, Abilities");
+  assert.equal(suspicionForRoll({ band: "trouble", show: true, overdraw: true }), Math.max(S.trouble, S.monsterShows) + S.overdraw, "an overdraw on top");
 });
 
 test("Tells go off on 4–6 on a d6 (Chapters 2 and 5, At the Table) as DGF.tell", () => {
@@ -416,7 +449,8 @@ test("the year's results and the epilogue (Chapter 7) are DGF.results and DGF.ep
   says(TXT.ch7, "Less than half the list home: 0–1 of 4, 0–2 of 5", "Chapter 7, Bust");
   assert.deepEqual([0, 1, 2, 3, 4].map((n) => yr(4, n)), ["bust", "bust", "partial", "partial", "partial"]);
   assert.deepEqual([0, 1, 2, 3, 4, 5].map((n) => yr(5, n)), ["bust", "bust", "bust", "partial", "partial", "partial"]);
-  says(TXT.ch7, "Two left behind drop it two steps. It never drops below Bust.", "Chapter 7, Left Behind");
+  says(TXT.ch7, "Two left behind drop it two steps. It never drops below Bust, and a Forked year stays Forked.", "Chapter 7, Left Behind");
+  says(TXT.ch7, "Cornered in the final flight, or every Entity held at once: the raid is lost, and nothing comes home", "Chapter 7, Forked (D7b)");
   assert.equal(yearResult({ listSize: 5, itemsHome: 5, essentialsAllHome: true, extrasMissing: 0, furnitureHome: true, leftBehind: 2 }), "partial");
   assert.equal(yearResult({ listSize: 5, itemsHome: 3, essentialsAllHome: false, extrasMissing: 0, leftBehind: 3 }), "bust");
 });
@@ -467,7 +501,7 @@ test("the shopping table (Chapter 8) is DGF.shoppingTable, its kinds and places 
 test("every kind has three places, and Chapter 8 says how to place a list (V15)", () => {
   for (const d of DGF.duties) assert.equal(d.where.split(", ").length, 3, `${d.name}: three places, so a d3 always lands on one`);
   says(TXT.ch8, "Roll a d3, or pick: 1 is the first place listed, 2 the second, 3 the third. One item per place.", "Chapter 8, Rolling a Town");
-  says(TXT.ch8, "If a kind has more items than places, two of them share a place: one location, guarding both items.", "Chapter 8, Rolling a Town");
+  says(TXT.ch8, "If a kind has more items than places, they share places, two to a place: one location, guarding both items.", "Chapter 8, Rolling a Town");
 });
 
 test("the villagers (Chapter 8) are DGF.villagers", () => {
@@ -541,7 +575,7 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   const comment = ex.match(/<!-- Every die above was rolled for real[\s\S]*?-->/);
   assert.ok(comment, "the example records its dice");
   says(comment[0].replace(/\s+/g, " "), "Tell checks d6 2, 1; Werewolf d12 10 + Mask 4; Witch d10 1 + Monster 4; chase ground d6 6, Witch d12 12 + Monster 3; ground 6, d12 2 + Monster 9; ground 5, d10 5 + Monster 7; Dracula d8 7 + Mask 2; Creature d10 5 + Mask 2; Witch d10 7 + Monster 4; Tell check d6 4; whose (1–3 Dracula, 4–6 the Creature) d6 6", "the example's dice comment");
-  assert.ok(html.indexOf("<h3>An Example of Play</h3>") > html.indexOf('id="town-thistlewick"'), "the example follows Thistlewick");
+  assert.ok(headingAt(html, "An Example of Play") >= 0 && headingAt(html, "An Example of Play") < html.indexOf('id="town-thistlewick"'), "the example comes before the town pages (Thistlewick's follows)");
 
   const town = TOWNS.find((t) => t.key === "thistlewick");
   const Lb = L[town.label];
@@ -575,15 +609,17 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
   says(text, `${r.t} + ${r.s} = ${r.t + r.s}. That is ${r.d - r.t - r.s} short, Trouble`, "Turn 2");
   says(text, `Suspicion goes up by the bigger trigger, to ${suspicion}`, "Turn 2");
 
-  // the Witch's local chase
-  let lead = DGF.lead.localStart;
-  let mob = localMobDifficulty(suspicion);
-  says(text, `Her Lead starts at ${lead}, and the mob is ${DGF.localMob.base} + half the Suspicion: ${mob}`, "the chase");
+  // the Witch's local chase (D1: the mob set as it starts, for the whole chase; one rise, when it ends), worked through
+  // the Foundry system's own chase logic (module/logic/chase.mjs)
+  const mob = localMobDifficulty(suspicion);
+  let chase = newChase({ id: "example", members: [memberOf({ id: "witch", name: "A Witch", system: { entityKey: "witch", perk: "familiarsWarning" } })], suspicion });
+  assert.equal(chase.mob, mob);
+  says(text, `Her Lead starts at ${chase.lead}, and the mob is ${DGF.localMob.base} + half the Suspicion as the chase starts: ${mob}, for the whole chase.`, "the chase");
   const ground = (f) => DGF.chaseTable[f - 1];
   const rounds = [
-    { f: 6, trait: "wits", t: 12, s: 3, said: (x) => `Round 1, a dead end: Wits d12 and the Monster, ${x.t} + ${x.s} = ${x.t + x.s}, Lead ${x.lead}` },
-    { f: 6, trait: "wits", t: 2, s: 9, said: (x) => `Round 2, another dead end: ${x.t} + ${x.s} = ${x.t + x.s}, Lead ${x.lead}, but the Monster showed: Suspicion ${x.susp}, and the mob is now ${x.mob}` },
-    { f: 5, trait: "sly", t: 5, s: 7, weakness: true, hedge: true, said: (x) => `rolls ${x.t} + ${x.s} = ${x.t + x.s}: Lead ${x.lead}, and she escapes. The Monster showed again: Suspicion ${x.susp}` },
+    { f: 6, trait: "wits", t: 12, s: 3, said: (x) => `Round 1, a dead end: Wits d12 and the Monster, ${x.t} + ${x.s} = ${x.t + x.s}, Lead ${x.lead}.` },
+    { f: 6, trait: "wits", t: 2, s: 9, said: (x) => `Round 2, another dead end: ${x.t} + ${x.s} = ${x.t + x.s}, Lead ${x.lead}, and the Monster showed, so this chase will cost her +${x.rise} when it ends.` },
+    { f: 5, trait: "sly", t: 5, s: 7, weakness: true, hedge: true, said: (x) => `rolls ${x.t} + ${x.s} = ${x.t + x.s}: Lead ${x.lead}, and she escapes. The Monster showed again, but a chase raises Suspicion only once, by its biggest trigger: +${x.rise}, to ${x.susp}.` },
   ];
   for (const [i, x] of rounds.entries()) {
     const g = ground(x.f);
@@ -593,13 +629,19 @@ test("Chapter 9's example of play: every total, Lead, mob and Suspicion follows 
     const die = raise(E.witch.dice[x.trait], ...(x.weakness ? [-1] : []), ...(x.hedge ? [+1] : []));
     if (x.weakness) says(text, `her Weakness makes her Sly d${E.witch.dice.sly} a d${raise(E.witch.dice.sly, -1)}`, `round ${i + 1}`);
     assert.ok(x.t <= die && x.s <= DGF.second.monster, `round ${i + 1}: faces fit the dice`);
-    const b = band(x.t + x.s, mob);
-    lead += leadMove({ band: b, critical: isCritical(x.t, x.s, mob) });
-    if (monsterShows(x.t, x.s)) suspicion += suspicionForRoll({ band: b, show: true });
-    mob = localMobDifficulty(suspicion);
-    says(text, x.said({ ...x, lead, susp: suspicion, mob }), `round ${i + 1}`);
+    const b = band(x.t + x.s, chase.mob);
+    const show = monsterShows(x.t, x.s);
+    const r1 = Math.max(b === "trouble" ? DGF.suspicion.trouble : 0, show ? DGF.suspicion.monsterShows : 0);
+    chase = startRound(chase, { face: x.f, suspicion: suspicion + 99 }); // the Suspicion now doesn't move the mob
+    chase = recordRoll(chase, "witch", { messageId: `r${i}`, band: b, critical: isCritical(x.t, x.s, chase.mob), rise: r1, riseKeys: show ? ["monster"] : r1 ? ["trouble"] : [] }).chase;
+    chase = resolveRound(chase).chase;
+    assert.equal(chase.mob, mob, `round ${i + 1}: the mob stays ${mob}`);
+    const rise = chaseRise(chase).total;
+    says(text, x.said({ ...x, lead: chase.lead, rise, susp: suspicion + rise }), `round ${i + 1}`);
   }
-  assert.equal(lead, DGF.lead.localEscape, "she escapes at the local chase's escape number");
+  assert.equal(chase.outcome, "escaped");
+  assert.equal(chase.lead, DGF.lead.localEscape, "she escapes at the local chase's escape number");
+  suspicion += chaseRise(chase).total; // the chase's one rise, when it ends
   assert.ok(ground(5).name.toLowerCase().includes("festival parade"));
 
   // the china shop: Dracula's front door, the creature's back room (a Cost chosen as Suspicion)

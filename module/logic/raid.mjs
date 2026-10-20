@@ -7,8 +7,8 @@
  * the whole town hunts. Every function returns a new state; nothing is mutated.
  *
  *   state = { v, raidId, difficulty, limit, turn, turns, dawn, hunt, huntCause,
- *             ledger: [{ id, eventId, amount, source, label, actorName, messageId,
- *                        turn, cancelled, hunt }], seq,
+ *             ledger: [{ id, eventId, amount, extra, source, label, actorName, messageId,
+ *                        turn, cancelled, hunt }], seq,   // extra: D3, an overdraw's +2 on top of its event
  *             chase,   // the chase running (or the last one), module/logic/chase.mjs; null
  *             group,   // the group check open (or the last one), module/logic/checks.mjs; null
  *             tells,   // the Tell checks made: [{ id, place, turn, goesOff, actorId, name }]
@@ -21,7 +21,8 @@
  *             readied,  // F26: the Entities a new raid (or the Storyteller's tick) made ready for this raid; null in an older raid
  *             partyOut, // null, or { how: "wayOut" | "flight", turn, piece } once the party has left town (no hunt or chase starts);
  *                       //   piece: what that leaving made of the furniture ("out" | "lost"), or "" if it moved nothing
- *             endedChase } // the local chase the Limit ended (B3: cornered that round = captured first)
+ *             wayOutTurn, // R4: the Turn the way out was last rolled (0: not yet): once a Turn
+ *             endedChase } // the local chase the hunt ended or followed (D1: its rise brought the Limit; F25: dawn or the hunt by hand)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
  * 12th Turn ends), Chapter 5 (the Limit by difficulty; one roll, one rise; at the
@@ -30,6 +31,7 @@
  */
 import { DGF } from "../config.mjs";
 import { foldSuspicion, addEntry, cancelEvent, restoreEvent } from "./suspicion.mjs";
+import { chaseRise, riseEventId } from "./chase.mjs";
 
 export const RAID_VERSION = 2;
 /** V4: the furniture's piece in this raid. */
@@ -62,6 +64,7 @@ export function newRaid({ id = "", difficulty = "standard", readied = [] } = {})
     dropped: [],
     readied: [...readied],
     partyOut: null,
+    wayOutTurn: 0,
     endedChase: null,
   };
 }
@@ -93,6 +96,7 @@ export function normalizeRaid(stored) {
     readied: Array.isArray(s.readied) ? s.readied : null, // an older raid didn't keep it: nobody is made ready again
     dropped: Array.isArray(s.dropped) ? s.dropped : [],
     partyOut: s.partyOut && typeof s.partyOut === "object" ? s.partyOut : null,
+    wayOutTurn: num(s.wayOutTurn, 0),
     endedChase: s.endedChase && typeof s.endedChase === "object" && Array.isArray(s.endedChase.members) ? s.endedChase : null,
   };
 }
@@ -102,19 +106,21 @@ export function suspicionOf(state) {
   return foldSuspicion(state.ledger, state.limit);
 }
 
-/** The ledger's events, newest first: one row per eventId, with its applied amount. */
+/** The ledger's events, newest first: one row per eventId, with its applied amount (the biggest trigger, plus every overdraw on top, D3). */
 export function eventsOf(state) {
   const rows = new Map();
   for (const e of state.ledger) {
     const r = rows.get(e.eventId);
-    if (!r) rows.set(e.eventId, { ...e, sources: [e.source], lastSeq: e.seq ?? 0 });
+    if (!r) rows.set(e.eventId, { ...e, top: e.amount, extra: e.extra ?? 0, sources: [e.source], lastSeq: e.seq ?? 0 });
     else {
-      if (e.amount > r.amount) Object.assign(r, { amount: e.amount, label: e.label || r.label });
+      if (e.amount > r.top) Object.assign(r, { top: e.amount, label: e.label || r.label });
+      r.extra += e.extra ?? 0;
       r.sources.push(e.source);
       r.lastSeq = Math.max(r.lastSeq, e.seq ?? 0);
       r.cancelled = r.cancelled && e.cancelled;
     }
   }
+  for (const r of rows.values()) r.amount = r.top + r.extra;
   return [...rows.values()].sort((a, b) => b.lastSeq - a.lastSeq);
 }
 
@@ -144,16 +150,18 @@ export function raidView(state) {
 /**
  * Record (part of) an event. Entries sharing an eventId apply only their largest
  * amount (one roll, one rise; a group check's rolls share one event, so it rises
- * once, by the worst); the same eventId + source + message again replaces that
- * entry, so a retried request never counts twice. While the hunt is on the entry
- * is kept but ignored (Suspicion stops).
+ * once, by the worst), and each entry's `extra` on top (D3: an overdraw's +2); the
+ * same eventId + source + message again replaces that entry, so a retried request
+ * never counts twice. While the hunt is on the entry is kept but ignored (Suspicion
+ * stops) — unless `beforeHunt` (F25: a local chase's rise so far, applied as the hunt ends it).
  */
-export function recordEvent(state, { eventId, amount, source, label = "", actorName = "", messageId = "" }) {
+export function recordEvent(state, { eventId, amount, extra = 0, source, label = "", actorName = "", messageId = "", beforeHunt = false }) {
   if (!eventId) throw new Error("an event needs an eventId");
   if (!Number.isFinite(amount)) throw new Error(`event ${eventId}: amount must be a number`);
+  if (!(Number.isFinite(extra) && extra >= 0)) throw new Error(`event ${eventId}: extra must be a number, 0 or more`);
   const seq = state.seq + 1;
   const id = messageId ? `${eventId}:${source}:${messageId}` : `${eventId}:${source}`;
-  const entry = { id, eventId, amount, source, label, actorName, messageId, turn: state.turn, seq, cancelled: false, hunt: state.hunt };
+  const entry = { id, eventId, amount, extra, source, label, actorName, messageId, turn: state.turn, seq, cancelled: false, hunt: beforeHunt ? false : state.hunt };
   const i = state.ledger.findIndex((e) => e.eventId === eventId && e.source === source && (e.messageId ?? "") === messageId);
   let ledger;
   if (i >= 0) {
@@ -220,11 +228,39 @@ export function huntDue(state, before = null) {
   return "";
 }
 
-/** The amount an event raises now (its biggest live entry), or 0. */
+/**
+ * The rise an event's triggers make now (its biggest live entry), or 0: what decides whether a Cost's Suspicion +1
+ * would add anything (an overdraw's +2 on top, D3, doesn't count here).
+ */
 export function eventAmount(state, eventId) {
   let best = 0;
   for (const e of state.ledger) if (e.eventId === eventId && !e.cancelled && !e.hunt && e.amount > best) best = e.amount;
   return best;
+}
+
+/**
+ * D1 (Chapter 6, One chase, one rise): a local chase is over: it raises Suspicion once, by the biggest trigger among
+ * all its rolls, plus +2 for each overdraw made in it (D3) — one event, its own (so a retry never counts twice).
+ * `beforeHunt` (F25): the hunt ended the chase; its rise so far still goes on the track.
+ */
+export function applyChaseRise(state, chase, { beforeHunt = false } = {}) {
+  const r = chaseRise(chase);
+  if (!(r.total > 0)) return state;
+  const names = [...(chase.members ?? []), ...(chase.gaveUp ?? [])].map((m) => m.name).filter(Boolean);
+  return recordEvent(state, {
+    eventId: riseEventId(chase), amount: r.rise, extra: r.overdrawRise, source: "chase",
+    label: [...r.keys, ...(r.overdraws ? ["overdraw"] : [])].join(","), actorName: [...new Set(names)].join(", "), beforeHunt,
+  });
+}
+
+/** R4 (Chapter 4, Getting Out): the way out has been rolled this Turn (it can be rolled once a Turn). */
+export function markWayOut(state, turn = state.turn) {
+  return state.wayOutTurn === turn ? state : { ...state, wayOutTurn: turn };
+}
+
+/** R4: has the way out already been rolled this Turn? */
+export function wayOutRolled(state) {
+  return !!state?.wayOutTurn && state.wayOutTurn === state.turn && !state.dawn;
 }
 
 /** The raid with this chase (module/logic/chase.mjs) as its current one (null: none). */
@@ -372,11 +408,14 @@ export function leaveTown(state, how, { carried = true } = {}) {
 
 /**
  * The Storyteller takes back a mistaken leaving of town: the party is in town again. A piece that leaving
- * took out of town or left behind (and nobody has changed since) is in play again: it was taken. Nothing else changes.
+ * took out of town or left behind (and nobody has changed since) is in play again: it was taken; and the way-out roll
+ * that took them out no longer counts as this Turn's (R4). Nothing else changes.
  */
 export function backInTown(state) {
   if (!state.partyOut) return state;
   const s = { ...state, partyOut: null };
+  // R4: the way-out roll that took the party out is taken back with it: the way out can be rolled again this Turn
+  if (state.partyOut.how === "wayOut" && state.wayOutTurn === state.partyOut.turn) s.wayOutTurn = 0;
   const piece = state.partyOut.piece;
   return piece && state.furniture === piece ? setFurniture(s, "inPlay") : s;
 }

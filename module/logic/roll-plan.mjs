@@ -18,12 +18,13 @@
  *   trait,                              // the trait the obstacle calls for
  *   second,                             // "mask" | "monster"
  *   difficulty,                         // the obstacle's Difficulty (or the way out's)
- *   abilities: [{ payerId, payerName, slot, name, effect, trait, noLoot, watchedOnly,
- *                 payer: { charges, weaknessInPlay } }],   // spent before the roll
+ *   abilities: [{ payerId, payerName, slot, name, effect, trait, noLoot, watchedOnly, asRaise,
+ *                 payer: { charges, weaknessInPlay } }],   // spent before the roll; asRaise: D6b, spent as a raise (final flight)
  *   duty,      // at a location whose list item is the roller's Castle Duty kind
  *   loud,      // taking the loud way
  *   watched,   // the obstacle is watched
  *   wayOut,    // this is the way out of town (always watched; Shortcut)
+ *   wayOutRolled, // R4: the way out has already been rolled this Turn (once a Turn; the switch wayOutOncePerTurn)
  *   partyPerks, // the way out: the Perks of the others there (everyone not captured; Fetch)
  *   chase,     // a chase roll (a local chase; every roll once the hunt is on)
  *   hunt,      // the whole town hunts (Suspicion stops, the Mask is off)
@@ -63,6 +64,18 @@ export function buildRollPlan(input) {
   const abilities = (input.abilities ?? []).map((a) => ({ ...a }));
   const isOwn = (a) => a.payerId === rollerId;
 
+  // D6b (Chapter 6, The Final Flight): any ability may be spent as a raise (the trait die one size bigger) instead of
+  // doing what it usually does — only in the final flight. It still costs its charge, and still counts as the one raise.
+  for (const a of abilities.filter((x) => x.asRaise)) {
+    if (!hunt) errors.push({ code: "raiseOnlyInFlight", name: a.name });
+    Object.assign(a, { usual: a.effect, effect: "raise", trait: null, noLoot: false, watchedOnly: false });
+  }
+  // each ability goes on a roll once, one way or the other
+  const spentTwice = abilities.filter((a, i) => abilities.findIndex((b) => b.payerId === a.payerId && b.slot === a.slot) !== i);
+  for (const a of spentTwice) errors.push({ code: "sameAbilityTwice", name: a.name });
+  // the Draught changes form from the sheet; on a roll it goes only as a raise, in the final flight
+  if (abilities.some((a) => a.effect === "form")) errors.push({ code: "draughtNotOnRoll" });
+
   // Chapter 6: in a local chase, abilities help only your own roll (anyone's in the final flight).
   if (chase && !hunt && abilities.some((a) => !isOwn(a))) errors.push({ code: "helpInLocalChase" });
 
@@ -85,6 +98,7 @@ export function buildRollPlan(input) {
   const captive = sys.status === "captured";
   if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free
   if (mode === "slip") for (const code of slipProblems(sys, { turn: Number(input.turn) || 0 })) errors.push({ code });
+  if (mode === "wayOut" && input.wayOutRolled) errors.push({ code: "wayOutOncePerTurn" }); // R4: the way out can be rolled once a Turn
   if ((mode === "slip" || mode === "rescue") && hunt) errors.push({ code: "lockupInHunt" }); // everyone not captured is in the final flight
   if (listed) {
     const all = [...listed.quiet, ...listed.loud];
@@ -160,7 +174,10 @@ export function buildRollPlan(input) {
     if (!pay.allowed) errors.push({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: p.payerName }); // B3: once per flight
     return { ...p, ...pay };
   });
-  const overdraw = !hunt && payments.some((p) => p.overdraw > 0);
+  // D3: outside the final flight each overdraw costs Suspicion +2 on top of the roll's other rise (in a local chase, on
+  // top of the chase's one rise); in the flight it costs the Weakness instead (payFor)
+  const overdraws = hunt ? 0 : payments.reduce((n, p) => n + (p.overdraw > 0 ? p.overdraw : 0), 0);
+  const overdraw = overdraws > 0;
 
   // V17 Out of Sight: Trouble gets you caught only while you or anyone in the same place carries loot or furniture. The
   // roller's own carrying counts by itself; a helper on this roll is at the same place; anyone else is the dialog's tick.
@@ -207,6 +224,7 @@ export function buildRollPlan(input) {
     abilities,
     payments,
     overdraw,
+    overdraws,
     weaknessFromOverdraw: payments.filter((p) => p.weakness).map((p) => p.payerId),
     showMargin: P.showMargin && P.trait === trait ? P.showMargin : 1,
     formMargin: forms.length > 1 && sys.form === forms[0] ? (P.formMargin ?? 1) : null,
@@ -223,24 +241,35 @@ export function buildRollPlan(input) {
 
 /**
  * Read the dice for a plan. Suspicion: one roll raises it once, by its biggest
- * trigger (Trouble +1, the Monster shows +2, the loud way +1, overdraw +2),
- * nothing once the hunt is on. Returns everything the chat card shows.
+ * trigger (Trouble +1, the Monster shows +2, the loud way +1), and each overdraw
+ * adds +2 on top (D3); nothing once the hunt is on. D1: a local chase roll raises
+ * nothing now: what it would (`chaseRise`, its trigger keys, `chaseOverdraws`) waits
+ * for the chase's one rise when it ends (the ground has no loud way). Returns
+ * everything the chat card shows: `suspicion` (raised now) = `rise` (the biggest
+ * trigger) + `overdrawRise` (the overdraws on top).
  */
 export function resolvePlannedRoll(plan, traitFace, secondFace) {
   const base = resolveRoll({
     traitFace, secondFace, difficulty: plan.difficulty, second: plan.second,
-    hidden: plan.hidden, loud: plan.loud && plan.loudAmount > 0, overdraw: plan.overdraw, hunt: plan.hunt,
+    hidden: plan.hidden, loud: plan.loud && plan.loudAmount > 0 && !plan.chase, overdraw: plan.overdraws ?? (plan.overdraw ? 1 : 0), hunt: plan.hunt,
   });
   const margin = secondFace - traitFace;
   const monster = plan.second === "monster";
   const showed = monster && margin >= plan.showMargin;
   const show = showed && !plan.hidden;
+  const localChase = plan.chase && !plan.hunt;
+  const overdraws = plan.hunt ? 0 : (plan.overdraws ?? (plan.overdraw ? 1 : 0));
   const triggers = [];
   if (base.band === "trouble") triggers.push({ key: "trouble", amount: DGF.suspicion.trouble });
   if (show) triggers.push({ key: "monster", amount: plan.monsterAmount });
-  if (plan.loud && plan.loudAmount > 0) triggers.push({ key: "loud", amount: plan.loudAmount });
-  if (plan.overdraw) triggers.push({ key: "overdraw", amount: DGF.suspicion.overdraw });
-  const suspicion = plan.hunt ? 0 : Math.max(0, ...triggers.map((t) => t.amount));
+  if (plan.loud && plan.loudAmount > 0 && !plan.chase) triggers.push({ key: "loud", amount: plan.loudAmount });
+  if (overdraws) triggers.push({ key: "overdraw", amount: overdraws * DGF.suspicion.overdraw, onTop: true });
+  const top = plan.hunt ? 0 : Math.max(0, ...triggers.filter((t) => !t.onTop).map((t) => t.amount));
+  const topKeys = top > 0 ? triggers.filter((t) => !t.onTop && t.amount === top).map((t) => t.key) : [];
+  const overdrawRise = overdraws * DGF.suspicion.overdraw;
+  const rise = localChase ? 0 : top;
+  const onTop = localChase ? 0 : overdrawRise;
+  const suspicion = rise + onTop;
   const caught = base.band === "trouble" && plan.watched && !plan.chase && (!plan.caughtOnlyCarrying || plan.carrying);
   return {
     traitFace,
@@ -253,12 +282,18 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
     hiddenShow: showed && plan.hidden,
     triggers,
     suspicion,
+    rise,
+    overdrawRise: onTop,
+    riseKeys: localChase ? [] : topKeys,
+    chaseRise: localChase ? top : 0,
+    chaseRiseKeys: localChase ? topKeys : [],
+    chaseOverdraws: localChase ? overdraws : 0,
     caught,
     troubleUnwatched: base.band === "trouble" && !plan.watched && !plan.chase && plan.lockup !== "slip",
     unseen: base.band === "trouble" && plan.watched && !caught && !plan.chase, // Out of Sight: watched, but nobody there carries anything
     formShift: plan.formMargin !== null && monster && margin >= plan.formMargin,
     chargeBack: base.critical && !plan.chase, // in a chase a Critical moves the Lead instead
-    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip", wayOut: plan.wayOut }),
+    costs: costOptions({ band: base.band, trait: plan.trait, perk: plan.perk, suspicion: rise, carriesLoot: plan.carriesLoot, chase: plan.chase, hunt: plan.hunt, slip: plan.lockup === "slip", wayOut: plan.wayOut }),
     leadMove: plan.chase ? leadMove(base) : 0, // one Entity's move; a shared Lead moves by the majority rule (module/logic/chase.mjs)
     freed: plan.lockup === "slip" && slipFrees(base.band, plan.perk), // only a Success frees you (Built to Last: a Cost too)
     slipTrouble: plan.lockup === "slip" && base.band === "trouble", // Suspicion rises, but no chase starts
@@ -269,8 +304,8 @@ export function resolvePlannedRoll(plan, traitFace, secondFace) {
 
 /**
  * P3 + T10: the Costs the Storyteller may pick on a Cost result. Never one that
- * costs nothing right then: no Suspicion +1 the roll already raised (or once the
- * hunt is on); "drop an item" only if the roller carries loot; in a chase a Cost
+ * costs nothing right then: no Suspicion +1 the roll's triggers already raised (`suspicion`:
+ * the roll's rise without its overdraws, which add on top, D3), or once the hunt is on; "drop an item" only if the roller carries loot; in a chase a Cost
  * costs nothing more; slipping free from the lock-up, a Cost does nothing; at the
  * way out a Cost gets everyone out, free (Chapter 4, T4). Perks remove options (Old Money, Patience of Ages, Keeper
  * of Treasures, Wise Woman). "A lost Turn when nothing waits" is the Storyteller's call.

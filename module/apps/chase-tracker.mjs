@@ -3,12 +3,14 @@
  * ----------------------------------------------------
  * Everyone sees the chase: who is in it, the Lead track (0 = cornered, the
  * escape number = clear), the mob's Difficulty, this round's ground and the
- * traits that work, whose Weakness is in play, who has rolled. Each player gets
- * a Roll button for their own Entity; the Storyteller gets the controls (roll
- * the ground, move the Lead by the rolls, Lead ±1, escaped / cornered / call it
- * off, add or take out an Entity, start the final flight by hand). Every control
- * is a GM operation (module/raid/chase-flow.mjs); the rules are in
- * module/logic/chase.mjs.
+ * traits that work, whose Weakness is in play, who has rolled, and (D1) the
+ * local chase's rise so far, which comes when it ends. Each player gets a Roll
+ * button for their own Entity and, at the start of a round in a local chase, a
+ * Give up button (D2: captured, no roll); the Storyteller gets those for everyone
+ * and the controls (roll the ground, move the Lead by the rolls, Lead ±1, escaped /
+ * cornered / call it off, add or take out an Entity, start the final flight by
+ * hand). Every control is a GM operation (module/raid/chase-flow.mjs); the rules
+ * are in module/logic/chase.mjs.
  */
 import { SYSTEM_ID, SETTINGS, OPS, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -41,6 +43,7 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
       startFlight: ChaseTracker.#op(OPS.chaseStart, { final: true }),
       removeMember: ChaseTracker.#onMember(true),
       addMember: ChaseTracker.#onMember(false),
+      giveUp: ChaseTracker.#onGiveUp,
     },
   };
 
@@ -68,8 +71,11 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
         weaknessName: DGF.entities.find((e) => e.key === m.entityKey)?.weakness?.name ?? "",
         rolled: roll ? `${t(`DGF.Band.${roll.band}`)}${roll.critical ? ` (${t("DGF.Critical")})` : ""}` : "",
         canRoll: running && !!c.ground && !roll && !!actor?.isOwner,
+        // D2: at the start of a round (before anyone has rolled in it), its owner or the Storyteller
+        canGiveUp: C.canGiveUp(c, m.actorId).ok && (isGM || !!actor?.isOwner),
       };
     });
+    const rise = c.kind === "local" ? C.chaseRise(c) : null;
     const inChase = new Set(c.members.map((m) => m.actorId));
     return {
       ...base,
@@ -81,7 +87,11 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
       escape: c.escape,
       pips: Array.from({ length: c.escape + 1 }, (_, n) => ({ n, here: n === c.lead, end: n === 0 || n === c.escape })),
       leadLine: t("DGF.Chase.leadLine", { lead: c.lead, escape: c.escape }),
-      mobLine: c.mob ? t("DGF.Chase.mobShort", { mob: c.mob }) : "",
+      mobLine: c.mob ? t(c.kind === "local" ? "DGF.Chase.mobFixed" : "DGF.Chase.mobShort", { mob: c.mob }) : "",
+      // D1: the local chase's one rise so far (it comes when the chase ends)
+      riseLine: rise && running ? t("DGF.Chase.riseSoFar", { n: rise.total }) : "",
+      riseHint: rise && running ? t("DGF.Chase.riseHint") : "",
+      gaveUp: (c.gaveUp ?? []).map((g) => g.name).join(", "),
       groundLine: ground ? t("DGF.Chase.groundLine", { ground: ground.name, traits: traitList(c.ground.traits) }) : running ? t("DGF.Chase.noGround") : "",
       groundText: ground?.text ?? "",
       members,
@@ -101,6 +111,24 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static #onMember(remove) {
     return async function (event, target) { return runOp(OPS.chaseMember, { actorId: target.dataset.actorId, remove }); };
+  }
+
+  /** D2: give up (captured, no roll) after a confirm; the Storyteller's client checks it's the start of a round. */
+  static async #onGiveUp(event, target) {
+    const actor = game.actors.get(target.dataset.actorId);
+    if (actor?.type !== ACTOR_TYPES.entity) return null;
+    const yes = await foundry.applications.api.DialogV2.confirm({
+      window: { title: t("DGF.Chase.giveUp") },
+      content: `<p>${t("DGF.Chase.giveUpConfirm", { name: foundry.utils.escapeHTML(actor.name) })}</p>`,
+      rejectClose: false,
+    });
+    if (!yes) return null;
+    const result = await runOp(OPS.chaseGiveUp, { actorId: actor.id });
+    if (result?.ok === false && !["noGM", "failed"].includes(result.reason)) {
+      const key = `DGF.Chase.giveUpRefused.${result.reason}`;
+      ui.notifications.warn(game.i18n.has(key) ? t(key) : t("DGF.Notify.refused"));
+    }
+    return result;
   }
 
   static async #onRollFor(event, target) {

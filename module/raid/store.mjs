@@ -8,10 +8,12 @@
  * When it changes, every client fires HOOKS.raidChanged (and suspicionChanged /
  * huntStarted, chaseChanged / chaseEnded) and refreshes its HUD and chase tracker.
  *
- * Slice 2 rides on every write: other parts register a `transform` (state →
- * state, run inside the write, e.g. the hunt starting the final flight) and a
- * `followUp` (run after the write is saved, e.g. rolling the ground, capturing
- * the cornered) with onRaidMutation() — see module/raid/chase-flow.mjs.
+ * Slice 2 rides on every write: other parts register a `settle` (state → state,
+ * run inside the write before the hunt is checked, e.g. a local chase that just
+ * ended raising Suspicion once, D1, so its rise can bring the Limit), a `transform`
+ * (state → state, run inside the write after it, e.g. the hunt starting the final
+ * flight) and a `followUp` (run after the write is saved, e.g. rolling the ground,
+ * capturing the cornered) with onRaidMutation() — see module/raid/chase-flow.mjs.
  */
 import { SYSTEM_ID, SETTINGS, OPS, HOOKS, CARD, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -22,7 +24,7 @@ import { cardOf, updateCard, postCard, setRaidIdReader, setEventAmountReader, po
 import { newRaidUpdate } from "../logic/lockup.mjs";
 import { rollAbilities, isInRaid } from "../logic/entity.mjs";
 import { assignExtraCharges } from "../logic/rules.mjs";
-import { inLocalChase } from "../logic/chase.mjs";
+import { inLocalChase, isRunning, addOverdraw } from "../logic/chase.mjs";
 
 /** The castle's upgrades (campaign play): the pieces brought home, three at most. */
 export function castleUpgrades() {
@@ -41,12 +43,14 @@ export function raidView() {
 }
 
 let queue = Promise.resolve();
+const settlers = []; // (state, before) → state, inside each write, before the hunt is checked
 const transforms = []; // (state, before) → state, inside each write
 const followUps = []; // async (state, before), after each write is saved
 const announcers = []; // async (before, state), inside each write, after the save
 
 /** Register automation that rides on every raid write (see the header). */
-export function onRaidMutation({ transform, followUp, announce } = {}) {
+export function onRaidMutation({ settle, transform, followUp, announce } = {}) {
+  if (settle) settlers.push(settle);
   if (transform) transforms.push(transform);
   if (followUp) followUps.push(followUp);
   if (announce) announcers.push(announce);
@@ -63,6 +67,7 @@ export function mutateRaid(fn) {
     const out = fn(before);
     let state = out && out.state ? out.state : out;
     const result = out && out.state ? out.result : undefined;
+    for (const st of settlers) state = st(state, before);
     let huntCause = "";
     if (setting(SETTINGS.autoHunt)) {
       huntCause = R.huntDue(state, before);
@@ -127,6 +132,8 @@ export function onRaidChange(value, { refresh = () => {} } = {}) {
 
 async function markCards(eventId, patch) {
   const ids = new Set(getRaid().ledger.filter((e) => e.eventId === eventId && e.messageId).map((e) => e.messageId));
+  // a card about an event with no message of its own in the ledger (a local chase's one rise, D1)
+  for (const m of game.messages.contents) if (cardOf(m)?.eventId === eventId) ids.add(m.id);
   for (const id of ids) {
     const m = game.messages.get(id);
     if (m && cardOf(m)) await updateCard(m, patch);
@@ -213,20 +220,33 @@ export function registerRaidOps() {
   setRaidIdReader(() => getRaid().raidId);
   setEventAmountReader((eventId) => R.eventAmount(getRaid(), eventId));
 
-  // Anyone: apply what a roll or ability card raised. The amount comes from the card, never from the request.
+  // Anyone: apply what a roll, ability, Tell or chase card raised. The amount comes from the card, never from the request:
+  // its biggest trigger (`rise`), and D3 its overdraws on top (`overdrawRise`). A card from before D3 has only `suspicion`.
   registerOp(OPS.raidApplyCard, {
     apply: async ({ messageId }) => {
       const message = game.messages.get(messageId);
       const card = cardOf(message);
-      if (!card || ![CARD.roll, CARD.ability, CARD.tell].includes(card.kind)) return { ok: false, reason: "notACard" };
+      if (!card || ![CARD.roll, CARD.ability, CARD.tell, CARD.chase].includes(card.kind)) return { ok: false, reason: "notACard" };
       if (!postedByOwner(message)) return { ok: false, reason: "notTheirs" }; // a card about someone else's Entity
       const raid = getRaid();
       if (card.raidId !== raid.raidId) return { ok: false, reason: "otherRaid" };
       if (card.cancelled) return { ok: false, reason: "cancelled" };
+      // D1 + D3: an overdraw from the sheet in a local chase adds +2 to the chase's one rise, when it ends
+      if (card.kind === CARD.ability && card.chaseOverdraws > 0) {
+        const { result } = await mutateRaid((s) => {
+          if (isRunning(s.chase) && s.chase.id === card.chaseId) return { state: R.setChase(s, addOverdraw(s.chase, { messageId, n: card.chaseOverdraws })), result: "chase" };
+          // the chase is over already (its rise is on the track): the overdraw raises Suspicion now, on its own
+          return { state: R.recordEvent(s, { eventId: card.eventId, amount: 0, extra: card.chaseOverdraws * DGF.suspicion.overdraw, source: card.kind, label: "overdraw", actorName: card.actorName ?? "", messageId }), result: "now" };
+        });
+        if (!card.applied) await updateCard(message, { applied: true, ...(result === "now" ? { suspicion: card.chaseOverdraws * DGF.suspicion.overdraw, chaseId: "" } : {}) });
+        return { ok: true, value: R.suspicionOf(getRaid()).value, to: result };
+      }
       if (!(card.suspicion > 0)) return { ok: true, reason: "noop" };
+      const rise = card.rise ?? card.suspicion;
       const { state } = await mutateRaid((s) => R.recordEvent(s, {
-        eventId: card.eventId, amount: card.suspicion, source: card.kind,
-        label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId,
+        eventId: card.eventId, amount: rise, extra: card.rise === undefined ? 0 : (card.overdrawRise ?? 0), source: card.kind,
+        label: card.suspicionLabel ?? "", actorName: card.actorName ?? "", messageId: card.kind === CARD.chase ? "" : messageId,
+        beforeHunt: card.kind === CARD.chase && !!card.riseBeforeHunt,
       }));
       if (!card.applied) await updateCard(message, { applied: true });
       return { ok: true, value: R.suspicionOf(state).value };
@@ -250,7 +270,10 @@ export function registerRaidOps() {
       if (setting(SETTINGS.autoCosts)) {
         if (choice === "suspicion") {
           await mutateRaid((s) => R.recordEvent(s, { eventId: card.eventId, amount: DGF.suspicion.cost, source: "cost", label: "cost", actorName: card.actorName ?? "", messageId }));
-          Object.assign(patch, { suspicion: Math.max(card.suspicion ?? 0, DGF.suspicion.cost), triggers: [...(card.triggers ?? []), { key: "cost", amount: DGF.suspicion.cost }], applied: true });
+          // the Cost is one of the roll's triggers (the biggest counts); an overdraw still adds on top (D3)
+          const rise = Math.max(card.rise ?? card.suspicion ?? 0, DGF.suspicion.cost);
+          const onTop = card.rise === undefined ? 0 : (card.overdrawRise ?? 0);
+          Object.assign(patch, { rise, suspicion: rise + onTop, triggers: [...(card.triggers ?? []), { key: "cost", amount: DGF.suspicion.cost }], applied: true });
         } else if (choice === "smaller" && isEntity(actor)) {
           await actor.update({ "system.nextRollSmaller": (actor.system.nextRollSmaller ?? 0) + 1 });
         } else if (choice === "loseTurn" && isEntity(actor)) {
@@ -460,13 +483,13 @@ export async function reconcile() {
   const known = new Set(raid.ledger.map((e) => e.messageId).filter(Boolean));
   const recent = game.messages.contents.slice(-100);
   // a roll the raid follows (a group check, a chase round, a capture, the lock-up, the way out) that the GM never saw
-  const tracked = (c) => c.kind === CARD.roll && (c.groupId || c.chaseId || c.lockup || c.caught || c.wayOutBeaten);
+  const tracked = (c) => c.kind === CARD.roll && (c.groupId || c.chaseId || c.lockup || c.caught || c.wayOutBeaten || (c.wayOut && !c.chase));
   const unseen = recent.filter((m) => { const c = cardOf(m); return c && tracked(c) && c.raidId === raid.raidId && !c.gmSeen; });
   // a roll the raid follows is reconciled whatever the switches (raid.roll reads them); its Suspicion only with autoSuspicion
   const todo = !autoSuspicion ? [] : recent.filter((m) => {
     const c = cardOf(m);
     return c && [CARD.roll, CARD.ability, CARD.tell].includes(c.kind) && c.raidId === raid.raidId && !unseen.includes(m)
-      && c.suspicion > 0 && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);
+      && (c.suspicion > 0 || (c.kind === CARD.ability && c.chaseOverdraws > 0)) && !c.hunt && !c.applied && !c.cancelled && !known.has(m.id);
   });
   // a helped roll whose helpers haven't paid yet (whatever the switches: the op reads them)
   const unpaid = recent.filter((m) => { const c = cardOf(m); return c?.kind === CARD.roll && c.raidId === raid.raidId && c.helpersPaid === false; });
