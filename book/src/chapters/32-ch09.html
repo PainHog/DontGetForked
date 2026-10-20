@@ -6,11 +6,30 @@
   </header>
 
   <p class="opener">Three towns ready to raid, one each for Easy, Standard and Hard, each with a map and everything needed to run it.</p>
-  <p>Each location’s rows run in order: its two ways in (picked the first time anyone tries the location, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”.</p>
+  <aside class="box list"><h4>Reading the Town Pages</h4>
+    <ul>
+      <li>Each location’s rows run in order: its two ways in (picked by the first roll at one of them, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”.</li>
+      <li><em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for.</li>
+      <li>Try the furniture’s obstacle once that location’s loot has been taken.</li>
+      <li>The way out (Sly or Nimble, or Brawn the loud way) and the lock-up (Sly, or Brawn the loud way; Nimble too to slip free) are always watched.</li>
+      <li>On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture. Any move takes one Turn (one more carrying furniture).</li>
+      <li>The Lantern Night custom and the villagers are colour; the villagers are the faces at watched obstacles.</li>
+    </ul>
+  </aside>
+
+  <h3 data-toc id="toc-example">An Example of Play</h3>
+  <p>Four players raid Thistlewick (its page follows) as Dracula, the Witch, Frankenstein’s Creature and the Werewolf, with their default picks (Butler, Cook, Handyman and Gardener). Suspicion starts at 0; the Limit is 11.</p>
+  <p><strong>Turn 1.</strong> The party splits. The Witch and the Werewolf head for the baker, where the Witch’s Cook Duty gives her an edge; Dracula and the Creature take the china shop, where Dracula’s Butler Duty gives him the same edge. Both count as watched (the china shop for its back gate, though they’ll use the front door), so the Storyteller makes a <strong>Tell check</strong> at each, a d6 that sets off one arriving Entity’s Tell on 4–6. A 2 and a 1 mean no Tells. (At the baker, the Witch’s Familiar’s Warning would have needed a second 4–6 too.)</p>
+  <p><strong>Turn 2.</strong> At the baker, the party takes the shuttered window. The Werewolf rolls Nimble d12 with the <strong>Mask</strong>: 10 + 4 = 14 against 8, a Success. The window is now open for both, so the Witch goes on to the shopkeeper (Charm, 8, watched). Her Charm d8 is a d10 here (her Duty’s raise). She lets the <strong>Monster</strong> out for the bigger die and rolls 1 + 4 = 5. That is 3 short, <strong>Trouble</strong>, and the Monster’s 4 beat her trait die’s 1, so it showed. One roll, one rise, so Suspicion goes up by the bigger trigger, to 2. The shopkeeper was watching, so the Witch is caught.</p>
+  <p>She runs. Her <strong>Lead</strong> starts at 1, and the mob is 8 + half the Suspicion as the chase starts: 9, for the whole chase. Each round, the Storyteller rolls the ground on the chase table. Round 1, a dead end: Wits d12 and the Monster, 12 + 3 = 15, Lead 2. Round 2, another dead end: 2 + 9 = 11, Lead 3, and the Monster showed, so this chase will cost her +2 when it ends. Round 3, the festival parade. Out comes a sprig of rowan, and her Weakness makes her Sly d10 a d8. She spends a charge on her Hedge Spell to raise it back and rolls 5 + 7 = 12: Lead 4, and she escapes. The Monster showed again, but a chase raises Suspicion only once, by its biggest trigger: +2, to 4. (Once the Monster has shown in a chase, letting it out again costs nothing more, which is why she kept it out.) She is back at the baker, her Turn used up.</p>
+  <p>At the china shop, Dracula picks the front door’s lock with the Mask, rolling Sly d6, a d8 with his Butler Duty, 7 + 2 = 9 against 8. The Creature takes the back room with Wits d10 and the Mask: 5 + 2 = 7, one short, a <strong>Cost</strong>. He has the tea service; the Storyteller picks the Cost. Dropping an item would cost nothing (he carries only what this roll won). Of the rest, Suspicion +1 hurts most, so a teacup smashes. Suspicion 5.</p>
+  <p><strong>Turn 3.</strong> The Witch tries the shopkeeper again, and the Werewolf spends a charge on Good Dog for her, so she rolls the Monster without risking Suspicion. (Any ability but an approach of your own or the Draught can go on a friend’s roll in the same place; the helper pays the charge and keeps its action.) 7 + 4 = 11, a Success, and the wedding cake is hers. Dracula and the Creature move on to the watched ironmonger, where the Tell check is a 4, and a d6 between the two arrivals picks the Creature, who stands a head above the crowd. Suspicion 6.</p>
+  <p>Three Turns gone, nine to go. Both essentials are in hand, but Suspicion is 6 of 11. From here on, every Monster counts.</p>
+  <!-- Every die above was rolled for real (node -e, Math.random), in this order: Tell checks d6 2, 1; Werewolf d12 10 + Mask 4; Witch d10 1 + Monster 4; chase ground d6 6, Witch d12 12 + Monster 3; ground 6, d12 2 + Monster 9; ground 5, d10 5 + Monster 7; Dracula d8 7 + Mask 2; Creature d10 5 + Mask 2; Witch d10 7 + Monster 4; Tell check d6 4; whose (1–3 Dracula, 4–6 the Creature) d6 6. -->
 
   <!-- town:puddlecombe (generated by book/tools/town-pages.mjs from book/src/towns.json: edit those, not this) -->
 <div class="town" id="town-puddlecombe">
-<div class="town-head"><p class="town-label">Easy</p><h3>Puddlecombe</h3>
+<div class="town-head"><p class="town-label">Easy</p><h3 data-toc id="toc-puddlecombe">Puddlecombe</h3>
 <p class="town-desc">A sleepy village that has never had a real monster.</p></div>
 <div class="town-top">
 <div class="town-facts">
@@ -54,20 +73,12 @@
 </div>
 <!-- /town:puddlecombe -->
 
-  <aside class="box list span-all"><h4>Reading the Town Pages</h4>
-    <ul>
-      <li><em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for.</li>
-      <li>Try the furniture’s obstacle once that location’s loot has been taken.</li>
-      <li>The way out (Sly or Nimble, or Brawn the loud way) and the lock-up (Sly, or Brawn the loud way; Nimble too to slip free) are always watched.</li>
-      <li>On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture. Any move takes one Turn (two carrying furniture).</li>
-      <li>The Lantern Night custom and the villagers are colour; the villagers are the faces at watched obstacles.</li>
-    </ul>
-  </aside>
+
 
 
   <!-- town:thistlewick (generated by book/tools/town-pages.mjs from book/src/towns.json: edit those, not this) -->
 <div class="town" id="town-thistlewick">
-<div class="town-head"><p class="town-label">Standard</p><h3>Thistlewick</h3>
+<div class="town-head"><p class="town-label">Standard</p><h3 data-toc id="toc-thistlewick">Thistlewick</h3>
 <p class="town-desc">A market town proud of its festival.</p></div>
 <div class="town-top">
 <div class="town-facts">
@@ -119,7 +130,7 @@
 
   <!-- town:gallowsmere (generated by book/tools/town-pages.mjs from book/src/towns.json: edit those, not this) -->
 <div class="town" id="town-gallowsmere">
-<div class="town-head"><p class="town-label">Hard</p><h3>Gallowsmere</h3>
+<div class="town-head"><p class="town-label">Hard</p><h3 data-toc id="toc-gallowsmere">Gallowsmere</h3>
 <p class="town-desc">A walled town that remembers last year.</p></div>
 <div class="town-top">
 <div class="town-facts">
@@ -171,15 +182,5 @@
 </table>
 </div>
 <!-- /town:gallowsmere -->
-
-  <h3>An Example of Play</h3>
-  <p>Four players raid Thistlewick as Dracula, the Witch, Frankenstein’s Creature and the Werewolf, with their default picks (Butler, Cook, Handyman and Gardener). Suspicion starts at 0; the Limit is 11.</p>
-  <p><strong>Turn 1.</strong> The party splits. The Witch and the Werewolf head for the baker, where the Witch’s Cook Duty gives her an edge; Dracula and the Creature take the china shop, where Dracula’s Butler Duty gives him the same edge. Both count as watched (the china shop for its back gate, though they’ll use the front door), so the Storyteller makes a <strong>Tell check</strong> at each, a d6 that sets off one arriving Entity’s Tell on 4–6. A 2 and a 1 mean no Tells. (At the baker, the Witch’s Familiar’s Warning would have needed a second 4–6 too.)</p>
-  <p><strong>Turn 2.</strong> At the baker, the party takes the shuttered window. The Werewolf rolls Nimble d12 with the <strong>Mask</strong>: 10 + 4 = 14 against 8, a Success. The window is now open for both, so the Witch goes on to the shopkeeper (Charm, 8, watched). Her Charm d8 is a d10 here (her Duty’s raise). She lets the <strong>Monster</strong> out for the bigger die and rolls 1 + 4 = 5. That is 3 short, <strong>Trouble</strong>, and the Monster’s 4 beat her trait die’s 1, so it showed. One roll, one rise, so Suspicion goes up by the bigger trigger, to 2. The shopkeeper was watching, so the Witch is caught.</p>
-  <p>She runs. Her <strong>Lead</strong> starts at 1, and the mob is 8 + half the Suspicion: 9. Each round, the Storyteller rolls the ground on the chase table. Round 1, a dead end: Wits d12 and the Monster, 12 + 3 = 15, Lead 2. Round 2, another dead end: 2 + 9 = 11, Lead 3, but the Monster showed: Suspicion 4, and the mob is now 10. Round 3, the festival parade. Out comes a sprig of rowan, and her Weakness makes her Sly d10 a d8. She spends a charge on her Hedge Spell to raise it back and rolls 5 + 7 = 12: Lead 4, and she escapes. The Monster showed again: Suspicion 6. She is back at the baker, her Turn used up.</p>
-  <p>At the china shop, Dracula picks the front door’s lock with the Mask, rolling Sly d6, a d8 with his Butler Duty, 7 + 2 = 9 against 8. The Creature takes the back room with Wits d10 and the Mask: 5 + 2 = 7, one short, a <strong>Cost</strong>. He has the tea service; the Storyteller picks the Cost. Dropping an item would cost nothing (he carries only what this roll won). Of the rest, Suspicion +1 hurts most, so a teacup smashes. Suspicion 7.</p>
-  <p><strong>Turn 3.</strong> The Witch tries the shopkeeper again, and the Werewolf spends a charge on Good Dog for her, so she rolls the Monster without risking Suspicion. (Any ability but an approach of your own can go on a friend’s roll in the same place; the helper pays the charge and keeps its action.) 7 + 4 = 11, a Success, and the wedding cake is hers. Dracula and the Creature move on to the watched ironmonger, where the Tell check is a 4, and a d6 between the two arrivals picks the Creature, who stands a head above the crowd. Suspicion 8.</p>
-  <p>Three Turns gone, nine to go. Both essentials are in hand, but Suspicion is 8 of 11. From here on, every Monster counts.</p>
-  <!-- Every die above was rolled for real (node -e, Math.random), in this order: Tell checks d6 2, 1; Werewolf d12 10 + Mask 4; Witch d10 1 + Monster 4; chase ground d6 6, Witch d12 12 + Monster 3; ground 6, d12 2 + Monster 9; ground 5, d10 5 + Monster 7; Dracula d8 7 + Mask 2; Creature d10 5 + Mask 2; Witch d10 7 + Monster 4; Tell check d6 4; whose (1–3 Dracula, 4–6 the Creature) d6 6. -->
 
 </section>

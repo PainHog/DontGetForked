@@ -30,7 +30,7 @@
       <ul>
         <li>Roll a d3, or pick: 1 is the first place listed, 2 the second, 3 the third.</li>
         <li>One item per place. If the place is taken, roll again or pick another.</li>
-        <li>If a kind has more items than places, two of them share a place: one location, guarding both items.</li>
+        <li>If a kind has more items than places, they share places, two to a place: one location, guarding both items.</li>
       </ul></li>
     <li><strong>How many obstacles.</strong> For each location, roll a d20 on the first row of the table below for one, two or three obstacles, which you get past in order. The two ways in count as a single obstacle, the first.</li>
     <li><strong>Each obstacle.</strong> Roll three dice for each:
@@ -39,10 +39,11 @@
         <li>a d20 on the Difficulty row of the table below;</li>
         <li>a d10 on the Watched row of the table below.</li>
       </ul>
-      Roll the first obstacle twice, once for each way in. If the second way in’s quiet way is the same trait as the first’s, roll the obstacle table again until it differs. A later obstacle may repeat one of the ways in (two shuttered windows are fine). Roll one more obstacle at the furniture’s location. It stands after that location’s last obstacle, and its Difficulty is 2 higher than rolled, at most 12.</li>
+      For the first obstacle, roll all three dice twice, once for each way in. If the second way in’s quiet way is the same trait as the first’s, roll the obstacle table again until it differs. A later obstacle may repeat one of the ways in (two shuttered windows are fine). Roll one more obstacle at the furniture’s location. It stands after that location’s last obstacle, and its Difficulty is 2 higher than rolled, at most 12.</li>
     <li><strong>The ceiling.</strong> A town may have one Difficulty 12 (two on Hard). Keep the first you roll. Reroll the Difficulty d20 of each later one until it isn’t 12. The furniture’s obstacle counts by its d20 roll, before the +2, so a rolled 12 counts and a rolled 10 that becomes 12 doesn’t.</li>
   </ol>
   <div class="keep">
+  <h3>The Location Rolls</h3>
   <table class="tbl wide">
     <thead><tr><th>Roll</th><th>Easy</th><th>Standard</th><th>Hard</th></tr></thead>
     <tbody>
@@ -54,7 +55,7 @@
   </div>
 
   <div class="keep">
-    <h3>The Obstacle Table</h3>
+    <h3 data-toc id="toc-obstacle-table">The Obstacle Table</h3>
     <p>The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself.</p>
     <table class="tbl wide">
       <thead><tr><th>d20</th><th>Obstacle</th><th>Quiet way</th><th>Loud way</th></tr></thead>
@@ -96,7 +97,7 @@
 
   <div class="keep">
   <h3>Easy, Standard or Hard</h3>
-  <p>Choose Easy, Standard or Hard. The choice sets the numbers below.</p>
+  <p>Choose Easy, Standard or Hard. The choice sets the numbers below. On Hard, expect to run for it: most Hard raids end in the final flight, with the loot on your backs.</p>
   <table class="tbl">
     <thead><tr><th><span class="sr-only">Number</span></th><th>Easy</th><th>Standard</th><th>Hard</th></tr></thead>
     <tbody>
@@ -110,28 +111,28 @@
     </tbody>
   </table>
   </div>
-  <p>The same on Easy, Standard and Hard:</p>
+  <div class="box list same-all"><h4>The Same on Easy, Standard and Hard</h4>
   <ul>
-    <li>3 charges per Entity, 12 Turns, overdraw Suspicion +2.</li>
-    <li>Local chase: Lead starts at 1, escape at 4; the mob is 8 plus half the Suspicion, rounded down, at most 12.</li>
+    <li>3 charges per Entity, 12 Turns, overdraw Suspicion +2 (on top).</li>
+    <li>Local chase: Lead starts at 1, escape at 4; the mob is 8 plus half the Suspicion when it starts, rounded down, at most 12.</li>
     <li>Final flight: Lead starts at 2.</li>
-    <li>In a rolled town no entrance is small.</li>
-  </ul>
+    <li>In a rolled town no way in or way out is small.</li>
+  </ul></div>
 
   <div class="keep">
-    <h3>The Shopping List</h3>
+    <h3 data-toc id="toc-shopping-list">The Shopping List</h3>
     <p>For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again.</p>
     <p>The essentials are the first items you roll, one on Easy and two on Hard. On Standard, roll any die: odd, one essential; even, two.</p>
     <p>Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location.</p>
     <table class="tbl wide">
       <thead><tr><th>d6</th><th>Kind</th><th>The item (second d6)</th></tr></thead>
       <tbody>
-        <tr><td class="num">1</td><td><strong>Food and drink</strong><br><span class="where">the baker, the butcher, the tavern cellar</span></td><td><strong>1</strong> a wheel of strong cheese · <strong>2</strong> a side of bacon · <strong>3</strong> a cask of red wine (“for the guests”) · <strong>4</strong> a sack of flour · <strong>5</strong> a jar of honey · <strong>6</strong> the wedding cake in the shop window</td></tr>
-        <tr><td class="num">2</td><td><strong>Plants and seeds</strong><br><span class="where">the market garden, the florist, the seed merchant</span></td><td><strong>1</strong> seed potatoes · <strong>2</strong> a pot of nightshade (purely ornamental) · <strong>3</strong> rose bushes for the graveyard · <strong>4</strong> turnip seed for next year’s lanterns · <strong>5</strong> a crate of lilies · <strong>6</strong> mushroom spawn for the cellar</td></tr>
-        <tr><td class="num">3</td><td><strong>Books and paper</strong><br><span class="where">the bookseller, the printer, the schoolhouse</span></td><td><strong>1</strong> this week’s newspapers · <strong>2</strong> black-edged writing paper · <strong>3</strong> a cookbook “for the guests” · <strong>4</strong> ink and sealing wax · <strong>5</strong> an almanac with next year’s moons · <strong>6</strong> a book of etiquette</td></tr>
-        <tr><td class="num">4</td><td><strong>Silver, china and linen</strong><br><span class="where">the silversmith, the china shop, the laundry</span></td><td><strong>1</strong> the silver spoons · <strong>2</strong> a tea service · <strong>3</strong> bed linen · <strong>4</strong> a lace tablecloth · <strong>5</strong> a pair of candlesticks · <strong>6</strong> a gravy boat</td></tr>
-        <tr><td class="num">5</td><td><strong>Tools and hardware</strong><br><span class="where">the smithy, the ironmonger, the carpenter</span></td><td><strong>1</strong> a box of nails · <strong>2</strong> a new lock for the dungeon · <strong>3</strong> hinges that creak properly · <strong>4</strong> a lamp and a can of oil · <strong>5</strong> a coil of rope · <strong>6</strong> a length of good chain</td></tr>
-        <tr><td class="num">6</td><td><strong>Cloth and costumes</strong><br><span class="where">the draper, the tailor, the hatter</span></td><td><strong>1</strong> a bolt of black velvet · <strong>2</strong> bandages, lots · <strong>3</strong> a top hat · <strong>4</strong> a new cape · <strong>5</strong> knitting wool · <strong>6</strong> boots in a very large size</td></tr>
+        <tr><td class="num">1</td><td><strong>Food and drink</strong><br><span class="where">the baker, the butcher, the tavern cellar</span></td><td><strong>1</strong>&nbsp;a wheel of strong cheese&nbsp;· <strong>2</strong>&nbsp;a side of bacon&nbsp;· <strong>3</strong>&nbsp;a cask of red wine (“for the guests”)&nbsp;· <strong>4</strong>&nbsp;a sack of flour&nbsp;· <strong>5</strong>&nbsp;a jar of honey&nbsp;· <strong>6</strong>&nbsp;the wedding cake in the shop window</td></tr>
+        <tr><td class="num">2</td><td><strong>Plants and seeds</strong><br><span class="where">the market garden, the florist, the seed merchant</span></td><td><strong>1</strong>&nbsp;seed potatoes&nbsp;· <strong>2</strong>&nbsp;a pot of nightshade (purely ornamental)&nbsp;· <strong>3</strong>&nbsp;rose bushes for the graveyard&nbsp;· <strong>4</strong>&nbsp;turnip seed for next year’s lanterns&nbsp;· <strong>5</strong>&nbsp;a crate of lilies&nbsp;· <strong>6</strong>&nbsp;mushroom spawn for the cellar</td></tr>
+        <tr><td class="num">3</td><td><strong>Books and paper</strong><br><span class="where">the bookseller, the printer, the schoolhouse</span></td><td><strong>1</strong>&nbsp;this week’s newspapers&nbsp;· <strong>2</strong>&nbsp;black-edged writing paper&nbsp;· <strong>3</strong>&nbsp;a cookbook “for the guests”&nbsp;· <strong>4</strong>&nbsp;ink and sealing wax&nbsp;· <strong>5</strong>&nbsp;an almanac with next year’s moons&nbsp;· <strong>6</strong>&nbsp;a book of etiquette</td></tr>
+        <tr><td class="num">4</td><td><strong>Silver, china and linen</strong><br><span class="where">the silversmith, the china shop, the laundry</span></td><td><strong>1</strong>&nbsp;the silver spoons&nbsp;· <strong>2</strong>&nbsp;a tea service&nbsp;· <strong>3</strong>&nbsp;bed linen&nbsp;· <strong>4</strong>&nbsp;a lace tablecloth&nbsp;· <strong>5</strong>&nbsp;a pair of candlesticks&nbsp;· <strong>6</strong>&nbsp;a gravy boat</td></tr>
+        <tr><td class="num">5</td><td><strong>Tools and hardware</strong><br><span class="where">the smithy, the ironmonger, the carpenter</span></td><td><strong>1</strong>&nbsp;a box of nails&nbsp;· <strong>2</strong>&nbsp;a new lock for the dungeon&nbsp;· <strong>3</strong>&nbsp;hinges that creak properly&nbsp;· <strong>4</strong>&nbsp;a lamp and a can of oil&nbsp;· <strong>5</strong>&nbsp;a coil of rope&nbsp;· <strong>6</strong>&nbsp;a length of good chain</td></tr>
+        <tr><td class="num">6</td><td><strong>Cloth and costumes</strong><br><span class="where">the draper, the tailor, the hatter</span></td><td><strong>1</strong>&nbsp;a bolt of black velvet&nbsp;· <strong>2</strong>&nbsp;bandages, lots&nbsp;· <strong>3</strong>&nbsp;a top hat&nbsp;· <strong>4</strong>&nbsp;a new cape&nbsp;· <strong>5</strong>&nbsp;knitting wool&nbsp;· <strong>6</strong>&nbsp;boots in a very large size</td></tr>
       </tbody>
     </table>
   </div>
@@ -196,9 +197,9 @@
     <p class="signoff-name">Richard Moore</p>
   </aside>
   <p><strong>Villagers and witnesses.</strong> Everyone in town is in costume and in a good mood, and they see what they expect to see. A watched obstacle means someone is looking; if it isn’t already a person, give them a face (one of a premade town’s villagers, or a roll). Play the town busy and cheerful, until it isn’t.</p>
-  <p><strong>Choosing Costs.</strong> Pick the one that hurts most right now, but never one that costs nothing. A lost Turn bites near dawn, a smaller die before a hard roll, “drop an item” when the roller carries loot (it drops its own), Suspicion +1 near the Limit. At the way out there’s nothing to pick, because a Cost has no effect there and everyone still leaves, free. Always say what happened (the baker’s wife looks twice).</p>
+  <p><strong>Choosing Costs.</strong> Pick the one that hurts most right now, but never one that costs nothing. A lost Turn bites near dawn, a smaller die before a big roll, “drop an item” when the roller carries loot (it drops its own), Suspicion +1 near the Limit. At the way out there’s nothing to pick, because a Cost has no effect there and everyone still leaves, free. Always say what happened (the baker’s wife looks twice).</p>
   <p><strong>Suspicion.</strong> Keep the track where everyone can see it, and let the town’s mood follow it as whispers turn to pointing, and pointing to torches.</p>
   <p><strong>The mob.</strong> In every chase, roll the ground on the chase table each round, and describe it. Once the hunt is on, the mob is like the weather, always there and always closer. When a Weakness comes into play, make it a moment.</p>
-  <p><strong>The lock-up.</strong> Capture is only a setback. The captive can try to slip free once each Turn after the one it was caught in, and the others can come for it (see Captured, Chapter 6). Keep the captive’s player, and anyone else waiting, busy by letting them voice a jailer or a villager.</p>
+  <p><strong>The lock-up.</strong> Capture is only a setback. The captive can try to slip free once each Turn after the one it was captured in, and the others can come for it (see Captured, Chapter 6). Keep the captive’s player, and anyone else waiting, busy by letting them voice a jailer or a villager.</p>
   <p><strong>Pacing.</strong> Count the Turns aloud, and warn when three are left. Early on, give each player a job that suits their monster, and steer a new player toward a Difficulty 8 obstacle first. Furniture always costs Suspicion +1 at the end of every Turn from the one it’s taken until it leaves town. A carried move takes two Turns, so even a piece carried straight to the way out adds at least 1, and usually 2. Warn the party if that would reach the Limit. A raid should fit in an hour or two; roll a town before the session (it takes about half an hour).</p>
 </section>

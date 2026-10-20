@@ -16,18 +16,18 @@ marked PLACEHOLDERs (dashed red outline on the proofs) so nothing ships by accid
 | `tools/text-diff.py` | Word-level diff of two builds' text (to prove only intended text changed) |
 | `tools/pdf-finish.py` | Run by the build after every PDF: halves the bookmarks Chromium doubles and sets the author and subject (needs Python with PyMuPDF; skipped with a warning otherwise) |
 | `REVIEW.md` | The log of every ruling and text change (what, where, why, source) |
-| `dist/Dont_Get_Forked_v0.1.pdf` | The typeset edition (digital) |
-| `dist/Dont_Get_Forked_v0.1_print-*.pdf` | Print-on-demand files: interior (8.75×11.25in incl. 0.125in bleed, even page count) and separate front/back covers |
+| `dist/Dont_Get_Forked_v0.2.pdf` | The typeset edition (digital) |
+| `dist/Dont_Get_Forked_v0.2_print-*.pdf` | Print-on-demand files: interior (8.75×11.25in incl. 0.125in bleed, even page count) and separate front/back covers |
 
 ```bash
 npm install
-npm run build:book                                   # → book/dist/Dont_Get_Forked_v0.1.pdf
+npm run build:book                                   # → book/dist/Dont_Get_Forked_v0.2.pdf
 npm run build:book -- --print                        # → print-on-demand interior + covers (with bleed)
 npm run build:book -- --draft                        # missing art becomes a labelled box instead of an error
 node book/tools/art-gen/scenes/build.mjs [name …]    # regenerate art into book/art/
 node book/tools/preview-art.mjs /tmp/art [name …]    # look at the art (PNG per piece + _sheet.png)
-python3 book/tools/contact-sheet.py book/dist/Dont_Get_Forked_v0.1.pdf /tmp/sheet 40 6   # look at every page
-python3 book/tools/text-diff.py old.pdf book/dist/Dont_Get_Forked_v0.1.pdf               # text check vs an earlier build
+python3 book/tools/contact-sheet.py book/dist/Dont_Get_Forked_v0.2.pdf /tmp/sheet 40 6   # look at every page
+python3 book/tools/text-diff.py old.pdf book/dist/Dont_Get_Forked_v0.2.pdf               # text check vs an earlier build
 ```
 
 ## What the build does

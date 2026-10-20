@@ -178,7 +178,13 @@ export function townMap(town) {
   {
     const [ax, ay] = gate, [bx, by] = M.wayOut.out;
     const len = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / len, uy = (by - ay) / len;
-    const tip = [ax + ux * Math.min(len - 4, 46), ay + uy * Math.min(len - 4, 46)];
+    // the arrow stops inside the frame, so its head is never cut off by the border
+    const m = 12;
+    const room = Math.min(
+      ux > 0 ? (W - m - ax) / ux : ux < 0 ? (m - ax) / ux : Infinity,
+      uy > 0 ? (H - m - ay) / uy : uy < 0 ? (m - ay) / uy : Infinity);
+    const reach = Math.max(14, Math.min(len - 4, 46, room));
+    const tip = [ax + ux * reach, ay + uy * reach];
     const tail = [ax - ux * 6, ay - uy * 6];
     parts.marks.push(`<path d="M${r1(tail[0])} ${r1(tail[1])} L${r1(tip[0])} ${r1(tip[1])}" stroke="${C.ink}" stroke-width="2.4" stroke-linecap="round"/>`);
     parts.marks.push(`<path d="M${r1(tip[0] - ux * 11 - uy * 7)} ${r1(tip[1] - uy * 11 + ux * 7)} L${r1(tip[0])} ${r1(tip[1])} L${r1(tip[0] - ux * 11 + uy * 7)} ${r1(tip[1] - uy * 11 - ux * 7)}" fill="none" stroke="${C.ink}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`);

@@ -50,7 +50,7 @@ export function townBlock(t, { newPage }) {
     groups.push(`<tbody>\n${rows.join("\n")}\n</tbody>`);
   }
   return `<div class="town${newPage ? " new-page" : ""}" id="town-${t.key}">
-<div class="town-head"><p class="town-label">${t.labelName}</p><h3>${t.name}</h3>
+<div class="town-head"><p class="town-label">${t.labelName}</p><h3 data-toc id="toc-${t.key}">${t.name}</h3>
 <p class="town-desc">${t.description}</p></div>
 <div class="town-top">
 <div class="town-facts">

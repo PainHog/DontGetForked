@@ -42,8 +42,8 @@ const CHAPTERS = DEMO ? join(BOOK, "demo", "chapters") : join(SRC, "chapters");
 const BOOK_TITLE = DEMO ? "Lantern Night in Hallowby" : "Don’t Get Forked";             // curly apostrophe, as in the chapters
 const BOOK_DESCRIPTION = DEMO ? "A Halloween one-shot for Don’t Get Forked, by Richard Moore" : "A tabletop roleplaying game by Richard Moore";   // PLACEHOLDER — the real subtitle is not written yet
 const AUTHOR = "Richard Moore";
-const VERSION = "0.1";
-const FILE_STEM = DEMO ? "Lantern_Night_in_Hallowby" : "Dont_Get_Forked";        // → Dont_Get_Forked_v0.1.pdf
+const VERSION = "0.2";
+const FILE_STEM = DEMO ? "Lantern_Night_in_Hallowby" : "Dont_Get_Forked";        // → Dont_Get_Forked_v0.2.pdf
 const HTML_NAME = DEMO ? "lantern-night-in-hallowby.html" : "dont-get-forked.html";   // the self-contained print HTML (digital build only)
 // An ornament anchored in the top-left corner of the Table of Contents page
 // (an art name from book/art/, or null for none). Art direction is undecided.
@@ -203,6 +203,8 @@ for (const m of body.matchAll(/<section class="(part|chapter|sheet)[^"]*" id="([
     const num = strip((inner.match(/class="chapter-num">([\s\S]*?)</) ?? [, ""])[1]);
     const title = strip((inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) ?? [, id])[1]);
     entries.push({ kind, id, label: num, title });
+    // a heading marked data-toc gets a line of its own under its chapter
+    for (const h of inner.matchAll(/<h3\b[^>]*\bdata-toc\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h3>/g)) entries.push({ kind: "sub", id: h[1], label: "", title: strip(h[2]) });
   } else {
     const title = strip((inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) ?? [, "Sheet"])[1]);
     entries.push({ kind, id, label: "", title });
@@ -276,6 +278,19 @@ const PT_PER_IN = 72;
 const BOTTOM_LIMIT_PT = (0.78 + BLEED_IN) * PT_PER_IN;   // @page bottom margin: content must end above this
 const TEXT_H_IN = 11 - 0.72 - 0.78;   // the text area's height (the print bleed adds to both the page and its margins)
 const MIN_SPOT_IN = 1.3, MAX_SPOT_IN = 5.3, SAFETY_IN = 0.2, MIN_GAP_IN = 0.22;  // 5.3in = 4:3 art at full text width
+// A spot may grow past its full-width height to fill more of the page, trimming its sides by at
+// most this much in all (so a plate fills the page instead of floating in white, and nothing at
+// the edges of the picture is lost beyond a sliver).
+const TEXT_W_IN = 8.5 - 2 * 0.68, SPOT_FILL = 1.2;
+
+/** Width over height of a piece of art (raster or SVG viewBox). */
+function artAspect(name) {
+  const file = artFile(name);
+  if (!file) return 4 / 3;
+  if (!file.endsWith(".svg")) { const { w, h } = rasterSize(readFileSync(file)); return w / h; }
+  const vb = readFileSync(file, "utf8").match(/viewBox="[\d.\s-]*?([\d.]+)\s+([\d.]+)"/);
+  return vb ? +vb[1] / +vb[2] : 4 / 3;
+}
 
 function planSpots(ends) {
   const used = new Set(), plan = {};
@@ -297,10 +312,11 @@ function planSpots(ends) {
       ?? all.find(a => !used.has(a) && have(a) && !later.has(a));
     if (!art) continue;
     used.add(art);
-    const h = +Math.min(MAX_SPOT_IN, room - MIN_GAP_IN).toFixed(2);
+    const natural = Math.min(MAX_SPOT_IN, TEXT_W_IN / artAspect(art));
+    const h = +Math.min(room - MIN_GAP_IN, natural * SPOT_FILL).toFixed(2);
     // centre the art in the space left (never closer than MIN_GAP_IN to the text)
     const top = +Math.max(MIN_GAP_IN, (room - h) / 2).toFixed(2);
-    plan[id] = { art, h, top };
+    plan[id] = { art, h, top, fill: h > natural + 0.01 };
   }
   return plan;
 }
@@ -310,7 +326,7 @@ function planSpots(ends) {
 const PRINT_CSS = `
 :root { --page-mt: ${0.72 + BLEED_IN}in; --page-ml: ${0.68 + BLEED_IN}in; }
 @page { size: ${8.5 + 2 * BLEED_IN}in ${11 + 2 * BLEED_IN}in; margin: ${0.72 + BLEED_IN}in ${0.68 + BLEED_IN}in ${0.78 + BLEED_IN}in ${0.68 + BLEED_IN}in; }
-@page cover { margin: 0; } @page part { margin: 0; } @page back { margin: 0; } @page sheet { margin: ${0.5 + BLEED_IN}in; }
+@page cover { margin: 0; } @page part { margin: 0; } @page back { margin: 0; } @page sheet { margin: ${0.5 + BLEED_IN}in ${0.5 + BLEED_IN}in ${0.78 + BLEED_IN}in; }
 .cover, .part, .back-cover { width: ${8.5 + 2 * BLEED_IN}in; height: ${11 + 2 * BLEED_IN}in; }
 .cover .cover-art svg { width: ${8.5 + 2 * BLEED_IN}in; height: auto; margin-top: -${BLEED_IN * 0.3}in; }
 .cover h1.cover-title { margin-top: ${0.8 + BLEED_IN}in; }
@@ -341,12 +357,16 @@ function page(pages, markers, spots = {}, { only = null, padBlank = false } = {}
   content = content.replace(/(<section class="chapter[^"]*" id="([^"]+)"[^>]*>)([\s\S]*?)(<\/section>)(?=\s*(?:<!--|<section|$))/g,
     (m, open, id, inner, close) => {
       const sp = spots[id];
-      const fig = sp ? `<figure class="art tailpiece" data-art="${sp.art}" style="height:${sp.h}in;margin-top:${sp.top}in"></figure>` : "";
+      const fig = sp ? `<figure class="art tailpiece${sp.fill ? " fill" : ""}" data-art="${sp.art}" style="height:${sp.h}in;margin-top:${sp.top}in"></figure>` : "";
       const end = markers ? `<div class="end-marker"><span>@@end-${id}@@</span></div>` : "";
-      return `${open}${inner}${fig ? inlineArt(fig) : ""}${end}${close}`;
+      // a filling spot crops to its box (centred) instead of fitting inside it
+      const art = fig ? inlineArt(fig) : "";
+      return `${open}${inner}${sp?.fill ? art.replace('preserveAspectRatio="xMidYMid meet"', 'preserveAspectRatio="xMidYMid slice"') : art}${end}${close}`;
     });
   if (markers) {
     content = content.replace(/(<section class="(?:part|chapter|sheet)[^"]*" id="([^"]+)"[^>]*>)/g,
+      (_, open, id) => `${open}<span class="pdf-marker">@@${id}@@</span>`);
+    content = content.replace(/(<h3\b[^>]*\bdata-toc\b[^>]*\bid="([^"]+)"[^>]*>)/g,
       (_, open, id) => `${open}<span class="pdf-marker">@@${id}@@</span>`);
   }
   return `<!doctype html>
