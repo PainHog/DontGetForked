@@ -1,0 +1,221 @@
+#001 | TEST roller sanity (discard) | d6+d10+d20 | 5, 7, 17
+#002 | SETUP Dracula Perk random (1-2 Hypnotic Eyes, 3-4 Old Money, 5-6 Wall-Crawler) | d6 | 2
+#003 | SETUP Witch Gift random (1-2 Broomstick, 3-4 Black Cat, 5-6 A Potion for That) | d6 | 4
+#004 | SETUP Ghost Duty clash with Dracula (Butler): d6 on Duty table, reroll taken 1 Cook,3 Librarian,4 Butler,6 Tailor | d6 | 5
+#005 | R1 T1 Tell check smithy (Ghost arrives) 4-6 goes off | d6 | 1
+#006 | R1 T1 Tell check silversmith (Dracula) | d6 | 4
+#007 | R1 T1 Tell check printer (Mummy) | d6 | 5
+#008 | R1 T1 Tell check tailor (Werewolf) | d6 | 6
+#009 | R1 T1 Tell check butcher (Witch) + Familiar second d6 (both 4-6 needed) | d6+d6 | 1, 5
+#010 | R1 T2 Werewolf tailor drainpipe Nimble d12 (Tailor duty, already max) Mask v8 unwatched | d12 + Mask d6 v 8 | 8 + 2 = 10 | SUCCESS
+#011 | R1 T2 Ghost smithy high garden wall (watched) Nimble d12 Mask v8 | d12 + Mask d6 v 8 | 9 + 1 = 10 | SUCCESS
+#012 | R1 T2 Dracula silversmith shuttered window (watched) Nimble d10->d12 Butler Mask v8 | d12 + Mask d6 v 8 | 7 + 5 = 12 | SUCCESS
+#013 | R1 T2 Witch butcher geese yard (watched) Sly d10->d12 Cook Mask v8 | d12 + Mask d6 v 8 | 7 + 2 = 9 | SUCCESS
+#014 | R1 T2 Mummy printer nosy neighbour (watched) ROYAL BEARING own approach Charm d8->d10 Librarian Mask v8-2=6 | d10 + Mask d6 v 6 | 3 + 6 = 9 | SUCCESS
+#015 | R1 T3 Mummy printer back room (unwatched) Wits d12 (Librarian, max) Mask v8 | d12 + Mask d6 v 8 | 10 + 5 = 15 | SUCCESS
+#016 | R1 T3 Dracula silversmith guard dog (watched) Charm d12 (Butler, max) Mask v8 | d12 + Mask d6 v 8 | 9 + 1 = 10 | SUCCESS
+#017 | R1 T3 Ghost smithy night watchman (watched) THROUGH THE WALL own approach Sly d10->d12 Handyman Mask v10-2=8 | d12 + Mask d6 v 8 | 8 + 2 = 10 | SUCCESS
+#018 | R1 T3 Witch butcher shopkeeper (watched) Charm d8->d10 Cook + BLACK CAT Monster (no Susp) v10 | d10 + Monster d10 v 10 | 10 + 7 = 17 | SUCCESS
+#019 | R1 T3 Werewolf tailor crowded shop floor (group, watched) KEEN NOSE Wits d8->d10 Tailor + GOOD DOG Monster (no Susp) v10 | d10 + Monster d10 v 10 | 8 + 5 = 13 | SUCCESS
+#020 | R1 T4 Werewolf tailor heavy cellar trapdoor FOR THE PIECE (unwatched) Brawn d10->d12 Tailor Mask v12 | d12 + Mask d6 v 12 | 5 + 1 = 6 | TROUBLE
+#021 | R1 T4 Dracula silversmith strongbox (unwatched) BAT roll Nimble d10->d12 Butler Mask v10 | d12 + Mask d6 v 10 | 1 + 2 = 3 | TROUBLE
+#022 | R1 T5 Dracula silversmith strongbox retry: BAT (Drac 2->1) Nimble d12 + Witch's BLACK CAT on his roll (Witch 2->1) Monster no Susp v10 | d12 + Monster d10 v 10 | 6 + 2 = 8 | COST
+#023 | R1 T5 Werewolf tailor trapdoor FOR THE PIECE retry Brawn d12 (Tailor) Mask v12 | d12 + Mask d6 v 12 | 6 + 4 = 10 | COST
+#024 | R1 T5 Tell check at the way out (Witch, Ghost, Mummy arrive) + Familiar's Warning second d6 (both 4-6) | d6+d6 | 5, 4
+#025 | R1 T5 way-out Tell: which arrival (1 Witch 2 Ghost 3 Mummy; reroll 4-6) - rolling up to 4 in case of rerolls, use first valid | d6+d6+d6+d6 | 6, 6, 4, 3
+#026 | R1 T7 Ghost rolls THE WAY OUT for all (watched) Nimble d12 + Monster v10 (S8) | d12 + Monster d10 v 10 | 10 + 9 = 19 | SUCCESS
+#027 | R2 TOWN list item 1: kind d6=3 (Books and paper), item d6=3 (a cookbook)
+#028 | R2 TOWN list item 2: kind d6=3 (Books and paper), item d6=4 (ink and sealing wax)
+#029 | R2 TOWN list item 3: kind d6=4 (Silver, china and linen), item d6=3 (bed linen)
+#030 | R2 TOWN list item 4: kind d6=6 (Cloth and costumes), item d6=1 (a bolt of black velvet)
+#031 | R2 TOWN list item 5: kind d6=3 (Books and paper), item d6=2 (black-edged writing paper)
+#032 | R2 TOWN essentials die (Standard: odd 1, even 2) d6=4 -> 2 essential(s), the first rolled
+#033 | R2 TOWN furniture piece d6 (1 armchair B,2 mirror B,3 armour B,4 bear B,5 clock HUGE,6 bed HUGE) | d6 | 5
+#034 | R2 TOWN furniture stands with list item d6 (1-5; reroll 6) - spare dice for rerolls, use first valid | d6+d6+d6 | 5, 1, 3
+#035 | R2 TOWN item 1 (a cookbook) place d3 (d6=2 -> 1) = the bookseller
+#036 | R2 TOWN the bookseller obstacle count d20=20 -> 3
+#037 | R2 TOWN the bookseller WAY IN A obstacle d20=4 (A bolted back gate)
+#038 | R2 TOWN the bookseller WAY IN A Difficulty d20=19 -> 10
+#039 | R2 TOWN the bookseller WAY IN A watched d10=9 -> not watched
+#040 | R2 TOWN the bookseller WAY IN B obstacle d20=5 (A high garden wall)
+#041 | R2 TOWN the bookseller WAY IN B Difficulty d20=3 -> 6
+#042 | R2 TOWN the bookseller WAY IN B watched d10=5 -> watched
+#043 | R2 TOWN the bookseller THEN #2 obstacle d20=20 (A maze of festival stalls)
+#044 | R2 TOWN the bookseller THEN #2 Difficulty d20=18 -> 10
+#045 | R2 TOWN the bookseller THEN #2 watched d10=4 -> watched
+#046 | R2 TOWN the bookseller THEN #3 obstacle d20=12 (A muddy yard full of geese)
+#047 | R2 TOWN the bookseller THEN #3 Difficulty d20=15 -> 10
+#048 | R2 TOWN the bookseller THEN #3 watched d10=7 -> not watched
+#049 | R2 TOWN item 2 (ink and sealing wax) place d3 (d6=6 -> 3) = the schoolhouse
+#050 | R2 TOWN the schoolhouse obstacle count d20=3 -> 1
+#051 | R2 TOWN the schoolhouse WAY IN A obstacle d20=7 (The rooftops)
+#052 | R2 TOWN the schoolhouse WAY IN A Difficulty d20=16 -> 10
+#053 | R2 TOWN the schoolhouse WAY IN A watched d10=5 -> watched
+#054 | R2 TOWN the schoolhouse WAY IN B obstacle d20=18 (A dark, cluttered back room)
+#055 | R2 TOWN the schoolhouse WAY IN B Difficulty d20=9 -> 8
+#056 | R2 TOWN the schoolhouse WAY IN B watched d10=3 -> watched
+#057 | R2 TOWN item 3 (bed linen) place d3 (d6=6 -> 3) = the laundry
+#058 | R2 TOWN the laundry obstacle count d20=20 -> 3
+#059 | R2 TOWN the laundry WAY IN A obstacle d20=5 (A high garden wall)
+#060 | R2 TOWN the laundry WAY IN A Difficulty d20=18 -> 10
+#061 | R2 TOWN the laundry WAY IN A watched d10=1 -> watched
+#062 | R2 TOWN the laundry WAY IN B obstacle d20=20 (A maze of festival stalls)
+#063 | R2 TOWN the laundry WAY IN B Difficulty d20=15 -> 10
+#064 | R2 TOWN the laundry WAY IN B watched d10=10 -> not watched
+#065 | R2 TOWN the laundry THEN #2 obstacle d20=12 (A muddy yard full of geese)
+#066 | R2 TOWN the laundry THEN #2 Difficulty d20=6 -> 8
+#067 | R2 TOWN the laundry THEN #2 watched d10=9 -> not watched
+#068 | R2 TOWN the laundry THEN #3 obstacle d20=1 (A heavy cellar trapdoor)
+#069 | R2 TOWN the laundry THEN #3 Difficulty d20=7 -> 8
+#070 | R2 TOWN the laundry THEN #3 watched d10=2 -> watched
+#071 | R2 TOWN item 4 (a bolt of black velvet) place d3 (d6=3 -> 2) = the tailor
+#072 | R2 TOWN the tailor obstacle count d20=10 -> 2
+#073 | R2 TOWN the tailor WAY IN A obstacle d20=15 (A doorman checking invitations)
+#074 | R2 TOWN the tailor WAY IN A Difficulty d20=7 -> 8
+#075 | R2 TOWN the tailor WAY IN A watched d10=8 -> not watched
+#076 | R2 TOWN the tailor WAY IN B obstacle d20=17 (A locked strongbox)
+#077 | R2 TOWN the tailor WAY IN B Difficulty d20=12 -> 8
+#078 | R2 TOWN the tailor WAY IN B watched d10=10 -> not watched
+#079 | R2 TOWN the tailor THEN #2 obstacle d20=20 (A maze of festival stalls)
+#080 | R2 TOWN the tailor THEN #2 Difficulty d20=19 -> 10
+#081 | R2 TOWN the tailor THEN #2 watched d10=3 -> watched
+#082 | R2 TOWN item 5 (black-edged writing paper) place d3 (d6=3 -> 2) = the printer
+#083 | R2 TOWN the printer obstacle count d20=6 -> 1
+#084 | R2 TOWN the printer WAY IN A obstacle d20=16 (Children in costumes who want a closer look)
+#085 | R2 TOWN the printer WAY IN A Difficulty d20=20 -> 12
+#086 | R2 TOWN the printer WAY IN A watched d10=7 -> not watched
+#087 | R2 TOWN the printer WAY IN B obstacle d20=11 (A crowded shop floor)
+#088 | R2 TOWN the printer WAY IN B Difficulty d20=14 -> 10
+#089 | R2 TOWN the printer WAY IN B watched d10=2 -> watched
+#090 | R2 TOWN the printer FOR THE PIECE obstacle d20=6 (A shuttered window)
+#091 | R2 TOWN the printer FOR THE PIECE Difficulty d20=4 -> 8
+#092 | R2 TOWN the printer FOR THE PIECE watched d10=9 -> not watched
+#093 | R2 TOWN Lantern Night custom d6 | d6 | 6
+#094 | R2 TOWN villager A who d6 + what d6 | d6+d6 | 6, 5
+#095 | R2 TOWN villager B who d6 + what d6 | d6+d6 | 3, 1
+#096 | R2 T1 Tell check schoolhouse (Ghost+Witch) + Familiar second d6 | d6+d6 | 3, 3
+#097 | R2 T1 Tell check bookseller (Mummy) | d6 | 2
+#098 | R2 T1 Tell check laundry (Dracula) | d6 | 5
+#099 | R2 T1 Tell check tailor (Werewolf) | d6 | 5
+#100 | R2 T2 Tell check printer (Ghost+Witch) + Familiar second d6 | d6+d6 | 6, 1
+#101 | R2 T2 Mummy bookseller high garden wall (watched) Nimble d4->d6 Librarian Mask v6 | d6 + Mask d6 v 6 | 2 + 6 = 8 | SUCCESS
+#102 | R2 T2 Dracula laundry maze of stalls (group, unwatched) BAT Nimble d10->d12 Butler Mask v10 | d12 + Mask d6 v 10 | 11 + 6 = 17 | SUCCESS
+#103 | R2 T2 Werewolf tailor locked strongbox way in (unwatched) Wits d8 Mask v8 | d8 + Mask d6 v 8 | 4 + 3 = 7 | COST
+#104 | R2 T3 Mummy bookseller maze of stalls (group, watched) Wits d12 (Librarian max) Mask v10 | d12 + Mask d6 v 10 | 9 + 6 = 15 | SUCCESS
+#105 | R2 T3 Dracula laundry geese (unwatched) Sly d6->d8 Butler Mask v8 | d8 + Mask d6 v 8 | 7 + 6 = 13 | SUCCESS
+#106 | R2 T3 Witch printer children in costumes (group, unwatched) HEDGE SPELL Charm d8->d10 + BLACK CAT Monster no Susp v12 | d10 + Monster d10 v 12 | 9 + 4 = 13 | SUCCESS
+#107 | R2 T4 Mummy bookseller geese (unwatched) ANCIENT LORE Wits d12 (Librarian max) Mask v10 | d12 + Mask d6 v 10 | 3 + 6 = 9 | COST
+#108 | R2 T4 Dracula laundry heavy cellar trapdoor (watched) Brawn d8->d10 Butler Mask v8 (S3) | d10 + Mask d6 v 8 | 6 + 1 = 7 | COST
+#109 | R2 T5 Ghost printer shuttered window FOR THE PIECE (unwatched) Nimble d12 Mask v10 (S4) | d12 + Mask d6 v 10 | 11 + 2 = 13 | SUCCESS
+#110 | R2 T5 Tell check at the way out (Dracula, Mummy, Werewolf arrive; no Witch) | d6 | 4
+#111 | R2 T5 way-out Tell: which arrival (1 Dracula 2 Mummy 3 Werewolf; reroll 4-6; use first valid) | d6+d6+d6+d6 | 6, 3, 2, 5
+#112 | R2 T7 Werewolf rolls THE WAY OUT (watched) Nimble d12 stepped down to d10 by pending Cost + Monster v8-1 (Fetch)=7 (S6) | d10 + Monster d10 v 7 | 4 + 2 = 6 | COST
+#113 | DRILL A1 Witch lone local chase (mob 10 fixed, Lead 1, esc 4) round 1 ground d6 (1 Sly/Charm 2 Nimble/Sly 3 Brawn/Nimble 4 Nimble/Wits 5 Charm/Sly 6 Brawn/Wits) | d6 | 5
+#114 | NOTE: before #113 one premise-colour roll (d12+d6) was rolled with output hidden and its log line deleted; it was never seen or used. Logged here for transparency.
+#115 | DRILL A1 r1 parade: Witch Sly d10 + BLACK CAT Monster (no Susp) v10 [Lead 1] | d10 + Monster d10 v 10 | 6 + 6 = 12 | SUCCESS (CRITICAL)
+#116 | DRILL A1 round 2 ground d6 | d6 | 5
+#117 | DRILL A1 r2 parade: Witch Sly d10 + Mask v10 [Lead 3] | d10 + Mask d6 v 10 | 9 + 4 = 13 | SUCCESS
+#118 | DRILL A2 Dracula lone local chase (Gallowsmere T2 S4, mob 10 fixed, Lead 1, esc 4, Garlic from r1) round 1 ground d6 | d6 | 4
+#119 | DRILL A2 r1 rooftops: Dracula Nimble d10-1(Garlic)=d8 + Monster v10 [Lead 1] | d8 + Monster d10 v 10 | 7 + 3 = 10 | SUCCESS
+#120 | DRILL A2 round 2 ground d6 [Lead 2] | d6 | 6
+#121 | DRILL A2 r2 dead end: Dracula BAT Nimble d10-1=d8 + Monster v10 [Lead 2] | d8 + Monster d10 v 10 | 8 + 2 = 10 | SUCCESS
+#122 | DRILL A2 round 3 ground d6 [Lead 3] | d6 | 1
+#123 | DRILL A2 r3 crowded square: Dracula Charm d12-1=d10 + Monster (Hypnotic Eyes: shows only if beats by 2+) v10 [Lead 3] | d10 + Monster d10 v 10 | 2 + 8 = 10 | SUCCESS | MONSTER SHOWS
+#124 | DRILL B shared local chase Werewolf+Mummy (Gallowsmere T4 S7, mob 11, Lead 1, esc 4) round 1 ground d6 | d6 | 6
+#125 | DRILL B r1 dead end: Werewolf Brawn d10 + GOOD DOG Monster (no Susp) v11 [shared Lead 1] | d10 + Monster d10 v 11 | 3 + 1 = 4 | TROUBLE
+#126 | DRILL B r1 dead end: Mummy Wits d12 + Monster v11 [shared Lead 1] | d12 + Monster d10 v 11 | 5 + 9 = 14 | SUCCESS | MONSTER SHOWS
+#127 | DRILL B round 2 ground d6 [shared Lead 1] | d6 | 2
+#128 | DRILL B r2 alleys: Werewolf Nimble d12 + Monster v11 [Lead 1] | d12 + Monster d10 v 11 | 4 + 10 = 14 | SUCCESS | MONSTER SHOWS
+#129 | DRILL B r2 alleys: Mummy ANCIENT LORE Wits d12 + Monster v11 [Lead 1] | d12 + Monster d10 v 11 | 12 + 5 = 17 | SUCCESS
+#130 | DRILL B round 3 ground d6 [shared Lead 3; Soon Weaknesses arrive] | d6 | 5
+#131 | DRILL B r3 parade: Werewolf KEEN NOSE Wits d8-1(Hounds)=d6 + Monster v11 [Lead 3] | d6 + Monster d10 v 11 | 2 + 1 = 3 | TROUBLE
+#132 | DRILL B r3 parade: Mummy ANCIENT LORE Wits d12-1(Loose Thread)=d10 + Monster v11 [Lead 3] | d10 + Monster d10 v 11 | 1 + 5 = 6 | TROUBLE | MONSTER SHOWS
+#133 | DRILL B round 4 ground d6 [shared Lead 1; nobody gave up at round start] | d6 | 6
+#134 | DRILL B r4 dead end: Werewolf Brawn d10-1=d8 + Monster v11 [Lead 1] | d8 + Monster d10 v 11 | 1 + 8 = 9 | COST | MONSTER SHOWS
+#135 | DRILL B r4 dead end: Mummy Wits d12-1=d10 + Monster v11 [Lead 1] | d10 + Monster d10 v 11 | 7 + 9 = 16 | SUCCESS | MONSTER SHOWS
+#136 | DRILL B round 5 ground d6 [shared Lead 2] | d6 | 3
+#137 | DRILL B r5 stalls: Werewolf Nimble d12-1=d10 + Monster v11 [Lead 2] | d10 + Monster d10 v 11 | 6 + 1 = 7 | TROUBLE
+#138 | DRILL B r5 stalls: Mummy OVERDRAWS Ancient Lore (+2 on top) Wits d12-1=d10 + Monster v11 [Lead 2] | d10 + Monster d10 v 11 | 2 + 10 = 12 | SUCCESS | MONSTER SHOWS
+#139 | DRILL B round 6 ground d6 [Werewolf GAVE UP at round start -> captured; Mummy alone, Lead 2, mob 11] | d6 | 4
+#140 | DRILL B r6 rooftops: Mummy alone Wits d12-1=d10 + Monster v11 [Lead 2] | d10 + Monster d10 v 11 | 1 + 2 = 3 | TROUBLE | MONSTER SHOWS
+#141 | DRILL B round 7 ground d6 [Mummy alone, Lead 1] | d6 | 1
+#142 | DRILL B r7 square: Mummy alone Charm d8-1=d6 + Monster v11 [Lead 1] | d6 + Monster d10 v 11 | 4 + 7 = 11 | SUCCESS | MONSTER SHOWS
+#143 | DRILL B round 8 ground d6 [Mummy alone, Lead 2] | d6 | 2
+#144 | DRILL B r8 alleys: Mummy alone Sly d6-1=d4 + Monster v11 [Lead 2] | d4 + Monster d10 v 11 | 4 + 2 = 6 | TROUBLE
+#145 | DRILL B round 9 ground d6 [Mummy alone, Lead 1; she did not give up] | d6 | 6
+#146 | DRILL B r9 dead end: Mummy alone Wits d12-1=d10 + Monster v11 [Lead 1] | d10 + Monster d10 v 11 | 6 + 7 = 13 | SUCCESS | MONSTER SHOWS
+#147 | DRILL B round 10 ground d6 [Mummy alone, Lead 2] | d6 | 3
+#148 | DRILL B r10 stalls: Mummy alone Brawn d10-1=d8 + Monster v11 [Lead 2] | d8 + Monster d10 v 11 | 2 + 7 = 9 | COST | MONSTER SHOWS
+#149 | DRILL B round 11 ground d6 [Mummy alone, Lead 2] | d6 | 1
+#150 | DRILL B r11 square: Mummy alone Charm d8-1=d6 + Monster v11 [Lead 2] | d6 + Monster d10 v 11 | 4 + 9 = 13 | SUCCESS | MONSTER SHOWS
+#151 | DRILL B round 12 ground d6 [Mummy alone, Lead 3] | d6 | 6
+#152 | DRILL B r12 dead end: Mummy alone Wits d12-1=d10 + Monster v11 [Lead 3] | d10 + Monster d10 v 11 | 6 + 4 = 10 | COST
+#153 | DRILL B round 13 ground d6 [Mummy alone, Lead 3] | d6 | 6
+#154 | DRILL B r13 dead end: Mummy alone Wits d12-1=d10 + Monster v11 [Lead 3] | d10 + Monster d10 v 11 | 1 + 6 = 7 | TROUBLE | MONSTER SHOWS
+#155 | DRILL B round 14 ground d6 [Mummy alone, Lead 2] | d6 | 5
+#156 | DRILL B r14 parade: Mummy alone Charm d8-1=d6 + Monster v11 [Lead 2] | d6 + Monster d10 v 11 | 5 + 1 = 6 | TROUBLE
+#157 | DRILL B round 15 ground d6 [Mummy alone, Lead 1] | d6 | 2
+#158 | DRILL B r15 alleys: Mummy alone Sly d6-1=d4 + Monster v11 [Lead 1] | d4 + Monster d10 v 11 | 2 + 4 = 6 | TROUBLE | MONSTER SHOWS
+#159 | DRILL C T5 Werewolf SLIP FREE (lock-up 10, watched; Success only) Nimble d12 + Mask v10 (S11/13) | d12 + Mask d6 v 10 | 7 + 3 = 10 | SUCCESS
+#160 | DRILL C T5 Tell check at the LOCK-UP (Dracula arrives; captives' arrivals don't count) S11 | d6 | 3
+#161 | DRILL C T6 Dracula RESCUE via MESMERISE own approach Charm d12 v10-2=8 + Werewolf's GOOD DOG on his roll (Monster no Susp) (S11) | d12 + Monster d10 v 8 | 12 + 9 = 21 | SUCCESS
+#162 | DRILL D Inkwold T10 S9/10: Dracula RESCUE loud way Brawn d8 (+1 whatever) + captive Werewolf's GOOD DOG (Monster no Susp) v10 | d8 + Monster d10 v 10 | 5 + 8 = 13 | SUCCESS | MONSTER SHOWS
+#163 | DRILL E Inkwold FINAL FLIGHT (5 runners, mob 11, Lead 3 via Fetch, escape 5) round 1 ground d6 | d6 | 6
+#164 | DRILL E r1 dead end: Werewolf Brawn d10 + GOOD DOG spent AS A RAISE -> d12 + Monster v11 | d12 + Monster d10 v 11 | 11 + 9 = 20 | SUCCESS
+#165 | DRILL E r1 dead end: Mummy Wits d12 + Monster v11 | d12 + Monster d10 v 11 | 8 + 9 = 17 | SUCCESS | MONSTER SHOWS
+#166 | DRILL E r1 dead end: Witch (carrying clock) Wits d12 + Monster v11 | d12 + Monster d10 v 11 | 6 + 1 = 7 | TROUBLE
+#167 | DRILL E r1 dead end: Dracula Brawn d8-1(Garlic)+1(Mummy ROYAL BEARING as raise)=d8 + Monster v11 | d8 + Monster d10 v 11 | 7 + 7 = 14 | SUCCESS (CRITICAL)
+#168 | DRILL E r1 dead end: Ghost (carrying clock) Wits d6-1(Cold Iron)+1(CHILL)=d6 + Monster v11 | d6 + Monster d10 v 11 | 1 + 5 = 6 | TROUBLE | MONSTER SHOWS
+#169 | DRILL E2 Gallowsmere DAWN FLIGHT (Witch, Mummy, Werewolf+armour; mob 11, Lead 2, escape 6) round 1 ground d6 | d6 | 2
+#170 | DRILL E2 r1 alleys: Witch Sly d10 + Monster v11 [Lead 2] | d10 + Monster d10 v 11 | 3 + 3 = 6 | TROUBLE
+#171 | DRILL E2 r1 alleys: Mummy ANCIENT LORE Wits d12 + Monster v11 | d12 + Monster d10 v 11 | 3 + 4 = 7 | TROUBLE | MONSTER SHOWS
+#172 | DRILL E2 r1 alleys: Werewolf (carrying armour) Nimble d12-1=d10 + Monster v11 | d10 + Monster d10 v 11 | 5 + 1 = 6 | TROUBLE
+#173 | DRILL E3 Gallowsmere LIMIT FLIGHT T9 (all 5; Werewolf carries armour; mob 11, Lead 2, escape 6) round 1 ground d6 | d6 | 1
+#174 | DRILL E3 r1 square: Dracula Charm d12-1(Garlic)+1(BAT as raise)=d12 + Monster v11 [Lead 2] | d12 + Monster d10 v 11 | 12 + 1 = 13 | SUCCESS
+#175 | DRILL E3 r1 square: Ghost Sly d10-1(Cold Iron)+1(CHILL)=d10 + Monster v11 | d10 + Monster d10 v 11 | 3 + 2 = 5 | TROUBLE
+#176 | DRILL E3 r1 square: Werewolf Sly d6+1(Ghost THROUGH THE WALL as raise)=d8 + Monster v11 | d8 + Monster d10 v 11 | 3 + 6 = 9 | COST | MONSTER SHOWS
+#177 | DRILL E3 r1 square: Witch Sly d10 + Monster v11 | d10 + Monster d10 v 11 | 7 + 8 = 15 | SUCCESS | MONSTER SHOWS
+#178 | DRILL E3 r1 square: Mummy OVERDRAWS ANCIENT LORE (Weakness from her next roll) Wits d12 + Monster v11 | d12 + Monster d10 v 11 | 4 + 3 = 7 | TROUBLE
+#179 | DRILL E3 round 2 ground d6 [Lead 2] | d6 | 4
+#180 | DRILL E3 r2 rooftops (1st): Witch Wits d12 + Monster v11 [Lead 2] | d12 + Monster d10 v 11 | 2 + 9 = 11 | SUCCESS | MONSTER SHOWS
+#181 | DRILL E3 r2 rooftops (2nd): Dracula Nimble d10-1(Garlic)+1(Witch OVERDRAWS Hedge Spell as raise)=d10 + Monster v11 | d10 + Monster d10 v 11 | 10 + 3 = 13 | SUCCESS
+#182 | DRILL E3 r2 rooftops: Werewolf OVERDRAWS Good Dog as raise: Nimble d12-1(armour)+1=d12 + Monster v11 | d12 + Monster d10 v 11 | 10 + 4 = 14 | SUCCESS
+#183 | DRILL E3 r2 rooftops: Ghost Nimble d12-1(Cold Iron)+1(CHILL)=d12 + Monster v11 | d12 + Monster d10 v 11 | 2 + 5 = 7 | TROUBLE | MONSTER SHOWS
+#184 | DRILL E3 r2 rooftops: Mummy Wits d12-1(overdraw Weakness)=d10 + Monster v11 | d10 + Monster d10 v 11 | 10 + 1 = 11 | SUCCESS
+#185 | DRILL E3 round 3 ground d6 [Lead 4; all Weaknesses in play, no charges/overdraws left] | d6 | 1
+#186 | DRILL E3 r3 square: Dracula Charm d12-1=d10 + Monster v11 [Lead 4] | d10 + Monster d10 v 11 | 9 + 5 = 14 | SUCCESS
+#187 | DRILL E3 r3 square: Ghost Sly d10-1=d8 + Monster v11 | d8 + Monster d10 v 11 | 5 + 7 = 12 | SUCCESS | MONSTER SHOWS
+#188 | DRILL E3 r3 square: Werewolf Sly d6-1=d4 + Monster v11 | d4 + Monster d10 v 11 | 4 + 10 = 14 | SUCCESS | MONSTER SHOWS
+#189 | DRILL E3 r3 square: Witch Sly d10-1(Rowan)=d8 + Monster v11 | d8 + Monster d10 v 11 | 5 + 4 = 9 | COST
+#190 | DRILL E3 r3 square: Mummy Charm d8-1=d6 + Monster v11 | d6 + Monster d10 v 11 | 2 + 9 = 11 | SUCCESS | MONSTER SHOWS
+#191 | DRILL W Gallowsmere T8 S10: Ghost caught at the WAY OUT, lone local chase (mob 12 capped, Lead 1, esc 4, Cold Iron r1) round 1 ground d6 | d6 | 4
+#192 | DRILL W r1 rooftops: Ghost Nimble d12-1(Cold Iron)+1(CHILL)=d12 + Monster v12 [Lead 1] | d12 + Monster d10 v 12 | 11 + 7 = 18 | SUCCESS
+#193 | DRILL W round 2 ground d6 [Lead 2] | d6 | 2
+#194 | DRILL W r2 alleys: Ghost Nimble d12-1+1(CHILL)=d12 + Monster v12 [Lead 2] | d12 + Monster d10 v 12 | 6 + 8 = 14 | SUCCESS | MONSTER SHOWS
+#195 | DRILL W round 3 ground d6 [Lead 3; Ghost 0 charges] | d6 | 2
+#196 | DRILL W r3 alleys: Ghost Nimble d12-1=d10 + Monster v12 [Lead 3] | d10 + Monster d10 v 12 | 3 + 2 = 5 | TROUBLE
+#197 | DRILL W round 4 ground d6 [Lead 2] | d6 | 6
+#198 | DRILL W r4 dead end: Ghost Wits d6-1=d4 + Monster v12 [Lead 2] | d4 + Monster d10 v 12 | 1 + 4 = 5 | TROUBLE | MONSTER SHOWS
+#199 | DRILL W round 5 ground d6 [Lead 1] | d6 | 5
+#200 | DRILL W r5 parade: Ghost Sly d10-1=d8 + Monster v12 [Lead 1] | d8 + Monster d10 v 12 | 8 + 6 = 14 | SUCCESS
+#201 | DRILL W round 6 ground d6 [Lead 2] | d6 | 2
+#202 | DRILL W r6 alleys: Ghost Nimble d12-1=d10 + Monster v12 [Lead 2] | d10 + Monster d10 v 12 | 5 + 2 = 7 | TROUBLE
+#203 | DRILL W round 7 ground d6 [Lead 1] | d6 | 3
+#204 | DRILL W r7 stalls: Ghost Nimble d12-1=d10 + Monster v12 [Lead 1] | d10 + Monster d10 v 12 | 2 + 10 = 12 | SUCCESS | MONSTER SHOWS
+#205 | DRILL W round 8 ground d6 [Lead 2] | d6 | 3
+#206 | DRILL W r8 stalls: Ghost Nimble d12-1=d10 + Monster v12 [Lead 2] | d10 + Monster d10 v 12 | 2 + 9 = 11 | COST | MONSTER SHOWS
+#207 | DRILL W round 9 ground d6 [Lead 2] | d6 | 6
+#208 | DRILL W r9 dead end: Ghost Wits d6-1=d4 + Monster v12 [Lead 2] | d4 + Monster d10 v 12 | 1 + 4 = 5 | TROUBLE | MONSTER SHOWS
+#209 | DRILL W round 10 ground d6 [Lead 1] | d6 | 4
+#210 | DRILL W r10 rooftops: Ghost Nimble d12-1=d10 + Monster v12 [Lead 1] | d10 + Monster d10 v 12 | 9 + 5 = 14 | SUCCESS
+#211 | DRILL W round 11 ground d6 [Lead 2] | d6 | 4
+#212 | DRILL W r11 rooftops: Ghost Nimble d12-1=d10 + Monster v12 [Lead 2] | d10 + Monster d10 v 12 | 3 + 1 = 4 | TROUBLE
+#213 | DRILL W round 12 ground d6 [Lead 1] | d6 | 3
+#214 | DRILL W r12 stalls: Ghost Nimble d12-1=d10 + Monster v12 [Lead 1] | d10 + Monster d10 v 12 | 7 + 5 = 12 | SUCCESS
+#215 | DRILL W round 13 ground d6 [Lead 2] | d6 | 3
+#216 | DRILL W r13 stalls: Ghost Nimble d12-1=d10 + Monster v12 [Lead 2] | d10 + Monster d10 v 12 | 5 + 6 = 11 | COST | MONSTER SHOWS
+#217 | DRILL W round 14 ground d6 [Lead 2] | d6 | 5
+#218 | DRILL W r14 parade: Ghost Sly d10-1=d8 + Monster v12 [Lead 2] | d8 + Monster d10 v 12 | 6 + 7 = 13 | SUCCESS | MONSTER SHOWS
+#219 | DRILL W round 15 ground d6 [Lead 3] | d6 | 1
+#220 | DRILL W r15 square: Ghost Sly d10-1=d8 + Monster v12 [Lead 3] | d8 + Monster d10 v 12 | 8 + 8 = 16 | SUCCESS (CRITICAL)
+#221 | DRILL W T9 Werewolf rolls THE WAY OUT Nimble d12 + Monster v10 (S12/13) | d12 + Monster d10 v 10 | 8 + 10 = 18 | SUCCESS | MONSTER SHOWS

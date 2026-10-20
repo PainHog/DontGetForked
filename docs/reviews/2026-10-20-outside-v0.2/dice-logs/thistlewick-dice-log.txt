@@ -1,0 +1,142 @@
+#1 2026-10-20T20:36:13.145Z | TEST harness check (not used in play) | d6=6 ; Test d12=4 + Monster d10=7 = 11 vs 8: SUCCESS [MONSTER SHOWS +2]
+#2 2026-10-20T20:36:24.055Z | SETUP Werewolf Gift (1-2 Keen Nose, 3-4 Through the Hedge, 5-6 Howl) | d6=2
+#3 2026-10-20T20:36:24.090Z | SETUP Werewolf Perk (1-2 Night Runner, 3-4 Shortcut, 5-6 Fetch) | d6=4
+#4 2026-10-20T20:36:24.131Z | SETUP Ghost Perk (1-2 Spectral, 3-4 Rattle, 5-6 Already Dead) | d6=3
+#5 2026-10-20T20:36:24.186Z | SETUP Creature Perk (1-2 Strong Back, 3-4 Tireless, 5-6 Built to Last) | d6=1
+#6 2026-10-20T20:36:24.236Z | SETUP Ghost Castle Duty (default Butler clashes with Dracula; Ghost chose later -> rolls d6, again on taken 1,2,4,5) | d6=6 ; d6=3 ; d6=4 ; d6=3
+#7 2026-10-20T20:36:38.769Z | T1 Tell check baker (Witch arrives; Familiar's Warning 2nd d6 also needs 4-6) | d6=3 ; d6=5
+#8 2026-10-20T20:36:38.804Z | T1 Tell check china shop (Dracula arrives) | d6=2
+#9 2026-10-20T20:36:38.837Z | T1 Tell check hatter (Ghost arrives) | d6=2
+#10 2026-10-20T20:36:38.872Z | T1 Tell check ironmonger (Creature arrives) | d6=1
+#11 2026-10-20T20:36:38.908Z | T1 Tell check seed merchant (Werewolf arrives) | d6=5
+#12 2026-10-20T20:36:55.079Z | T2 Creature ironmonger way in: cart (Brawn 6, unwatched), Brawn d12 (Handyman raise wasted at d12) + Monster | Creature d12=3 + Monster d10=1 = 4 vs 6: COST [Monster hidden]
+#13 2026-10-20T20:36:55.121Z | T2 Dracula china shop way in: locked front door (Sly 8, unwatched), Sly d6->d8 Butler + Monster | Dracula d8=2 + Monster d10=4 = 6 vs 8: COST [MONSTER SHOWS +2]
+#14 2026-10-20T20:36:55.156Z | T2 Werewolf seed merchant way in: muddy yard (Sly 6, unwatched), Sly d6->d8 Gardener + Monster | Werewolf d8=6 + Monster d10=8 = 14 vs 6: SUCCESS [MONSTER SHOWS +2]
+#15 2026-10-20T20:36:55.194Z | T2 Ghost hatter way in: nosy neighbour (Sly 8, WATCHED), Sly d10->d12 Tailor + Monster (Rattle) | Ghost d12=12 + Monster d10=10 = 22 vs 8: SUCCESS [Monster hidden]
+#16 2026-10-20T20:36:55.233Z | T2 Witch baker way in: crowded shop floor (group, Sly 8, WATCHED), Sly d10->d12 Cook + Mask | Witch d12=8 + Mask d6=4 = 12 vs 8: SUCCESS
+#17 2026-10-20T20:37:22.822Z | T3 Creature ironmonger strongbox (Wits 10 WATCHED) via Brute Force: Brawn d12 (Handyman raise cancels pending Cost step-down) + Monster | Creature d12=8 + Monster d10=4 = 12 vs 10: SUCCESS [Monster hidden]
+#18 2026-10-20T20:37:22.861Z | T3 Witch baker shopkeeper (Charm 8 WATCHED), Charm d8->d10 Cook + Mask | Witch d10=1 + Mask d6=6 = 7 vs 8: COST
+#19 2026-10-20T20:37:22.896Z | T3 Werewolf seed merchant night watchman (Wits 10 WATCHED), Wits d8->d10 Gardener + Monster via Good Dog (safe) | Werewolf d10=4 + Monster d10=6 = 10 vs 10: SUCCESS [Monster shows - safe, no +2]
+#20 2026-10-20T20:37:48.083Z | T4 Tell check the way out (Witch + Werewolf come back; Familiar's Warning 2nd d6; if off, d6 picks arrival 1=Witch 2=Werewolf reroll 3-6) | d6=3 ; d6=6 ; d6=5 ; d6=6 ; d6=6
+#21 2026-10-20T20:37:48.119Z | T4 Dracula china shop back room (Wits 8, unwatched) via Bat: Nimble d10->d12 Butler + Mask | Dracula d12=12 + Mask d6=2 = 14 vs 8: SUCCESS
+#22 2026-10-20T20:37:48.161Z | T4 Ghost ironmonger guard dog FOR THE PIECE (WATCHED, Nimble loud 10), Nimble d12 + Monster (Rattle) | Ghost d12=9 + Monster d10=9 = 18 vs 10: CRITICAL [Monster hidden]
+#23 2026-10-20T20:38:30.880Z | T6 Werewolf rolls THE WAY OUT for everyone (Nimble, Standard 8, Shortcut -2 = 6, WATCHED), Nimble d12 + Monster; Suspicion 9 of 10 | Werewolf d12=6 + Monster d10=2 = 8 vs 6: SUCCESS [Monster hidden]
+#24 2026-10-20T20:38:58.720Z | RAID2 SETUP Dracula Gift (1-2 Bat, 3-4 Mist, 5-6 Wolf) / Perk (1-2 Hypnotic Eyes, 3-4 Old Money, 5-6 Wall-Crawler) | d6=2 ; d6=5
+#25 2026-10-20T20:38:58.755Z | RAID2 SETUP Werewolf Gift (1-2 Keen Nose, 3-4 Through the Hedge, 5-6 Howl) / Perk (1-2 Night Runner, 3-4 Shortcut, 5-6 Fetch) | d6=4 ; d6=6
+#26 2026-10-20T20:38:58.799Z | RAID2 SETUP Witch Gift (1-2 Broomstick, 3-4 Black Cat, 5-6 Potion) / Perk (1-2 Familiar's Warning, 3-4 Fly by Night, 5-6 Wise Woman) | d6=6 ; d6=5
+#27 2026-10-20T20:38:58.842Z | RAID2 SETUP Ghost Gift (1-2 Chill, 3-4 Whisper, 5-6 Fade) / Perk (1-2 Spectral, 3-4 Rattle, 5-6 Already Dead) | d6=6 ; d6=4
+#28 2026-10-20T20:38:58.878Z | RAID2 SETUP Creature Gift (1-2 Mountain Stride, 3-4 Hovel Watcher, 5-6 Book-Learned) / Perk (1-2 Strong Back, 3-4 Tireless, 5-6 Built to Last) | d6=3 ; d6=1
+#29 2026-10-20T20:38:58.918Z | RAID2 SETUP Ghost Duty clash again (rolls d6, again on taken 1,2,4,5) | d6=4 ; d6=2 ; d6=6 ; d6=4 ; d6=6
+#30 2026-10-20T20:39:07.202Z | RAID2 T1 Tell check baker (Dracula, Witch, Werewolf arrive; pick arrival 1=Dra 2=Witch 3=WW, reroll 4-6) | d6=1 ; d6=5 ; d6=3 ; d6=1
+#31 2026-10-20T20:39:07.239Z | RAID2 T1 Tell check ironmonger (Creature, Ghost arrive; pick 1=Cre 2=Gho reroll 3-6) | d6=2 ; d6=1 ; d6=4 ; d6=1
+#32 2026-10-20T20:39:18.014Z | RAID2 T2 GROUP CHECK baker crowded shop floor (group, Sly 8, WATCHED): Dracula Sly d6+Mon, Werewolf Sly d6+Mon, Witch Sly d10->d12 Cook+Mon | Dracula d6=1 + Monster d10=7 = 8 vs 8: SUCCESS [MONSTER SHOWS +2] ; Werewolf d6=6 + Monster d10=5 = 11 vs 8: SUCCESS [Monster hidden] ; Witch d12=8 + Monster d10=5 = 13 vs 8: SUCCESS [Monster hidden]
+#33 2026-10-20T20:39:18.055Z | RAID2 T2 Creature ironmonger cart (Brawn 6, unwatched) Brawn d12 + Mon | Creature d12=8 + Monster d10=8 = 16 vs 6: CRITICAL [Monster hidden]
+#34 2026-10-20T20:39:22.987Z | RAID2 T2 Ghost ironmonger strongbox (WATCHED, Charm loud 10) Charm d8 + Mon (Rattle) | Ghost d8=5 + Monster d10=9 = 14 vs 10: SUCCESS [MONSTER SHOWS +2]
+#35 2026-10-20T20:39:33.210Z | RAID2 T3 Dracula baker shopkeeper (Charm 8, WATCHED) Charm d12 + Mon | Dracula d12=12 + Monster d10=6 = 18 vs 8: SUCCESS [Monster hidden]
+#36 2026-10-20T20:39:33.244Z | RAID2 T3 Ghost ironmonger guard dog FOR THE PIECE (WATCHED, Nimble loud 10) Nimble d12 + Mon (Rattle) | Ghost d12=12 + Monster d10=9 = 21 vs 10: SUCCESS [Monster hidden]
+#37 2026-10-20T20:39:45.372Z | RAID2 T3 Tell check seed merchant (Werewolf arrives) | d6=2
+#38 2026-10-20T20:39:45.406Z | RAID2 T3 Tell check hatter (Witch arrives; Wise Woman perk this raid, no Familiar's Warning) | d6=6
+#39 2026-10-20T20:39:56.139Z | RAID2 T4 Witch hatter nosy neighbour (Sly 8, WATCHED) Sly d10 + Mask | Witch d10=10 + Mask d6=3 = 13 vs 8: SUCCESS
+#40 2026-10-20T20:39:56.175Z | RAID2 T4 Werewolf seed merchant muddy yard (Sly 6, unwatched) Sly d6->d8 Gardener + Mask | Werewolf d8=6 + Mask d6=4 = 10 vs 6: SUCCESS
+#41 2026-10-20T20:39:56.207Z | RAID2 T4 Tell check china shop (Dracula + Creature arrive; pick 1=Dra 2=Cre reroll 3-6) | d6=6 ; d6=6 ; d6=3 ; d6=5
+#42 2026-10-20T20:40:01.460Z | RAID2 T4 china shop Tell: pick arrival continued (1=Dracula 2=Creature, reroll 3-6) | d6=6 ; d6=3 ; d6=1 ; d6=6 ; d6=6 ; d6=5
+#43 2026-10-20T20:40:16.986Z | RAID2 T5 Tell check the way out (Ghost w/ mirror + Witch come back; pick 1=Ghost 2=Witch reroll 3-6) | d6=6 ; d6=2 ; d6=2 ; d6=5 ; d6=1 ; d6=4
+#44 2026-10-20T20:40:17.016Z | RAID2 T5 Werewolf seed merchant night watchman (WATCHED, Wits 10) via Through the Hedge: Brawn d10->d12 Gardener at Diff 8, + Mask | Werewolf d12=1 + Mask d6=1 = 2 vs 8: TROUBLE
+#45 2026-10-20T20:40:17.043Z | RAID2 T5 Dracula china shop front door (Sly 8, unwatched) via Bat: Nimble d10->d12 Butler + Mask | Dracula d12=12 + Mask d6=4 = 16 vs 8: SUCCESS  <<VOID: hunt began on #44 before Dracula acted (anyone who has not acted yet does not)>>
+#46 2026-10-20T20:40:47.452Z | RAID2 FINAL FLIGHT round 1 ground (1 square Sly/Charm, 2 alleys Nimble/Sly, 3 stalls Brawn/Nimble, 4 rooftops Nimble/Wits, 5 parade Charm/Sly, 6 dead end Brawn/Wits) | d6=3
+#47 2026-10-20T20:40:58.484Z | RAID2 FF R1 stalls (Brawn/Nimble) vs 11, Lead 3 (Fetch): Dra Nimble d10 (Wall-Crawler +1, Garlic -1); WW Nimble d12; Witch Wits d12 (Potion, 1 ch); Ghost Nimble d12 -carry -ColdIron +Fade-as-raise = d10; Cre Brawn d12 | Dracula d10=2 + Monster d10=1 = 3 vs 11: TROUBLE [Monster hidden] ; Werewolf d12=6 + Monster d10=4 = 10 vs 11: COST [Monster hidden] ; Witch d12=8 + Monster d10=10 = 18 vs 11: SUCCESS [MONSTER SHOWS +2] ; Ghost d10=6 + Monster d10=7 = 13 vs 11: SUCCESS [MONSTER SHOWS +2] ; Creature d12=6 + Monster d10=3 = 9 vs 11: COST [Monster hidden]
+#48 2026-10-20T20:41:03.546Z | RAID2 FINAL FLIGHT round 2 ground | d6=1
+#49 2026-10-20T20:41:21.073Z | RAID2 FF R2 square (Sly/Charm) vs 11, Lead 4: Dra Charm d12-Garlic+Bat-as-raise=d12; WW Brawn via Creature's Brute Force d10 +Good Dog raise=d12; Witch Sly d10+Hedge Spell raise=d12; Ghost Sly d10-ColdIron+Through-the-Wall-as-raise=d10; Cre Brute Force Brawn d12 | Dracula d12=7 + Monster d10=7 = 14 vs 11: CRITICAL [Monster hidden] ; Werewolf d12=6 + Monster d10=8 = 14 vs 11: SUCCESS [MONSTER SHOWS +2] ; Witch d12=6 + Monster d10=6 = 12 vs 11: CRITICAL [Monster hidden] ; Ghost d10=6 + Monster d10=10 = 16 vs 11: SUCCESS [MONSTER SHOWS +2] ; Creature d12=11 + Monster d10=3 = 14 vs 11: SUCCESS [Monster hidden]
+#50 2026-10-20T20:44:56.225Z | DRILL1 LOW-SUSPICION LOCAL CHASE: Ghost (Raid1 build) caught at hatter nosy neighbour T2 [Trouble stipulated, Mask: S1->2]; mob 8+1=9, Lead 1, esc 4. Round 1 ground | d6=4
+#51 2026-10-20T20:45:00.794Z | DRILL1 R1 rooftops: Ghost Nimble d12 -ColdIron = d10 + Monster (Rattle) vs 9, Lead 1 | Ghost d10=3 + Monster d10=8 = 11 vs 9: SUCCESS [MONSTER SHOWS +2]
+#52 2026-10-20T20:45:05.069Z | DRILL1 R2 ground (Lead 2) | d6=5
+#53 2026-10-20T20:45:10.015Z | DRILL1 R2 parade: Ghost Sly d10 -ColdIron +Chill raise (1 ch) = d10 + Monster vs 9, Lead 2 | Ghost d10=7 + Monster d10=5 = 12 vs 9: SUCCESS [Monster hidden]
+#54 2026-10-20T20:45:13.841Z | DRILL1 R3 ground (Lead 3) | d6=3
+#55 2026-10-20T20:45:18.597Z | DRILL1 R3 stalls: Ghost Nimble d12 -ColdIron = d10 + Monster vs 9, Lead 3 | Ghost d10=3 + Monster d10=7 = 10 vs 9: SUCCESS [MONSTER SHOWS +2]
+#56 2026-10-20T20:45:26.734Z | DRILL2 HIGH-SUSPICION LOCAL CHASE: Raid2 T4 variant, S7 after china Tell; Witch nosy neighbour [Trouble stipulated, Mask: S7->8]; mob 8+4=12, Lead 1, esc 4; Witch 3 ch (Potion=Wits, Hedge Spell=raise). R1 ground | d6=6
+#57 2026-10-20T20:45:33.970Z | DRILL2 R1 dead end: Witch Wits d12 + Monster vs 12, Lead 1 | Witch d12=4 + Monster d10=7 = 11 vs 12: COST [MONSTER SHOWS +2]
+#58 2026-10-20T20:45:38.757Z | DRILL2 R2 ground (Lead 1; Monster already shown so chase rise will be +2 -> S10 = Limit) | d6=6
+#59 2026-10-20T20:45:44.265Z | DRILL2 R2 dead end: Witch Wits d12 + Monster vs 12, Lead 1 | Witch d12=10 + Monster d10=7 = 17 vs 12: SUCCESS [Monster hidden]
+#60 2026-10-20T20:45:48.345Z | DRILL2 R3 ground (Lead 2; Rowan now in play: trait die -1) | d6=4
+#61 2026-10-20T20:45:53.180Z | DRILL2 R3 rooftops: Witch Wits d12 -Rowan +Hedge Spell raise (1 ch) = d12 + Monster vs 12, Lead 2 | Witch d12=1 + Monster d10=2 = 3 vs 12: TROUBLE [MONSTER SHOWS +2]
+#62 2026-10-20T20:45:57.245Z | DRILL2 R4 ground (Lead 1) | d6=6
+#63 2026-10-20T20:46:02.125Z | DRILL2 R4 dead end: Witch Wits d12 -Rowan +Hedge Spell raise (1 ch, 1 left) = d12 + Monster vs 12, Lead 1 | Witch d12=9 + Monster d10=6 = 15 vs 12: SUCCESS [Monster hidden]
+#64 2026-10-20T20:46:06.109Z | DRILL2 R5 ground (Lead 2) | d6=2
+#65 2026-10-20T20:46:15.462Z | DRILL2 R5 alleys: Witch Potion (last ch) -> Wits d12 -Rowan + Hedge Spell by OVERDRAW (+2 on top, but Limit already certain) = d12 + Monster vs 12, Lead 2 | Witch d12=1 + Monster d10=3 = 4 vs 12: TROUBLE [MONSTER SHOWS +2]
+#66 2026-10-20T20:46:19.364Z | DRILL2 R6 ground (Lead 1; Witch 0 charges) | d6=5
+#67 2026-10-20T20:46:26.941Z | DRILL2 R6 parade: Witch Potion by OVERDRAW -> Wits d12 -Rowan + Hedge Spell by OVERDRAW = d12 + Monster vs 12, Lead 1 | Witch d12=11 + Monster d10=3 = 14 vs 12: SUCCESS [Monster hidden]
+#68 2026-10-20T20:46:31.018Z | DRILL2 R7 ground (Lead 2) | d6=3
+#69 2026-10-20T20:46:35.853Z | DRILL2 R7 stalls: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 2 | Witch d12=4 + Monster d10=2 = 6 vs 12: TROUBLE [Monster hidden]
+#70 2026-10-20T20:46:40.068Z | DRILL2 R8 ground (Lead 1) | d6=3
+#71 2026-10-20T20:46:44.291Z | DRILL2 R8 stalls: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 1 | Witch d12=11 + Monster d10=4 = 15 vs 12: SUCCESS [Monster hidden]
+#72 2026-10-20T20:46:48.461Z | DRILL2 R9 ground (Lead 2) | d6=2
+#73 2026-10-20T20:46:52.668Z | DRILL2 R9 alleys: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 2 | Witch d12=5 + Monster d10=9 = 14 vs 12: SUCCESS [MONSTER SHOWS +2]
+#74 2026-10-20T20:46:56.431Z | DRILL2 R10 ground (Lead 3) | d6=5
+#75 2026-10-20T20:47:00.796Z | DRILL2 R10 parade: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 3 | Witch d12=4 + Monster d10=5 = 9 vs 12: TROUBLE [MONSTER SHOWS +2]
+#76 2026-10-20T20:47:05.728Z | DRILL2 R11 ground (Lead 2) | d6=1
+#77 2026-10-20T20:47:05.782Z | DRILL2 R11: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 2 | Witch d12=12 + Monster d10=6 = 18 vs 12: SUCCESS [Monster hidden]
+#78 2026-10-20T20:47:11.053Z | DRILL2 R12 ground (Lead 3) | d6=1
+#79 2026-10-20T20:47:11.083Z | DRILL2 R12: Witch 2 OVERDRAWS (Potion->Wits, Hedge raise) = d12 + Monster vs 12, Lead 3 | Witch d12=8 + Monster d10=5 = 13 vs 12: SUCCESS [Monster hidden]
+#80 2026-10-20T20:48:06.440Z | DRILL4 GROUP CHECK baker crowded shop floor (group, Sly 8, WATCHED), S4 before: Dracula Sly d6+Mask, Creature Sly d6+Mask, Werewolf Sly d6+Mask (Raid1 builds; Dracula carries the tea service) | Dracula d6=4 + Mask d6=1 = 5 vs 8: TROUBLE ; Creature d6=6 + Mask d6=3 = 9 vs 8: SUCCESS ; Werewolf d6=2 + Mask d6=5 = 7 vs 8: COST
+#81 2026-10-20T20:48:15.800Z | DRILL4 SHARED LOCAL CHASE Dracula+Werewolf [Werewolf Trouble stipulated in place of #80 Cost]; group check rise +1: S4->5; mob 8+2=10; Lead 1, esc 4; majority rule. R1 ground | d6=6
+#82 2026-10-20T20:48:21.473Z | DRILL4 R1 dead end vs 10, Lead 1: Dracula Bat (1 ch) Nimble d10 -Garlic = d8 + Mon; Werewolf Brawn d10 + Mon | Dracula d8=1 + Monster d10=5 = 6 vs 10: TROUBLE [MONSTER SHOWS +2] ; Werewolf d10=3 + Monster d10=1 = 4 vs 10: TROUBLE [Monster hidden]
+#83 2026-10-20T20:48:39.012Z | DRILL5 SLIP FREE (Turn after capture), S7: Werewolf Nimble d12 + Good Dog Monster-safe (1 ch) vs lock-up 10 | Werewolf d12=10 + Monster d10=3 = 13 vs 10: SUCCESS [Monster hidden]
+#84 2026-10-20T20:48:39.054Z | DRILL5 SLIP FREE: Dracula Mesmerise (last ch; approach w/ Charm at watched lock-up, Diff 10-2=8) Charm d12 + Monster (Hypnotic Eyes: shows only if beats by 2+) | Dracula d12=11 + Monster d10=4 = 15 vs 8: SUCCESS [Monster hidden]
+#85 2026-10-20T20:49:01.729Z | CHAIN-C (Raid1 alt: mirror taken T5, S8 at T6) T6 Werewolf way out [Trouble stipulated, Mask]: S8->9, caught, mob 8+4=12. DRILL3 GIVE UP at start of R1 -> captured, no roll, no rise. Then: Ghost ABANDONS mirror (free); Witch+Dracula hand loot to Creature, move to LOCK-UP; Tell check (Familiar's Warning 2nd d6; pick 1=Witch 2=Dra) | d6=1 ; d6=3 ; d6=5 ; d6=6
+#86 2026-10-20T20:49:10.160Z | CHAIN-C T7 S9: Werewolf SLIP FREE Nimble d12 + Good Dog Monster-safe (1 ch) vs 10 (Trouble would be +1 = Limit) | Werewolf d12=9 + Monster d10=10 = 19 vs 10: SUCCESS [Monster shows - safe, no +2]
+#87 2026-10-20T20:49:25.863Z | CHAIN-C T8 (=DRILL7a) S9, all 5 at the way out: Creature rolls THE WAY OUT the loud way, Brawn d12 + Monster vs 8 (loud +1 => Limit 10 whatever happens; result first) | Creature d12=9 + Monster d10=6 = 15 vs 8: SUCCESS [Monster hidden]
+#88 2026-10-20T20:49:49.470Z | CHAIN-D [stipulated start T9, S7: Werewolf+Witch held since T8 (cake+turnip seed taken by the town); Ghost (top hat) + Creature (rope) at lock-up; Dracula (tea) at way out; charges Dra1 WW0 Witch1 Ghost1 Cre0]. T9 Werewolf SLIP FREE Nimble d12 + Mask vs 10 | Werewolf d12=8 + Mask d6=4 = 12 vs 10: SUCCESS
+#89 2026-10-20T20:49:49.516Z | CHAIN-D T9 Witch SLIP FREE Sly d10 + Hedge Spell raise (last ch) = d12 + Mask vs 10 | Witch d12=4 + Mask d6=3 = 7 vs 10: TROUBLE
+#90 2026-10-20T20:49:57.071Z | CHAIN-D T9 S8: Ghost (handed top hat to Creature) RESCUE Sly d10 + Chill raise (last ch) = d12 + Monster (Rattle) vs 10 | Ghost d12=1 + Monster d10=2 = 3 vs 10: TROUBLE [MONSTER SHOWS +2]
+#91 2026-10-20T20:50:15.644Z | CHAIN-D T9 S9: Ghost GIVES UP at start of R1 (no roll, no rise; captured, carries nothing). Creature (rope, top hat; 0 ch) = DRILL7b RESCUE the loud way Brawn d12 + Monster vs 10 (loud +1 => Limit whatever; result first: Success/Cost frees Witch+Ghost into the flight) | Creature d12=12 + Monster d10=2 = 14 vs 10: SUCCESS [Monster hidden]
+#92 2026-10-20T20:50:25.363Z | CHAIN-D FINAL FLIGHT (=DRILL9 5 runners, low charges: Dra1 others 0), Lead 2, esc 5, mob 11. Dracula hadn't acted in T9 -> doesn't. R1 ground | d6=1
+#93 2026-10-20T20:50:50.808Z | CHAIN-D FF R1 square (Sly/Charm) vs 11, Lead 2: Dra Charm d12-Garlic+last charge as raise=d12; WW OVERDRAW Keen Nose->Wits d8 (Weakness from R2); Witch Sly d10 (saves overdraw); Ghost Sly d10-ColdIron=d8 (can't overdraw); Cre OVERDRAW Brute Force->Brawn d12 (Weakness from R2) | Dracula d12=11 + Monster d10=8 = 19 vs 11: SUCCESS [Monster hidden] ; Werewolf d8=3 + Monster d10=2 = 5 vs 11: TROUBLE [Monster hidden] ; Witch d10=7 + Monster d10=1 = 8 vs 11: TROUBLE [Monster hidden] ; Ghost d8=6 + Monster d10=9 = 15 vs 11: SUCCESS [MONSTER SHOWS +2] ; Creature d12=12 + Monster d10=4 = 16 vs 11: SUCCESS [Monster hidden]
+#94 2026-10-20T20:50:56.187Z | CHAIN-D FF R2 ground (Lead 3) | d6=5
+#95 2026-10-20T20:51:05.738Z | CHAIN-D FF R2 parade (Charm/Sly) vs 11, Lead 3: Dra Charm d12-Garlic=d10 (0 ch, can't overdraw); WW Sly d6-Hounds(overdrawn)=d4; Witch OVERDRAW Potion->Wits d12 (Rowan due R3 anyway = free); Ghost Sly d8; Cre Sly d6-Fire(overdrawn)=d4 | Dracula d10=3 + Monster d10=3 = 6 vs 11: TROUBLE [Monster hidden] ; Werewolf d4=2 + Monster d10=9 = 11 vs 11: SUCCESS [MONSTER SHOWS +2] ; Witch d12=1 + Monster d10=6 = 7 vs 11: TROUBLE [MONSTER SHOWS +2] ; Ghost d8=4 + Monster d10=9 = 13 vs 11: SUCCESS [MONSTER SHOWS +2] ; Creature d4=3 + Monster d10=1 = 4 vs 11: TROUBLE [Monster hidden]
+#96 2026-10-20T20:51:11.012Z | CHAIN-D FF R3 ground (Lead 2; all Weaknesses in play, no charges, no overdraws left) | d6=5
+#97 2026-10-20T20:51:16.614Z | CHAIN-D FF R3 parade (Charm/Sly) vs 11, Lead 2: Dra Charm d10; WW Sly d4; Witch Sly d8; Ghost Sly d8; Cre Sly d4 | Dracula d10=7 + Monster d10=10 = 17 vs 11: SUCCESS [MONSTER SHOWS +2] ; Werewolf d4=2 + Monster d10=1 = 3 vs 11: TROUBLE [Monster hidden] ; Witch d8=6 + Monster d10=5 = 11 vs 11: SUCCESS [Monster hidden] ; Ghost d8=2 + Monster d10=10 = 12 vs 11: SUCCESS [MONSTER SHOWS +2] ; Creature d4=2 + Monster d10=9 = 11 vs 11: SUCCESS [MONSTER SHOWS +2]
+#98 2026-10-20T20:51:21.248Z | CHAIN-D FF R4 ground (Lead 4) | d6=4
+#99 2026-10-20T20:51:27.614Z | CHAIN-D FF R4 rooftops (Nimble/Wits) vs 11, Lead 4: Dra Nimble d8; WW Nimble d10; Witch Wits d10; Ghost Nimble d10; Cre Wits d8 | Dracula d8=2 + Monster d10=8 = 10 vs 11: COST [MONSTER SHOWS +2] ; Werewolf d10=9 + Monster d10=7 = 16 vs 11: SUCCESS [Monster hidden] ; Witch d10=9 + Monster d10=2 = 11 vs 11: SUCCESS [Monster hidden] ; Ghost d10=9 + Monster d10=7 = 16 vs 11: SUCCESS [Monster hidden] ; Creature d8=2 + Monster d10=7 = 9 vs 11: COST [MONSTER SHOWS +2]
+#100 2026-10-20T20:51:54.644Z | DRILL4b SHARED CHASE [stipulated: Witch + Creature both Trouble in one group check at the baker crowd, Mask; S4->5]; mob 10; Lead 1; Witch 2 ch, Creature 2 ch (Raid1 builds). R1 ground | d6=4
+#101 2026-10-20T20:52:01.301Z | DRILL4b R1 rooftops vs 10, Lead 1: Witch Wits d12 + Mon; Creature Wits d10 + Mon | Witch d12=2 + Monster d10=7 = 9 vs 10: COST [MONSTER SHOWS +2] ; Creature d10=10 + Monster d10=7 = 17 vs 10: SUCCESS [Monster hidden]
+#102 2026-10-20T20:52:06.099Z | DRILL4b R2 ground (Lead 2) | d6=4
+#103 2026-10-20T20:52:11.305Z | DRILL4b R2 rooftops vs 10, Lead 2: Witch Wits d12 + Mon; Creature Wits d10 + Mon | Witch d12=3 + Monster d10=4 = 7 vs 10: TROUBLE [MONSTER SHOWS +2] ; Creature d10=3 + Monster d10=2 = 5 vs 10: TROUBLE [Monster hidden]
+#104 2026-10-20T20:52:23.292Z | DRILL4c SHARED CHASE [stipulated: Dracula (carrying tea service) + Witch caught in one group check at the baker crowd; S5->6]; mob 8+3=11; Lead 1. Dracula 0 ch, Witch 2 ch. R1 ground | d6=4
+#105 2026-10-20T20:52:31.427Z | DRILL4c R1 rooftops vs 11, Lead 1: Dracula Nimble d10-Garlic=d8 + Mon; Witch Wits d12 + Mon | Dracula d8=4 + Monster d10=5 = 9 vs 11: COST [MONSTER SHOWS +2] ; Witch d12=10 + Monster d10=6 = 16 vs 11: SUCCESS [Monster hidden]
+#106 2026-10-20T20:52:43.231Z | DRILL4c R2 ground (Lead 2; nobody gives up: Dracula holds an essential he cannot hand over mid-chase) | d6=4
+#107 2026-10-20T20:52:48.233Z | DRILL4c R2 rooftops vs 11, Lead 2: Dracula Nimble d8 + Mon; Witch Wits d12 + Mon | Dracula d8=6 + Monster d10=6 = 12 vs 11: CRITICAL [Monster hidden] ; Witch d12=3 + Monster d10=1 = 4 vs 11: TROUBLE [Monster hidden]
+#108 2026-10-20T20:52:53.206Z | DRILL4c R3 ground (Lead 3; Witch's Rowan now in play) | d6=1
+#109 2026-10-20T20:53:00.127Z | DRILL4c R3 square vs 11, Lead 3: Dracula Charm d12-Garlic=d10 + Mon; Witch Potion->Wits d12 -Rowan + Hedge raise (2 ch) = d12 + Mon | Dracula d10=4 + Monster d10=2 = 6 vs 11: TROUBLE [Monster hidden] ; Witch d12=6 + Monster d10=6 = 12 vs 11: CRITICAL [Monster hidden]
+#110 2026-10-20T20:53:28.692Z | DRILL9b 3-RUNNER FLIGHT [stipulated: end of T10, S9; Werewolf+Witch held; Ghost mid-carry (mirror, top hat) between ironmonger and way out; Dracula (tea) + Creature (cake, rope) at way out; FURNITURE TICK -> S10 -> hunt]. Charges Dra0 Ghost1 Cre1. Lead 2, esc 5, mob 11. R1 ground | d6=5
+#111 2026-10-20T20:53:36.389Z | DRILL9b R1 parade (Charm/Sly) vs 11, Lead 2: Dra Charm d12-Garlic=d10; Ghost Sly d10-ColdIron+Chill raise (last ch)=d10; Cre Brute Force (last ch) Brawn d12 | Dracula d10=6 + Monster d10=3 = 9 vs 11: COST [Monster hidden] ; Ghost d10=4 + Monster d10=4 = 8 vs 11: TROUBLE [Monster hidden] ; Creature d12=3 + Monster d10=3 = 6 vs 11: TROUBLE [Monster hidden]
+#112 2026-10-20T20:53:48.836Z | DRILL9c/11 DAWN, 1-RUNNER FLIGHT [stipulated: T12 ends; Werewolf (Raid1, 1 ch, carries cake) alone at lock-up after failed rescues; Dra, Witch, Ghost, Cre held]. Lead 2, esc 5, mob 11. R1 ground | d6=2
+#113 2026-10-20T20:53:54.295Z | DRILL9c R1 alleys vs 11, Lead 2: Werewolf Nimble d12 + Mon | Werewolf d12=12 + Monster d10=10 = 22 vs 11: SUCCESS [Monster hidden]
+#114 2026-10-20T20:53:58.493Z | DRILL9c R2 ground (Lead 3) | d6=2
+#115 2026-10-20T20:54:03.838Z | DRILL9c R2 alleys vs 11, Lead 3: Werewolf Nimble d12 + Mon | Werewolf d12=6 + Monster d10=1 = 7 vs 11: TROUBLE [Monster hidden]
+#116 2026-10-20T20:54:08.031Z | DRILL9c R3 ground (Lead 2; Hounds now in play) | d6=2
+#117 2026-10-20T20:54:13.283Z | DRILL9c R3 alleys vs 11, Lead 2: Werewolf Nimble d12 -Hounds + Good Dog spent AS A RAISE (last ch) = d12 + Mon | Werewolf d12=6 + Monster d10=3 = 9 vs 11: COST [Monster hidden]
+#118 2026-10-20T20:54:18.002Z | DRILL9c R4 ground (Lead 2; 0 ch; can't overdraw while Weakness in play) | d6=1
+#119 2026-10-20T20:54:22.931Z | DRILL9c R4 square vs 11, Lead 2: Werewolf Sly d6-Hounds = d4 + Mon | Werewolf d4=4 + Monster d10=2 = 6 vs 11: TROUBLE [Monster hidden]
+#120 2026-10-20T20:54:27.315Z | DRILL9c R5 ground (Lead 1) | d6=4
+#121 2026-10-20T20:54:31.976Z | DRILL9c R5 rooftops vs 11, Lead 1: Werewolf Nimble d12-Hounds = d10 + Mon | Werewolf d10=5 + Monster d10=4 = 9 vs 11: COST [Monster hidden]
+#122 2026-10-20T20:54:35.943Z | DRILL9c R6 ground (Lead 1) | d6=4
+#123 2026-10-20T20:54:40.140Z | DRILL9c R6 rooftops vs 11, Lead 1: Werewolf Nimble d10 + Mon | Werewolf d10=10 + Monster d10=4 = 14 vs 11: SUCCESS [Monster hidden]
+#124 2026-10-20T20:54:44.409Z | DRILL9c R7 ground (Lead 2) | d6=5
+#125 2026-10-20T20:54:48.784Z | DRILL9c R7 parade (Charm/Sly) vs 11, Lead 2: Werewolf Sly d6-Hounds = d4 + Mon | Werewolf d4=1 + Monster d10=3 = 4 vs 11: TROUBLE [MONSTER SHOWS +2]
+#126 2026-10-20T20:54:52.871Z | DRILL9c R8 ground (Lead 1) | d6=1
+#127 2026-10-20T20:54:57.113Z | DRILL9c R8 square (Sly/Charm) vs 11, Lead 1: Werewolf Sly d4 + Mon | Werewolf d4=1 + Monster d10=5 = 6 vs 11: TROUBLE [MONSTER SHOWS +2]
+#128 2026-10-20T20:55:06.706Z | DRILL11 EVERYONE HELD? [stipulated T9, S6: Dra, WW, Witch, Ghost held; Creature (Raid1, 0 ch, carries rope) last free, at lock-up]. Creature RESCUE the loud way Brawn d12 + Mask vs 10 (loud +1 -> S7) | Creature d12=5 + Mask d6=1 = 6 vs 10: TROUBLE
+#129 2026-10-20T20:55:12.627Z | DRILL11 rescuer caught: Creature local chase from lock-up, S7, mob 8+3=11, Lead 1. R1 ground | d6=6
+#130 2026-10-20T20:55:16.899Z | DRILL11 R1 dead end (Brawn/Wits) vs 11, Lead 1: Creature Brawn d12 + Mon | Creature d12=7 + Monster d10=3 = 10 vs 11: COST [Monster hidden]
+#131 2026-10-20T20:55:21.194Z | DRILL11 R2 ground (Lead 1) | d6=4
+#132 2026-10-20T20:55:29.200Z | DRILL11 R2 rooftops vs 11, Lead 1: Creature Wits d10 + Mon (declines overdraw) | Creature d10=5 + Monster d10=5 = 10 vs 11: COST [Monster hidden]
+#133 2026-10-20T20:55:33.312Z | DRILL11 R3 ground (Lead 1; Fire now in play) | d6=6
+#134 2026-10-20T20:55:37.804Z | DRILL11 R3 dead end vs 11, Lead 1: Creature Brawn d12-Fire = d10 + Mon | Creature d10=4 + Monster d10=3 = 7 vs 11: TROUBLE [Monster hidden]
+#135 2026-10-20T20:55:55.830Z | DRILL10 HUGE PIECE [hypothetical: grandfather clock (Huge) in place of the mirror]. Ghost + Werewolf both carry (taken T5, both moves T5-T6, arrive T6). S at T7 = 9 after ticks. T7 Werewolf (carrier) rolls way out [Trouble stipulated, Monster forced]; S9 -> 10? | d6=2  <<UNUSED: setup re-stated in #136 (S9 would have hit the Limit, no local chase)>>
+#136 2026-10-20T20:56:07.119Z | DRILL10 (restated) Huge clock carried by Ghost + Werewolf, at the way out with all others; T7 Werewolf (carrier) rolled way out [Trouble stipulated, Monster forced, hidden]: S5->6; caught WHILE CARRYING: local chase, mob 8+3=11, Lead 1, NO MASK, Nimble -1. R1 ground | d6=2
+#137 2026-10-20T20:56:14.010Z | DRILL10 R1 alleys vs 11, Lead 1: Werewolf Nimble d12 -carrying = d10 + Monster via Good Dog (safe; 1 ch) | Werewolf d10=6 + Monster d10=7 = 13 vs 11: SUCCESS [Monster shows - safe, no +2]
+#138 2026-10-20T20:56:18.070Z | DRILL10 R2 ground (Lead 2) | d6=6
+#139 2026-10-20T20:56:23.521Z | DRILL10 R2 dead end vs 11, Lead 2: Werewolf Brawn d10 + Monster via Good Dog (last ch) | Werewolf d10=9 + Monster d10=8 = 17 vs 11: SUCCESS [Monster hidden]
+#140 2026-10-20T20:56:27.762Z | DRILL10 R3 ground (Lead 3; Hounds in play; 0 ch) | d6=6
+#141 2026-10-20T20:56:34.665Z | DRILL10 R3 dead end vs 11, Lead 3: Werewolf Brawn d10-Hounds = d8 + Monster (forced, carrying; no overdraw) | Werewolf d8=4 + Monster d10=10 = 14 vs 11: SUCCESS [MONSTER SHOWS +2]
+#142 2026-10-20T20:56:55.215Z | DRILL12 LEFT BEHIND [stipulated Raid1 variant T6, S9: Witch held (handed the cake to Creature before her failed roll); the other four at the way out with all 5 items + mirror]. Werewolf rolls THE WAY OUT (Shortcut 6) Nimble d12 + Mask; party chooses to leave her | Werewolf d12=6 + Mask d6=3 = 9 vs 6: SUCCESS

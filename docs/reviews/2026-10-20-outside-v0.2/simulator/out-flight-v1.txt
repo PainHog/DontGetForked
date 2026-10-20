@@ -1,0 +1,9 @@
+# rules v1: {"v":1,"chaseFixedMob":false,"chaseOneRise":false,"flightAnyRaise":false,"wallCrawlerRaise":false,"everyoneHeldForked":false,"resultFirst":false,"v2defaults":false,"limits":{"Easy":11,"Standard":11,"Hard":15},"thistleStrongbox":8,"giveUp":false}
+
+| Level (mob, escape at) | charges | 1 Entity | 3 | 4 | 5 |
+| Easy (10, 5) | 0 | 81.3% | 89.5% | 90.7% | 92.9% |
+| Easy (10, 5) | 3 | 87.0% | 95.2% | 96.2% | 97.7% |
+| Standard (11, 5) | 0 | 60.0% | 69.7% | 71.1% | 75.0% |
+| Standard (11, 5) | 3 | 69.4% | 83.7% | 86.5% | 90.3% |
+| Hard (11, 6) | 0 | 55.9% | 66.5% | 68.3% | 72.2% |
+| Hard (11, 6) | 3 | 64.4% | 81.3% | 84.9% | 88.5% |

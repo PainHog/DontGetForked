@@ -1,0 +1,13 @@
+# rules v1: {"v":1,"chaseFixedMob":false,"chaseOneRise":false,"flightAnyRaise":false,"wallCrawlerRaise":false,"everyoneHeldForked":false,"resultFirst":false,"v2defaults":false,"limits":{"Easy":11,"Standard":11,"Hard":15},"thistleStrongbox":8,"giveUp":false,"spectralNoPick":false}
+Local chase, solo, 0 charges, Limit 11: escape% at start 0 / 4 / 8
+| Dracula Hypnotic (default) | 75.9 (+4.4) | 51.7 (+3.9) | 42.3 (+2.1) |
+| Dracula Wall-Crawler | 78.1 (+4.4) | 55.3 (+4.0) | 45.4 (+2.2) |
+| Witch Familiar (default) | 78.0 (+4.4) | 56.7 (+3.9) | 48.8 (+2.2) |
+| Witch Fly by Night | 86.8 (+3.3) | 69.7 (+3.4) | 59.3 (+2.2) |
+| Werewolf Night Runner | 91.9 (+3.5) | 78.4 (+4.0) | 78.0 (+2.5) |
+| Werewolf no perk | 74.4 (+4.6) | 53.4 (+4.0) | 45.4 (+2.2) |
+| Mummy Fear the Curse (default) | 73.7 (+4.8) | 51.3 (+4.1) | 44.5 (+2.2) |
+| Mummy Patience | 73.7 (+4.8) | 51.3 (+4.1) | 44.5 (+2.2) |
+| Dracula if Soon | 81.4 (+4.0) | 59.6 (+3.8) | 50.9 (+2.2) |
+| Ghost (Always) | 74.3 (+4.6) | 51.2 (+4.0) | 42.0 (+2.2) |
+| Ghost if Soon | 79.5 (+4.2) | 59.0 (+3.9) | 50.1 (+2.2) |

@@ -1,0 +1,41 @@
+# rules v1, Limits {"Easy":11,"Standard":11,"Hard":15}
+
+=== Full raids (heuristic policy; furniture ignored), random default parties ===
+Puddlecombe (Easy) x3              Win 85.9% Partial 5.9% Bust 7.0% Forked 1.2% | Limit hit 16.3% dawn-flight 0.0% flight-escape 92.6%
+                                   Susp@T3 3.7 @T6 6.2 end 6.3 | per raid: rolls 12.1 chases 0.40 captures 0.13 left-behind 0.05 tells 2.2 spectral-skips 0.13
+                                   charges spent 70.8% of starting | crit 6.4% trouble 11.9% monster-shows 17.1% | Susp from rolls 1.7 costs 1.1 tells 2.2
+Puddlecombe (Easy) x4              Win 88.2% Partial 4.5% Bust 6.3% Forked 1.0% | Limit hit 16.5% dawn-flight 0.0% flight-escape 94.1%
+                                   Susp@T3 4.5 @T6 6.3 end 6.3 | per raid: rolls 13.0 chases 0.42 captures 0.14 left-behind 0.05 tells 2.1 spectral-skips 0.22
+                                   charges spent 64.3% of starting | crit 6.5% trouble 12.1% monster-shows 17.9% | Susp from rolls 1.6 costs 1.1 tells 2.1
+Puddlecombe (Easy) x5              Win 88.9% Partial 4.1% Bust 6.6% Forked 0.4% | Limit hit 15.1% dawn-flight 0.0% flight-escape 97.0%
+                                   Susp@T3 5.4 @T6 6.0 end 6.0 | per raid: rolls 12.4 chases 0.38 captures 0.12 left-behind 0.05 tells 2.2 spectral-skips 0.24
+                                   charges spent 52.1% of starting | crit 6.7% trouble 11.6% monster-shows 17.0% | Susp from rolls 1.4 costs 1.1 tells 2.2
+Thistlewick (Standard) x3          Win 72.8% Partial 8.3% Bust 11.2% Forked 7.8% | Limit hit 29.6% dawn-flight 0.0% flight-escape 73.6%
+                                   Susp@T3 3.5 @T6 7.2 end 7.8 | per raid: rolls 15.0 chases 0.51 captures 0.20 left-behind 0.10 tells 2.6 spectral-skips 0.36
+                                   charges spent 82.5% of starting | crit 5.8% trouble 17.1% monster-shows 23.8% | Susp from rolls 2.3 costs 1.3 tells 2.6
+Thistlewick (Standard) x4          Win 76.3% Partial 8.4% Bust 10.1% Forked 5.2% | Limit hit 26.9% dawn-flight 0.0% flight-escape 80.6%
+                                   Susp@T3 4.3 @T6 7.3 end 7.5 | per raid: rolls 15.5 chases 0.47 captures 0.18 left-behind 0.09 tells 2.6 spectral-skips 0.45
+                                   charges spent 73.4% of starting | crit 5.9% trouble 16.2% monster-shows 23.6% | Susp from rolls 2.1 costs 1.3 tells 2.6
+Thistlewick (Standard) x5          Win 80.3% Partial 8.3% Bust 7.7% Forked 3.7% | Limit hit 24.5% dawn-flight 0.0% flight-escape 85.0%
+                                   Susp@T3 4.9 @T6 7.2 end 7.3 | per raid: rolls 15.8 chases 0.45 captures 0.16 left-behind 0.08 tells 2.6 spectral-skips 0.59
+                                   charges spent 64.8% of starting | crit 6.0% trouble 15.8% monster-shows 23.9% | Susp from rolls 1.9 costs 1.4 tells 2.6
+Gallowsmere (Hard) x3              Win 46.7% Partial 12.7% Bust 21.9% Forked 18.7% | Limit hit 58.0% dawn-flight 1.4% flight-escape 68.4%
+                                   Susp@T3 5.6 @T6 10.2 end 13.5 | per raid: rolls 25.3 chases 1.04 captures 0.49 left-behind 0.20 tells 2.4 spectral-skips 0.13
+                                   charges spent 102.1% of starting | crit 4.7% trouble 24.8% monster-shows 36.2% | Susp from rolls 6.2 costs 1.3 tells 2.4
+Gallowsmere (Hard) x4              Win 50.1% Partial 12.9% Bust 20.1% Forked 17.0% | Limit hit 60.5% dawn-flight 0.3% flight-escape 72.1%
+                                   Susp@T3 6.4 @T6 12.0 end 13.6 | per raid: rolls 28.3 chases 1.09 captures 0.51 left-behind 0.22 tells 2.5 spectral-skips 0.24
+                                   charges spent 98.1% of starting | crit 4.6% trouble 24.7% monster-shows 36.1% | Susp from rolls 6.0 costs 1.4 tells 2.5
+Gallowsmere (Hard) x5              Win 56.1% Partial 12.6% Bust 19.1% Forked 12.2% | Limit hit 58.4% dawn-flight 0.1% flight-escape 79.1%
+                                   Susp@T3 7.3 @T6 12.7 end 13.3 | per raid: rolls 30.1 chases 1.10 captures 0.51 left-behind 0.23 tells 2.5 spectral-skips 0.36
+                                   charges spent 94.4% of starting | crit 4.7% trouble 24.1% monster-shows 35.8% | Susp from rolls 5.7 costs 1.4 tells 2.5
+
+-- Rolled towns (Chapter 8 tables), party of 4 --
+rolled Easy x4                     Win 92.4% Partial 3.3% Bust 3.5% Forked 0.8% | Limit hit 11.3% dawn-flight 0.0% flight-escape 92.8%
+                                   Susp@T3 3.5 @T6 5.3 end 5.4 | per raid: rolls 10.7 chases 0.25 captures 0.08 left-behind 0.03 tells 1.7 spectral-skips 0.42
+                                   charges spent 56.2% of starting | crit 6.2% trouble 12.4% monster-shows 19.5% | Susp from rolls 1.9 costs 0.9 tells 1.7
+rolled Standard x4                 Win 72.8% Partial 9.3% Bust 11.2% Forked 6.7% | Limit hit 33.0% dawn-flight 0.0% flight-escape 79.7%
+                                   Susp@T3 4.3 @T6 7.6 end 8.0 | per raid: rolls 17.5 chases 0.50 captures 0.18 left-behind 0.09 tells 2.3 spectral-skips 0.50
+                                   charges spent 77.3% of starting | crit 5.6% trouble 17.5% monster-shows 24.5% | Susp from rolls 2.9 costs 1.3 tells 2.3
+rolled Hard x4                     Win 55.0% Partial 13.3% Bust 19.4% Forked 12.4% | Limit hit 49.2% dawn-flight 0.1% flight-escape 74.8%
+                                   Susp@T3 6.0 @T6 11.4 end 12.5 | per raid: rolls 24.3 chases 0.93 captures 0.45 left-behind 0.19 tells 2.4 spectral-skips 0.55
+                                   charges spent 90.3% of starting | crit 4.9% trouble 24.0% monster-shows 34.0% | Susp from rolls 5.6 costs 1.4 tells 2.4
