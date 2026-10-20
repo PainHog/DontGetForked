@@ -103,15 +103,15 @@ Measured on 2026-10-20 (`sim/TUNING-2026-10-20.md`: three seeds, on random kits 
 | # | Outcome |
 |---|---|
 | A1, A2 | Replaced (S1, S2 above). |
-| A3 Dracula Revealed | **Open:** no clean pre-1930 vampire found yet (the Varney woodcuts read wrongly at portrait size). |
-| A4 Invisible Man Revealed | **Open:** content swap still wanted. Its rights are now confirmed (Strimpl, *L'Homme invisible*, Calmann-Lévy, 1912). |
-| A5 Chapter 1 castle | **Open:** no sharper scan found yet. |
+| A3 Dracula Revealed | **Replaced:** Gustave Doré's bat-winged Satan on a crag (*Paradise Lost*, 1866; Internet Archive scan, public domain). The nearest pre-1930 picture that reads as a winged night creature at portrait size; no museum copy found. |
+| A4 Invisible Man Revealed | **Replaced:** Honoré Daumier, *Pastorales* no. 19 (1845; Rijksmuseum, Public Domain Mark): a scarecrow's empty coat and top hat flapping in a wheat field, with nobody inside. |
+| A5 Chapter 1 castle | **Replaced:** Paul Sandby, *Caernarvon Castle (Night)*, 1776 (NGA, CC0), a real 280 ppi scan with the towers filling the band. |
 | A6 soft spots | Re-scanned: the windmill, the cart (trimmed inside its plate mark) and the bonfire at 280 ppi; the owl at its full scan. |
 | A7, A8, A10, A11 | Left for the commissioned art. |
 | A9 crops | Dracula's costume and the Mummy's Revealed re-cropped. |
 | L17 lantern | Cropped tighter. |
-| L12 back-cover picture | **Open:** no new picture yet (the candidates repeat chapter headers). |
-| R2, R3 image log | Already kept: `book/art/stand-in/SOURCES.md` (work, artist, source, licence, audit for every printed picture, the cover included). Commons non-museum files: the NGA has CC0 copies of two Palmer prints, not yet switched. |
+| L12 back-cover picture | **Replaced:** Auguste Lepère after Henri Louis Scott, a lantern-lit festival crowd at night, 1883 (NGA, CC0), used nowhere else. Palmer's *Rising Moon* stays only on the one-shot's cover. |
+| R2, R3 image log | Already kept: `book/art/stand-in/SOURCES.md` (work, artist, source, licence, audit for every printed picture, the cover included). The two Palmer prints with NGA CC0 copies (*The Lonely Tower*, *The Bellman*) now use them, with the same crops; *Opening the Fold* has no museum copy and stays on Commons. |
 | R4 dates | Strimpl 1912, Woodward 1897 (*Red Apple and Silver Bells*), Koster in the Rijksmuseum by 1892 and dead since 1937: all clear. |
 | R5 | Added to the legal page. |
 | R6 | Credits corrected to what is printed. |

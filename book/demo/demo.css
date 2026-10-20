@@ -100,13 +100,13 @@ table.timeline td:first-child { width: 0.9in; font: 800 9pt var(--sans); color: 
 .pregen {
   break-inside: avoid;
   display: grid; grid-template-columns: 1.45in 1fr; gap: 0.16in;
-  height: 4.12in; box-sizing: border-box; overflow: hidden;
-  margin: 0 0 0.14in;
-  padding: 0.12in 0.16in 0.08in;
+  height: 4.28in; box-sizing: border-box; overflow: hidden;
+  margin: 0 0 0.12in;
+  padding: 0.11in 0.16in 0.07in;
   border: 3px double var(--dark);
   border-radius: 8px;
   background: var(--paper-light);
-  font-size: 9.2pt; line-height: 1.3;
+  font-size: 9.1pt; line-height: 1.29;
 }
 .pregen .pg-art figure { margin: 0 0 0.06in; }
 .pregen .pg-art figure svg { display: block; box-sizing: border-box; width: 100%; height: 1.55in; border: 1px solid var(--paper-edge); border-radius: 4px; background: var(--paper-2); }
@@ -119,7 +119,7 @@ table.timeline td:first-child { width: 0.9in; font: 800 9pt var(--sans); color: 
 .pregen p.pw-h { margin: 0.05in 0 0.01in; break-after: avoid; }
 .pregen p.pw-h .pw-cost { margin-left: 0.05in; font: 700 7.2pt var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
 .pregen p.pw-meta { margin: 0.03in 0 0.01in; }
-.pregen p.pg-help { margin-top: 0.05in; padding-top: 0.04in; border-top: 1px solid var(--paper-edge); font: 500 8pt/1.3 var(--sans); color: var(--ink-soft); }
+.pregen p.pg-help { margin-top: 0.04in; padding-top: 0.035in; border-top: 1px solid var(--paper-edge); font: 500 8pt/1.3 var(--sans); color: var(--ink-soft); }
 
 /* --------------------------------------------------------- the tracker -- */
 .tracker h3 { margin-top: 0.1in; }

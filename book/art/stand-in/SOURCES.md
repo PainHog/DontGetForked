@@ -4,7 +4,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 
 `book/tools/prep-art.py` downloads each scan, crops it (fractions in `manifest.json`), turns it into a two-tone image from the book's ink to its paper colour, and saves the JPEG used by the build. The pieces are credited on the credits page.
 
-**Rights rule used:** keep a print only if its Commons licence is CC0 or public domain, the artist died before 1955 and the work was published before 1930. Rejected during the search: a CC-BY-SA photo, a scan from a commercial print seller, and an etching whose artist couldn't be confirmed. Rejected for content: a gallows, a blackface mask, crude scenes, an anti-Catholic print, torture devices and a corpse. Swapped out after the outside review of v0.1 (2026-10-20): Gavarni and Verdeil's two men in long hooked false noses (invisible-costume), which read like a 19th-century antisemitic caricature, and Vervloet's Mechelen festival giants (creature-costume), where one dark face read as blackface and a fold crease ran through the print. Rejected in that search: Toulouse-Lautrec's *The Motorist* (goggled and muffled, but the face is drawn as a dark caricature), Gavarni's *Un honnête Domino* (the companion wears a long false nose), the *Varney the Vampire* woodcuts (at portrait size the frontispiece reads as a couple in bed, and the part-cover vampire is tangled in lettering), a 1690 broadside "Figure d'un antropophage" (an anti-Irish caricature), Mechelen's seated giant *Groot-Vader* (reads as a statue, with no crowd for scale, and fold creases) and a pen sketch of the Antwerp giant in the 1685 ommegang (too sketchy at 1.66 in).
+**Rights rule used:** keep a print only if its Commons licence (or, for a museum's own release, its museum record) is CC0 or public domain, the artist died before 1955 and the work was published before 1930. Rejected during the search: a CC-BY-SA photo, a scan from a commercial print seller, and an etching whose artist couldn't be confirmed. Rejected for content: a gallows, a blackface mask, crude scenes, an anti-Catholic print, torture devices and a corpse. Swapped out after the outside review of v0.1 (2026-10-20): Gavarni and Verdeil's two men in long hooked false noses (invisible-costume), which read like a 19th-century antisemitic caricature, and Vervloet's Mechelen festival giants (creature-costume), where one dark face read as blackface and a fold crease ran through the print. Rejected in that search: Toulouse-Lautrec's *The Motorist* (goggled and muffled, but the face is drawn as a dark caricature), Gavarni's *Un honnête Domino* (the companion wears a long false nose), the *Varney the Vampire* woodcuts (at portrait size the frontispiece reads as a couple in bed, and the part-cover vampire is tangled in lettering), a 1690 broadside "Figure d'un antropophage" (an anti-Irish caricature), Mechelen's seated giant *Groot-Vader* (reads as a statue, with no crowd for scale, and fold creases) and a pen sketch of the Antwerp giant in the 1685 ommegang (too sketchy at 1.66 in). The second round of 2026-10-20 (A3, A4, A5, L12 and the two Palmer re-sources) prefers CC0 museum releases taken from the museums' own servers; its rejected candidates are listed under each picture.
 
 ## cover-castle: Front cover
 
@@ -17,11 +17,12 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 
 ## part1-tower: Part One title page
 
-- **Work:** Samuel Palmer - The Lonely Tower - Google Art Project (2397075).jpg
-- **Artist:** Samuel Palmer (British, 1805-1881); 1879 (etching for Milton's Il Penseroso)
-- **Source:** https://commons.wikimedia.org/wiki/File:Samuel_Palmer_-_The_Lonely_Tower_-_Google_Art_Project_(2397075).jpg
-- **Licence:** Public domain (PD-Art|PD-old-100-1923|deathyear=1881). Palmer died 1881; published 1879; PD-Art.
-- **Audit:** Ruined tower on its hill, trees rooted on the slope, crescent moon on the horizon. The bottom edge cuts, deliberately, the top of a reclining shepherd's hat (bottom left) and a small ox-wain on the horizon by the moon: the scene continues out of frame (book audit BA-34; raising the crop loses the moon). The plate's border and paper at the right edge are cropped off (BA-33, 2026-10-06).
+- **Work:** *The Lonely Tower*, 1879, etching in black on laid paper (for Milton's *Il Penseroso*); National Gallery of Art, Washington, 1991.154.6 (gift of Charles Ryskamp)
+- **Artist:** Samuel Palmer (British, 1805–1881); 1879
+- **Source:** https://www.nga.gov/collection/art-object-page.73572.html (image from the NGA's IIIF server, https://api.nga.gov/iiif/885dbecb-b8a6-4343-ac25-ba33f3f5cd86, at 4096 px wide, the largest the server gives; the scan is 4472 px)
+- **Licence:** CC0 (National Gallery of Art Open Access; the NGA open-data image record is marked open access), checked 2026-10-20. Palmer died 1881; published 1879.
+- **Replaces** (2026-10-20, outside review of v0.1, R3): the Google Art Project scan of another impression on Wikimedia Commons (File:Samuel_Palmer_-_The_Lonely_Tower_-_Google_Art_Project_(2397075).jpg, PD-Art), which isn't a museum release. **Same crop:** the old crop was carried over to the NGA scan by matching the two scans' features (1,406 matched points; scale 1.08, rotation under 0.1°). 1800 px wide (was 1600), so 269 ppi at the 6.7 in it prints at (was 239). The NGA impression is inkier, so its mid-tones are lifted (`gamma` 1.45 in the manifest) to keep the old picture's tone on the dark Part One page.
+- **Audit:** Ruined tower on its hill, trees rooted on the slope, crescent moon on the horizon, stars in the sky. The bottom edge cuts, deliberately, the top of a reclining shepherd's hat (bottom left) and a small ox-wain on the horizon by the moon: the scene continues out of frame (book audit BA-34; raising the crop loses the moon). The plate's border and paper are outside the crop on every side (BA-33): no plate line shows.
 
 ## part2-village: Part Two title page
 
@@ -31,13 +32,15 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1890.
 - **Audit:** Houses standing on the shore, a church spire and a cottage in the distance. No figures. Re-cropped lower on 2026-10-06 (book audit BA-46) so the whole village shows on its shore; the moon is now above the frame. Signature cropped off.
 
-## ch01-castle: Chapter 1 header
+## ch01-castle: Chapter 1 header (also the one-shot's Part One header)
 
-- **Work:** Idylls of the King 3.jpg
-- **Artist:** Gustave Doré (French, 1832-1883); engraved on steel for the Moxon edition; Tennyson, Enid, London: Edward Moxon & Co., 1867-68
-- **Source:** https://commons.wikimedia.org/wiki/File:Idylls_of_the_King_3.jpg
-- **Licence:** Public domain (PD-Art|PD-old-auto-expired|deathyear=1883). Doré died 1883; published 1867-68; PD-Art / PD-old-auto-expired (deathyear 1883).
-- **Audit:** Castle on its crag; towers cut by the bottom frame edge, deliberately (the crag continues out of frame). The mounted figure of the original is cropped out.
+- **Work:** *Caernarvon Castle (Night)*, 1776; etching, aquatint and lift-ground aquatint printed in brown on laid paper; National Gallery of Art, Washington, 1994.60.58 (gift of Ruth B. Benedict). Lettered in the plate "P.Sandby Fecit", "Publish'd according to Act of Parliament by P.Sandby St. Georges Row Sepr.1st.1776" and "CAERNARVON CASTLE."
+- **Artist:** Paul Sandby (British, 1731–1809); published by the artist, 1 September 1776
+- **Source:** https://www.nga.gov/collection/art-object-page.79397.html (image from the NGA's IIIF server, https://api.nga.gov/iiif/336a2985-a211-4309-9bbe-00b6a06ac3c8, at 4096 px wide, the largest the server gives)
+- **Licence:** CC0 (National Gallery of Art Open Access; open-data image record marked open access), checked 2026-10-20. Sandby died 1809; published 1776.
+- **Replaces** (2026-10-20, outside review of v0.1, A5): Gustave Doré's castle from Tennyson's *Enid* (Moxon, 1867–68; File:Idylls_of_the_King_3.jpg on Commons, 1774 px), upscaled and smeary at print size, with more than half the band empty sky. A sharper scan of the same Doré plate exists (Internet Archive, enidalfred00tennrich, page n49, University of California copy of *Enid*, 1868), but its plate gives only about 1790 px across the banner's crop, and its sky is the same half-empty band, so a different castle was chosen. Also tried and rejected: Turner's *Dunstanborough Castle* (Liber Studiorum, NGA; a daylight seascape, the castle small), Legros's *Ruins of a Château* and Buhot's *Château des hiboux* (NGA; small ruins that don't read as a castle in a wide band), Victor Hugo's 1868 etching (NGA; the castle tiny) and the Rijksmuseum's moonlit Rhine castles (small book plates).
+- **Printed size:** the chapter header, 7.14 × 1.8 in; 2000 px wide from 2957 px of the scan, so 280 ppi (the old one was 1500 px upscaled from about 1420).
+- **Audit:** Object table: the moon low in the sky at the left, half behind cloud; a large tree at the left edge, its trunk and roots below the frame (the tree runs out of the left and bottom edges, deliberately); clouds and one star in the sky; the castle's great tower with three turrets on its top, the curtain wall and a second, slimmer tower at the right, all standing on walls that run out of the bottom and right edges (the castle continues out of frame, deliberately). The shore, the boats and figures, a bright streak in the sky at the far right and the plate's lettering are cropped off, so the band has no figures and no lettering. Two-tone from the brown print; mid-tones lifted slightly (`gamma` 1.2). Not upscaled.
 
 ## ch02-curiosities: Chapter 2 header
 
@@ -63,13 +66,14 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1767.
 - **Audit:** Costumed figures in ruffs and feathered hats in a doorway and at the left; the torch on the left is held in a hand, the lower torches rise from the bottom edge, held by marchers below the frame (a deliberate crop). Faces have two eyes each. Plate border trimmed.
 
-## ch05-bellman: Chapter 5 header
+## ch05-bellman: Chapter 5 header (also the one-shot's Part Four header)
 
-- **Work:** Samuel Palmer - The Bellman - Google Art Project.jpg
-- **Artist:** Samuel Palmer (British, 1805-1881); 1879 (etching for Milton's Il Penseroso)
-- **Source:** https://commons.wikimedia.org/wiki/File:Samuel_Palmer_-_The_Bellman_-_Google_Art_Project.jpg
-- **Licence:** Public domain (PD-Art|PD-old-100-1923|deathyear=1881). Palmer died 1881; published 1879; PD-Art.
-- **Audit:** Cottages on the ground, smoke rising from chimneys, cattle lying in the field, a figure standing on the path. No floating objects.
+- **Work:** *The Bellman*, 1879, etching on japan paper, pasted to board (for Milton's *Il Penseroso*); National Gallery of Art, Washington, 1991.154.5 (gift of Charles Ryskamp). The NGA holds a second impression, 1947.7.89, which would serve as well.
+- **Artist:** Samuel Palmer (British, 1805–1881); 1879
+- **Source:** https://www.nga.gov/collection/art-object-page.73571.html (image from the NGA's IIIF server, https://api.nga.gov/iiif/737fac19-8000-49c0-8ff9-6a31883d50ab, at 4096 px wide, the largest the server gives; the scan is 4449 px)
+- **Licence:** CC0 (National Gallery of Art Open Access; open-data image record marked open access), checked 2026-10-20. Palmer died 1881; published 1879.
+- **Replaces** (2026-10-20, outside review of v0.1, R3): the Google Art Project scan of another impression on Wikimedia Commons (File:Samuel_Palmer_-_The_Bellman_-_Google_Art_Project.jpg, PD-Art). **Same crop**, carried over by matching the scans' features (1,821 matched points; scale 0.98, rotation 0.2°), kept just inside the image at both sides. 2000 px wide (was 1500), so 280 ppi across the 7.14 in header (was 210). Mid-tones lifted (`gamma` 1.3) to keep the old tone.
+- **Audit:** Cottages on the ground, smoke rising from chimneys, cattle lying in the field, the bellman and villagers standing on the path, their legs cut by the bottom edge (deliberate: the lane continues). Trees rooted out of frame at the right. No floating objects; no plate line shows.
 
 ## ch06-crowd: Chapter 6 header
 
@@ -103,13 +107,24 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0 (Copyright: Publiek domein); both artists died more than 250 years ago. Checked on its Commons file page through the API on 2026-10-06.
 - **Audit:** A dance in front of an inn: the piper stands raised above the crowd (his footing is hidden behind the dancers), a couple dances hand in hand with a child between them, a man sits on a barrel raising a cup, onlookers stand in the doorway, a dog runs at the children, a broken cart lies by a dead tree, and a pole with a festival rag leans on the roof. Counted: faces in profile show one eye, frontal faces two; arms join at the shoulders. Feet, the dog's legs, the barrel and the cart wheel run off the bottom edge with the ground, deliberately (the street continues out of frame); nothing is cut inside the frame. The houses' upper storeys, the sky and the plate border are cropped off. Nothing crude in the crop (the scene is a dance; no drunkenness or brawling shown).
 
-## back-moonrise: Back cover
+## back-moonrise: the one-shot's cover (the rulebook's back cover until 2026-10-20)
 
 - **Work:** Samuel Palmer, The Rising Moon, 1857, NGA 119976.jpg
 - **Artist:** Samuel Palmer (British, 1805-1881); 1857 (Etching Club)
 - **Source:** https://commons.wikimedia.org/wiki/File:Samuel_Palmer,_The_Rising_Moon,_1857,_NGA_119976.jpg
 - **Licence:** CC0 (CC0). Palmer died 1881; National Gallery of Art scan, CC0.
 - **Audit:** Sheep lying in the field, a figure standing, cypresses and moon. Signature, plate edge and paper margins cropped off (narrowed on 2026-10-06, book audit BA-38).
+- **Now:** printed only on the cover of the one-shot, *Lantern Night in Hallowby*. The rulebook's back cover has `back-festival` since 2026-10-20 (outside review of v0.1, L12).
+
+## back-festival: Back cover
+
+- **Work:** *14 Juillet. Illumination de la Place de la République* (Bastille Day: the illuminations in the Place de la République, Paris), 1883; wood engraving; National Gallery of Art, Washington, 2007.12.21 (Ailsa Mellon Bruce Fund)
+- **Artist:** Auguste Lepère (French, 1849–1918), engraver, after Henri Louis Scott (French, c. 1846–1884); 1883
+- **Source:** https://www.nga.gov/collection/art-object-page.138626.html (image from the NGA's IIIF server, https://api.nga.gov/iiif/fd1e0308-9e6b-41b2-923b-b5fdd06faf52, at 4096 px wide, the largest the server gives; the scan is 5293 px)
+- **Licence:** CC0 (National Gallery of Art Open Access; open-data image record marked open access), checked 2026-10-20. Lepère died 1918, Scott 1884; dated 1883.
+- **Chosen** (2026-10-20, outside review of v0.1, L12): a festival town at night (a crowd with paper lanterns, flags and fireworks) sells "monsters go shopping on Lantern Night" better than Palmer's sheep, and it is printed nowhere else in the book (the reviewer's other ideas, the torchlit procession and Vallotton's crowd, are already chapter headers). Rejected: Lepère's *Fête vénitienne sur la Seine* (NGA; lantern boats under a bridge, no town) and Dürer's *Masquerade Dance with Torches* (NGA; an indoor court dance).
+- **Printed size:** the back cover's frame, 4.4 in wide, in a tall crop (0.92:1) that also closes the empty band the review flagged; 1600 px wide, so 364 ppi.
+- **Audit:** Object table: the right-hand part of the print. A night crowd fills the square, holding paper lanterns up on sticks and in their hands; flags on poles held above the crowd; strings of round lanterns hung from the illuminated pylon at the right and running out of the right edge; a tall flagpole with a banner standing in the crowd, its foot hidden by the crowd; two temporary illuminated pylons with stars on them standing in the square, their bases hidden by the crowd; fireworks streaking and smoke rising in the sky. The crowd runs out of the bottom and both side edges (the square continues, deliberately). The left part of the print, with the Monument to the Republic and its lettering and the dome behind, is cropped off. Lettering left in the picture is real ("RF" on the lanterns), not pseudo-text. Character rows: the foreground figures face away or are in profile; faces turned to us show two eyes; arms join at the shoulders; the raised hand at the centre is whole. A faint vertical hairline where two of the engraving's wood blocks meet ran down the sky above the left pylon; it is retouched (`seams` in the manifest, redrawn row by row from the hatching either side). Not a caricature: a news engraving of a real festival.
 
 ## spot-watchman: Spot (Chapter 5 end)
 
@@ -173,11 +188,13 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### dracula-revealed: Dracula, revealed
 
-- **Work:** Philippe-Amédée Roustan dans le rôle de Lord Ruthwen.jpg
-- **Artist:** Anonymous engraver, for Charles Malo's Almanach des Spectacles (Paris, Louis Janet); 1821 (role created 1820, Théâtre de la Porte Saint-Martin)
-- **Source:** https://commons.wikimedia.org/wiki/File:Philippe-Am%C3%A9d%C3%A9e_Roustan_dans_le_r%C3%B4le_de_Lord_Ruthwen.jpg
-- **Licence:** Public domain (PD-anon-70-EU). Anonymous work published 1821 (205 years old, over the 150-year bar for unknown artists); Commons tags it PD-anon-70-EU.
-- **Audit:** The actor stands on the stage floor, both feet down; sword hung from his belt, plumed hat on his head. Character: two eyes (profile, one visible), two arms (right pointing, five fingers; left on hip), two legs. The plate's printed border rules and paper margins show at both sides (book audit BA-40: cropping inside them cuts the feet at this frame's shape, and an erase leaves a visible seam, so they stay until the illustrator's art); the caption is cropped off.
+- **Work:** "Me miserable! which way shall I fly / Infinite wrath, and infinite despair?" (*Paradise Lost*, Book IV, lines 73–74), plate 13 of Doré's illustrations to Milton's *Paradise Lost*; wood engraving, the block signed "Pannemaker–Doms" by its engravers
+- **Artist:** Gustave Doré (French, 1832–1883), designer; engraved by Pannemaker and Doms; first published 1866 (Cassell, Petter & Galpin, London); this impression from *Milton's Paradise Lost*, ed. Robert Vaughan, New York: Cassell Publishing Co., undated (19th century)
+- **Source:** Internet Archive, https://archive.org/details/miltonsparadisel18milt (page n169; full-page image https://archive.org/download/miltonsparadisel18milt/page/n169.jpg, 3090 × 4420 px from a 300 ppi camera scan). The same plate is on Wikimedia Commons as File:Paradise_Lost_13.jpg (975 px, public domain), too small to use.
+- **Licence:** Public domain. Doré died 1883; published 1866. The Internet Archive item states no licence or restriction; it is a straight photograph of a flat printed page, which adds no copyright of its own. No CC0 museum copy was found (searched: NGA, the Met, Art Institute of Chicago, Cleveland, Rijksmuseum).
+- **Replaces** (2026-10-20, outside review of v0.1, A3): the anonymous 1821 engraving of Philippe-Amédée Roustan as Lord Ruthven, a plumed theatre cavalier who didn't read as a vampire, with its plate rules inside the frame (BA-40). Doré's bat-winged figure in human form reads as a creature of the night at 1.66 in, and the review suggested a Doré bat. Rejected in this search: Delacroix's *Mephistopheles in the Air* (NGA; a horned devil, reads as the Devil, the figure small over the town), Goya's *Modo de volar* (NGA; men with strapped-on wings, reads as flying machines), Meryon's *Le Stryge* (NGA; a stone gargoyle), Munch's *Vampire* (NGA, not open access), René de Moraine's *Le Vampire* (Commons; 629 px, too small), Redon's lithographs (NGA; nothing reads as a vampire at portrait size) and the scan's other bat-winged Satan plates (the figure small in a wide scene).
+- **Printed size:** 1.66 × 1.95 in (one-shot cards 1.55 in tall); 640 px wide from 1730 px of the scan, so 385 ppi.
+- **Audit:** Object table: the figure stands on a rocky crag: his right foot, bare, flat on the rock (a sandal strap round the ankle); his left knee raised, the left foot set on a ledge of rock; his right hand grips the rock's edge (four fingers over it, the thumb behind); his left arm crosses over his head, the hand clutching his hair. Both wings join at his shoulders, and both are whole inside the frame, tips included. Rock fills the left and lower part of the frame and runs out of the bottom and left edges (the crag continues); the rock face at the right runs up out of the top edge; dark night sky at the top right. Character row: one head, face upturned in three-quarter view, the eyes shadowed under his hand; two arms, two hands; two legs, two feet; two wings. Scale armour and a short kilt. The plate border, Doré's and the engravers' signatures and the caption are cropped off. Not a film look.
 
 ### creature-costume: Frankenstein’s Creature, in costume
 
@@ -240,12 +257,13 @@ Added 2026-10-05 at Richard's request ("my illustrator uses them for inspiration
 
 ### invisible-revealed: the Invisible Man, revealed
 
-- **Work:** Wells Strimpl - L'homme invisible.jpg
-- **Artist:** Ludvík Strimpl (1880-1937); 1912 (cover of 'L'Homme invisible', Calmann-Lévy, Nouvelle Collection illustrée)
-- **Source:** https://commons.wikimedia.org/wiki/File:Wells_Strimpl_-_L%27homme_invisible.jpg
-- **Licence:** Public domain (PD-Art (PD-old-auto-expired), PD-old-80-expired, CC-PD-Mark). Artist died 1937; published 1912; Commons: PD-old-80-expired / PD-Art.
-- **Publication (checked 2026-10-20, outside review of v0.1):** Calmann-Lévy, Paris, *Nouvelle Collection illustrée* no. 71, dépôt légal 1912 (library catalogue of the Médiathèques of Bar-le-Duc: "Calmann-Lévy, 1912"; ISFDB and nooSFere: cover and interior illustrations by Louis Strimpl). Strimpl died 1937, so the term (life + 70) ended in 2008.
-- **Audit:** A skeleton crouches on a ledge by a window in a beam of light, its pelvis and one foot on the ledge, the other leg hanging over it, its hands reaching out into the light. Character: two arms, two legs, the skull turned away. Nothing floats.
+- **Work:** *Pastorales*, no. 19: "Que nous sommes bêtes d'avoir une peur pareille (...)" ("How silly of us to be so frightened…"), lithograph, published in *Le Charivari*, 17 August 1845; Rijksmuseum, Amsterdam, RP-P-OB-41.116 (Delteil 1406, second state)
+- **Artist:** Honoré Daumier (French, 1808–1879); printed and published by Aubert & Cie, Paris; 1845
+- **Source:** https://id.rijksmuseum.nl/200182474 (the Rijksmuseum's record; image https://iiif.micr.io/CvzYw/full/max/0/default.jpg, 3210 × 4140 px)
+- **Licence:** Public domain: the Rijksmuseum marks the image Public Domain Mark 1.0 (https://creativecommons.org/publicdomain/mark/1.0/), checked 2026-10-20. Daumier died 1879; published 1845.
+- **Replaces** (2026-10-20, outside review of v0.1, A4): Ludvík Strimpl's skeleton from the cover of *L'Homme invisible* (Calmann-Lévy, 1912), which read as Death and competed with the Ghost. The review asked for empty clothes; a scarecrow's coat and hat flapping with nobody inside reads that way at portrait size. Rejected in this search: Klinger's *A Glove* etchings (NGA; the glove is small among figures at 1.66 in), Whistler's *Old-Clothes Shop* (NGA; a shopfront, no clothes read), Cruikshank's *Meditations in Monmouth Street* (*Sketches by Boz*, 1836, Rijksmuseum; crowded at portrait size) and the 1810 caricatures *Les Invisibles* (the Met and NGA; deep bonnets, not invisibility).
+- **Printed size:** 1.66 × 1.95 in (one-shot cards 1.55 in tall); 640 px wide from 1187 px of the scan, so 385 ppi.
+- **Audit:** Object table: a scarecrow in a wheat field in a gale. A battered top hat sits on the top of its pole; an old coat hangs from the pole's crossbar, both sleeves blown out (one raised at the left and running out of the left edge, one streaming to the right), its skirts flapping; the pole runs down from under the coat into the wheat. The wheat runs out of the bottom and right edges (the field continues); a small bird sits in the wheat at the right. Nobody is inside the clothes. The frightened couple of the original are cropped off except the end of the woman's wind-blown scarf at the left edge and a shadow of her shoulder in the bottom-left corner, both cut by the frame deliberately (they continue out of frame) and reading as blown leaves at this size. The vignette's corner, the series title, the number and the caption are cropped off; newspaper text printed on the back shows through only faintly in the sky (levelled with `cutoff` [1, 3], which keeps the crayon grain). Character row: none (no figure); the coat has two sleeves, the hat sits on the pole.
 
 ### ghost-costume: a Ghost, in costume
 
@@ -334,3 +352,20 @@ The credits page (`book/src/chapters/01-credits.html`, "Stand-in illustrations")
 | Institutions: the Rijksmuseum, the National Gallery of Art, the Metropolitan Museum of Art, Paris Musées, the British Library, Wikimedia Commons | all still used (Paris Musées now for creature-costume; the National Gallery of Art also for invisible-costume) | keep |
 
 So the line should drop **Jan Vervloet, Paul Gavarni and Pierre Verdeil** and add **Charles Morel and Giovanni David**.
+
+## Credits check after the open review items (2026-10-20, second round)
+
+A3, A4, A5, L12 and the two Palmer re-sources changed five printed pictures and added one (`back-festival`). Both credits pages against what each book now prints:
+
+| Artist | Rulebook prints | One-shot prints | Change |
+|---|---|---|---|
+| Samuel Palmer | part1-tower, ch05-bellman, ch07-dawn (back-moonrise no longer) | back-moonrise (cover), ch05-bellman, ch07-dawn | keep |
+| Gustave Doré | werewolf-costume, dracula-revealed (ch01-castle no longer) | the same two portraits | keep |
+| Paul Sandby | ch01-castle | ch01-castle (Part One header) | **add** to both |
+| Auguste Lepère after Henri Louis Scott | back-festival | nothing | **add** to the rulebook only |
+| Honoré Daumier | invisible-revealed | invisible-revealed (Entity card) | **add** to both |
+| Ludvík Strimpl | nothing (invisible-revealed replaced) | nothing | **remove** from both |
+| unknown engravers | ch02-curiosities (1599), ch03-dice (17th c.), ghost-costume (1804), creature-costume's wood engraver (c. 1891); dracula-revealed is now Doré's design, engraved by Pannemaker and Doms | ghost-costume, creature-costume's engraver | keep ("16th–19th-century" in the rulebook, "19th-century" in the one-shot) |
+| Institutions | the Internet Archive is new (dracula-revealed); the Rijksmuseum also for invisible-revealed; the National Gallery of Art also for part1-tower, ch05-bellman, ch01-castle and back-festival | the same, less back-festival | **add** the Internet Archive to both |
+
+Every other row of the table above is unchanged. Ch07-dawn stays the Google Art Project scan on Commons: the National Gallery of Art has no copy of *Opening the Fold*.

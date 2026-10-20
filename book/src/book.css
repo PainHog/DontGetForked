@@ -435,6 +435,8 @@ figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
 /* A printable sheet (character sheet, reference card): its own page, double border. */
 /* the bottom margin matches every other page, so the running footer sits in the same place */
 @page sheet { margin: 0.5in 0.5in 0.78in; }
+/* no position: relative here: with it, Chromium also painted a sliver of the sheet's frame at the foot of the
+   page before (its own page has other margins) */
 .sheet {
   page: sheet;
   break-before: page;
@@ -446,7 +448,6 @@ figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
   background: var(--paper-light);
   font-family: var(--sans);
   font-size: 10.5pt;
-  position: relative;
 }
 .sheet h2 {
   margin: 0 0 0.02in; text-align: center;

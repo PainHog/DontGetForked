@@ -1,4 +1,4 @@
-Now: Fine-tuning the monsters after the outside review: three of them start with better choices, Dracula climbs his way out of chases, and the middle town is a little harder, in the rulebook, the one-shot and the online version.
+Now: The last fixes before the first game: better starting powers for three monsters, new stand-in pictures, and a final test game of the Halloween one-shot.
 Next: Richard runs the one-shot for his group on Wednesday, then settles two questions left open (a bigger roll on a twelve-sided die, and Jekyll & Hyde's starting choices) and writes his foreword when he has time.
 Number: Design decisions made = 133
 Number: Open design questions = 2

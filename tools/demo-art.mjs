@@ -32,11 +32,11 @@ const MAP_WIDTH = DEMO_MAP_WIDTH;
  * apart at a glance; the short name goes on the ribbon.
  */
 export const TOKENS = {
-  dracula: { art: "dracula-revealed", cx: 0.57, cy: 0.2, size: 0.42, ring: "#8b1e2b", short: "Dracula" },
+  dracula: { art: "dracula-revealed", cx: 0.55, cy: 0.42, size: 0.66, ring: "#8b1e2b", short: "Dracula" },
   creature: { art: "creature-revealed", cx: 0.43, cy: 0.2, size: 0.48, ring: "#3f6f52", short: "The Creature" },
-  mummy: { art: "mummy-revealed", cx: 0.6, cy: 0.27, size: 0.5, ring: "#b08a3e", short: "The Mummy" },
+  mummy: { art: "mummy-revealed", cx: 0.31, cy: 0.3, size: 0.52, ring: "#b08a3e", short: "The Mummy" },
   werewolf: { art: "werewolf-costume", cx: 0.55, cy: 0.48, size: 0.66, ring: "#7a5634", short: "The Werewolf" },
-  invisible: { art: "invisible-costume", cx: 0.28, cy: 0.23, size: 0.36, ring: "#4b6584", short: "Invisible Man" },
+  invisible: { art: "invisible-costume", cx: 0.38, cy: 0.25, size: 0.45, ring: "#4b6584", short: "Invisible Man" },
   ghost: { art: "ghost-costume", cx: 0.45, cy: 0.4, size: 0.72, ring: "#8fa6ad", short: "A Ghost" },
   witch: { art: "witch-revealed", cx: 0.33, cy: 0.24, size: 0.5, ring: "#5e3a7a", short: "A Witch" },
   "jekyll-hyde": { art: "jekyll-hyde-costume", cx: 0.54, cy: 0.2, size: 0.5, ring: "#3a3a3f", short: "Jekyll & Hyde" },

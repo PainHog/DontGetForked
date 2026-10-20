@@ -14,6 +14,9 @@ Reads book/art/stand-in/manifest.json, one entry per piece:
                                      #   light figure whitens faint show-through from the back of the page)
     "gamma": 1.3,                    # optional: lifts the mid-tones after levelling (above 1 = lighter), for an
                                      #   inkier impression of a print that should keep the tone of the one it replaces
+    "seams": [[x0, y0, x1, y1]],     # optional: a hairline from (x0, y0) to (x1, y1) (fractions of the result), such
+                                     #   as the joint between a wood engraving's blocks; each row is redrawn across
+                                     #   it from the pixels either side
     "ink": "#161618", "paper": "#f2f1ee" }   # optional duotone ends (default: the book's)
 
 Each scan is downloaded once into a cache outside the repository, cropped, turned into
@@ -75,6 +78,17 @@ def prep(entry):
     if entry.get("gamma", 1) != 1:
         g = entry["gamma"]
         im = im.point(lambda v: round(255 * (v / 255) ** (1 / g)))
+    for sx0, sy0, sx1, sy1 in entry.get("seams", []):
+        px = im.load()
+        ya, yb = round(sy0 * im.height), min(round(sy1 * im.height), im.height)
+        for y in range(ya, yb):
+            xc = round((sx0 + (sx1 - sx0) * (y - ya) / max(yb - ya, 1)) * im.width)
+            lo, hi = xc - 4, xc + 4
+            if lo < 0 or hi >= im.width:
+                continue
+            a, b = px[lo, y], px[hi, y]
+            for x in range(lo + 1, hi):
+                px[x, y] = round(a + (b - a) * (x - lo) / (hi - lo))
     # Two-tone from the book's ink to its paper colour.
     paper = hex_rgb(entry.get("paper", "#f2f1ee"))
     im = ImageOps.colorize(im, black=hex_rgb(entry.get("ink", "#161618")), white=paper)

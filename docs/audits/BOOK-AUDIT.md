@@ -70,7 +70,7 @@ Checked: the PDF is tagged, has `/Lang (en)`, a title shown in the window, bookm
 | cover-castle | A castle on a cliff above a wooded river at night, a bridge and village roofs below. Engraving by Anton Louis Koster. |
 | map-puddlecombe / -thistlewick / -gallowsmere | The SVG's own title, plus: "Every location is watched; the star marks the furniture at the tavern cellar / the hatter / the tailor." |
 | dracula-costume | Dracula in costume (stand-in): a man in a black half-mask, broad hat and cloak, a woman clinging to him. Lithograph by Charles Rochussen, 1868. |
-| dracula-revealed | Dracula revealed (stand-in): an actor as the vampire Lord Ruthven in a plumed hat, doublet and cape, pointing. Engraving, 1821. |
+| dracula-revealed | Dracula revealed (stand-in): an actor as the vampire Lord Ruthven in a plumed hat, doublet and cape, pointing. Engraving, 1821. (Picture replaced 2026-10-20; the alt text now describes the new one: `book/art/stand-in/SOURCES.md`.) |
 | creature-costume | Frankenstein’s Creature in costume (stand-in): towering festival giants in gowns, with a fifer and a drummer. Lithograph by Jan Vervloet, 1825. |
 | creature-revealed | Frankenstein’s Creature revealed (stand-in): a wild-haired, barefoot figure in a draped tunic holding a broken sword over a fallen man. Lithograph, 1823. |
 | mummy-costume | The Mummy in costume (stand-in): a woman in profile in an Egyptian headdress. Cigarette card, 1888–90. |
@@ -78,7 +78,7 @@ Checked: the PDF is tagged, has `/Lang (en)`, a title shown in the window, bookm
 | werewolf-costume | The Werewolf in costume (stand-in): a wolf in bed wearing a frilled nightcap. Engraving after Gustave Doré, 1862. |
 | werewolf-revealed | The Werewolf revealed (stand-in): wolf-men standing upright against a moonlit wall. Illustration by Maurice Sand, 1858. |
 | invisible-costume | The Invisible Man in costume (stand-in): two gentlemen in top hats and false noses whispering at a masked ball. Engraving after Paul Gavarni, 1840s. |
-| invisible-revealed | The Invisible Man revealed (stand-in): a skeleton crouching on a ledge in a beam of light. Cover by Ludvík Strimpl, 1912. |
+| invisible-revealed | The Invisible Man revealed (stand-in): a skeleton crouching on a ledge in a beam of light. Cover by Ludvík Strimpl, 1912. (Picture replaced 2026-10-20; the alt text now describes the new one: `book/art/stand-in/SOURCES.md`.) |
 | ghost-costume | A Ghost in costume (stand-in): a man holding a white sheet over his head, his face peeping out, by a door at night. Engraving, 1804. |
 | ghost-revealed | A Ghost revealed (stand-in): a chained ghost before a man in a nightcap in his armchair, by candlelight. Engraving by John Leech, 1843. |
 | witch-costume | A Witch in costume (stand-in): a child in a pointed hat and cloak holding a tall staff, a moon behind her. Drawing by Alice B. Woodward, 1897. |
