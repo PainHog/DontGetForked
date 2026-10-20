@@ -1,9 +1,9 @@
-Now: A last check of the Halloween one-shot before Richard runs it this Wednesday: one more full test game, and the small wording slips it found are fixed.
+Now: Version 0.2 of the rulebook, after an outside review: chases are fairer, the rules are clearer, two stand-in pictures were replaced, and the pages are tidier.
 Next: Richard runs the one-shot for his group on Wednesday, and writes his foreword when he has time.
-Number: Design decisions made = 123
+Number: Design decisions made = 125
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 300
+Number: Automated checks passing = 330
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 
@@ -62,6 +62,7 @@ Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century et
 - [x] Rulebook checked for hard-to-follow rules and rewritten in plainer words
 - [x] A Halloween one-shot: a word-for-word script, a town map and monster tokens
 - [x] A final test game of the one-shot before the first real table
+- [x] An outside review of the rulebook, and version 0.2 with its fixes
 - [ ] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice
 - [ ] Richard's own foreword
