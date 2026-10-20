@@ -140,10 +140,70 @@ export function validateEntity(e) {
 /**
  * A party of `n` distinct Entities (no duplicates), each with a random Gift and
  * a Castle Duty no one else in the party has (R8).
+ *
+ * Measuring aids (sim/tuning-check.mjs; all off by default, and the default path draws exactly the same random numbers):
+ *  - kit "default": every Entity takes its marked default Gift and Perk (Chapter 2: "Every pick has a marked default, so a
+ *    new player can skip the choices"), and its default Castle Duty; if two defaults clash, the later one in the party
+ *    takes a Duty nobody has, at random (module/config.mjs: "if two defaults clash, the second rolls again"). This is
+ *    what a first-time table plays, and what the one-shot's Entity cards have.
+ *  - force: an Entity key always in the party (at a random place in it; the others random), so a party "with Dracula"
+ *    is measured on every raid instead of half of them (the same parties as the raids that happen to include him).
+ *  - override: { entityKey: { gift: name, perk: key } } replaces that Entity's Gift and/or Perk whenever it plays.
  */
-export function makeParty(rng, n, chargesEach, roster = ROSTER) {
-  const picks = rng.shuffle(roster).slice(0, n);
+export function makeParty(rng, n, chargesEach, roster = ROSTER, { kit = "random", force = null, override = null } = {}) {
+  let picks;
+  if (force) {
+    const x = roster.find((e) => e.key === force || e.id === force);
+    if (!x) throw new Error(`no Entity "${force}" to force into the party`);
+    const rest = rng.shuffle(roster.filter((e) => e !== x)).slice(0, n - 1);
+    const at = rng.int(0, n - 1);
+    picks = [...rest.slice(0, at), x, ...rest.slice(at)];
+  } else picks = rng.shuffle(roster).slice(0, n);
   const duties = rng.shuffle(DUTIES); // R8: no two Entities in a party take the same Castle Duty
+  const party = makeMembers(rng, picks, duties, chargesEach);
+  if (kit === "default") {
+    const taken = new Set();
+    for (const m of party) {
+      const d = DEFAULTS[m.ent.key];
+      if (!d) continue;
+      m.gift = m.ent.giftOptions.find((g) => (g.name ?? g) === d.gift) ?? m.gift;
+      m.perk = d.perk ?? m.perk;
+      m.duty = taken.has(d.duty) ? rng.pick(DUTIES.filter((x) => !taken.has(x))) : d.duty;
+      taken.add(m.duty);
+    }
+  }
+  if (override) {
+    for (const m of party) {
+      const o = override[m.ent.key];
+      if (!o) continue;
+      if (o.gift) m.gift = m.ent.giftOptions.find((g) => (g.name ?? g) === o.gift) ?? (() => { throw new Error(`${m.ent.key}: no Gift "${o.gift}"`); })();
+      if (o.perk) { if (!m.ent.perkOptions?.includes(o.perk)) throw new Error(`${m.ent.key}: no Perk "${o.perk}"`); m.perk = o.perk; }
+    }
+  }
+  return party;
+}
+
+/** Each Entity's marked defaults (Chapter 2), from the Foundry config: Gift version name, Perk key, Castle Duty key. */
+const DEFAULTS = Object.fromEntries(DGF.entities.map((e) => [e.key, {
+  gift: e.gift?.versions.find((v) => v.default)?.name ?? null,
+  perk: e.perks?.find((p) => p.default)?.key ?? null,
+  duty: e.duty ?? null,
+}]));
+export const ENTITY_DEFAULTS = Object.freeze(DEFAULTS);
+
+/**
+ * A copy of a roster with a Gift version's trait changed (a measuring aid for sim/tuning-check.mjs, e.g. the Witch's
+ * Broomstick rolling Wits instead of Nimble: { Broomstick: "wits" }). The Entities keep everything else.
+ */
+export function rosterWithGiftTraits(roster, traits) {
+  if (!traits || !Object.keys(traits).length) return roster;
+  return Object.freeze(roster.map((e) => {
+    if (!e.giftOptions.some((g) => g.name && traits[g.name])) return e;
+    return Object.freeze({ ...e, giftOptions: Object.freeze(e.giftOptions.map((g) => (g.name && traits[g.name] ? Object.freeze({ ...g, trait: traits[g.name] }) : g))) });
+  }));
+}
+
+function makeMembers(rng, picks, duties, chargesEach) {
   return picks.map((e, k) => ({
     ent: e,
     id: e.id,

@@ -17,7 +17,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeRng } from "./rng.mjs";
 import { PARAMS, PRESETS, NUMBERS, TARGETS, PACKAGES, defaults } from "./params.mjs";
-import { makeParty, ROSTER, ROSTERS, DUTIES } from "./entities.mjs";
+import { makeParty, ROSTER, ROSTERS, DUTIES, rosterWithGiftTraits } from "./entities.mjs";
 import { makeTown } from "./town.mjs";
 import { playRaid } from "./engine.mjs";
 import { Recorder } from "./recorder.mjs";
@@ -50,11 +50,13 @@ export function mergeNumbers(base, over) {
 export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, sizes = SIZES, townFn = null }) {
   const rec = new Recorder();
   const raids = [];
+  const roster = rosterWithGiftTraits(Array.isArray(params.roster) ? params.roster : ROSTERS[params.roster] || ROSTER, params.giftTraits);
   for (const label of labels) {
     for (const size of sizes) {
       for (let i = 0; i < runs; i++) {
         const rng = makeRng(seed, label, size, i);
-        const party = makeParty(rng.fork("party"), size, numbers.charges, (Array.isArray(params.roster) ? params.roster : ROSTERS[params.roster] || ROSTER));
+        // Measuring aids (sim/tuning-check.mjs; off by default): kitPolicy "default", forceEntity, kitOverride, giftTraits.
+        const party = makeParty(rng.fork("party"), size, numbers.charges, roster, { kit: params.kitPolicy ?? "random", force: params.forceEntity ?? null, override: params.kitOverride ?? null });
         // campaign upgrades (optional rules): each bonus charge goes to the next Entity in the party
         // (bonusStack: all of them on one Entity instead)
         for (let k = 0; k < (numbers.bonusCharges ?? 0); k++) { const m = party[numbers.bonusStack ? 0 : k % party.length]; m.charges += 1; m.chargesStart += 1; }

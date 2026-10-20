@@ -806,6 +806,7 @@ function pickWayIn(S, ob, loc, avail) {
   const alt = ob.alt;
   delete ob.alt;
   if (S.P.waysIn !== "two") return;
+  alt.wayIn = true; // still a way in once it's off the location (ctxFor; tuning W-d)
   const bestValue = (o) => Math.max(...avail.map((m) => planRoll(S, m, ctxFor(S, m, o, loc, "raid")).value));
   if (bestValue(alt) > bestValue(ob)) Object.assign(ob, { options: alt.options, difficulty: alt.difficulty, witnessed: alt.witnessed, group: alt.group });
 }
@@ -894,6 +895,8 @@ function ctxFor(S, m, ob, loc, phase) {
     phase, options: ob.options, difficulty: ob.difficulty - (loc && loc.id === "exit" && hasPerk(m, "shortcut") ? 2 : 0) - (loc && loc.id === "lockup" && ["lockup", "flightLockup"].includes(S.P.fetchRule) && hasPerk(m, "fetch") ? 2 : 0)
       - (loc && loc.id === "exit" && S.P.fetchRule === "flightExit" && [m, ...helpers].some((o) => hasPerk(o, "fetch")) ? 1 : 0), witnessed: ob.witnessed,
     helpers, locKind: loc ? loc.kind : null, weakness: false, noCost: !!loc && loc.id === "exit", // T4: an exit Cost costs nothing more
+    // a location's first obstacle, either version (its two ways in; Chapter 4), read only by wallCrawler "wayIn" (tuning W-d)
+    wayIn: !!loc && loc.id !== "exit" && loc.id !== "lockup" && !!loc.obstacles && (ob.wayIn || loc.obstacles[0] === ob || loc.obstacles[0]?.alt === ob),
     // opening this obstacle would leave the others here behind it with work still past it (openPolicy "last")
     leavesOthers: !!loc && loc.id !== "exit" && loc.id !== "lockup" && !ob.group && helpers.length > 0 && loc.obstacles.some((o) => !o.cleared && o !== ob),
   };
@@ -955,6 +958,13 @@ function rollCandidates(S, m, ctx) {
   // your own in a local chase and at the lock-up. (Before the audit: own switches only, and a switch to a trait listed
   // as loud was rolled quiet.)
   const listed = new Set(ctx.options.map((o) => o.trait));
+  // wallCrawler "wayIn" (tuning W-d, sim/TUNING-2026-10-20.md): "...and at a way in you may roll Nimble instead of the
+  // trait the obstacle calls for" (own roll, no charge, so a Nimble switch isn't needed there; a trait the obstacle
+  // lists as loud stays loud, as with a switch).
+  if (phase === "raid" && ctx.wayIn && hasPerk(m, "wallCrawler") && P.wallCrawler === "wayIn" && !listed.has("nimble")) {
+    listed.add("nimble");
+    cands.push({ trait: "nimble", loud: false, quiet: false, via: null, perk: "wallCrawler" });
+  }
   for (const src of sources(S, m, ctx, "switch")) {
     if (listed.has(src.ability.trait)) continue;
     listed.add(src.ability.trait); // sources() puts the owner with the most charges first
@@ -998,12 +1008,20 @@ function planRoll(S, m, ctx) {
   const carrying = !!m.furniture;
   let seconds;
   const MON = P.monsterRule === "d8" ? 8 : MONSTER;
-  if (carrying || phase === "final") seconds = [MON]; // carrying: no Mask; S1: once the hunt is on the Mask is off
+  // strongBack "mask" (tuning C-a): with Strong Back, carrying furniture doesn't stop you choosing the Mask.
+  const maskWhileCarrying = carrying && hasPerk(m, "strongBack") && P.strongBack === "mask";
+  if ((carrying && !maskWhileCarrying) || phase === "final") seconds = [MON]; // carrying: no Mask; S1: once the hunt is on the Mask is off
   else if (P.monsterPolicy === "mask") seconds = [MASK];
   else if (P.monsterPolicy === "monster") seconds = [MON];
   else seconds = [MASK, MON];
   const tie = P.monsterRule === "tie";
   const showVal = P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1;
+  // Tuning (sim/TUNING-2026-10-20.md, all off by default): what the players know of Hypnotic Eyes (perkAware: they weigh
+  // "beats it by 2" right; without it the plan prices the Monster as usual, the simulator's play so far; hypnoticEyes
+  // "never" is always known); raiseD12 "plus2": a raise past a d12 adds +2 to the total (G-a).
+  const eyesMin = (trait) => (hasPerk(m, "hypnoticEyes") && trait === "charm" ? (P.hypnoticEyes === "never" ? Infinity : P.perkAware ? 2 : 1) : 1);
+  const raiseD12 = P.raiseD12 === "plus2" ? 2 : P.raiseD12 === "plus1" ? 1 : 0; // plus1: the review's other candidate (context)
+  const wc = hasPerk(m, "wallCrawler") ? (P.wallCrawler ?? "plain") : null;
 
   // D1 (chaseRule "oneRise"): inside a local chase the rise waits for the chase's end, so a roll is weighed by what it adds
   // to the chase's biggest trigger so far (ctx.chase.maxTrig), against the headroom left after the rise already pending.
@@ -1027,9 +1045,12 @@ function planRoll(S, m, ctx) {
     let down = m.nextStepDown;
     const duty = P.dutyEdge && phase === "raid" && ctx.locKind && ctx.locKind === m.duty;
     if (duty) up += 1;
-    if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless") && !(hasPerk(m, "bruteStrength") && m.form === "hyde")) down += 1; // carriers roll Nimble one size smaller
+    if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless") && !(hasPerk(m, "bruteStrength") && m.form === "hyde") && wc !== "carry") down += 1; // carriers roll Nimble one size smaller (tuning W-b: not with Wall-Crawler "carry")
     if (ctx.weakness) down += 1; // the mob brought your Weakness: one size smaller in the chase
-    const traitRaised = duty; // counts toward P7's cap
+    // wallCrawler "bigger" (tuning W-e): "your Nimble is one size bigger in a chase", the roll's one raise.
+    const wcBig = wc === "bigger" && (phase === "local" || phase === "final") && c.trait === "nimble" && !duty;
+    if (wcBig) up += 1;
+    const traitRaised = duty || wcBig; // counts toward P7's cap
     for (const second of seconds) {
       const raiseOpts = [{ t: 0, s: 0 }];
       const maxRaises = P.raiseCap === "perRoll" ? (traitRaised ? 0 : 1) : 2;
@@ -1044,8 +1065,12 @@ function planRoll(S, m, ctx) {
         for (const hid of hidOpts) {
           const td = applySteps(base, up + ro.t - down);
           const sd = ro.s ? stepUp(second, 1).die : second;
-          const D = Math.max(2, ctx.difficulty - (c.easier || 0));
-          const d = outcomeDist(td.die, sd, D, { monster: isMon, hidden: hid, tie });
+          // raiseD12 "plus2" (tuning G-a): a raise that would take a d12 past the top adds +2 to the total instead, the same
+          // as a Difficulty 2 lower (the Monster showing and a Critical still read the faces). Raises net against steps down first.
+          const bonus = raiseD12 && td.over > 0 ? raiseD12 : 0;
+          const D = Math.max(2, ctx.difficulty - (c.easier || 0)) - bonus;
+          const showMin = eyesMin(c.trait);
+          const d = outcomeDist(td.die, sd, D, { monster: isMon, hidden: hid, tie, showMin });
           // Ability uses for this plan, and how many must be overdrawn.
           const uses = [];
           if (c.via) uses.push(c.via);
@@ -1088,7 +1113,8 @@ function planRoll(S, m, ctx) {
           const weakCost = phase === "final" && (P.overdrawAtLimit === "weakness" || P.overdrawAtLimit === "once") ? 0.3 * overdraws : 0;
           const value = gain - lambda * eSusp - mu * (witnessed ? seenP * d.trouble : 0) - cc * uses.length - (overdraws ? 0.15 : 0) - weakCost;
           if (!best || value > best.value + 1e-12) {
-            best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, seenP, difficulty: D, fixedSusp: fixed };
+            best = { value, cand: c, traitDie: td.die, under: td.under, over: td.over, second, secondDie: sd, hidden: hid, uses, overdraws, witnessed, seenP, difficulty: D, fixedSusp: fixed,
+              showMin, bonus, raise: duty ? "duty" : wcBig ? "wallCrawler" : ro.t ? "ability" : null };
           }
         }
       }
@@ -1109,15 +1135,29 @@ function executeRoll(S, m, plan, phase, { noCost = false, deferCost = false } = 
   }
   if (plan.overdraws && phase === "final" && P.overdrawAtLimit === "free") S.rec.detect("overdraw in the final flight (its Suspicion cost means nothing)");
   if (plan.under > 0) S.rec.detect("a die stepped below d4 (floored at d4)");
-  if (plan.over > 0) S.rec.detect("a raise past d12 (lost)");
+  if (plan.over > 0 && !plan.bonus) S.rec.detect("a raise past d12 (lost)");
+  if (P.tuneStats && plan.raise) {
+    // tuning G-a: how often a raise (an ability's, Castle Duty's, Wall-Crawler "bigger") lands on a d12
+    S.rec.count(`tune raise:${plan.raise}:${phase}`);
+    if (plan.over > 0) S.rec.count(`tune raise on a d12:${plan.raise}:${phase}${plan.bonus ? ` (+${plan.bonus})` : " (lost)"}`);
+  }
+  if (P.tuneStats) {
+    S.rec.count(`tune rolls:${phase}`);
+    if (plan.traitDie === 12) S.rec.count(`tune rolls on a d12:${phase}`);
+    if (plan.cand.perk === "wallCrawler") S.rec.count("tune Wall-Crawler: Nimble at a way in");
+    if (m.furniture && plan.second === MASK) S.rec.count("tune Strong Back: the Mask while carrying");
+    if (m.furniture) S.rec.count(`tune carrier rolls:${phase}:${m.ent.key}`);
+    if (hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm" && plan.second !== MASK) S.rec.count("tune Hypnotic Eyes: Monster on Charm");
+    if (hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm") S.rec.count("tune Hypnotic Eyes: Charm rolls");
+  }
   m.nextStepDown = 0;
   const t = S.rng.die(plan.traitDie);
   const s = S.rng.die(plan.secondDie);
   const b = band(t + s, plan.difficulty);
   const critical = isCritical(t, s, plan.difficulty, P.critRule);
   m.lastTrait = plan.cand.trait;
-  const eyes = hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm"; // shows only if it beats the trait die by 2+
-  const show = plan.second !== MASK && !plan.hidden && (eyes ? s - t >= 2 : monsterShows(t, s, P.monsterRule === "tie"));
+  const eyes = hasPerk(m, "hypnoticEyes") && plan.cand.trait === "charm"; // shows only if it beats the trait die by 2+ (tuning D-a, hypnoticEyes "never": never)
+  const show = plan.second !== MASK && !plan.hidden && (eyes ? (P.hypnoticEyes === "never" ? false : s - t >= 2) : monsterShows(t, s, P.monsterRule === "tie"));
   if (plan.cand.formChange) { m.form = m.form === "hyde" ? "jekyll" : "hyde"; S.rec.count("the draught"); }
   // C2b: when the Monster shows on one of Jekyll's rolls, Hyde takes over, free.
   if (m.ent.formDice && m.form !== "hyde" && plan.second !== MASK && (hasPerk(m, "steadyNerves") ? s - t >= 2 : monsterShows(t, s, P.monsterRule === "tie"))) { m.form = "hyde"; S.rec.count("Hyde takes over"); }
@@ -1251,11 +1291,20 @@ function chaseRise(S, ch) {
   if (limitHit(S)) { S.st.chaseHunt++; S.rec.count("local chase brought the hunt (D1)"); finalFlight(S, "limit"); }
 }
 
+/** Tuning (tuneStats): each Entity's lone local chases, escaped and captured (sim/tuning-check.mjs). */
+function tuneChase(S, m, what) {
+  if (!S.P.tuneStats) return;
+  const k = m.ent.key ?? m.id;
+  const c = (S.st.soloBy ??= {})[k] ??= { n: 0, esc: 0, cap: 0 };
+  c[what]++;
+}
+
 function localChaseBody(S, m, t) {
   const N = S.N;
   S.rec.count("local chases");
   S.chases = (S.chases ?? 0) + 1;
   S.st.solo++;
+  tuneChase(S, m, "n");
   const one = oneRise(S);
   let weak = weakStart(S, m, false);
   let lead = N.lead.localStart + (hasPerk(m, "nightRunner") ? 1 : 0);
@@ -1268,7 +1317,7 @@ function localChaseBody(S, m, t) {
     // D2: at the start of any round a runner may give up: captured, no roll.
     if (giveUps(S, [m], lead, ch, new Map([[m, weak]])).length) {
       S.st.giveUps++; S.rec.count("gave up (D2)");
-      capture(S, m); S.st.soloCaptured++;
+      capture(S, m); S.st.soloCaptured++; tuneChase(S, m, "cap");
       if (one) chaseRise(S, ch);
       return;
     }
@@ -1283,8 +1332,8 @@ function localChaseBody(S, m, t) {
     if (one) {
       ch.maxTrig = Math.max(ch.maxTrig, r.trigger);
       ch.odRise += r.odRise;
-      if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; return chaseRise(S, ch); }
-      if (lead <= 0) { if (corner(S, m)) S.st.soloCaptured++; return chaseRise(S, ch); }
+      if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; tuneChase(S, m, "esc"); return chaseRise(S, ch); }
+      if (lead <= 0) { if (corner(S, m)) { S.st.soloCaptured++; tuneChase(S, m, "cap"); } return chaseRise(S, ch); }
       continue;
     }
     // chaseRule "perRoll" (the rule before D1): every chase roll raises Suspicion as it happens, and the Limit can come mid-chase.
@@ -1418,7 +1467,7 @@ function chaseOdds(S, runners, ch, weak, solo) {
       for (const m of runners) {
         const ctx = { phase: "local", options: groundFor(m, ground), difficulty: ch.mob, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m) ?? false, chase: { maxTrig: k, odRise: ch.odRise } };
         const plan = planRoll(S, m, ctx);
-        const d = outcomeDist(plan.traitDie, plan.secondDie, plan.difficulty, { monster: plan.second !== MASK, hidden: plan.hidden, tie: P.monsterRule === "tie" });
+        const d = outcomeDist(plan.traitDie, plan.secondDie, plan.difficulty, { monster: plan.second !== MASK, hidden: plan.hidden, tie: P.monsterRule === "tie", showMin: plan.showMin ?? 1 });
         const fixed = plan.fixedSusp, sv = Math.max(fixed, P.monsterRule === "plus2" && !hasPerk(m, "rattle") ? 2 : 1);
         const od = P.overdrawStack === "stack" ? plan.overdraws * N.overdrawSuspicion : 0;
         const crit = P.critRule === "doubles" ? d.critDoubles : 0;

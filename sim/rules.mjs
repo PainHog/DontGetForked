@@ -80,8 +80,10 @@ const DIST_CACHE = new Map();
  *            show:{success:number,cost:number,trouble:number},
  *            critDoubles:number, critBeat4:number}}
  */
-export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, hidden = false, tie = false } = {}) {
-  const key = `${traitDie}|${secondDie}|${difficulty}|${monster ? 1 : 0}|${hidden ? 1 : 0}|${tie ? 1 : 0}`;
+export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, hidden = false, tie = false, showMin = 1 } = {}) {
+  // showMin (sim/TUNING-2026-10-20.md): how far the Monster die must beat the trait die to show (1 = the rule; 2 = Hypnotic
+  // Eyes as the book has it, when the players know it; Infinity = never). Only read when it isn't 1.
+  const key = `${traitDie}|${secondDie}|${difficulty}|${monster ? 1 : 0}|${hidden ? 1 : 0}|${tie ? 1 : 0}${showMin !== 1 ? `|${showMin}` : ""}`;
   const hit = DIST_CACHE.get(key);
   if (hit) return hit;
   const out = { success: 0, cost: 0, trouble: 0, show: { success: 0, cost: 0, trouble: 0 }, critDoubles: 0, critBeat4: 0 };
@@ -90,7 +92,7 @@ export function outcomeDist(traitDie, secondDie, difficulty, { monster = false, 
     for (let s = 1; s <= secondDie; s++) {
       const b = band(t + s, difficulty);
       out[b] += w;
-      if (monster && !hidden && monsterShows(t, s, tie)) out.show[b] += w;
+      if (monster && !hidden && (showMin !== 1 ? s - t >= showMin : monsterShows(t, s, tie))) out.show[b] += w;
       if (isCritical(t, s, difficulty, "doubles")) out.critDoubles += w;
       if (isCritical(t, s, difficulty, "beat4")) out.critBeat4 += w;
     }
