@@ -58,6 +58,7 @@ export const CONFIGS = {
   F1r: { item: "1.2", title: "Flight overdraw only in round 1, smart pricing", p: { flightODPrice: "smart", flightOverdraw: "round1" } },
   Fs: { item: "1.2", title: "Stacking step, today's (flat) pricing", p: { flightOverdraw: "stack" } },
   Fr: { item: "1.2", title: "Round 1 only, today's (flat) pricing", p: { flightOverdraw: "round1" } },
+  Fsa: { item: "1.2", title: "Stacking step, allowed while the Weakness is in play too, today's (flat) pricing", p: { flightOverdraw: "stackAny" } },
   // 1.3 Late-track and long chases
   M3: { item: "1.3", title: "Local mob 8 + ⌊Suspicion / 3⌋ (at most 12)", p: {}, n: { localMob: { div: 3 } } },
   M11: { item: "1.3", title: "Local mob 8 + ⌊Suspicion / 2⌋, at most 11", p: {}, n: { localMob: { max: 11 } } },
@@ -67,9 +68,15 @@ export const CONFIGS = {
   // 1.5 Clocks and party size
   P5L: { item: "1.5", title: "With 5 Entities, the Limit is 1 lower (8 / 9 / 12)", p: {}, n5: { labels: { easy: { limit: 8 }, standard: { limit: 9 }, hard: { limit: 12 } } } },
   P5T: { item: "1.5", title: "With 5 Entities, the night lasts 10 Turns", p: {}, n5: { labels: { easy: { turns: 10 }, standard: { turns: 10 }, hard: { turns: 10 } } } },
+  P5LES: { item: "1.5", title: "With 5 Entities, the Limit is 1 lower on Easy and Standard only (8 / 9 / 13)", p: {}, n5: { labels: { easy: { limit: 8 }, standard: { limit: 9 } } } },
   E10: { item: "1.5", title: "Easy Limit 10 (10 / 10 / 13)", p: {}, n: { labels: { easy: { limit: 10 } } } },
   // 1.6 Dead abilities in a local chase
   LR: { item: "1.6", title: "In a local chase, any ability may be spent as a raise on your own roll", p: { localRaise: "any" } },
+  // The recommendations together (sim/REVIEW2-2026-10-21.md): (a), one overdraw per local chase, the stacking flight step
+  // (allowed with the Weakness), mob at most 11, the round-6 cap, any ability as a raise in a local chase.
+  PKG: { item: "all", title: "The recommended set together, today's players", p: { spectralFix: "notLast", localOverdraw: "once", flightOverdraw: "stackAny", localRoundCap: 6, localRaise: "any" }, n: { localMob: { max: 11 } }, ghost: true },
+  PKGT: { item: "all", title: "The recommended set, with every trick played (Ghost hand-offs and steering, doomed overdraws, smart flight pricing)", p: { spectralFix: "notLast", localOverdraw: "once", flightOverdraw: "stackAny", localRoundCap: 6, localRaise: "any", ghostHandOff: "handSteer", doomedOverdraw: true, flightODPrice: "smart" }, n: { localMob: { max: 11 } }, ghost: true },
+  TRICKS: { item: "all", title: "Today's rules with every trick played (the upper bound the set is measured against)", p: { ghostHandOff: "handSteer", doomedOverdraw: true, flightODPrice: "smart" }, ghost: true },
 };
 
 // ---------------------------------------------------------------- one job (a configuration on one seed)
@@ -297,7 +304,7 @@ export function report(res, { chases = null } = {}) {
   if (S.G1) {
     L.push("## 1.1 Spectral plus free hand-offs", "");
     L.push("**Does the simulator let the Ghost do it?** Partly. A Spectral pass at a location's last group obstacle already takes the item with no roll (D4), and the location is done, so her partner never rolls it. But the simulated players hand loot over only before a watched roll, so after the first such pass she carries the item and Spectral is off for the rest of the night. What was missing is the hand-off straight after: the new policy `ghostHandOff` adds it (\"hand\": she gives her loot to a friend at the same place at once; \"handSteer\", the generous upper bound: also her group heads for locations whose last obstacle is a group obstacle). The fixes are `spectralFix`: (a) \"notLast\", (b) \"noItem\" (she is past, but someone must roll it before it's beaten; alone, she rolls it), (c) \"firstOnly\".", "");
-    const gcols = names.filter((k) => k === "base" || CONFIGS[k].item === "1.1");
+    const gcols = names.filter((k) => k === "base" || CONFIGS[k].item === "1.1" || CONFIGS[k].item === "all");
     const grow = gcols.map((nm) => { const g = S[nm].ghost; return [nm, CONFIGS[nm].title, ...LABELS.map((l) => g[l] ? wfPlain(g[l]) : "—"), ...LABELS.map((l) => g[l] ? `${num(g[l].spectral / g[l].n)} · ${num(g[l].handOffs / g[l].n)}` : "—")]; });
     L.push(`**A Ghost with Spectral in every party of 4** (${(gr * seeds.length).toLocaleString("en-GB")} raids per label; the other three random):`, "");
     L.push(table(["", "Option", "Easy win / forked", "Standard", "Hard", "Easy: Spectral passes · hand-offs per raid", "Standard", "Hard"], grow), "");
@@ -312,7 +319,7 @@ export function report(res, { chases = null } = {}) {
   // 1.2
   if (S.D1 || S.F1) {
     L.push("## 1.2 Overdraws", "");
-    const ocols = ["base", "D1", "D1o", "Do"].filter((k) => S[k]);
+    const ocols = ["base", "D1", "D1o", "Do", "TRICKS", "PKG", "PKGT"].filter((k) => S[k]);
     L.push("### (i) In a local chase", "");
     const orow = [];
     for (const l of LABELS) for (const nm of ocols) {
@@ -322,7 +329,7 @@ export function report(res, { chases = null } = {}) {
     }
     L.push(table(["Label", "", "Chases per raid", "Lone chases with an overdraw", "with 2+", "Most in one chase", "Lone chases with the hunt already certain", "…and the runner out of charges", "Overdraws made with the hunt certain (all seeds)", "Chases with 2+ of them", "Lone escape", "Level win / forked"], orow), "");
     L.push("\"The hunt already certain\": a round rolled when the chase's rise so far already reaches the Limit, so more Suspicion is lost past it. D1 plays that trick (the runner treats further Suspicion as free); D1o adds the one-overdraw rule.", "");
-    const fcols = ["base", "F1", "F1s", "F1sa", "F1r", "Fs", "Fr"].filter((k) => S[k]);
+    const fcols = ["base", "F1", "F1s", "F1sa", "F1r", "Fs", "Fsa", "Fr", "TRICKS", "PKG", "PKGT"].filter((k) => S[k]);
     L.push("### (ii) In the final flight", "");
     const frow = [];
     for (const l of LABELS) for (const nm of fcols) {
@@ -335,7 +342,7 @@ export function report(res, { chases = null } = {}) {
   // 1.3
   if (S.M3 || S.R6) {
     L.push("## 1.3 Late-track and long chases", "");
-    const ccols = ["base", "M3", "M11", "R6"].filter((k) => S[k]);
+    const ccols = ["base", "M3", "M11", "R6", "PKG"].filter((k) => S[k]);
     const buckets = [[0, 3], [4, 5], [6, 7], [8, 9], [10, 12]];
     L.push("### A lone runner's escape by Suspicion when the chase starts (chases in real raids, all three labels)", "");
     const brow = [];
@@ -405,7 +412,7 @@ export function report(res, { chases = null } = {}) {
     L.push(`**Raids that end in the final flight on Hard:** rolled Hard towns ${pct(S.base.labels.hard.flights / S.base.labels.hard.n)} (at the Limit ${pct(S.base.labels.hard.limit / S.base.labels.hard.n)}, at dawn ${pct(S.base.labels.hard.dawn / S.base.labels.hard.n)}); Gallowsmere ${pct(S.base.towns.gallowsmere.all.flights / S.base.towns.gallowsmere.all.n)} (at the Limit ${pct(S.base.towns.gallowsmere.all.limit / S.base.towns.gallowsmere.all.n)}, at dawn ${pct(S.base.towns.gallowsmere.all.dawn / S.base.towns.gallowsmere.all.n)}).`, "");
     L.push("### Options", "");
     const orow = [];
-    for (const nm of ["base", "P5L", "P5T", "E10"].filter((k) => S[k])) {
+    for (const nm of ["base", "P5L", "P5LES", "P5T", "E10"].filter((k) => S[k])) {
       orow.push([nm, CONFIGS[nm].title, ...LABELS.map((l) => wf(S[nm].cells[`${l}|5`], l)), ...LABELS.map((l) => wf(S[nm].labels[l], l)), ...TOWNS.map((t) => wf(S[nm].towns[t.key].bySize[5], t.label))]);
     }
     L.push(table(["", "Option", "5 Entities: Easy", "Standard", "Hard", "All sizes: Easy", "Standard", "Hard", ...TOWNS.map((t) => `${t.name}, 5`)], orow), "");

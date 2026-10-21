@@ -306,9 +306,9 @@ function planSpots(ends) {
   const used = new Set(), plan = {};
   const order = Object.keys(ends);
   for (const [idx, [id, { freeIn }]] of Object.entries(ends).entries()) {
-    const prefs = SPOTS[id];
+    const prefs = SPOTS[id] ?? [];
     const room = freeIn - SAFETY_IN;
-    if (!prefs || room - MIN_GAP_IN < MIN_SPOT_IN) continue;
+    if (room - MIN_GAP_IN < MIN_SPOT_IN) continue;
     // a chapter that fills its last page exactly pushes its zero-height end marker to the top of
     // the next page (the next chapter's opener): that reads as a whole free page, but there is no room
     if (freeIn > TEXT_H_IN - 0.3) continue;
@@ -319,8 +319,13 @@ function planSpots(ends) {
     // don't take a spot a later chapter prefers
     const later = new Set(order.slice(idx + 1).flatMap(k => SPOTS[k] ?? []));
     const art = prefs.find(a => !used.has(a) && have(a))
-      ?? all.find(a => !used.has(a) && have(a) && !later.has(a));
-    if (!art) continue;
+      ?? (prefs.length ? all.find(a => !used.has(a) && have(a) && !later.has(a)) : undefined);
+    if (!art) {
+      // no picture left for this gap: a framed "Waiting for Artwork" box marks where one will go (Richard, 2026-10-21)
+      const h = +Math.min(room - MIN_GAP_IN, MAX_SPOT_IN).toFixed(2);
+      plan[id] = { placeholder: true, h, top: +Math.max(MIN_GAP_IN, (room - h) / 2).toFixed(2) };
+      continue;
+    }
     used.add(art);
     const natural = Math.min(MAX_SPOT_IN, TEXT_W_IN / artAspect(art));
     const h = +Math.min(room - MIN_GAP_IN, natural * SPOT_FILL).toFixed(2);
@@ -348,6 +353,17 @@ const PRINT_CSS = `
 
 const sectionOf = (html, cls) => (html.match(new RegExp(`<section class="${cls}"[\\s\\S]*?<\\/section>`)) ?? [null])[0];
 
+/** What goes at the end of a chapter or a gap point: its spot or placeholder (if planned) and, in marker passes, an end marker. */
+function tailpiece(id, spots, markers) {
+  const sp = spots[id];
+  const end = markers ? `<div class="end-marker"><span>@@end-${id}@@</span></div>` : "";
+  if (sp?.placeholder) return `<figure class="art-placeholder" style="height:${sp.h}in;margin-top:${sp.top}in"><span>Waiting for Artwork</span></figure>${end}`;
+  const fig = sp ? `<figure class="art tailpiece${sp.fill ? " fill" : ""}" data-art="${sp.art}" style="height:${sp.h}in;margin-top:${sp.top}in"></figure>` : "";
+  // a filling spot crops to its box (centred) instead of fitting inside it
+  const art = fig ? inlineArt(fig) : "";
+  return `${sp?.fill ? art.replace('preserveAspectRatio="xMidYMid meet"', 'preserveAspectRatio="xMidYMid slice"') : art}${end}`;
+}
+
 function page(pages, markers, spots = {}, { only = null, padBlank = false } = {}) {
   let content = body;
   if (only) {
@@ -363,16 +379,11 @@ function page(pages, markers, spots = {}, { only = null, padBlank = false } = {}
       if (padBlank) content += `\n<section class="blank-page"></section>`;
     }
   }
+  // a gap point between two town pages (the next starts a page of its own): it can take a spot or a placeholder too
+  content = content.replace(/(<!-- \/town:([\w-]+) -->)(?=\s*<!-- town:)/g, (m, mark, key) => `${mark}${tailpiece(`gap-town-${key}`, spots, markers)}`);
   // end of each chapter: a spot illustration (if planned) and, in marker passes, an end marker
   content = content.replace(/(<section class="chapter[^"]*" id="([^"]+)"[^>]*>)([\s\S]*?)(<\/section>)(?=\s*(?:<!--|<section|$))/g,
-    (m, open, id, inner, close) => {
-      const sp = spots[id];
-      const fig = sp ? `<figure class="art tailpiece${sp.fill ? " fill" : ""}" data-art="${sp.art}" style="height:${sp.h}in;margin-top:${sp.top}in"></figure>` : "";
-      const end = markers ? `<div class="end-marker"><span>@@end-${id}@@</span></div>` : "";
-      // a filling spot crops to its box (centred) instead of fitting inside it
-      const art = fig ? inlineArt(fig) : "";
-      return `${open}${inner}${sp?.fill ? art.replace('preserveAspectRatio="xMidYMid meet"', 'preserveAspectRatio="xMidYMid slice"') : art}${end}${close}`;
-    });
+    (m, open, id, inner, close) => `${open}${inner}${tailpiece(id, spots, markers)}${close}`);
   if (markers) {
     content = content.replace(/(<section class="(?:part|chapter|sheet)[^"]*" id="([^"]+)"[^>]*>)/g,
       (_, open, id) => `${open}<span class="pdf-marker">@@${id}@@</span>`);
@@ -496,12 +507,14 @@ try {
   }
   for (const e of entries) {
     const sp = spots[e.id];
-    console.log(`  p${String(p1.found[e.id]).padStart(3)}  ${e.label ? e.label + " — " : ""}${e.title}${sp ? `   [+ ${sp.art} ${sp.h}in]` : ""}`);
+    console.log(`  p${String(p1.found[e.id]).padStart(3)}  ${e.label ? e.label + " — " : ""}${e.title}${sp ? `   [+ ${sp.placeholder ? "Waiting for Artwork" : sp.art} ${sp.h}in]` : ""}`);
   }
+  const boxes = Object.entries(spots).filter(([, s]) => s.placeholder).map(([id, s]) => `${id} p${p1.ends[id]?.page} (${s.h}in)`);
+  if (boxes.length) console.log(`  "Waiting for Artwork" boxes: ${boxes.join(", ")}`);
   const gaps = Object.entries(p1.ends).filter(([id, v]) => !spots[id] && v.freeIn > 3 && v.freeIn <= TEXT_H_IN - 0.3).map(([id, v]) => `${id} (${v.freeIn.toFixed(1)}in free)`);
   if (gaps.length) console.warn(`  ! large gaps with no spot: ${gaps.join(", ")}`);
   // every stand-in spot is credited by artist on the credits page, so say when one isn't printed
-  const placed = new Set(Object.values(spots).map((s) => s.art));
+  const placed = new Set(Object.values(spots).filter((s) => !s.placeholder).map((s) => s.art));
   const unplaced = [...new Set(Object.values(SPOTS).flat())].filter((a) => !placed.has(a));
   if (unplaced.length) warn.push(`spot art not printed (its artist is still on the credits page): ${unplaced.join(", ")}`);
   for (const w of warn) console.warn(`  ! ${w}`);
