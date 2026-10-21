@@ -13,6 +13,7 @@ node sim/run.mjs --package N1         # the same for a package → sim/REPORT-N1
 node sim/premade-check.mjs 2000       # the three premade towns against their targets
 node sim/review-check.mjs 3000        # the outside review's package against the rules before it (~15 min)
 node sim/tuning-check.mjs             # the review's Entity tuning options and Thistlewick candidates (~50 min) → sim/TUNING-2026-10-20.md
+node sim/review2-check.mjs            # the v0.2 review's open decisions (Spectral, overdraws, chases, lock-up, party size; ~40 min) → tables for sim/REVIEW2-2026-10-21.md
 node sim/tune.mjs --params '{…}'      # search label numbers toward the targets
 npm test                              # includes test/sim.test.mjs
 ```
@@ -132,4 +133,5 @@ package’s rule switches.
 | `premade-check.mjs` | Plays each premade town as printed against its label's targets |
 | `review-check.mjs` | The outside review's package (D1–D7 with R1 and D4, 2026-10-19/20) against the rules before it (`BEFORE_REVIEW` in `params.mjs`, package V0), piece by piece, with the 10-Turn night (D5b), the number fixes proposed for the misses, the ready-made towns and Hallowby |
 | `tuning-check.mjs` | The outside review's Entity tuning options (Section 4) and Thistlewick candidates at today's defaults, on random kits and on every Entity's default kit, with the measuring switches in `params.mjs` TUNING (off by default) → `TUNING-2026-10-20.md` |
+| `review2-check.mjs` | The second outside review's open decisions (v0.2 review, Section 1: Spectral with free hand-offs, overdraws, the late-track mob and long chases, the Easy lock-up, party size and clocks, any ability as a raise in a local chase), each option and each trick (an upper-bound policy) against today's defaults on three seeds, with the measuring switches in `params.mjs` REVIEW2 (off by default), and lone and shared chases on their own (`--chases`) → `REVIEW2-2026-10-21.md` |
 | `FINDINGS.md` | Every simulation's findings in plain words, newest last |

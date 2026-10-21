@@ -6,12 +6,13 @@
  * default, so the defaults and test/sim.test.mjs are unchanged) or a NUMBERS override. Report: sim/REVIEW2-2026-10-21.md.
  *
  *   node sim/review2-check.mjs [--runs 2000] [--town-runs 3000] [--ghost-runs 4000] [--seeds 1,7,11] [--jobs 4]
- *                              [--only base,G1,…] [--save results.json] [--out sim/REVIEW2-2026-10-21.md]
- *   node sim/review2-check.mjs --from results.json[,more.json] [--chases-from chases.json] --out sim/REVIEW2-2026-10-21.md
+ *                              [--only base,G1,…] [--save results.json] [--out review2-tables.md]
+ *   node sim/review2-check.mjs --from results.json[,more.json] [--chases-from chases.json] --out review2-tables.md
+ *   (the tables only: sim/REVIEW2-2026-10-21.md is those tables under a hand-written summary, so don't --out onto it)
  *   node sim/review2-check.mjs --chases [--chase-runs 3000] [--save chases.json]      # lone and shared chases on their own
  *
  * Every configuration plays the same parties, towns and dice streams as the baseline on each seed (common random numbers;
- * a party-size option plays sizes 3 and 4 as the baseline and changes only the 5-Entity raids). Three kinds of run:
+ * a party-size option changes only the raids of the party size it names, n5 / n3). Three kinds of run:
  *  - rolled: rolled towns, Easy / Standard / Hard, parties of 3, 4 and 5 (--runs raids per label and party size);
  *  - towns: Puddlecombe, Thistlewick, Gallowsmere and the one-shot's Hallowby, parties of 3, 4 and 5 (--town-runs each);
  *  - ghost: a Ghost with Spectral in every party of 4 (the others random), rolled towns (--ghost-runs per label) and each
@@ -289,7 +290,7 @@ export function report(res, { chases = null } = {}) {
   L.push(`Measured for \`docs/reviews/2026-10-20-outside-v0.2/REVIEW.md\` Section 1 (items 1.1–1.6). A measuring job: nothing in the game changed. Every option is a switch in \`sim/params.mjs\` REVIEW2 (off by default) or a NUMBERS override; the defaults and \`test/sim.test.mjs\` are unchanged.`, "");
   L.push("**Baseline (\"today\"):** the rules as decided through 2026-10-20: the review package (D1–D7, R1, R4, D4), Limits 9 / 10 / 13, 12 Turns, the Entity tuning (Wall-Crawler's raise, the new defaults, Thistlewick's strongbox 10), random kits (each Entity's Gift and Perk at random, the standard the targets were set on).", "");
   L.push(`**Runs:** seeds ${seeds.join(", ")}; per seed ${rr.toLocaleString("en-GB")} rolled-town raids per label and party size (3, 4, 5), ${tr.toLocaleString("en-GB")} raids per party size in each town (Puddlecombe, Thistlewick, Gallowsmere, Hallowby), and for the Spectral options ${gr.toLocaleString("en-GB")} raids per label with a Ghost (Spectral) in a party of 4, plus ${tr.toLocaleString("en-GB")} per town. Every option plays the same parties, towns and dice streams as the baseline (common random numbers). Figures are the ${seeds.length} seeds pooled (${(3 * rr * seeds.length).toLocaleString("en-GB")} rolled raids per label) unless a seed range is shown. ✗ = outside the target.`, "");
-  L.push("```", `node sim/review2-check.mjs --runs ${rr} --town-runs ${tr} --ghost-runs ${gr} --seeds ${seeds.join(",")} --save review2.json --out sim/REVIEW2-2026-10-21.md`, `node sim/review2-check.mjs --chases --chase-runs ${chases ? chases.runs : 3000} --save chases.json`, `node sim/review2-check.mjs --from review2.json --chases-from chases.json --out sim/REVIEW2-2026-10-21.md   # the report again, no new runs`, "```", "");
+  L.push("```", `node sim/review2-check.mjs --runs ${rr} --town-runs ${tr} --ghost-runs ${gr} --seeds ${seeds.join(",")} --save review2.json --out review2-tables.md`, `node sim/review2-check.mjs --chases --chase-runs ${chases ? chases.runs : 3000} --save chases.json`, `node sim/review2-check.mjs --from review2.json --chases-from chases.json --out review2-tables.md   # the tables again, no new runs`, "```", "");
 
   // master table
   L.push("## Every option against the targets", "");
