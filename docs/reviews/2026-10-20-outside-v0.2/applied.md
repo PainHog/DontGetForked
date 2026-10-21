@@ -58,7 +58,7 @@ Page numbers are v0.2's. The rebuilt rulebook is still 34 pages and the one-shot
 | Item | Status | Note |
 |---|---|---|
 | "Gavarni dropped from the credits, but his print is still Dracula's In costume" | Report only: not so | Dracula's In costume is Charles Rochussen's 1868 playbill scene, credited. Every printed picture was matched to its artist in `book/art/stand-in/SOURCES.md` and both credits lines checked both ways: all match, once Andriessen is back for the bonfire (new section at the end of SOURCES.md) |
-| Cornet, Rochussen, Wageman and Whittock still printed? | Yes | Cornet: the lantern (Ch1's end, both books); Rochussen: Dracula In costume; Wageman and Whittock: the Creature Revealed |
+| Cornet, Rochussen, Wageman and Whittock still printed? | Yes | Cornet: the lantern spot (the rulebook's Chapter 1, the one-shot's Before You Play); Rochussen: Dracula In costume; Wageman and Whittock: the Creature Revealed |
 | The storefront note | Not filed here | Richard has the original; no change |
 | A source log for every picture; Woodward's and Koster's dates | Already there | `book/art/stand-in/SOURCES.md` (Woodward published 1897; Koster's etching in the Rijksmuseum by 1892) |
 | The windmill crop cuts the engraver's signature (N6) | Done | `manifest.json` crop 0.935 → 0.941; the signature is whole and no paper shows (row 125) |
