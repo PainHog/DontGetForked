@@ -123,24 +123,28 @@ export function otherForm(key, form) {
 }
 
 /**
- * Charges for using one ability, before you roll (Chapter 3). One charge each;
- * at zero charges you may still use it ("overdraw"): Suspicion +2, or, once the
- * hunt is on, your Weakness is in play from your next roll; while your Weakness
- * is in play you can't overdraw, and you overdraw at most once per flight (Chapter 6, B3).
+ * Charges for using one ability, before you roll (Chapter 3). One charge each; at zero charges you may still use it
+ * ("overdraw"): Suspicion +2 on top. In a local chase a runner overdraws at most once (2026-10-21, DGF.overdrawsPerChase;
+ * `localChase` is the Storyteller's switch for that rule, `overdrewInChase`: it has overdrawn in this chase already).
+ * Once the hunt is on, an overdraw costs a step down of its own instead: from your next roll to the end of the flight
+ * your trait die is one size smaller, on top of any Weakness (2026-10-21; it used to bring the Weakness, and wasn't
+ * allowed while the Weakness was in play); at most once per flight (B3; `overdrewInFlight`: already this flight).
  *   uses: how many abilities this Entity pays for now; cost: charges per use (1, or 0 if free)
- *   overdrewInFlight: this Entity has already overdrawn in this final flight
- * Returns { spend, overdraw, suspicion, weakness, allowed, refusal: "" | "weakness" | "once" }.
+ * Returns { spend, overdraw, suspicion, step, allowed, refusal: "" | "once" | "onceLocal" }.
  */
-export function payFor({ charges, uses = 1, cost = 1, hunt = false, weaknessInPlay = false, overdrewInFlight = false }) {
+export function payFor({ charges, uses = 1, cost = 1, hunt = false, overdrewInFlight = false, localChase = false, overdrewInChase = false }) {
   const owed = Math.max(0, uses * cost);
   const spend = Math.min(owed, Math.max(0, charges));
   const overdraw = owed - spend;
-  const refusal = !(overdraw > 0 && hunt) ? "" : overdrewInFlight || overdraw > 1 ? "once" : weaknessInPlay ? "weakness" : "";
+  const most = DGF.overdrawsPerChase;
+  let refusal = "";
+  if (overdraw > 0 && hunt && (overdrewInFlight || overdraw > most.final)) refusal = "once";
+  else if (overdraw > 0 && !hunt && localChase && (overdrewInChase || overdraw > most.local)) refusal = "onceLocal";
   return {
     spend,
     overdraw,
     suspicion: overdraw > 0 && !hunt ? DGF.suspicion.overdraw : 0,
-    weakness: overdraw > 0 && hunt,
+    step: overdraw > 0 && hunt,
     allowed: !refusal,
     refusal,
   };
@@ -151,12 +155,12 @@ export function payFor({ charges, uses = 1, cost = 1, hunt = false, weaknessInPl
  * Practised Hand ("changing back to Jekyll costs no charge").
  * Returns { from, to, traits, cost, ...payFor } or null for an Entity without forms.
  */
-export function draughtPlan(system, { hunt = false } = {}) {
+export function draughtPlan(system, { hunt = false, localChase = false, overdrewInChase = false } = {}) {
   const to = otherForm(system?.entityKey, system?.form);
   if (!to) return null;
   const free = DGF.perkRules[system.perk]?.freeDraughtTo === to;
   const cost = free ? 0 : 1;
-  return { from: system.form, to, traits: diceFor(system.entityKey, to), cost, ...payFor({ charges: system.charges?.value ?? 0, uses: 1, cost, hunt, weaknessInPlay: !!system.weaknessInPlay, overdrewInFlight: !!system.overdrewInFlight }) };
+  return { from: system.form, to, traits: diceFor(system.entityKey, to), cost, ...payFor({ charges: system.charges?.value ?? 0, uses: 1, cost, hunt, overdrewInFlight: !!system.overdrewInFlight, localChase, overdrewInChase }) };
 }
 
 /** F26: is this Entity in the raid now? An Entity without the mark (from an older world) is. */

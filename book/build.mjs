@@ -302,12 +302,14 @@ function artAspect(name) {
   return vb ? +vb[1] / +vb[2] : 4 / 3;
 }
 
-function planSpots(ends) {
+function planSpots(ends, found = {}) {
   const used = new Set(), plan = {};
   const order = Object.keys(ends);
   for (const [idx, [id, { freeIn }]] of Object.entries(ends).entries()) {
     const prefs = SPOTS[id] ?? [];
     const room = freeIn - SAFETY_IN;
+    // a gap before a kept-whole block counts only when the block really moved on to the next page
+    if (id.startsWith("gap-keep-") && !(found[`kstart-${id.slice(4)}`] > ends[id].page)) continue;
     if (room - MIN_GAP_IN < MIN_SPOT_IN) continue;
     // a chapter that fills its last page exactly pushes its zero-height end marker to the top of
     // the next page (the next chapter's opener): that reads as a whole free page, but there is no room
@@ -379,6 +381,13 @@ function page(pages, markers, spots = {}, { only = null, padBlank = false } = {}
       if (padBlank) content += `\n<section class="blank-page"></section>`;
     }
   }
+  // a block kept whole and marked "gap-before" (one-column pages only) that moves on to the next page leaves a band,
+  // which can take a placeholder (checked against where the block lands: planSpots)
+  let k = 0;
+  content = content.replace(/<div class="keep gap-before">/g, () => {
+    const id = `keep-${++k}`;
+    return `${tailpiece(`gap-${id}`, spots, markers)}<div class="keep gap-before">${markers ? `<span class="pdf-marker">@@kstart-${id}@@</span>` : ""}`;
+  });
   // a gap point between two town pages (the next starts a page of its own): it can take a spot or a placeholder too
   content = content.replace(/(<!-- \/town:([\w-]+) -->)(?=\s*<!-- town:)/g, (m, mark, key) => `${mark}${tailpiece(`gap-town-${key}`, spots, markers)}`);
   // end of each chapter: a spot illustration (if planned) and, in marker passes, an end marker
@@ -471,7 +480,7 @@ try {
   if (missing.length) throw new Error(`could not locate on any page: ${missing.join(", ")}`);
 
   // Pass 2: place spot illustrations; drop any that would move a page, and re-check.
-  let spots = planSpots(p1.ends);
+  let spots = planSpots(p1.ends, p1.found);
   for (let attempt = 0; attempt < 4; attempt++) {
     const pass2 = join(DIST, ".pass2.pdf");
     await printPdf(browser, page(p1.found, true, spots), pass2);

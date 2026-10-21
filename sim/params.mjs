@@ -10,6 +10,8 @@
  * Numbers the simulator tunes (charges, Limits, Turns, Lead…) are in NUMBERS.
  */
 
+import { DGF } from "../module/config.mjs";
+
 export const PARAMS = {
   critRule: {
     kind: "rule", default: "doubles", values: ["doubles", "beat4", "beat6", "beat7"],
@@ -148,6 +150,36 @@ export const PARAMS = {
     title: "When a Ghost's Spectral pass happens (D4, 2026-10-20: arrive)",
     doc: "arrive = the pass needs no roll and no action, so the Ghost passes a group obstacle the moment she reaches it, on the Turn she arrives too (with the loot at once if it was the last obstacle); a Spectral pass never picks the location's way in, which the others pick when they first roll there (an own-approach roll does pick it) (D4, as the book has it); work = only on a Turn spent at the location, and the way in is picked first (the simulator before D4).",
     ref: "Chapter 2 (Spectral), Chapter 4 (ways in); DESIGN D4; outside review R10, R13",
+  },
+  spectralFix: {
+    kind: "rule", default: "firstOnly", values: ["firstOnly", "none", "notLast", "noItem"],
+    title: "Spectral only at a way in (2026-10-21: firstOnly)",
+    doc: "firstOnly = Spectral works only at a way in, a location's first obstacle (either version; the v0.2 review's 1.1 option c, decided 2026-10-21): it still takes the item when that way in is the location's only obstacle, and a Ghost past a group way in stays past it if the others pick the other way in; none = on any group obstacle (the book before 2026-10-21); notLast = (a) not on a location's last obstacle; noItem = (b) a Spectral pass never takes the item: at a location's last obstacle she is past, but someone must get past it by a roll before it is beaten (alone there, she rolls it herself).",
+    ref: "Chapter 2 (Spectral); DESIGN 2026-10-21 (1); sim/REVIEW2-2026-10-21.md 1.1",
+  },
+  localOverdraw: {
+    kind: "rule", default: "once", values: ["once", "any"],
+    title: "Overdraws in a local chase (2026-10-21: once)",
+    doc: "once = at most one overdraw per runner per local chase (decided 2026-10-21); any = as many as a runner likes, +2 each on top of the one rise (the book before).",
+    ref: "Chapter 6 (One chase, one rise); DESIGN 2026-10-21 (2); sim/REVIEW2-2026-10-21.md 1.2",
+  },
+  flightOverdraw: {
+    kind: "rule", default: "stackAny", values: ["stackAny", "weakness", "stack", "round1"],
+    title: "What an overdraw costs in the final flight (2026-10-21: stackAny)",
+    doc: "stackAny = a step down of its own: the overdrawer's trait die is one size smaller from its next roll to the end of the flight, on top of any Weakness; once per flight; allowed while the Weakness is in play, so Dracula and a Ghost can overdraw once too (decided 2026-10-21); weakness = it brings your Weakness in from your next roll, once per flight, never while the Weakness is in play (the book before, overdrawAtLimit \"once\"); stack = the step of its own, but still never while the Weakness is in play; round1 = the old cost, only in round 1 of the flight. Read with overdrawAtLimit \"once\".",
+    ref: "Chapter 6 (The Final Flight); DESIGN 2026-10-21 (3); sim/REVIEW2-2026-10-21.md 1.2",
+  },
+  localRoundCap: {
+    kind: "rule", default: 6, values: [6, 0],
+    title: "A local chase lasts at most 6 rounds (2026-10-21: 6)",
+    doc: "6 = still running after round 6, a Lead of 2 or more escapes and anything less is cornered (captured), solo and shared chases alike (decided 2026-10-21); 0 = a local chase runs until the Lead reaches the escape number or 0 (the book before).",
+    ref: "Chapter 6 (The Local Chase); DESIGN 2026-10-21 (5); sim/REVIEW2-2026-10-21.md 1.3",
+  },
+  localRaise: {
+    kind: "rule", default: "any", values: ["any", "raiseOnly"],
+    title: "Any ability as a raise in a local chase (2026-10-21: any)",
+    doc: "any = in a local chase too, any Signature or Gift may be spent as a raise on your own roll, still one raise per roll (decided 2026-10-21; the final flight's is flightRaise); raiseOnly = in a local chase only raise abilities raise (the book before).",
+    ref: "Chapter 6 (The Local Chase); DESIGN 2026-10-21 (7); sim/REVIEW2-2026-10-21.md 1.6",
   },
   lootHandover: {
     kind: "rule", default: "free", values: ["free", "none"],
@@ -397,20 +429,17 @@ export const TUNING = {
 /**
  * Measuring switches for the second outside review's open decisions (docs/reviews/2026-10-20-outside-v0.2/REVIEW.md
  * Section 1; sim/review2-check.mjs, report sim/REVIEW2-2026-10-21.md). Like TUNING: kept out of PARAMS (not swept, not
- * in defaults()), and the engine reads each with its default when it is absent, so leaving them out plays the book.
- * The "policy" ones play a trick as generously as the rules allow (an upper bound); the "rule" ones are candidate texts.
- * Numbers options (the local mob, the lock-up, Limits, Turns) go through NUMBERS overrides instead; the one engine
- * addition there is NUMBERS.localMob.div (absent = the book's "half the Suspicion").
+ * in defaults()), and the engine reads each with its default when it is absent. These "policy" ones play a trick as
+ * generously as the rules allow (an upper bound). The review's candidate rule texts (spectralFix, localOverdraw,
+ * flightOverdraw, localRoundCap, localRaise) were decided on 2026-10-21 and are rule switches in PARAMS now, with the
+ * decided readings as their defaults (BEFORE_REVIEW2 below switches them back). Numbers options (the local mob, the
+ * lock-up, Limits, Turns) go through NUMBERS overrides; NUMBERS.localMob.div (absent = the book's "half the
+ * Suspicion") is the one engine addition there.
  */
 export const REVIEW2 = {
   ghostHandOff: { kind: "policy", default: "none", values: ["none", "hand", "handSteer"], doc: "none = the simulated players only hand loot over before a watched roll (U2); hand = a Ghost with Spectral who holds loot hands all of it to a friend at the same place at once (handing over is free, any time: Chapter 4), so Spectral stays on for her next group obstacle (review 1.1's trick); handSteer = hand, and her group prefers locations whose last obstacle is a group obstacle her Spectral pass takes the item past." },
-  spectralFix: { kind: "rule", default: "none", values: ["none", "notLast", "noItem", "firstOnly"], doc: "none = Spectral on any group obstacle (the book); notLast = (a) not on a location's last obstacle; noItem = (b) a Spectral pass never takes the item: at a location's last obstacle she is past, but someone must get past it by a roll before it is beaten (alone there, she rolls it herself); firstOnly = (c) only on a location's first obstacle (either way in)." },
   doomedOverdraw: { kind: "policy", default: false, values: [false, true], doc: "false = in a local chase the players price Suspicion as usual even once the chase's rise already reaches the Limit; true = once it does, Suspicion past the Limit is lost (Chapter 5), so further Suspicion costs a runner nothing and it overdraws whenever a raise helps (review 1.2's trick)." },
-  localOverdraw: { kind: "rule", default: "any", values: ["any", "once"], doc: "any = as many overdraws in a local chase as a runner likes, +2 each on top of the one rise (the book); once = at most one overdraw per runner per local chase (the Table Rulings sheet)." },
-  flightOverdraw: { kind: "rule", default: "weakness", values: ["weakness", "stack", "stackAny", "round1"], doc: "weakness = an overdraw in the final flight brings your Weakness in from your next roll, once per flight, never while the Weakness is in play (the book, overdrawAtLimit \"once\"); stack = it costs a step down of its own (trait die one size smaller from your next roll to the end of the flight) that stacks with the Weakness, once per flight, still never while the Weakness is in play; stackAny = stack, and allowed while the Weakness is in play (Dracula and a Ghost can then overdraw once); round1 = the book's cost, but only in round 1 of the flight." },
   flightODPrice: { kind: "policy", default: "flat", values: ["flat", "smart"], doc: "flat = the players price a flight overdraw at a flat 0.3 (the simulator so far); smart = at 0.25 for each of the overdrawer's own later rolls it actually makes worse: none when its Soon Weakness arrives by then anyway (an overdraw in round 2, or after it has rolled this round), up to 3 for a step that lasts (review 1.2's \"free in round 2\")." },
-  localRoundCap: { kind: "rule", default: 0, values: [0, 6], doc: "0 = a local chase runs until the Lead reaches the escape number or 0 (the book); 6 = after round 6, a Lead of 2 or more escapes and anything less is captured (cornered), solo and shared chases alike (review 1.3)." },
-  localRaise: { kind: "rule", default: "raiseOnly", values: ["raiseOnly", "any"], doc: "raiseOnly = in a local chase only raise abilities raise (the book); any = in a local chase too, any Signature or Gift may be spent as a raise on your own roll (review 1.6), still one raise per roll." },
   review2Stats: { kind: "measure", default: false, values: [false, true], doc: "true = log every local chase (start Suspicion, rounds, how it ended, overdraws, overdraws made with the hunt already certain, the dice chosen) and the Ghost's hand-offs in the raid summary's st (no effect on play)." },
 };
 
@@ -437,10 +466,16 @@ export const NUMBERS = {
   townBudget: "cap",
   obstacleTable: "approved", // C18: the d20 obstacle table; "random" was the placeholder generator // C17: rolled towns, at most one Difficulty-12 obstacle (two at Hard); "rolled" and "budget" were the other candidates
   overdrawSuspicion: 2,
-  lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 }, // S6/S9
+  lead: { localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6, localCapEscape: 2 }, // S6/S9; localCapEscape: past the round cap (localRoundCap, 2026-10-21) a Lead of this or more escapes
   finalCloseIn: 0, // PT4 M2 candidate: from this round of the final flight on (1-based), the mob is 1 harder each round (0 = off)
   finalCloseCap: 12,
-  localMob: { base: 8, perSuspicion: 0.5, max: 12 }, // S9; B3: base 8 (was 10)
+  localMob: { base: 8, perSuspicion: 0.5, max: 11 }, // S9; B3: base 8 (was 10); 2026-10-21: at most 11 (was 12)
+  // 2026-10-21: with five Entities (or more) in the raid, the Suspicion Limit is 1 lower on Easy and Standard (Hard as it
+  // is): the Foundry system's own data (module/config.mjs DGF.fivePlayers, which the book's town pages read too), not a copy
+  fivePlayers: JSON.parse(JSON.stringify(DGF.fivePlayers)),
+  // 2026-10-21 (W14): rolled towns: an obstacle that only makes sense inside (the obstacle table's `inside` rows) is rolled
+  // again when it lands at a way in, and at most one of a location's two ways in is a group obstacle (false: as before)
+  wayInRules: true,
   finalMobPerExtraEntity: 0, // S5: the final mob is not scaled by party size (draft 0.6 used 1 per Entity beyond 4)
   maxChaseRounds: 200, // a safety stop only (was 20, which ended about 1 Standard or Hard flight in 10 early and counted it as an escape)
   furyCap: 3, // overdrawAtLimit "fury": most the mob's Difficulty can rise in one final flight
@@ -494,12 +529,20 @@ export const BEFORE_REVIEW = Object.freeze({ chaseRule: "perRoll", giveUp: "neve
 export const OLD_LIMITS = Object.freeze({ labels: { easy: { limit: 11 }, standard: { limit: 11 }, hard: { limit: 15 } } });
 /** D5b: the 10-Turn night tried for Easy and Standard (Hard stays 12) with the old Limits; not adopted (the targets didn't hold, 2026-10-20). */
 export const TEN_TURNS = Object.freeze({ labels: { easy: { turns: 10, limit: 11 }, standard: { turns: 10, limit: 11 }, hard: { limit: 15 } } });
+/**
+ * The switch back to the rules before the v0.2 review's decisions (DESIGN 2026-10-21): BEFORE_REVIEW2 for the rules,
+ * OLD_REVIEW2 for its numbers (the local mob at most 12, no Limit change for five Entities, rolled towns without the
+ * way-in rules). Package V1 is both; sim/review2-check.mjs plays every option on top of them, as it was measured.
+ */
+export const BEFORE_REVIEW2 = Object.freeze({ spectralFix: "none", localOverdraw: "any", flightOverdraw: "weakness", localRoundCap: 0, localRaise: "raiseOnly" });
+export const OLD_REVIEW2 = Object.freeze({ localMob: { max: 12 }, fivePlayers: { limit: { easy: 0, standard: 0, hard: 0 } }, wayInRules: false });
 
 export const PACKAGES = {
-  P0: { title: "The rules as decided (through the outside review's package, D1–D7 with R1 and D4, and F12's Limits 9 / 10 / 13, 2026-10-20) with the current numbers", params: {}, numbers: {} },
-  V0: { title: "The rules and Limits before the outside review (through V30 and the clarity pass, 2026-10-14)", params: { ...BEFORE_REVIEW }, numbers: OLD_LIMITS },
-  P12: { title: "The outside review's package with the old Limits 11 / 11 / 15 (before F12)", params: {}, numbers: OLD_LIMITS },
-  T10: { title: "Not adopted (D5b): the package with a 10-Turn night on Easy and Standard and the old Limits", params: {}, numbers: TEN_TURNS },
+  P0: { title: "The rules as decided (through the v0.2 review's decisions of 2026-10-21: Spectral at a way in, one overdraw per local chase, the flight overdraw's own step, the local mob at most 11, six rounds at most, five Entities' Limit, any ability as a raise in a local chase, the rolled towns' ways in) with the current numbers", params: {}, numbers: {} },
+  V1: { title: "The rules before the v0.2 review's decisions (the outside review's package and Limits 9 / 10 / 13, 2026-10-20)", params: { ...BEFORE_REVIEW2 }, numbers: OLD_REVIEW2 },
+  V0: { title: "The rules and Limits before the outside review (through V30 and the clarity pass, 2026-10-14)", params: { ...BEFORE_REVIEW, ...BEFORE_REVIEW2 }, numbers: { ...OLD_REVIEW2, ...OLD_LIMITS } },
+  P12: { title: "The outside review's package with the old Limits 11 / 11 / 15 (before F12)", params: { ...BEFORE_REVIEW2 }, numbers: { ...OLD_REVIEW2, ...OLD_LIMITS } },
+  T10: { title: "Not adopted (D5b): the package with a 10-Turn night on Easy and Standard and the old Limits", params: { ...BEFORE_REVIEW2 }, numbers: { ...OLD_REVIEW2, ...TEN_TURNS } },
   N1: {
     title: "Retune tried for a party that stays together: final-flight Lead starts at 3; final mob 11 / 12 / 12; Limits 12 / 12 / 14",
     params: {},

@@ -5,13 +5,15 @@
  *  - the list: 4 items on Easy, 5 on Standard and Hard; 1, 1–2 or 2 essentials;
  *    each item from the d66 shopping table, at one of its kind's three places;
  *  - each location: 1–3 obstacles, its first in two versions (its two ways in)
- *    whose quiet ways are different traits;
+ *    whose quiet ways are different traits, neither one an inside obstacle (the table's
+ *    `inside` rows) and at most one a group obstacle (W14, 2026-10-21);
  *  - each obstacle from the d20 obstacle table, with a Difficulty its label's d20 can
  *    roll; at most one Difficulty 12 in an Easy or Standard town, two in a Hard town;
  *  - the furniture: one piece from the d6 table at one of the list's locations, behind
  *    one extra obstacle 2 harder than rolled (at most 12);
  *  - one Lantern Night custom, two villagers (who + what they're doing).
- * The way out, the lock-up, the Limit and the final mob come from the Easy, Standard or Hard table.
+ * The way out, the lock-up, the Limit (and with five players, DGF.fivePlayers) and the final mob come from the Easy,
+ * Standard or Hard table.
  * The book generator (town-pages.mjs) and the simulator (sim/premade.mjs) both read
  * the towns through loadTowns(), so they can't drift apart.
  */
@@ -33,7 +35,7 @@ function resolveObstacle(o, label, problems, where) {
   return {
     key: e.key, d20: i + 1, name: e.name,
     quiet: e.quiet, quietText: e.quietText ?? null, loud: e.loud ?? null, loudText: e.loudText ?? null,
-    group: !!e.group, difficulty: o.difficulty, watched: !!o.watched,
+    group: !!e.group, inside: !!e.inside, difficulty: o.difficulty, watched: !!o.watched,
   };
 }
 
@@ -56,6 +58,8 @@ function resolveTown(t) {
     const waysIn = (l.waysIn ?? []).map((o, k) => resolveObstacle(o, label, problems, `${where} way in ${k + 1}`));
     const then = (l.then ?? []).map((o, k) => resolveObstacle(o, label, problems, `${where} obstacle ${k + 2}`));
     if (waysIn.length === 2 && waysIn[0] && waysIn[1] && waysIn[0].quiet === waysIn[1].quiet) problems.push(`${where}: the two ways in have the same quiet way`);
+    waysIn.forEach((o, k) => { if (o?.inside) problems.push(`${where} way in ${k + 1}: "${o.key}" only makes sense inside, so it can't be a way in`); });
+    if (waysIn.filter((o) => o?.group).length > 1) problems.push(`${where}: both ways in are group obstacles (at most one may be)`);
     const count = 1 + then.length;
     if (count < 1 || count > 3) problems.push(`${where}: ${count} obstacles (a location has 1–3)`);
     let furniture = null;
@@ -96,7 +100,7 @@ function resolveTown(t) {
     custom: custom.text, customD6: DGF.festival.customs.indexOf(custom) + 1, villagers, locations,
     furnitureAt: withFurniture[0].key,
     wayOut: { difficulty: L.exit }, lockup: { difficulty: L.lockup },
-    limit: L.limit, finalMob: L.finalMob, finalEscape: L.finalEscape, map: t.map ?? null,
+    limit: L.limit, limitFive: L.limit + DGF.fivePlayers.limit[label], finalMob: L.finalMob, finalEscape: L.finalEscape, map: t.map ?? null,
     stats: {
       obstacles: rolled.length, twelves,
       watched: rolled.filter((o) => o.watched).length,

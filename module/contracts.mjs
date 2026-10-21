@@ -37,9 +37,20 @@ export const SETTINGS = Object.freeze({
   autoDrops: "autoDrops",                     // world: dropped loot waits where it fell; picking it up spends the next action (V21)
   autoAllHeld: "autoAllHeld",                 // world: everyone held at the lock-up at once ends the night: Forked (D7b)
   wayOutOncePerTurn: "wayOutOncePerTurn",     // world: the way out can be rolled once a Turn; a second try that Turn is refused (R4)
+  localOverdrawOnce: "localOverdrawOnce",     // world: one overdraw per runner per local chase; a second is refused (2026-10-21)
+  localRoundCap: "localRoundCap",             // world: a local chase lasts at most 6 rounds, then the Lead decides it (2026-10-21)
+  limitByPartySize: "limitByPartySize",       // world: with five Entities in the raid the Limit is 1 lower on Easy and Standard (2026-10-21)
+  hugePieceHeld: "hugePieceHeld",             // world: a Huge piece with a carrier in a local chase can't move (no way out) until it ends (2026-10-21)
+  demoPrompt: "demoPrompt",                   // world: offer to set up the one-shot when a GM opens a world without it
+  demoImported: "demoImported",               // world, hidden: the one-shot (the Demo compendiums) is in this world: the system version that set it up
   campaign: "campaign",                       // world: the optional campaign rules: castle upgrades (default off)
   castleUpgrades: "castleUpgrades",           // world, hidden: the castle's upgrades (the pieces brought home, three at most)
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
+});
+
+/** Settings menus (game.settings.registerMenu; a button in Configure Settings). */
+export const MENUS = Object.freeze({
+  demoImport: "demoImport"                    // GM: set up the one-shot (the Demo compendiums) in this world again
 });
 
 /** Chat-card kinds (flags["dont-get-forked"].card.kind). */

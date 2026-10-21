@@ -87,6 +87,8 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
         ...(sys.nextRollSmaller > 0 ? [{ key: "nextRollSmaller", label: t("DGF.Sheet.mark.smaller", { n: sys.nextRollSmaller }) }] : []),
         ...(sys.skipTurn > 0 ? [{ key: "skipTurn", label: t("DGF.Sheet.mark.skipTurn", { turn: sys.skipTurn }), now: sys.skipTurn === raid.turn }] : []),
         ...(sys.weaknessInPlay ? [{ key: "weaknessInPlay", label: t("DGF.Sheet.mark.weakness") }] : []),
+        // 2026-10-21: overdrawn in this final flight: its trait die one size smaller to the end of the flight, no second overdraw
+        ...(sys.overdrewInFlight ? [{ key: "overdrewInFlight", label: t("DGF.Sheet.mark.overdrawStep"), now: !!raid.hunt }] : []),
         ...(sys.pickedUpTurn ? [{ key: "pickedUp", label: t("DGF.Sheet.mark.pickedUp", { items: sys.pickedUp }), now: sys.pickedUpTurn === raid.turn }] : []),
       ],
       warnings,
@@ -161,7 +163,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
     if (!this.isEditable) return;
     const key = target.dataset.mark;
     if (key === "pickedUp") return this.document.update({ "system.pickedUpTurn": 0, "system.pickedUp": "" }); // V25
-    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false }[key];
+    const value = { nextRollSmaller: 0, skipTurn: 0, weaknessInPlay: false, overdrewInFlight: false }[key];
     if (value === undefined) return;
     return this.document.update({ [`system.${key}`]: value });
   }

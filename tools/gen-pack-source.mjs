@@ -76,7 +76,7 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
  * checks each still appears in its chapter.
  */
 export const BOOK_QUOTES = Object.freeze({
-  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty; if two defaults clash in a party, the player who chose their Entity later picks another or rolls a d6, rolling again on any Duty already taken." },
+  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off, the high d6 keeps it, and the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is where you can. Rolling a Duty at random, roll again on one that’s taken or not on the list, while a Duty that’s both free and on the list remains." },
   chase: { chapter: "16-ch06.html", html: "The row names two traits that work this round, for everyone in the chase." },
   customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way, so roll a d6 or pick a custom for each town. Customs are flavour and change no rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself." },
@@ -144,7 +144,7 @@ export function tableDocs() {
       description: `<p>${Q("obstacles")}</p>${source(8, "The Obstacle Table")}`,
       ...dieTable(20, DGF.obstacleTable.map((o) => ({
         key: o.key,
-        description: `<p><strong>${esc(o.name)}</strong>${o.group ? " <em>(group)</em>" : ""}</p><p>Quiet way: ${esc(wayText(o.quiet, o.quietText))}<br>Loud way: ${o.loud ? esc(wayText(o.loud, o.loudText)) : "—"}</p>`,
+        description: `<p><strong>${esc(o.name)}</strong>${o.group ? " <em>(group)</em>" : ""}${o.inside ? " <em>(inside)</em>" : ""}</p><p>Quiet way: ${esc(wayText(o.quiet, o.quietText))}<br>Loud way: ${o.loud ? esc(wayText(o.loud, o.loudText)) : "—"}</p>`,
       }))),
     },
     {

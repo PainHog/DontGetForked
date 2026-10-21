@@ -21,8 +21,9 @@ import { SYSTEM_ID, ACTOR_TYPES } from "./contracts.mjs";
 import { EntityData } from "./data/entity-data.mjs";
 import { EntitySheet } from "./sheets/entity-sheet.mjs";
 import { registerSettings } from "./settings.mjs";
+import { DemoImportMenu, offerDemo, importDemo, demoImportDialog } from "./apps/demo-import.mjs";
 import { registerGmOps, listenSocket, runOp, isActiveGM } from "./net/gm-ops.mjs";
-import { registerRaidOps, onRaidChange, primeRaid, seedRaid, reconcile, getRaid, raidView, mutateRaid } from "./raid/store.mjs";
+import { registerRaidOps, onRaidChange, primeRaid, seedRaid, reconcile, getRaid, raidView, mutateRaid, followPartySize } from "./raid/store.mjs";
 import { onRenderChatMessage, setYearOpener, setUpgradeOpener } from "./chat/cards.mjs";
 import { rollEntity, performRoll, spendCharge, drinkDraught } from "./dice/rolling.mjs";
 import { createEntity, newEntityFlow, onRenderActorDirectory } from "./entities/create.mjs";
@@ -52,7 +53,9 @@ Hooks.once("init", function () {
   registerSettings({
     onRaidChange: (value) => onRaidChange(value, { refresh: (state, prev) => { refreshHud(); refreshChaseTracker(state, prev); } }),
     onHudChange: (on) => onHudSetting(on),
-    onCastleChange: () => refreshHud()
+    onCastleChange: () => refreshHud(),
+    onLimitRule: () => followPartySize()?.catch?.((err) => console.error("Don't Get Forked | the party's size", err)),
+    demoMenu: DemoImportMenu
   });
   registerGmOps();
   registerRaidOps();
@@ -89,6 +92,7 @@ Hooks.once("init", function () {
       groupCheck: groupCheckDialog, tellCheck: tellCheckDialog, shoppingList: shoppingListDialog, endRaid: yearDialog,
     },
     chase: { open: openChaseTracker, current: currentChaseTracker, drive: driveChase, ChaseTracker },
+    demo: { offer: offerDemo, import: importDemo, dialog: demoImportDialog },
     runOp
   });
 });
@@ -112,6 +116,8 @@ Hooks.once("ready", async function () {
   wasActiveGM.set(game.user?.id ?? "", isActiveGM());
   if (isActiveGM()) await catchUp();
   await openHud();
+  // the one-shot ships in compendiums: offer the Storyteller to set it up in this world (once; GM only)
+  if (isActiveGM()) offerDemo().catch((err) => console.error("Don't Get Forked | setting up the one-shot failed", err));
   console.log("Don't Get Forked | Ready.");
 });
 

@@ -16,9 +16,9 @@ import { rollAbilities, otherForm, diceFor, payFor, draughtPlan, isInRaid } from
 import { runOp } from "../net/gm-ops.mjs";
 import { setting } from "../settings.mjs";
 import { getRaid } from "../raid/store.mjs";
-import { chaseRollContext, chaseWeakness, lockupDifficulty, entities } from "../raid/chase-flow.mjs";
+import { chaseRollContext, lockupDifficulty, entities, pieceHeldNow } from "../raid/chase-flow.mjs";
 import { awaitsRoll, groupEventId } from "../logic/checks.mjs";
-import { inLocalChase, chaseRise } from "../logic/chase.mjs";
+import { inLocalChase, chaseRise, overdrawsBy } from "../logic/chase.mjs";
 import { turnMarkApplies, wayOutRolled } from "../logic/raid.mjs";
 import { findEntity } from "../logic/entity.mjs";
 import { postCard } from "../chat/cards.mjs";
@@ -31,13 +31,14 @@ const isEntity = (a) => a?.type === ACTOR_TYPES.entity;
 /* ------------------------------------------------------- input -- */
 
 /**
- * The abilities an Entity may spend on a roll: its signature and Gift (rollAbilities); in the final flight also the
- * Draught, which then goes only as a raise (D6b: any ability may be spent as a raise there).
+ * The abilities an Entity may spend on a roll: its signature and Gift (rollAbilities); in a chase also the Draught,
+ * which then goes only as a raise (D6b: any ability may be spent as a raise in the final flight; 2026-10-21: on your own
+ * roll in a local chase too).
  */
-function spendable(system, hunt) {
+function spendable(system, inChase) {
   const list = rollAbilities(system);
   const sig = findEntity(system?.entityKey)?.signature;
-  if (hunt && sig?.effect === "form") list.unshift({ slot: "signature", name: sig.name, effect: "form", trait: null, noLoot: false, watchedOnly: false });
+  if (inChase && sig?.effect === "form") list.unshift({ slot: "signature", name: sig.name, effect: "form", trait: null, noLoot: false, watchedOnly: false });
   return list;
 }
 
@@ -45,23 +46,26 @@ function spendable(system, hunt) {
  * Every ability that could go on this actor's roll: its own (signature and Gift), then the other Entities' (helping
  * costs the helper's charge, Chapter 3). D6b: once the whole town hunts, each one can also be spent as a raise
  * (`canRaise`, the dialog's "or as a raise" tick); one that can do nothing else on a flight roll (an approach of
- * one's own, the Draught, a friend's approach) goes only as a raise (`raiseOnly`).
+ * one's own, the Draught, a friend's approach) goes only as a raise (`raiseOnly`). 2026-10-21: in a local chase too,
+ * the runner's own abilities (the ones that never work in a chase included); a friend's helps nobody there.
  */
 export function abilityChoices(actor, raid = getRaid()) {
   const hunt = !!raid.hunt;
+  const local = !hunt && inLocalChase(raid.chase, actor.id);
   const entry = (a, owner, own) => ({
     ...a,
     id: `ability:${owner.id}:${a.slot}`,
     payerId: owner.id,
     payerName: owner.name,
     own,
-    canRaise: hunt && a.effect !== "raise",
-    raiseOnly: hunt && (a.effect === "form" || a.effect === "open"),
-    // "while your Weakness is in play, however it came, you can't overdraw" (the chase's timing counts too)
-    payer: { charges: owner.system.charges?.value ?? 0, weaknessInPlay: !!owner.system.weaknessInPlay || (raid.hunt && chaseWeakness(owner.id, raid)), overdrewInFlight: !!owner.system.overdrewInFlight,
+    canRaise: (hunt || (local && own)) && a.effect !== "raise",
+    raiseOnly: (hunt || (local && own)) && (a.effect === "form" || a.effect === "open"),
+    // 2026-10-21: once per flight (B3), and once per local chase (overdrawsBy: on its rolls or from the sheet)
+    payer: { charges: owner.system.charges?.value ?? 0, overdrewInFlight: !!owner.system.overdrewInFlight,
+      overdrewInChase: local && own && overdrawsBy(raid.chase, owner.id) > 0,
       carrying: (owner.system.carried?.length ?? 0) > 0 || !!owner.system.carryingFurniture }, // V17: a helper is at the same place
   });
-  const own = spendable(actor.system, hunt).map((a) => entry(a, actor, true));
+  const own = spendable(actor.system, hunt || local).map((a) => entry(a, actor, true));
   // in a local chase, abilities help only your own roll; in the final flight, only those fleeing can help (and a
   // friend's approach of its own, or its Draught, only as a raise)
   const flight = raid.hunt && raid.chase && !raid.chase.outcome && raid.chase.kind === "final" ? new Set(raid.chase.members.map((m) => m.actorId)) : null;
@@ -112,6 +116,8 @@ export function buildInput(actor, values, raid = getRaid()) {
     watched: !!values.watched,
     wayOut: !!values.wayOut,
     wayOutRolled: !!values.wayOut && setting(SETTINGS.wayOutOncePerTurn) && wayOutRolled(raid), // R4: once a Turn
+    pieceHeld: !!values.wayOut && setting(SETTINGS.hugePieceHeld) && pieceHeldNow(raid), // W4 (2026-10-21): the Huge piece waits for the chase
+    localOverdrawOnce: setting(SETTINGS.localOverdrawOnce), // 2026-10-21: one overdraw per runner per local chase
     partyPerks: values.wayOut ? entities().filter((a) => a.id !== actor.id && a.system.status !== "captured").map((a) => a.system.perk) : [], // Fetch (B5)
     chase: !!values.chase,
     hunt: raid.hunt,
@@ -170,7 +176,10 @@ function dialogContext(actor, values, raid) {
   const duty = DGF.duties.find((d) => d.key === sys.duty);
   const notices = [];
   if (raid.hunt) notices.push(t("DGF.Roll.notice.hunt"), t("DGF.Roll.notice.flightRaise"));
+  else if (inLocalChase(raid.chase, actor.id)) notices.push(t("DGF.Roll.notice.localRaise"));
+  if (raid.hunt && sys.overdrewInFlight) notices.push(t("DGF.Roll.notice.overdrawStep"));
   if (setting(SETTINGS.wayOutOncePerTurn) && wayOutRolled(raid)) notices.push(t("DGF.Roll.notice.wayOutRolled"));
+  if (setting(SETTINGS.hugePieceHeld) && pieceHeldNow(raid)) notices.push(t("DGF.Roll.notice.pieceHeld"));
   if (sys.carryingFurniture) notices.push(t("DGF.Roll.notice.carrying"));
   if (sys.nextRollSmaller > 0) notices.push(t("DGF.Roll.notice.smaller", { n: sys.nextRollSmaller }));
   if (sys.weaknessInPlay) notices.push(t("DGF.Roll.notice.weakness"));
@@ -314,7 +323,7 @@ export async function performRoll(actor, values) {
   if (!plan.ok) return { ok: false, plan };
   const autoCharges = setting(SETTINGS.autoCharges);
   // Helpers' charges are spent by the GM from the posted card (the roller doesn't own their Entities): see below.
-  const helpersOwe = plan.payments.some((p) => !p.own && ((autoCharges && p.spend > 0) || p.weakness));
+  const helpersOwe = plan.payments.some((p) => !p.own && ((autoCharges && p.spend > 0) || p.step));
 
   const traitRoll = await new Roll(`1d${plan.traitDie}`).evaluate();
   const secondRoll = await new Roll(`1d${plan.secondDie}`).evaluate();
@@ -331,7 +340,7 @@ export async function performRoll(actor, values) {
     after = chargesAfter({ value: before, start: sys.charges.start + (sys.charges.extra ?? 0), spent: own?.spend ?? 0, chargeBack: res.chargeBack });
     if (after !== before) update["system.charges.value"] = after;
   }
-  if (own?.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
+  if (own?.step) update["system.overdrewInFlight"] = true; // 2026-10-21: its own step down from the next roll; once per flight (B3)
   if (plan.consumeSmaller) update["system.nextRollSmaller"] = 0;
   let formTo = "";
   if (res.formShift && setting(SETTINGS.autoForm)) {
@@ -360,7 +369,7 @@ export async function performRoll(actor, values) {
     diffParts: plan.diffParts, downParts: plan.downParts, raises: plan.raises, duty: plan.duty, perkRaise: plan.perkRaise, open: plan.open, hidden: plan.hidden,
     loud: plan.loud, watched: plan.watched, wayOut: plan.wayOut, chase: plan.chase, hunt: plan.hunt,
     abilities: plan.abilities.map((a) => ({ name: a.name, effect: a.effect, trait: a.trait, payerId: a.payerId, payerName: a.payerName, own: a.payerId === actor.id, asRaise: !!a.asRaise })),
-    payments: plan.payments.map((p) => ({ payerId: p.payerId, payerName: p.payerName, own: p.own, uses: p.uses, spend: p.spend, overdraw: p.overdraw, weakness: p.weakness })),
+    payments: plan.payments.map((p) => ({ payerId: p.payerId, payerName: p.payerName, own: p.own, uses: p.uses, spend: p.spend, overdraw: p.overdraw, step: p.step })),
     warnings: plan.warnings.map((w) => w.code),
     traitFace: res.traitFace, secondFace: res.secondFace, total: res.total, band: res.band, critical: res.critical,
     showed: res.showed, show: res.show, hiddenShow: res.hiddenShow, triggers: res.triggers, suspicion: res.suspicion,
@@ -390,7 +399,7 @@ export async function performRoll(actor, values) {
 const inTrackedLocal = (actor, raid) => inLocalChase(raid.chase, actor.id);
 
 async function confirmOverdraw(actor, pay, raid = getRaid()) {
-  const key = pay.weakness ? "DGF.Overdraw.weakness" : inTrackedLocal(actor, raid) ? "DGF.Overdraw.chase" : "DGF.Overdraw.suspicion";
+  const key = pay.step ? "DGF.Overdraw.step" : inTrackedLocal(actor, raid) ? "DGF.Overdraw.chase" : "DGF.Overdraw.suspicion";
   return foundry.applications.api.DialogV2.confirm({
     window: { title: t("DGF.Overdraw.title") },
     content: `<p>${t(key, { name: foundry.utils.escapeHTML(actor.name), n: DGF.suspicion.overdraw })}</p>`,
@@ -416,36 +425,43 @@ async function postAbilityCard(actor, fields, raid) {
   return message;
 }
 
+/** 2026-10-21: what one overdraw per local chase needs to know about this Entity (the switch localOverdrawOnce). */
+function localOnce(actor, raid) {
+  const on = !raid.hunt && setting(SETTINGS.localOverdrawOnce) && inTrackedLocal(actor, raid);
+  return { localChase: on, overdrewInChase: on && overdrawsBy(raid.chase, actor.id) > 0 };
+}
+const refusalCode = (refusal) => (refusal === "onceLocal" ? "overdrawOnceLocal" : "overdrawOnce");
+
 /** The sheet's "spend a charge": one use of an ability outside the roll dialog (overdraw at zero). */
 export async function spendCharge(actor) {
   if (!isEntity(actor) || !actor.isOwner) return null;
   const raid = getRaid();
   const sys = actor.system;
-  const pay = payFor({ charges: sys.charges.value, uses: 1, hunt: raid.hunt, weaknessInPlay: sys.weaknessInPlay || (raid.hunt && chaseWeakness(actor.id, raid)), overdrewInFlight: sys.overdrewInFlight });
-  if (!pay.allowed) { ui.notifications.warn(planText({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
+  const pay = payFor({ charges: sys.charges.value, uses: 1, hunt: raid.hunt, overdrewInFlight: sys.overdrewInFlight, ...localOnce(actor, raid) });
+  if (!pay.allowed) { ui.notifications.warn(planText({ code: refusalCode(pay.refusal), name: actor.name })); return null; }
   if (pay.overdraw && !(await confirmOverdraw(actor, pay, raid))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const update = {};
   if (autoCharges && pay.spend) update["system.charges.value"] = sys.charges.value - pay.spend;
-  if (pay.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; }
+  if (pay.step) update["system.overdrewInFlight"] = true; // 2026-10-21: its own step down from the next roll
   const before = sys.charges.value;
   if (Object.keys(update).length) await actor.update(update);
-  return postAbilityCard(actor, { action: "spend", spend: pay.spend, overdraw: pay.overdraw, suspicion: pay.suspicion, weakness: pay.weakness, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
+  return postAbilityCard(actor, { action: "spend", spend: pay.spend, overdraw: pay.overdraw, suspicion: pay.suspicion, step: pay.step, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
 }
 
 /** The Draught (Jekyll & Hyde): change form; one charge, free back to Jekyll with Practised Hand. */
 export async function drinkDraught(actor) {
   if (!isEntity(actor) || !actor.isOwner) return null;
   const raid = getRaid();
-  const plan = draughtPlan(actor.system, { hunt: raid.hunt });
+  const plan = draughtPlan(actor.system, { hunt: raid.hunt, ...localOnce(actor, raid) });
   if (!plan) return null;
-  if (!plan.allowed) { ui.notifications.warn(planText({ code: plan.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: actor.name })); return null; }
+  if (!plan.allowed) { ui.notifications.warn(planText({ code: refusalCode(plan.refusal), name: actor.name })); return null; }
   if (plan.overdraw && !(await confirmOverdraw(actor, plan, raid))) return null;
   const autoCharges = setting(SETTINGS.autoCharges);
   const before = actor.system.charges.value;
   const update = { "system.form": plan.to, "system.traits": plan.traits };
   if (autoCharges && plan.spend) update["system.charges.value"] = before - plan.spend;
-  if (plan.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; }
+  if (plan.step) update["system.overdrewInFlight"] = true; // 2026-10-21: its own step down from the next roll
   await actor.update(update);
-  return postAbilityCard(actor, { action: "draught", name: actor.system.view?.signature?.name ?? "", formFrom: plan.from, formTo: plan.to, cost: plan.cost, spend: plan.spend, overdraw: plan.overdraw, suspicion: plan.suspicion, weakness: plan.weakness, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
+  return postAbilityCard(actor, { action: "draught", name: actor.system.view?.signature?.name ?? "", formFrom: plan.from, formTo: plan.to, cost: plan.cost, spend: plan.spend, overdraw: plan.overdraw, suspicion: plan.suspicion, step: plan.step, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
 }

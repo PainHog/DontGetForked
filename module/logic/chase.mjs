@@ -12,9 +12,11 @@
  *             members: [{ actorId, name, entityKey, perk, timing }],   // those still running
  *             gaveUp: [{ actorId, name, round }],                       // D2: gave up (captured, no roll)
  *             lead, start, escape, round, mob, ground: { face, key, traits } | null,
+ *             roundCap,   // 2026-10-21: a local chase's most rounds (6; 0 = no cap: the switch off, the final flight, an older chase)
+ *             capped,     // the round cap ended it (escaped with a Lead of 2 or more, otherwise cornered)
  *             rolls: { [actorId]: { messageId, band, critical, rise, riseKeys, overdraws } },
- *             history: [{ round, face, key, mob, rolls: [{ actorId, name, band, critical, rise, riseKeys, overdraws }], move, lead }],
- *             extraOverdraws: [{ messageId, n }],   // overdraws made in the chase outside a chase roll (the sheet)
+ *             history: [{ round, face, key, mob, rolls: [{ actorId, name, band, critical, rise, riseKeys, overdraws }], move, lead, capped }],
+ *             extraOverdraws: [{ messageId, n, actorId }],   // overdraws made in the chase outside a chase roll (the sheet)
  *             endRise: null | { rise, keys, overdraws, overdrawRise, total, applied, beforeHunt },
  *             outcome: "" | "escaped" | "cornered" | "gaveUp" | "ended" | "dropped" }
  *
@@ -29,6 +31,10 @@
  * D1 (2026-10-19): a local chase's mob is set when it starts and stays put, and the
  * chase raises Suspicion once, when it ends, by the biggest trigger among all its rolls
  * (every runner's), plus +2 for each overdraw made in it (D3): chaseRise().
+ * 2026-10-21 (the v0.2 review's decisions): the local mob is at most 11 (rules.mjs); a local chase lasts at most 6
+ * rounds, then a Lead of 2 or more escapes and anything less is cornered (`roundCap`, resolveRound); a runner overdraws
+ * at most once in a local chase (overdrawsBy, read by the roll plan); a runner gives up only once the round's ground is
+ * read (canGiveUp); a Huge piece one of whose carriers is caught can't move until the chase is over (holdsPiece).
  */
 import { DGF } from "../config.mjs";
 import { leadMove, majorityMove, localMobDifficulty, weaknessInPlay } from "./rules.mjs";
@@ -74,7 +80,7 @@ export function finalEscape(label = "standard") {
  * Final flight: Lead 2, escape at the label's number (B3: 5 on Easy and Standard, 6 on Hard), the mob the
  * label's; Fetch: it starts at Lead 3 (DGF.perkRules finalLead).
  */
-export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "", label = "standard", suspicion = 0 }) {
+export function newChase({ id, kind = "local", cause = "caught", members = [], turn = 0, groupId = "", where = "", label = "standard", suspicion = 0, roundCap = DGF.localRoundCap.rounds }) {
   if (!CHASE_KINDS.includes(kind)) throw new Error(`unknown chase kind: ${kind}`);
   if (!id) throw new Error("a chase needs an id");
   const L = DGF.lead;
@@ -86,6 +92,8 @@ export function newChase({ id, kind = "local", cause = "caught", members = [], t
     start: 0,
     escape: kind === "final" ? finalEscape(label) : L.localEscape,
     round: 1, mob: null, ground: null, rolls: {}, history: [], extraOverdraws: [], endRise: null, outcome: "",
+    // 2026-10-21: a local chase lasts at most this many rounds (0: no cap, the Storyteller's switch off); never the final flight
+    roundCap: kind === "local" ? Math.max(0, Math.trunc(Number(roundCap)) || 0) : 0, capped: false,
   };
   // Night Runner: "when you flee alone, your local chase starts at Lead 2" (F14); Fetch: the final flight starts at Lead 3.
   const perkLead = Math.max(0, ...chase.members.map((m) => perkValue(chase, m, kind === "final" ? "finalLead" : "localLead")));
@@ -154,20 +162,21 @@ export function traitsFor(chase, actorId) {
 }
 
 /**
- * Is the member's Weakness in play this round? By its timing (C3: Always, Soon), or, in
- * the final flight, because it overdrew (`overdrawn`: the Entity's Weakness mark, S1).
+ * Is the member's Weakness in play this round? By its timing (C3: Always, Soon), or, in the final flight, because the
+ * Entity carries the Weakness mark (`marked`: an older world's, from before 2026-10-21, when an overdraw in the flight
+ * brought the Weakness; now an overdraw costs a step down of its own, the roll plan's).
  */
-export function weaknessFor(chase, actorId, { overdrawn = false } = {}) {
+export function weaknessFor(chase, actorId, { marked = false } = {}) {
   const m = memberIn(chase, actorId);
   if (!m) return false;
-  return weaknessInPlay({ timing: m.timing, round: chase.round, overdrawn: overdrawn && chase.kind === "final" });
+  return weaknessInPlay({ timing: m.timing, round: chase.round, marked: marked && chase.kind === "final" });
 }
 
 /**
  * What a member rolls now (for the roll dialog and the roll plan), or why it can't.
  * Returns { ok, reason?, chaseId, kind, round, difficulty, traits, weakness, ground, local }.
  */
-export function rollContext(chase, actorId, { overdrawn = false } = {}) {
+export function rollContext(chase, actorId, { marked = false } = {}) {
   const base = { ok: false, chaseId: chase?.id ?? "", kind: chase?.kind ?? "", round: chase?.round ?? 0 };
   if (!isRunning(chase)) return { ...base, reason: "noChase" };
   if (!memberIn(chase, actorId)) return { ...base, reason: "notInChase" };
@@ -175,7 +184,7 @@ export function rollContext(chase, actorId, { overdrawn = false } = {}) {
   if (chase.rolls[actorId]) return { ...base, reason: "alreadyRolled" };
   return {
     ...base, ok: true, difficulty: chase.mob, traits: traitsFor(chase, actorId),
-    weakness: weaknessFor(chase, actorId, { overdrawn }), ground: { ...chase.ground }, local: chase.kind === "local",
+    weakness: weaknessFor(chase, actorId, { marked }), ground: { ...chase.ground }, local: chase.kind === "local",
   };
 }
 
@@ -208,13 +217,36 @@ export function recordRoll(chase, actorId, { messageId = "", round, band, critic
 
 /**
  * D1 + D3: an overdraw made in a local chase outside a chase roll (an ability used from the sheet) adds +2 to the
- * chase's one rise. The same message again is a no-op.
+ * chase's one rise (`actorId`: whose, for the one overdraw a runner may make in a local chase). The same message again
+ * is a no-op.
  */
-export function addOverdraw(chase, { messageId = "", n = 1 }) {
+export function addOverdraw(chase, { messageId = "", n = 1, actorId = "" }) {
   if (!isRunning(chase) || chase.kind !== "local") return chase;
   const list = chase.extraOverdraws ?? [];
   if (messageId && list.some((o) => o.messageId === messageId)) return chase;
-  return { ...chase, extraOverdraws: [...list, { messageId, n: Math.max(0, Math.trunc(Number(n)) || 0) }] };
+  return { ...chase, extraOverdraws: [...list, { messageId, n: Math.max(0, Math.trunc(Number(n)) || 0), actorId: String(actorId ?? "") }] };
+}
+
+/**
+ * 2026-10-21 (Chapter 6, The Local Chase): a runner overdraws at most once in a local chase. How many overdraws has this
+ * Entity made in this chase so far: on its rolls (every round's) and from the sheet? (0 for a final flight.)
+ */
+export function overdrawsBy(chase, actorId) {
+  if (!chase || chase.kind !== "local" || !actorId) return 0;
+  const rolls = [...(chase.history ?? []).flatMap((h) => (h.rolls ?? []).filter((r) => r.actorId === actorId)), ...(chase.rolls?.[actorId] ? [chase.rolls[actorId]] : [])];
+  const extra = (chase.extraOverdraws ?? []).filter((o) => o.actorId === actorId);
+  return [...rolls, ...extra].reduce((n, r) => n + (r.overdraws ?? r.n ?? 0), 0);
+}
+
+/**
+ * 2026-10-21 (Chapter 4, Carrying; W4): a Huge piece whose carriers are split by a local chase (one caught, the other
+ * not) stays with the other carrier and can't move until the chase is over. `carrierIds`: the Entities carrying the
+ * piece now (in the raid, not captured). Held while the chase runs with a carrier in it and a carrier outside it.
+ */
+export function holdsPiece(chase, carrierIds = []) {
+  if (!isRunning(chase) || chase.kind !== "local") return false;
+  const ids = [...new Set(carrierIds)];
+  return ids.some((id) => !!memberIn(chase, id)) && ids.some((id) => !memberIn(chase, id));
 }
 
 /**
@@ -237,13 +269,14 @@ export function chaseRise(chase) {
 }
 
 /**
- * D2 (Chapter 6, Giving up): may this runner give up now? Only in a running local chase, at the start of a round
- * (before anyone has rolled in it). Returns { ok, reason? }.
+ * D2 (Chapter 6, Giving up): may this runner give up now? Only in a running local chase, at the start of a round:
+ * once the round's ground is read and before anyone has rolled in it. Returns { ok, reason? }.
  */
 export function canGiveUp(chase, actorId) {
   if (!isRunning(chase)) return { ok: false, reason: "noChase" };
   if (chase.kind !== "local") return { ok: false, reason: "notLocal" };
   if (!memberIn(chase, actorId)) return { ok: false, reason: "notInChase" };
+  if (!chase.ground) return { ok: false, reason: "noGround" };
   if (Object.keys(chase.rolls ?? {}).length) return { ok: false, reason: "roundStarted" };
   return { ok: true };
 }
@@ -282,23 +315,41 @@ function applyLead(chase, delta) {
 }
 
 /**
+ * 2026-10-21 (Chapter 6, The Local Chase): a local chase still running after its last round (`roundCap`, 6) ends: a Lead
+ * of 2 or more escapes, anything less is cornered. The outcome the cap gives after this round's move, or "".
+ */
+export function capOutcome(chase, lead = chase.lead) {
+  if (chase?.kind !== "local" || !(chase.roundCap > 0) || chase.round < chase.roundCap) return "";
+  return lead >= DGF.localRoundCap.escapeAt ? "escaped" : "cornered";
+}
+
+/** 2026-10-21: the rounds left before the cap decides a local chase (counting this one), or null with no cap. */
+export function roundsLeft(chase) {
+  return chase?.kind === "local" && chase.roundCap > 0 ? Math.max(0, chase.roundCap - chase.round + 1) : null;
+}
+
+/**
  * Resolve the round once everyone has rolled: move the Lead, then either end the
- * chase or begin the next round (the ground is rolled again).
- * Returns { chase, move, outcome }.
+ * chase or begin the next round (the ground is rolled again). 2026-10-21: after a
+ * local chase's last round (the cap) the Lead decides it (capOutcome).
+ * Returns { chase, move, outcome, capped }.
  */
 export function resolveRound(chase) {
   if (!roundDone(chase)) throw new Error("not everyone has rolled this round");
   const move = roundMove(chase);
-  const { lead, outcome } = applyLead(chase, move);
+  const moved = applyLead(chase, move);
+  const lead = moved.lead;
+  const capped = !moved.outcome && !!capOutcome(chase, lead);
+  const outcome = moved.outcome || capOutcome(chase, lead);
   const entry = {
     round: chase.round, face: chase.ground.face, key: chase.ground.key, mob: chase.mob,
     rolls: chase.members.map((m) => ({ actorId: m.actorId, name: m.name, ...chase.rolls[m.actorId] })),
-    move, lead,
+    move, lead, ...(capped ? { capped: true } : {}),
   };
-  const next = { ...chase, lead, history: [...chase.history, entry], outcome };
+  const next = { ...chase, lead, history: [...chase.history, entry], outcome, ...(capped ? { capped: true } : {}) };
   // the next round rolls a new ground; the mob stays what it was set to when the chase started (D1)
   if (!outcome) Object.assign(next, { round: chase.round + 1, ground: null, rolls: {} });
-  return { chase: next, move, outcome };
+  return { chase: next, move, outcome, capped };
 }
 
 /** The Storyteller moves the Lead by hand (a correction, or the chase run without automation). */

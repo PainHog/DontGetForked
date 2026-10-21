@@ -92,7 +92,8 @@ function rollContext(card) {
   const payments = (card.payments ?? []).filter((p) => p.uses > 0).map((p) => {
     const bits = [];
     if (p.spend) bits.push(t("DGF.Card.spent", { name: p.payerName, n: p.spend }));
-    if (p.overdraw) bits.push(t(p.weakness ? "DGF.Card.overdrawWeakness" : card.localChase ? "DGF.Card.overdrawChase" : "DGF.Card.overdraw", { name: p.payerName }));
+    // a card from before 2026-10-21 says the overdraw brought the Weakness (p.weakness); since, it costs a step down (p.step)
+    if (p.overdraw) bits.push(t(p.step ? "DGF.Card.overdrawStep" : p.weakness ? "DGF.Card.overdrawWeakness" : card.localChase ? "DGF.Card.overdrawChase" : "DGF.Card.overdraw", { name: p.payerName }));
     return bits.join(", ");
   });
   const status = card.hunt ? t("DGF.Card.huntStops")
@@ -161,7 +162,7 @@ function abilityContext(card) {
       : t("DGF.Card.spendCharge", { name: card.actorName }),
     charges: card.autoCharges ? t("DGF.Card.charges", { from: card.chargesBefore, to: card.chargesAfter }) : "",
     free: card.cost === 0 ? t("DGF.Card.free") : "",
-    overdraw: card.overdraw ? t(card.weakness ? "DGF.Card.overdrawWeakness" : card.chaseId ? "DGF.Card.overdrawChase" : "DGF.Card.overdrawSheet", { name: card.actorName }) : "",
+    overdraw: card.overdraw ? t(card.step ? "DGF.Card.overdrawStep" : card.weakness ? "DGF.Card.overdrawWeakness" : card.chaseId ? "DGF.Card.overdrawChase" : "DGF.Card.overdrawSheet", { name: card.actorName }) : "",
     suspicionLine: card.suspicion > 0 ? t("DGF.Card.suspicion", { n: card.suspicion, why: t("DGF.Trigger.overdraw") }) : "",
     suspicionStatus: card.suspicion > 0 ? status : "",
   };
@@ -184,8 +185,10 @@ function raidContext(card) {
       : "",
     left: card.event === "home" && card.leftNames?.length ? t("DGF.RaidCard.home.left", { names: card.leftNames.join(", ") }) : "",
     piece: card.event === "backInTown" && card.pieceBack ? t("DGF.RaidCard.backInTown.piece") : "",
-    // V19: who Spectral gets past a group obstacle, and who carries and so rolls
+    // V19: who Spectral gets past a group obstacle, and who carries and so rolls; 2026-10-21: only at a way in
     passed: card.passed?.length ? t("DGF.RaidCard.group.passed", { names: card.passed.join(", ") }) : "",
+    wayIn: card.event === "group" && card.wayIn ? t("DGF.RaidCard.group.wayIn") : "",
+    spectralNotWayIn: card.spectralNotWayIn?.length ? t("DGF.RaidCard.group.spectralNotWayIn", { names: card.spectralNotWayIn.join(", ") }) : "",
     // campaign play: the castle's upgrades, and who has their extra charges this raid
     castle: card.event === "castle" ? t("DGF.RaidCard.castle.list", { n: card.upgrades?.length ?? 0, max: DGF.campaign.maxUpgrades, names: (card.upgrades ?? []).join(", ") }) : "",
     extras: card.event === "castle" && card.extras?.length ? t("DGF.RaidCard.castle.extras", { list: card.extras.map((x) => `${x.name} +${x.n}`).join(", ") }) : "",
@@ -218,6 +221,9 @@ function chaseContext(card) {
     headline: t(`DGF.Chase.event.${card.event}`, { kind: kindLabel, round: card.round, names: (card.names ?? []).join(", ") }),
     who: card.event === "start" ? t("DGF.Chase.who", { names: (card.members ?? []).join(", ") }) : "",
     start: card.event === "start" ? t("DGF.Chase.startText", { lead: card.lead, escape: card.escape, cause: card.cause ? t(`DGF.Chase.cause.${card.cause}`) : "" }) : "",
+    // 2026-10-21: a local chase lasts at most 6 rounds; after the last, the Lead decides it
+    capLine: card.event === "start" && card.chaseKind === "local" && card.roundCap > 0 ? t("DGF.Chase.capText", { rounds: card.roundCap, lead: DGF.localRoundCap.escapeAt })
+      : card.capped && card.outcome ? t("DGF.Chase.cappedText", { rounds: card.roundCap || card.round, lead: card.lead, need: DGF.localRoundCap.escapeAt }) : "",
     // D1: the local mob is set when the chase starts
     mobSet: card.event === "start" && card.chaseKind === "local" && card.mob ? t("DGF.Chase.mobSet", { mob: card.mob }) : "",
     // D2: a runner gave up

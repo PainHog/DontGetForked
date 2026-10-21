@@ -8,7 +8,8 @@
  * Trouble at a watched obstacle is caught together and flees together on one
  * shared Lead (Chapter 5, Getting Caught).
  *
- *   group = { id, label, turn, members: [{ actorId, name }], rolls: { [actorId]: { messageId, caught } }, open }
+ *   group = { id, label, turn, wayIn, members: [{ actorId, name }], rolls: { [actorId]: { messageId, caught } }, open }
+ *   (wayIn: the group obstacle is a way in, a location's first obstacle: where Spectral works, 2026-10-21)
  *
  * Tell check (Chapter 5, C4): the first time anyone reaches each watched location
  * (the way out and the lock-up included), check once, however the party has
@@ -31,23 +32,27 @@ export function groupEventId(groupId) {
 
 /**
  * V19 Spectral (A Ghost): "you get past group obstacles without rolling, at no action, even in a Turn you move,
- * unless you carry loot or furniture". Does this Entity get past a group obstacle without rolling now?
+ * unless you carry loot or furniture"; 2026-10-21: only at a way in (a location's first obstacle; `wayIn`). Does this
+ * Entity get past this group obstacle without rolling now? (At a way in that is the location's only obstacle she takes
+ * the item, and past a group way in she stays past if the others pick the other way in: the table keeps both.)
  */
-export function spectralPasses(system) {
-  return !!perkRule(system?.perk).groupPass && !((system?.carried?.length ?? 0) > 0 || system?.carryingFurniture);
+export function spectralPasses(system, { wayIn = false } = {}) {
+  const r = perkRule(system?.perk);
+  if (!r.groupPass || (r.wayInOnly && !wayIn)) return false;
+  return !((system?.carried?.length ?? 0) > 0 || system?.carryingFurniture);
 }
 
 /**
  * Open a group check for these Entities ([{ actorId, name, passes }], at least two). A member that `passes`
  * (Spectral, carrying nothing) is past without rolling: it isn't waited for and can't be caught.
  */
-export function newGroup({ id, label = "", turn = 0, members = [] }) {
+export function newGroup({ id, label = "", turn = 0, members = [], wayIn = false }) {
   if (!id) throw new Error("a group check needs an id");
   const seen = new Set();
   const picked = members.filter((m) => m?.actorId && !seen.has(m.actorId) && seen.add(m.actorId));
   if (picked.length < 2) throw new Error("a group check is several Entities rolling together");
   const rolls = Object.fromEntries(picked.filter((m) => m.passes).map((m) => [m.actorId, { messageId: "", caught: false, passed: true }]));
-  return { id, label, turn, members: picked.map((m) => ({ actorId: m.actorId, name: m.name ?? "" })), rolls, open: true };
+  return { id, label, turn, wayIn: !!wayIn, members: picked.map((m) => ({ actorId: m.actorId, name: m.name ?? "" })), rolls, open: true };
 }
 
 /** Is this Entity in the open group check and still to roll? */

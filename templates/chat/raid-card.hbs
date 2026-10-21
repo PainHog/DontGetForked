@@ -5,8 +5,10 @@
   {{#if items.length}}<ul class="dgf-list">{{#each items}}<li>{{name}}{{#if note}} <span class="dgf-card-note">({{note}})</span>{{/if}}</li>{{/each}}</ul>{{/if}}
   {{#if left}}<p class="dgf-card-caught">{{left}}</p>{{/if}}
   {{#if piece}}<p class="dgf-card-meta">{{piece}}</p>{{/if}}
+  {{#if wayIn}}<p class="dgf-card-meta">{{wayIn}}</p>{{/if}}
   {{#if passed}}<p class="dgf-card-meta">{{passed}}</p>{{/if}}
   {{#if spectralRolls}}<p class="dgf-card-meta">{{spectralRolls}}</p>{{/if}}
+  {{#if spectralNotWayIn}}<p class="dgf-card-meta">{{spectralNotWayIn}}</p>{{/if}}
   {{#if castle}}<p>{{castle}}</p>{{/if}}
   {{#if extras}}<p class="dgf-card-meta">{{extras}}</p>{{/if}}
   <div class="dgf-card-actions"></div>

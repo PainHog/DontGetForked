@@ -143,10 +143,21 @@ export function majorityMove(results) {
   return d >= 2 ? 2 : d <= -2 ? -2 : d;
 }
 
-/** CORE-RULES Chases: the local mob's Difficulty (B3: 8 + half the Suspicion, at most 12), worked out when the chase starts (D1). */
+/** CORE-RULES Chases: the local mob's Difficulty (B3: 8 + half the Suspicion, rounded down; at most 11 since 2026-10-21), worked out when the chase starts (D1). */
 export function localMobDifficulty(suspicion) {
   const M = DGF.localMob;
   return Math.min(M.max, M.base + Math.floor(suspicion * M.perSuspicion));
+}
+
+/**
+ * Chapters 5 and 8: the raid's Suspicion Limit, by the town's label; with five Entities in the raid (or more) it is 1
+ * lower on Easy and Standard (2026-10-21, DGF.fivePlayers; Hard as it is). `partySize` 0 (unknown) counts as fewer.
+ */
+export function suspicionLimit(label, partySize = 0) {
+  const L = DGF.labels[label];
+  if (!L) throw new Error(`unknown difficulty: ${label}`);
+  const F = DGF.fivePlayers;
+  return L.limit + (partySize >= F.size ? (F.limit[label] ?? 0) : 0);
 }
 
 /**
@@ -247,10 +258,23 @@ export function obstacleOn(d20) {
   return o;
 }
 
-/** C18: a location's second way in: roll again (`rollD20` gives faces) until its quiet trait differs from the first's. */
+/**
+ * C18 + W14 (2026-10-21): a location's first way in: roll again (`rollD20` gives faces) while it is an obstacle that only
+ * makes sense inside (the table's `inside` rows).
+ */
+export function firstWayIn(rollD20) {
+  let o;
+  do o = obstacleOn(rollD20()); while (o.inside);
+  return o;
+}
+
+/**
+ * C18: a location's second way in: roll again (`rollD20` gives faces) until its quiet trait differs from the first's;
+ * W14 (2026-10-21): and while it is an inside obstacle, or a group obstacle when the first is one (at most one of the two is).
+ */
 export function secondWayIn(first, rollD20) {
   let o;
-  do o = obstacleOn(rollD20()); while (o.quiet === first.quiet);
+  do o = obstacleOn(rollD20()); while (o.quiet === first.quiet || o.inside || (first.group && o.group));
   return o;
 }
 
@@ -268,11 +292,11 @@ export function tellGoesOff(face) {
 
 /**
  * C3 (B3: the Dawn timing was dropped): is a Weakness in play this chase round (1-based)?
- * "always" from round 1, "soon" from round 3. An overdraw in the final flight puts
- * any Weakness in play (S1), passed as `overdrawn`.
+ * "always" from round 1, "soon" from round 3. `marked`: the Entity's Weakness mark (an older world's: until
+ * 2026-10-21 an overdraw in the final flight brought the Weakness; now it costs a step down of its own).
  */
-export function weaknessInPlay({ timing, round, overdrawn = false }) {
-  if (overdrawn) return true;
+export function weaknessInPlay({ timing, round, marked = false }) {
+  if (marked) return true;
   if (timing === "always") return true;
   if (timing === "soon") return round >= DGF.weaknessSoonRound;
   throw new Error(`unknown Weakness timing: ${timing}`);

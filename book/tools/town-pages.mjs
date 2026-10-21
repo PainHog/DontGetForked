@@ -9,7 +9,7 @@
  *
  * Everything in a town's block restates the approved tables: the custom, the villagers,
  * the list, the furniture, each obstacle's name and ways as printed in Chapter 8, and the
- * label's numbers from the Easy, Standard or Hard table. The hand-written parts of the chapter (its
+ * label's numbers from the Easy, Standard or Hard table (the Limit with five players too, where it differs). The hand-written parts of the chapter (its
  * opener and the example of play) sit outside the markers and are never touched.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -59,7 +59,7 @@ export function townBlock(t, { newPage }) {
 <ol class="town-list">${list}</ol>
 <p><strong>The furniture:</strong> ${low(host.furniture.name)} (${SIZE[host.furniture.size]}: ${CARRIERS[host.furniture.size]}), at ${host.place} (${host.n}).</p>
 <p><strong>Villagers:</strong> ${villagers}.</p>
-<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>
+<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit}${t.limitFive !== t.limit ? ` (${t.limitFive} with five players)` : ""} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>
 </div>
 <figure class="art map" data-art="map-${t.key}"></figure>
 </div>

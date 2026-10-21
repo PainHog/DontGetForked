@@ -19,12 +19,15 @@
  *   second,                             // "mask" | "monster"
  *   difficulty,                         // the obstacle's Difficulty (or the way out's)
  *   abilities: [{ payerId, payerName, slot, name, effect, trait, noLoot, watchedOnly, asRaise,
- *                 payer: { charges, weaknessInPlay } }],   // spent before the roll; asRaise: D6b, spent as a raise (final flight)
+ *                 payer: { charges, overdrewInFlight, overdrewInChase } }],   // spent before the roll; asRaise: spent as a raise
+ *                 // (D6b: any runner's roll in the final flight; 2026-10-21: your own roll in a local chase)
  *   duty,      // at a location whose list item is the roller's Castle Duty kind
  *   loud,      // taking the loud way
  *   watched,   // the obstacle is watched
  *   wayOut,    // this is the way out of town (always watched; Shortcut)
  *   wayOutRolled, // R4: the way out has already been rolled this Turn (once a Turn; the switch wayOutOncePerTurn)
+ *   pieceHeld, // 2026-10-21 (W4): a Huge piece one of whose carriers is in a local chase can't move: no way out (the switch hugePieceHeld)
+ *   localOverdrawOnce, // 2026-10-21: one overdraw per runner per local chase (the switch localOverdrawOnce)
  *   partyPerks, // the way out: the Perks of the others there (everyone not captured; Fetch)
  *   chase,     // a chase roll (a local chase; every roll once the hunt is on)
  *   hunt,      // the whole town hunts (Suspicion stops, the Mask is off)
@@ -67,15 +70,17 @@ export function buildRollPlan(input) {
   const isOwn = (a) => a.payerId === rollerId;
 
   // D6b (Chapter 6, The Final Flight): any ability may be spent as a raise (the trait die one size bigger) instead of
-  // doing what it usually does — only in the final flight. It still costs its charge, and still counts as the one raise.
+  // doing what it usually does, on any runner's roll; 2026-10-21 (The Local Chase): in a local chase too, on your own roll
+  // (a friend's ability helps nobody there: helpInLocalChase below), even one that never works in a chase. Only in a
+  // chase. It still costs its charge, and still counts as the one raise.
   for (const a of abilities.filter((x) => x.asRaise)) {
-    if (!hunt) errors.push({ code: "raiseOnlyInFlight", name: a.name });
+    if (!chase) errors.push({ code: "raiseOnlyInChase", name: a.name });
     Object.assign(a, { usual: a.effect, effect: "raise", trait: null, noLoot: false, watchedOnly: false });
   }
   // each ability goes on a roll once, one way or the other
   const spentTwice = abilities.filter((a, i) => abilities.findIndex((b) => b.payerId === a.payerId && b.slot === a.slot) !== i);
   for (const a of spentTwice) errors.push({ code: "sameAbilityTwice", name: a.name });
-  // the Draught changes form from the sheet; on a roll it goes only as a raise, in the final flight
+  // the Draught changes form from the sheet; on a roll it goes only as a raise, in a chase
   if (abilities.some((a) => a.effect === "form")) errors.push({ code: "draughtNotOnRoll" });
 
   // Chapter 6: in a local chase, abilities help only your own roll (anyone's in the final flight).
@@ -101,6 +106,7 @@ export function buildRollPlan(input) {
   if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free
   if (mode === "slip") for (const code of slipProblems(sys, { turn: Number(input.turn) || 0 })) errors.push({ code });
   if (mode === "wayOut" && input.wayOutRolled) errors.push({ code: "wayOutOncePerTurn" }); // R4: the way out can be rolled once a Turn
+  if (mode === "wayOut" && input.pieceHeld && !hunt) errors.push({ code: "pieceHeld" }); // W4: the Huge piece can't move until the chase is over
   if ((mode === "slip" || mode === "rescue") && hunt) errors.push({ code: "lockupInHunt" }); // everyone not captured is in the final flight
   if (listed) {
     const all = [...listed.quiet, ...listed.loud];
@@ -132,13 +138,15 @@ export function buildRollPlan(input) {
   if (raiseSources > 1) errors.push(perkRaise ? { code: "perkRaiseTaken", perk: perkName(sys), trait } : { code: "tooManyRaises" });
   const raises = Math.min(1, raiseSources);
 
-  // Steps down: a Cost's "next roll one size smaller", carrying (Nimble), the Weakness in a chase.
+  // Steps down: a Cost's "next roll one size smaller", carrying (Nimble), the Weakness in a chase, and (2026-10-21) an
+  // overdraw in the final flight: from the overdrawer's next roll to the end of the flight, on top of any Weakness.
   const downParts = [];
   if ((sys.nextRollSmaller ?? 0) > 0) downParts.push({ key: "cost", n: sys.nextRollSmaller });
   const carryExempt = P.carryNimble === false && (!P.form || P.form === sys.form);
   if (carryingFurniture && trait === "nimble" && !carryExempt) downParts.push({ key: "carrying", n: 1 });
   const weakness = !!sys.weaknessInPlay || !!input.weakness;
   if (weakness && chase) downParts.push({ key: "weakness", n: 1 });
+  if (hunt && sys.overdrewInFlight) downParts.push({ key: "overdraw", n: 1 });
   const downs = downParts.reduce((n, p) => n + p.n, 0);
 
   // Raises and steps down cancel out; then the die moves (d12 top, d4 floor: extra steps are lost).
@@ -169,20 +177,22 @@ export function buildRollPlan(input) {
   const hidden = abilities.some((a) => a.effect === "hidden");
   if (hidden && second === "mask") warnings.push({ code: "hiddenWithMask" });
 
-  // Charges: one per ability, before the roll; at zero, overdraw (Suspicion +2, or the Weakness once the hunt is on).
+  // Charges: one per ability, before the roll; at zero, overdraw (Suspicion +2; once the hunt is on, a step down of its own).
+  // 2026-10-21: in a local chase a runner overdraws once at most (the switch localOverdrawOnce); in the flight once (B3).
+  const localOnce = chase && !hunt && !!input.localOverdrawOnce;
   const byPayer = new Map();
   for (const a of abilities) {
-    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, weaknessInPlay: !!a.payer?.weaknessInPlay || (isOwn(a) && weakness && chase), overdrewInFlight: !!a.payer?.overdrewInFlight };
+    const p = byPayer.get(a.payerId) ?? { payerId: a.payerId, payerName: a.payerName ?? "", own: isOwn(a), uses: 0, charges: a.payer?.charges ?? 0, overdrewInFlight: !!a.payer?.overdrewInFlight, overdrewInChase: !!a.payer?.overdrewInChase };
     p.uses += 1;
     byPayer.set(a.payerId, p);
   }
   const payments = [...byPayer.values()].map((p) => {
-    const pay = payFor({ charges: p.charges, uses: p.uses, hunt, weaknessInPlay: p.weaknessInPlay, overdrewInFlight: p.overdrewInFlight });
-    if (!pay.allowed) errors.push({ code: pay.refusal === "once" ? "overdrawOnce" : "overdrawWeakness", name: p.payerName }); // B3: once per flight
+    const pay = payFor({ charges: p.charges, uses: p.uses, hunt, overdrewInFlight: p.overdrewInFlight, localChase: localOnce, overdrewInChase: p.overdrewInChase });
+    if (!pay.allowed) errors.push({ code: pay.refusal === "onceLocal" ? "overdrawOnceLocal" : "overdrawOnce", name: p.payerName });
     return { ...p, ...pay };
   });
   // D3: outside the final flight each overdraw costs Suspicion +2 on top of the roll's other rise (in a local chase, on
-  // top of the chase's one rise); in the flight it costs the Weakness instead (payFor)
+  // top of the chase's one rise); in the flight it costs a step down of its own instead (payFor; 2026-10-21)
   const overdraws = hunt ? 0 : payments.reduce((n, p) => n + (p.overdraw > 0 ? p.overdraw : 0), 0);
   const overdraw = overdraws > 0;
 
@@ -233,7 +243,7 @@ export function buildRollPlan(input) {
     payments,
     overdraw,
     overdraws,
-    weaknessFromOverdraw: payments.filter((p) => p.weakness).map((p) => p.payerId),
+    stepFromOverdraw: payments.filter((p) => p.step).map((p) => p.payerId), // 2026-10-21: their trait die one size smaller from their next roll
     showMargin: P.showMargin && P.trait === trait ? P.showMargin : 1,
     formMargin: forms.length > 1 && sys.form === forms[0] ? (P.formMargin ?? 1) : null,
     monsterAmount: P.monsterShows ?? DGF.suspicion.monsterShows,

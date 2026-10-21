@@ -4,6 +4,11 @@
  * measured at today's defaults (the review package of 2026-10-19/20, Limits 9 / 10 / 13, 12 Turns, the Entity tuning of
  * 2026-10-20). A measuring job: nothing here changes the game. Each option is a REVIEW2 switch in sim/params.mjs (off by
  * default, so the defaults and test/sim.test.mjs are unchanged) or a NUMBERS override. Report: sim/REVIEW2-2026-10-21.md.
+ * Decided the same day (docs/DESIGN.md, 2026-10-21): (c), one overdraw per local chase, the stacking flight step allowed
+ * with the Weakness, the mob at most 11, the round-6 cap, five Entities' Limit on Easy and Standard, any ability as a raise
+ * in a local chase, and the rolled towns' way-in rules are the simulator's defaults now. So that this script keeps
+ * measuring what it measured, every configuration plays on top of the rules before them (sim/params.mjs BEFORE_REVIEW2
+ * with OLD_REVIEW2, package V1): "base" is still the game of 2026-10-20 and each option is a change from it.
  *
  *   node sim/review2-check.mjs [--runs 2000] [--town-runs 3000] [--ghost-runs 4000] [--seeds 1,7,11] [--jobs 4]
  *                              [--only base,G1,…] [--save results.json] [--out review2-tables.md]
@@ -24,7 +29,7 @@ import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { runConfig, metrics, mergeNumbers, LABELS, SIZES } from "./run.mjs";
-import { defaults, NUMBERS, TARGETS } from "./params.mjs";
+import { defaults, NUMBERS as NUMBERS_NOW, TARGETS, BEFORE_REVIEW2, OLD_REVIEW2 } from "./params.mjs";
 import { PREMADE, simTown } from "./premade.mjs";
 import { HALLOWBY } from "./demo-check.mjs";
 import { Recorder } from "./recorder.mjs";
@@ -34,6 +39,10 @@ import { makeParty, ROSTERS } from "./entities.mjs";
 const ROSTER = ROSTERS.approved; // the book's eight (entities.mjs ROSTER is the old placeholder set)
 import { makeTown } from "./town.mjs";
 import { internals as E } from "./engine.mjs";
+
+/** The game this script measures against: the rules and numbers before the 2026-10-21 decisions (see the header). */
+const NUMBERS = mergeNumbers(NUMBERS_NOW, OLD_REVIEW2);
+const before = () => ({ ...defaults(), ...BEFORE_REVIEW2 });
 
 const TOWNS = [...PREMADE, HALLOWBY];
 const STEER = { ghostHandOff: "handSteer" };
@@ -142,7 +151,7 @@ function play(cfg, P, runs, seed, { labels = LABELS, sizes = SIZES, townFn = nul
 
 function runJob(name, seed, { runs, townRuns, ghostRuns }) {
   const cfg = CONFIGS[name];
-  const P = { ...defaults(), review2Stats: true, tuneStats: true, ...cfg.p };
+  const P = { ...before(), review2Stats: true, tuneStats: true, ...cfg.p };
   const out = { name, seed, runs, townRuns, ghostRuns, labels: {}, cells: {}, chase: {}, ents: {}, towns: {}, ghost: {}, ghostTowns: {} };
   const R = play(cfg, P, runs, seed);
   const M = metrics(R);
@@ -208,7 +217,7 @@ function runChases({ runs, seed }) {
       const numbers = mergeNumbers(NUMBERS, n);
       for (const pol of ["smart", "mask", "monster"]) {
         if (pol !== "smart" && rk === "R6") continue;
-        const params = { ...defaults(), review2Stats: true, monsterPolicy: pol, ...p };
+        const params = { ...before(), review2Stats: true, monsterPolicy: pol, ...p };
         for (let susp = 0; susp < lim; susp++) {
           for (const charges of pol === "smart" ? [3, 0] : [3]) {
             const c = { label, rule: rk, pol, susp, charges, n: 0, esc: 0, cap: 0, gaveUp: 0, long: 0, rounds: 0, hunt: 0 };
@@ -222,7 +231,7 @@ function runChases({ runs, seed }) {
         }
       }
       // two runners caught by one group check (charges 3), players' choice of die
-      const params = { ...defaults(), review2Stats: true, ...p };
+      const params = { ...before(), review2Stats: true, ...p };
       for (const susp of [0, 2, 4, 6, 8, 10, 12].filter((s) => s < lim)) {
         const c = { label, rule: rk, pol: "shared", susp, charges: 3, n: 0, esc: 0, cap: 0, c1: 0, long: 0, rounds: 0 };
         for (let i = 0; i < runs; i++) {

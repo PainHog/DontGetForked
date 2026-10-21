@@ -23,7 +23,7 @@ const member = (id, key, patch) => memberOf(entity(id, key, patch));
 
 /* ------------------------------------------------------------------ chases -- */
 
-test("a local chase: Lead 1, escape at 4; D1: the mob is 8 + half the Suspicion (at most 12), set when the chase starts and fixed", () => {
+test("a local chase: Lead 1, escape at 4; D1: the mob is 8 + half the Suspicion (at most 11 since 2026-10-21), set when the chase starts and fixed", () => {
   const c = newChase({ id: "c1", members: [member("a", "dracula")], suspicion: 3 });
   assert.equal(c.kind, "local");
   assert.equal(c.lead, 1);
@@ -32,8 +32,9 @@ test("a local chase: Lead 1, escape at 4; D1: the mob is 8 + half the Suspicion 
   assert.equal(c.mob, 9, "8 + half of 3, set as the chase starts");
   assert.equal(mobDifficulty(c, { suspicion: 0 }), 8);
   assert.equal(mobDifficulty(c, { suspicion: 5 }), 10);
-  assert.equal(mobDifficulty(c, { suspicion: 8 }), 12);
-  assert.equal(mobDifficulty(c, { suspicion: 11 }), 12);
+  assert.equal(mobDifficulty(c, { suspicion: 6 }), 11);
+  assert.equal(mobDifficulty(c, { suspicion: 8 }), 11, "at most 11 (2026-10-21; was 12)");
+  assert.equal(mobDifficulty(c, { suspicion: 12 }), 11);
   assert.equal(newChase({ id: "c0", members: [member("a", "dracula")] }).mob, 8, "no Suspicion yet: 8");
   // the Suspicion the round's ground is rolled with doesn't move it (F20 is gone): it stays what it was set to
   let r = startRound(c, { face: 3, suspicion: 10 });
@@ -95,7 +96,7 @@ test("Perks in a chase: Wall-Crawler and Fly by Night add a trait; Night Runner 
   assert.equal(mobDifficulty(newChase({ id: "m", kind: "final", cause: "limit", members: curse.members }), { label: "hard" }), 11, "not in the final flight");
 });
 
-test("the Weakness: Always from round 1, Soon from round 3 (B3: no Dawn timing); an overdraw puts it in play in the flight", () => {
+test("the Weakness: Always from round 1, Soon from round 3 (B3: no Dawn timing); an older world's Weakness mark puts it in play in the flight", () => {
   const drac = member("d", "dracula"); // Garlic, Always
   const crea = member("c", "creature"); // Fire, Soon
   const local = newChase({ id: "l", members: [drac, crea] });
@@ -106,8 +107,9 @@ test("the Weakness: Always from round 1, Soon from round 3 (B3: no Dawn timing);
   assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "dawn", members: [crea] }), "c"), false, "a flight dawn started brings nothing extra");
   assert.ok(DGF.entities.every((e) => DGF.weaknessTimings.includes(e.weakness.timing)));
   assert.throws(() => weaknessFor(newChase({ id: "x", members: [{ ...crea, timing: "dawn" }] }), "c"), /unknown Weakness timing/);
-  assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "limit", members: [crea] }), "c", { overdrawn: true }), true);
-  assert.equal(weaknessFor(local, "c", { overdrawn: true }), false, "overdraw costs the Weakness only once the hunt is on");
+  // an overdraw no longer brings the Weakness (2026-10-21: a step down of its own); a mark left from before still counts in the flight
+  assert.equal(weaknessFor(newChase({ id: "f", kind: "final", cause: "limit", members: [crea] }), "c", { marked: true }), true);
+  assert.equal(weaknessFor(local, "c", { marked: true }), false, "the mark counted only once the hunt was on");
   assert.equal(weaknessFor(local, "nobody"), false);
 });
 
@@ -394,7 +396,7 @@ const own = (r, slot) => {
   return { slot, name: a.name, effect: a.effect, trait: a.trait ?? null, noLoot: !!a.noLoot, watchedOnly: !!a.watchedOnly, payerId: r.id, payerName: "Me", payer: { charges: r.system.charges.value, weaknessInPlay: !!r.system.weaknessInPlay } };
 };
 
-test("a chase roll the tracker runs: only the ground's traits; the Weakness in play steps the die down and blocks overdraw in the flight", () => {
+test("a chase roll the tracker runs: only the ground's traits; the Weakness in play steps the die down (and no longer blocks an overdraw in the flight)", () => {
   const drac = roller("dracula");
   const p = plan(drac, { chase: true, chaseTraits: ["nimble", "wits"], trait: "sly", difficulty: 11 });
   assert.ok(p.errors.some((e) => e.code === "notOnGround"));
@@ -407,10 +409,11 @@ test("a chase roll the tracker runs: only the ground's traits; the Weakness in p
   const bat = plan(drac, { chase: true, chaseTraits: ["sly", "charm"], trait: "sly", abilities: [own(drac, "gift")] });
   assert.equal(bat.ok, true);
   assert.equal(bat.trait, "nimble");
-  // the Weakness in play (by its timing) blocks overdraw once the hunt is on
+  // 2026-10-21: the Weakness in play (by its timing) no longer blocks an overdraw once the hunt is on (no Dracula exception)
   const broke = roller("dracula", { charges: { value: 0, start: 3 } });
   const od = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", weakness: true, abilities: [own(broke, "gift")] });
-  assert.ok(od.errors.some((e) => e.code === "overdrawWeakness"));
+  assert.equal(od.ok, true);
+  assert.deepEqual(od.stepFromOverdraw, [broke.id], "its own step down, from its next roll");
   const okOd = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [own(broke, "gift")] });
   assert.equal(okOd.ok, true);
   // a chase roll's result: the Lead move for one Entity
@@ -681,7 +684,7 @@ test("B3 + V5: cornered in the round the Limit comes: captured first (Already De
 test("B3: overdraw in the final flight at most once per Entity per flight (refused in the roll plan)", () => {
   const broke = roller("dracula", { charges: { value: 0, start: 3 }, overdrewInFlight: true });
   const gift = own(broke, "gift");
-  const once = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [{ ...gift, payer: { charges: 0, weaknessInPlay: false, overdrewInFlight: true } }] });
+  const once = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [{ ...gift, payer: { charges: 0, overdrewInFlight: true } }] });
   assert.ok(once.errors.some((e) => e.code === "overdrawOnce"));
   const fresh = roller("dracula", { charges: { value: 0, start: 3 } });
   const sig = own(fresh, "signature");
@@ -689,7 +692,7 @@ test("B3: overdraw in the final flight at most once per Entity per flight (refus
   assert.ok(two.errors.some((e) => e.code === "overdrawOnce"), "two abilities at no charges is two overdraws");
   const first = plan(fresh, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], trait: "charm", second: "monster", abilities: [own(fresh, "gift")] });
   assert.equal(first.ok, true);
-  assert.equal(first.payments[0].weakness, true);
+  assert.equal(first.payments[0].step, true, "2026-10-21: a step down of its own from the next roll");
   // before the hunt there is no such limit (overdraw is Suspicion +2)
   const local = plan(fresh, { trait: "charm", abilities: [own(fresh, "gift"), { ...sig, effect: "hidden" }] });
   assert.equal(local.errors.some((e) => e.code === "overdrawOnce"), false);

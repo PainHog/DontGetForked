@@ -5,6 +5,7 @@
   </div>
   <div class="dgf-pips">{{#each pips}}<span class="dgf-pip{{#if filled}} dgf-filled{{/if}}"></span>{{/each}}</div>
   <div class="dgf-hud-row"><span class="dgf-hud-turn">{{turnLine}}</span><span class="dgf-hud-diff">{{label}}</span></div>
+  {{#if limitNote}}<p class="dgf-hint dgf-hud-limit">{{limitNote}}</p>{{/if}}
   {{#if atLimit}}{{#unless hunt}}<p class="dgf-hud-alert">{{localize "DGF.Raid.atLimit"}}</p>{{/unless}}{{/if}}
   {{#if hunt}}<p class="dgf-hud-alert dgf-hud-hunt">{{huntLine}}</p>{{/if}}
   {{#if over}}<p class="dgf-hud-alert dgf-hud-over">{{over}}</p>{{/if}}
@@ -19,6 +20,7 @@
   {{/if}}
   {{#if furnitureLost}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureLost"}}</p>{{/if}}
   {{#if furnitureOut}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureOut"}}</p>{{/if}}
+  {{#if pieceHeld}}<p class="dgf-hud-group">{{localize "DGF.Raid.pieceHeld"}}</p>{{/if}}
   {{#if furnitureInPlay}}<p class="dgf-hud-group">{{localize "DGF.Raid.furnitureInPlay"}}{{#if isGM}} <button type="button" class="dgf-link" data-action="furnitureOut">{{localize "DGF.Raid.furnitureOutButton"}}</button> <button type="button" class="dgf-link" data-action="furnitureLost">{{localize "DGF.Raid.furnitureLostButton"}}</button>{{/if}}</p>{{/if}}
   {{#if castle}}<p class="dgf-hud-group">{{castle}}</p>{{/if}}
   {{#if dropped.length}}

@@ -95,17 +95,24 @@ test("perk keys are unique across the eight (DGF.perkRules is keyed by them)", (
 });
 
 test("charges and overdraw (Chapter 3, Chapter 6)", () => {
-  assert.deepEqual(payFor({ charges: 2, uses: 1 }), { spend: 1, overdraw: 0, suspicion: 0, weakness: false, allowed: true, refusal: "" });
-  assert.deepEqual(payFor({ charges: 1, uses: 2 }), { spend: 1, overdraw: 1, suspicion: 2, weakness: false, allowed: true, refusal: "" });
-  assert.deepEqual(payFor({ charges: 0, uses: 1, hunt: true }), { spend: 0, overdraw: 1, suspicion: 0, weakness: true, allowed: true, refusal: "" });
-  assert.equal(payFor({ charges: 0, uses: 1, hunt: true, weaknessInPlay: true }).allowed, false);
-  assert.equal(payFor({ charges: 0, uses: 1, hunt: true, weaknessInPlay: true }).refusal, "weakness");
-  assert.deepEqual(payFor({ charges: 0, uses: 1, cost: 0 }), { spend: 0, overdraw: 0, suspicion: 0, weakness: false, allowed: true, refusal: "" });
+  assert.deepEqual(payFor({ charges: 2, uses: 1 }), { spend: 1, overdraw: 0, suspicion: 0, step: false, allowed: true, refusal: "" });
+  assert.deepEqual(payFor({ charges: 1, uses: 2 }), { spend: 1, overdraw: 1, suspicion: 2, step: false, allowed: true, refusal: "" });
+  // 2026-10-21: in the final flight an overdraw costs a step down of its own (from the next roll), not the Weakness
+  assert.deepEqual(payFor({ charges: 0, uses: 1, hunt: true }), { spend: 0, overdraw: 1, suspicion: 0, step: true, allowed: true, refusal: "" });
+  assert.equal(payFor({ charges: 0, uses: 1, hunt: true, weaknessInPlay: true }).allowed, true, "allowed while the Weakness is in play (no Dracula or Ghost exception)");
+  assert.deepEqual(payFor({ charges: 0, uses: 1, cost: 0 }), { spend: 0, overdraw: 0, suspicion: 0, step: false, allowed: true, refusal: "" });
   // B3: in the final flight, overdraw at most once per flight
   assert.equal(payFor({ charges: 0, uses: 1, hunt: true, overdrewInFlight: true }).refusal, "once");
   assert.equal(payFor({ charges: 0, uses: 2, hunt: true }).refusal, "once", "two at once is more than once");
-  assert.equal(payFor({ charges: 0, uses: 2 }).allowed, true, "before the hunt, overdraw is Suspicion +2 and has no limit");
+  assert.equal(payFor({ charges: 0, uses: 2 }).allowed, true, "outside a chase, overdraw is Suspicion +2 and has no limit");
   assert.equal(payFor({ charges: 1, uses: 1, hunt: true, overdrewInFlight: true }).allowed, true, "paying with a charge is no overdraw");
+  // 2026-10-21: one overdraw per runner per local chase (`localChase`: the switch on and the payer in one)
+  assert.equal(payFor({ charges: 0, uses: 1, localChase: true }).allowed, true, "the first");
+  assert.equal(payFor({ charges: 0, uses: 1, localChase: true, overdrewInChase: true }).refusal, "onceLocal", "a second is refused");
+  assert.equal(payFor({ charges: 0, uses: 2, localChase: true }).refusal, "onceLocal", "two on one roll is two");
+  assert.equal(payFor({ charges: 0, uses: 1, overdrewInChase: true }).allowed, true, "the switch off: no limit");
+  assert.equal(payFor({ charges: 1, uses: 1, localChase: true, overdrewInChase: true }).allowed, true, "a charge is no overdraw");
+  assert.equal(draughtPlan({ ...entitySystem("jekyll-hyde"), charges: { value: 0, start: 3 } }, { localChase: true, overdrewInChase: true }).refusal, "onceLocal", "the Draught from the sheet too");
 });
 
 test("party clashes: duplicate Entities and shared Castle Duties", () => {

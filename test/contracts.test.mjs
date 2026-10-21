@@ -22,7 +22,7 @@ const lang = JSON.parse(readFileSync(join(ROOT, "lang/en.json"), "utf8"));
 
 test("every name in contracts.mjs is used outside it", () => {
   for (const name of ["SYSTEM_ID", "FLAG", "QUERY", "SOCKET"]) assert.match(allCode, new RegExp(`\\b${name}\\b`), `${name} is used`);
-  for (const group of ["SETTINGS", "CARD", "OPS", "HOOKS", "ACTOR_TYPES"]) {
+  for (const group of ["SETTINGS", "MENUS", "CARD", "OPS", "HOOKS", "ACTOR_TYPES"]) {
     for (const key of Object.keys(C[group])) assert.match(allCode, new RegExp(`\\b${group}\\.${key}\\b`), `${group}.${key} is used`);
   }
 });
@@ -41,6 +41,7 @@ test("every hook in HOOKS is fired, every OPS operation registered, every CARD k
   assert.deepEqual(registeredOps().sort(), Object.values(C.OPS).sort());
   assert.deepEqual([...CARD_KINDS].sort(), Object.values(C.CARD).sort());
   for (const key of Object.values(C.SETTINGS)) assert.ok(game.settings.settings.has(`${C.SYSTEM_ID}.${key}`), `setting ${key} registered`);
+  for (const key of Object.values(C.MENUS)) assert.equal(game.settings.menus.get(`${C.SYSTEM_ID}.${key}`)?.restricted, true, `menu ${key} registered, the Storyteller's`);
   assert.equal(typeof globalThis.CONFIG.queries[C.QUERY], "function");
   assert.ok(globalThis.CONFIG.Actor.dataModels[C.ACTOR_TYPES.entity]);
   assert.deepEqual(log.errors, []);
@@ -87,7 +88,8 @@ test("lang/en.json has the words for every key the code builds from game data", 
     ...DGF.chaseOutcomes.map((k) => `DGF.Chase.outcome.local.${k}`),
     ...["cost", "carrying", "weakness"].map((k) => `DGF.Card.smaller.${k}`),
     ...["shortcut", "fetch", "open"].map((k) => `DGF.Card.diff.${k}`),
-    ...Object.values(C.SETTINGS).filter((k) => !["systemMigrationVersion", "raidState", "castleUpgrades"].includes(k)).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Hint`]), // hidden settings have no words
+    ...Object.values(C.SETTINGS).filter((k) => !["systemMigrationVersion", "raidState", "castleUpgrades", "demoImported"].includes(k)).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Hint`]), // hidden settings have no words
+    ...Object.values(C.MENUS).flatMap((k) => [`DGF.Settings.${k}.Name`, `DGF.Settings.${k}.Label`, `DGF.Settings.${k}.Hint`]),
   ];
   // every error or warning code the roll plan can produce
   const plan = readFileSync(join(ROOT, "module/logic/roll-plan.mjs"), "utf8");

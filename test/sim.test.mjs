@@ -175,7 +175,14 @@ test("the simulator's numbers and chase table are the book's (Chapters 4–6 and
   assert.equal(NUMBERS.charges, 3);
   assert.equal(NUMBERS.overdrawSuspicion, 2);
   assert.deepEqual([NUMBERS.lead.localStart, NUMBERS.lead.localEscape, NUMBERS.lead.finalStart], [1, 4, 2]);
-  assert.deepEqual(NUMBERS.localMob, { base: 8, perSuspicion: 0.5, max: 12 });
+  assert.deepEqual(NUMBERS.localMob, { base: 8, perSuspicion: 0.5, max: 11 }); // 2026-10-21: at most 11 (was 12)
+  assert.deepEqual(NUMBERS.localMob, { ...DGF.localMob }, "the simulator's local mob is the Foundry system's");
+  // 2026-10-21: five Entities: the Limit 1 lower on Easy and Standard; a local chase lasts at most 6 rounds (Lead 2+ escapes)
+  assert.deepEqual(NUMBERS.fivePlayers, { size: 5, limit: { easy: -1, standard: -1, hard: 0 } });
+  assert.deepEqual(NUMBERS.fivePlayers, JSON.parse(JSON.stringify(DGF.fivePlayers)), "the simulator's five-player Limit is the Foundry system's");
+  assert.equal(PARAMS.localRoundCap.default, DGF.localRoundCap.rounds);
+  assert.equal(NUMBERS.lead.localCapEscape, DGF.localRoundCap.escapeAt);
+  assert.equal(NUMBERS.wayInRules, true, "rolled towns follow the way-in rules (W14)");
   assert.equal(NUMBERS.finalMobPerExtraEntity, 0); // S5
   assert.deepEqual(CHASE_TABLES.approved, [["sly", "charm"], ["nimble", "sly"], ["brawn", "nimble"], ["nimble", "wits"], ["charm", "sly"], ["brawn", "wits"]]);
 });
@@ -191,6 +198,8 @@ test("every rule switch defaults to the decided rule", () => {
     tellPartyChance: 0.5, weaknessRule: "timing",
     // the outside review's package (DESIGN 2026-10-19: D1, D3, D6b, D7b; 2026-10-20: R1, D4)
     chaseRule: "oneRise", flightRaise: "any", allHeld: "forked", limitOrder: "result", spectralWhen: "arrive",
+    // the v0.2 review's decisions (DESIGN 2026-10-21)
+    spectralFix: "firstOnly", localOverdraw: "once", flightOverdraw: "stackAny", localRoundCap: 6, localRaise: "any",
   };
   const D = defaults();
   for (const [k, v] of Object.entries(decided)) assert.equal(D[k], v, k);
@@ -243,7 +252,8 @@ test("the simulator's default kits and Wall-Crawler are the book's (Chapter 2, d
     assert.deepEqual([E.planRoll(S, drac, ctx(false, phase)).traitDie, E.planRoll(S, drac, ctx(false, phase)).raise], [12, "wallCrawler"], phase);
     assert.equal(E.planRoll(S, drac, ctx(true, phase)).traitDie, 10, `${phase}: Garlic cancels it`);
   }
-  const plain = state([drac], [], { params: { wallCrawler: "plain" } }).S;
+  // (2026-10-21: in a local chase any ability may be spent as a raise, so the plain Perk is measured with raise abilities only)
+  const plain = state([drac], [], { params: { wallCrawler: "plain", localRaise: "raiseOnly" } }).S;
   assert.equal(E.planRoll(plain, drac, ctx(false)).traitDie, 10, "the measuring switch still plays the Perk before 2026-10-20");
 });
 
@@ -419,7 +429,7 @@ test("D3: outside the final flight every overdraw adds +2 on top of the roll's r
   };
   assert.deepEqual(run("stack", "raid"), [1, 4, 5]); // Trouble +1, and +2 for each of the two overdraws
   assert.deepEqual(run("merge", "raid"), [2, 0, 2]); // before D3: the overdraw was one of the roll's triggers
-  assert.deepEqual(run("stack", "final"), [1, 0, 1]); // in the flight an overdraw costs the Weakness, not Suspicion
+  assert.deepEqual(run("stack", "final"), [1, 0, 1]); // in the flight an overdraw costs a step down (2026-10-21), not Suspicion
 });
 
 test("D6b: in the final flight any ability can be spent as a raise, still one raise per roll", () => {
@@ -487,14 +497,152 @@ test("D4: Spectral needs no action, so the Ghost passes a group way in on her ar
 });
 
 test("the switch back: package V0 is the rules and the Limits before the outside review (F12 made them 9 / 10 / 13)", async () => {
-  const { PACKAGES, BEFORE_REVIEW, OLD_LIMITS } = await import("../sim/params.mjs");
+  const { PACKAGES, BEFORE_REVIEW, OLD_LIMITS, BEFORE_REVIEW2, OLD_REVIEW2 } = await import("../sim/params.mjs");
   const { mergeNumbers } = await import("../sim/run.mjs");
   const nb = mergeNumbers(NUMBERS, PACKAGES.V0.numbers);
   assert.deepEqual(["easy", "standard", "hard"].map((l) => nb.labels[l].limit), [11, 11, 15]);
-  assert.deepEqual(PACKAGES.V0.numbers, OLD_LIMITS);
-  assert.deepEqual(PACKAGES.V0.params, { ...BEFORE_REVIEW });
+  assert.deepEqual(PACKAGES.V0.numbers, { ...OLD_REVIEW2, ...OLD_LIMITS });
+  assert.deepEqual(PACKAGES.V0.params, { ...BEFORE_REVIEW, ...BEFORE_REVIEW2 });
   for (const [k, v] of Object.entries(BEFORE_REVIEW)) {
     assert.ok(PARAMS[k].values.includes(v), `${k}: ${v} is one of its values`);
     assert.notEqual(defaults()[k], v, `${k}: the default is the package's reading`);
   }
+});
+
+test("the switch back: package V1 is the rules before the v0.2 review's decisions (2026-10-21)", async () => {
+  const { PACKAGES, BEFORE_REVIEW2, OLD_REVIEW2 } = await import("../sim/params.mjs");
+  const { mergeNumbers } = await import("../sim/run.mjs");
+  assert.deepEqual(PACKAGES.V1.params, { ...BEFORE_REVIEW2 });
+  for (const [k, v] of Object.entries(BEFORE_REVIEW2)) {
+    assert.ok(PARAMS[k].values.includes(v), `${k}: ${v} is one of its values`);
+    assert.notEqual(defaults()[k], v, `${k}: the default is the decided reading`);
+  }
+  const nb = mergeNumbers(NUMBERS, PACKAGES.V1.numbers);
+  assert.equal(nb.localMob.max, 12);
+  assert.equal(nb.wayInRules, false);
+  assert.deepEqual(nb.fivePlayers.limit, { easy: 0, standard: 0, hard: 0 });
+  assert.deepEqual(PACKAGES.V1.numbers, OLD_REVIEW2);
+});
+
+// ---------------------------------------------------------------- the v0.2 review's decisions (DESIGN 2026-10-21)
+
+test("2026-10-21: five Entities: the Limit is 1 lower on Easy and Standard, Hard as it is", () => {
+  const party = (n) => ["creature", "mummy", "werewolf", "witch", "ghost"].slice(0, n).map((k) => member(k));
+  const limit = (label, n, numbers = NUMBERS) => {
+    const loc = { id: "loc1", kind: null, obstacles: [], items: [{ id: "item1", essential: true, kind: "cook" }], furniture: null, done: false };
+    const town = { label, L: numbers.labels[label], items: loc.items, locations: [loc], lockup: { id: "lockup", difficulty: 10 },
+      furnitureLoc: { id: "furniture", obstacles: [ob(["brawn"], 8)], furniture: { size: "bulky" }, done: false } };
+    return E.makeState({ party: party(n), town, params: defaults(), numbers, rng: script(), rec: new Recorder() }).limit;
+  };
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => limit(l, 5)), [8, 9, 13]);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => limit(l, 4)), [9, 10, 13]);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => limit(l, 3)), [9, 10, 13]);
+  assert.equal(limit("standard", 5, merge(NUMBERS, { fivePlayers: { limit: { standard: 0 } } })), 10, "the switch back");
+});
+
+test("2026-10-21: a local chase lasts at most 6 rounds: Lead 2 or more escapes, anything less is cornered", () => {
+  // the creature against the mob of 8 (Suspicion 0): 3 + 3 = 6 is a Cost every round (the Lead stays); 6 + 4 a Success
+  const run = (localRoundCap, faces) => {
+    const creature = member("creature"), wolf = member("werewolf");
+    const { S } = state([creature, wolf], [], { faces, params: { localRoundCap, giveUp: "never" } });
+    S.turn = 1;
+    E.localChase(S, creature);
+    return { status: creature.status, rolls: S.rec.rolls.local.n };
+  };
+  const costs = (n) => Array.from({ length: n }, () => [3, 3]).flat();
+  assert.deepEqual(run(6, costs(8)), { status: "captured", rolls: 6 }); // Lead 1 after round 6: cornered
+  assert.deepEqual(run(6, [6, 4, ...costs(8)]), { status: "active", rolls: 6 }); // Lead 2 after round 6: escaped
+  const free = run(0, costs(8)); // no cap (the book before): it runs on until the dice decide it
+  assert.ok(free.rolls > 6 && free.status === "active", JSON.stringify(free));
+});
+
+test("2026-10-21: one overdraw per runner per local chase", () => {
+  const creature = member("creature", { charges: 0 }), wolf = member("werewolf");
+  const can = (localOverdraw, odBy) => {
+    const { S } = state([creature, wolf], [], { params: { localOverdraw } });
+    return E.overdrawAllowed(S, "local", creature, { chase: { maxTrig: 0, odRise: 0, mob: 8, odBy } });
+  };
+  assert.equal(can("once", undefined), true, "the first overdraw");
+  assert.equal(can("once", new Set([creature])), false, "a second is refused");
+  assert.equal(can("once", new Set([wolf])), true, "per runner");
+  assert.equal(can("any", new Set([creature])), true, "the book before");
+});
+
+test("2026-10-21: the final flight's overdraw is a step down of its own, on top of the Weakness, once per flight, allowed with the Weakness", () => {
+  const drac = member("dracula", { charges: 0 }); // his Weakness is Always: in play from round 1
+  const { S } = state([drac]);
+  const weakOf = () => true;
+  assert.equal(E.overdrawAllowed(S, "final", drac, { weakOf }), true, "allowed while the Weakness is in play (no Dracula exception)");
+  drac.overdrewInFlight = true;
+  assert.equal(E.overdrawAllowed(S, "final", drac, { weakOf }), false, "once per flight");
+  drac.overdrewInFlight = false;
+  const before = state([drac], [], { params: { flightOverdraw: "weakness" } }).S;
+  assert.equal(E.overdrawAllowed(before, "final", drac, { weakOf }), false, "before: never while the Weakness is in play");
+  // the step stacks with the Weakness: Sly d6 → d4 with the Weakness, and the overdraw's own step can't go below d4
+  const wolf = member("werewolf"); // Nimble d12
+  const ctx = (weakness, odStep) => ({ phase: "final", options: [{ trait: "nimble", loud: false }], difficulty: 11, witnessed: false, helpers: [], locKind: null, weakness, weakOf: () => weakness, odStep, round: 2 });
+  const W = state([wolf], [], { params: { chargePolicy: "hoard" } }).S;
+  wolf.charges = 0;
+  assert.equal(E.planRoll(W, wolf, ctx(false, false)).traitDie, 12);
+  assert.equal(E.planRoll(W, wolf, ctx(false, true)).traitDie, 10, "the overdraw's step");
+  assert.equal(E.planRoll(W, wolf, ctx(true, true)).traitDie, 8, "and the Weakness on top");
+});
+
+test("2026-10-21: Spectral works only at a way in; past a group way in, she stays past whichever way in the others pick", () => {
+  const run = (spectralFix, later) => {
+    const ghost = member("ghost", { perk: "spectral" }), wolf = member("werewolf");
+    const door = ob(["sly", "brawn!"], 8); // a single way in
+    door.alt = ob(["nimble"], 10, { group: true }); // the rooftops, the other way in
+    const crowd = ob(["sly"], 8, { group: true }); // a crowded shop floor, past the way in
+    const { S, loc } = state([ghost, wolf], later ? [door, crowd] : [door, crowd], { params: { spectralFix } });
+    S.turn = 1;
+    if (later) { door.cleared = true; delete door.alt; }
+    const acted = E.spectralPass(S, loc, [ghost, wolf]);
+    return { acted, past: (later ? crowd : door).passed.has(ghost.id) };
+  };
+  assert.deepEqual(run("firstOnly", false), { acted: true, past: true }, "at a way in (the group version)");
+  assert.deepEqual(run("firstOnly", true), { acted: false, past: false }, "not past a way in");
+  assert.deepEqual(run("none", true), { acted: true, past: true }, "the book before: any group obstacle");
+  // the others pick the other way in (the door): she is still past it
+  const ghost = member("ghost", { perk: "spectral" }), wolf = member("werewolf");
+  const door = ob(["sly", "brawn!"], 8);
+  door.alt = ob(["nimble"], 10, { group: true });
+  const { S, loc } = state([ghost, wolf], [door, ob(["wits"], 8)]);
+  S.turn = 1;
+  assert.equal(E.spectralPass(S, loc, [ghost, wolf]), true);
+  E.pickWayIn(S, loc.obstacles[0], loc, [wolf]);
+  assert.equal(loc.obstacles[0].group, false, "the wolf picked the door");
+  assert.ok(loc.obstacles[0].passed.has(ghost.id), "she is still past it");
+  // and the only obstacle: her pass takes the item
+  const g2 = member("ghost", { perk: "spectral" }), w2 = member("werewolf");
+  const only = ob(["sly"], 8, { group: true });
+  only.alt = ob(["charm"], 8);
+  const two = state([g2, w2], [only]);
+  two.S.turn = 1;
+  E.spectralPass(two.S, two.loc, [g2, w2]);
+  assert.equal(g2.items.length, 1, "the way in was the location's only obstacle: she has the item");
+});
+
+test("2026-10-21 (W14): a rolled town never has an inside obstacle at a way in, nor two group ways in", async () => {
+  const { makeTown } = await import("../sim/town.mjs");
+  const inside = new Set(DGF.obstacleTable.filter((o) => o.inside).map((o) => o.name));
+  assert.ok(inside.size >= 2, "the obstacle table marks its inside rows");
+  const count = (numbers) => {
+    let bad = 0, both = 0, insideLater = 0;
+    for (let i = 0; i < 400; i++) {
+      const t = makeTown(makeRng(5, "standard", 4, i).fork("town"), "standard", numbers);
+      for (const l of [...t.locations, t.furnitureLoc]) {
+        const ways = [l.obstacles[0], l.obstacles[0].alt];
+        if (ways.some((o) => inside.has(o.name))) bad++;
+        if (ways.every((o) => o.group)) both++;
+        if (l.obstacles.slice(1).some((o) => inside.has(o.name))) insideLater++;
+      }
+    }
+    return { bad, both, insideLater };
+  };
+  const now = count(NUMBERS), was = count(merge(NUMBERS, { wayInRules: false }));
+  assert.equal(now.bad, 0);
+  assert.equal(now.both, 0);
+  assert.ok(now.insideLater > 0, "inside obstacles still come up past the way in");
+  assert.ok(was.bad > 0 && was.both > 0, "before W14 they came up at ways in");
 });

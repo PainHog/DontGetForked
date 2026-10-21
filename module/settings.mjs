@@ -4,7 +4,7 @@
  * system is a sheet, a dice roller and a Suspicion counter the Storyteller moves.
  * Keys come from module/contracts.mjs SETTINGS; words from lang/en.json.
  */
-import { SYSTEM_ID, SETTINGS } from "./contracts.mjs";
+import { SYSTEM_ID, SETTINGS, MENUS } from "./contracts.mjs";
 
 /** Read one of this system's settings. */
 export function setting(key) {
@@ -13,9 +13,10 @@ export function setting(key) {
 
 /**
  * Register every setting. `onRaidChange` runs on every client when the raid
- * state changes; `onHudChange` when the HUD switch changes.
+ * state changes; `onHudChange` when the HUD switch changes; `onLimitRule` when the
+ * party-size Limit switch changes (the active Storyteller's client sets the Limit again).
  */
-export function registerSettings({ onRaidChange = () => {}, onHudChange = () => {}, onCastleChange = () => {} } = {}) {
+export function registerSettings({ onRaidChange = () => {}, onHudChange = () => {}, onCastleChange = () => {}, onLimitRule = () => {}, demoMenu = null } = {}) {
   const reg = (key, data) => game.settings.register(SYSTEM_ID, key, data);
   const toggle = (key, def, extra = {}) => reg(key, {
     name: `DGF.Settings.${key}.Name`, hint: `DGF.Settings.${key}.Hint`,
@@ -43,6 +44,21 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.autoDrops, true);
   toggle(SETTINGS.autoAllHeld, true); // D7b
   toggle(SETTINGS.wayOutOncePerTurn, true); // R4
+  // The v0.2 review's decisions (2026-10-21)
+  toggle(SETTINGS.localOverdrawOnce, true);
+  toggle(SETTINGS.localRoundCap, true);
+  toggle(SETTINGS.limitByPartySize, true, { onChange: () => onLimitRule() });
+  toggle(SETTINGS.hugePieceHeld, true);
+  // The one-shot, Lantern Night in Hallowby (module/apps/demo-import.mjs): offered once to a GM opening a world without it,
+  // and set up again from a menu (GM only).
+  toggle(SETTINGS.demoPrompt, true);
+  reg(SETTINGS.demoImported, { scope: "world", config: false, type: String, default: "" });
+  if (demoMenu) {
+    game.settings.registerMenu(SYSTEM_ID, MENUS.demoImport, {
+      name: `DGF.Settings.${MENUS.demoImport}.Name`, label: `DGF.Settings.${MENUS.demoImport}.Label`,
+      hint: `DGF.Settings.${MENUS.demoImport}.Hint`, icon: "fa-solid fa-masks-theater", type: demoMenu, restricted: true,
+    });
+  }
   // The optional campaign rules (Chapter 7): castle upgrades, kept from raid to raid (off: a raid stands alone).
   toggle(SETTINGS.campaign, false, { onChange: () => onCastleChange() });
   reg(SETTINGS.castleUpgrades, { scope: "world", config: false, type: Array, default: [], onChange: () => onCastleChange() });

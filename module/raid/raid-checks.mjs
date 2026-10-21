@@ -134,7 +134,7 @@ export function registerCheckOps() {
   // GM: open a group check for the Entities rolling a group obstacle together, or close it.
   registerOp(OPS.raidGroup, {
     gmOnly: true,
-    apply: async ({ action = "open", members = [], label = "" }) => {
+    apply: async ({ action = "open", members = [], label = "", wayIn = false }) => {
       if (action === "close") {
         const g = getRaid().group;
         if (!g?.open) return { ok: false, reason: "noGroup" };
@@ -150,16 +150,19 @@ export function registerCheckOps() {
       }
       if (!setting(SETTINGS.autoGroupChecks)) return { ok: false, reason: "groupChecksOff" };
       if (getRaid().group?.open) return { ok: false, reason: "groupOpen" };
-      // V19: a Spectral Ghost carrying nothing is past without rolling; carrying, it rolls like anyone else
+      // V19: a Spectral Ghost carrying nothing is past without rolling; carrying, it rolls like anyone else.
+      // 2026-10-21: only at a way in (a location's first obstacle: the Storyteller's tick); anywhere else she rolls too.
+      const atWayIn = !!wayIn;
       const list = members.map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a))
-        .map((a) => ({ actorId: a.id, name: a.name, passes: spectralPasses(a.system), spectral: !!DGF.perkRules[a.system.perk]?.groupPass }));
+        .map((a) => ({ actorId: a.id, name: a.name, passes: spectralPasses(a.system, { wayIn: atWayIn }), spectral: !!DGF.perkRules[a.system.perk]?.groupPass, carrying: !spectralPasses(a.system, { wayIn: true }) }));
       if (list.length < 2) return { ok: false, reason: "tooFew" };
       const id = foundry.utils.randomID();
-      const { state } = await mutateRaid((s) => R.setGroup(s, newGroup({ id, label: String(label ?? ""), turn: s.turn, members: list })));
+      const { state } = await mutateRaid((s) => R.setGroup(s, newGroup({ id, label: String(label ?? ""), turn: s.turn, members: list, wayIn: atWayIn })));
       await postCard({
-        kind: CARD.raid, event: "group", raidId: state.raidId, difficulty: state.difficulty, label: String(label ?? ""),
+        kind: CARD.raid, event: "group", raidId: state.raidId, difficulty: state.difficulty, label: String(label ?? ""), wayIn: atWayIn,
         names: list.filter((m) => !m.passes).map((m) => m.name),
-        passed: list.filter((m) => m.passes).map((m) => m.name), spectralRolls: list.filter((m) => m.spectral && !m.passes).map((m) => m.name),
+        passed: list.filter((m) => m.passes).map((m) => m.name), spectralRolls: list.filter((m) => m.spectral && !m.passes && m.carrying).map((m) => m.name),
+        spectralNotWayIn: list.filter((m) => m.spectral && !m.passes && !m.carrying).map((m) => m.name),
       });
       return { ok: true, groupId: id };
     },

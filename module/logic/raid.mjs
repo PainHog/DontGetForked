@@ -6,7 +6,7 @@
  * the Limit set by the town's difficulty, the Turn count and dawn, and whether
  * the whole town hunts. Every function returns a new state; nothing is mutated.
  *
- *   state = { v, raidId, difficulty, limit, turn, turns, dawn, hunt, huntCause,
+ *   state = { v, raidId, difficulty, partySize, limit, turn, turns, dawn, hunt, huntCause,
  *             ledger: [{ id, eventId, amount, extra, source, label, actorName, messageId,
  *                        turn, cancelled, hunt }], seq,   // extra: D3, an overdraw's +2 on top of its event
  *             chase,   // the chase running (or the last one), module/logic/chase.mjs; null
@@ -23,6 +23,8 @@
  *                       //   piece: what that leaving made of the furniture ("out" | "lost"), or "" if it moved nothing
  *             wayOutTurn, // R4: the Turn the way out was last rolled (0: not yet): once a Turn
  *             endedChase } // the local chase the hunt ended or followed (D1: its rise brought the Limit; F25: dawn or the hunt by hand)
+ *   partySize: the Entities in the raid (0: not counted, an older raid); the Limit is the label's, 1 lower on Easy and
+ *              Standard with five Entities (2026-10-21, rules.mjs suspicionLimit; the switch limitByPartySize)
  *
  * Source: rulebook Chapter 4 (Turns: the night lasts 12 Turns; dawn comes when the
  * 12th Turn ends), Chapter 5 (the Limit by difficulty; one roll, one rise; at the
@@ -31,6 +33,7 @@
  */
 import { DGF } from "../config.mjs";
 import { foldSuspicion, addEntry, cancelEvent, restoreEvent } from "./suspicion.mjs";
+import { suspicionLimit } from "./rules.mjs";
 import { chaseRise, riseEventId } from "./chase.mjs";
 
 export const RAID_VERSION = 2;
@@ -38,14 +41,19 @@ export const RAID_VERSION = 2;
 export const FURNITURE_STATES = Object.freeze(["", "inPlay", "out", "lost"]);
 export const LABELS = Object.freeze(Object.keys(DGF.labels));
 
-/** A fresh raid at this difficulty ("easy" | "standard" | "hard"). */
-export function newRaid({ id = "", difficulty = "standard", readied = [] } = {}) {
+/**
+ * A fresh raid at this difficulty ("easy" | "standard" | "hard"). `partySize`: the Entities in it (2026-10-21: with five
+ * the Limit is 1 lower on Easy and Standard; 0 leaves the label's Limit).
+ */
+export function newRaid({ id = "", difficulty = "standard", readied = [], partySize = 0 } = {}) {
   if (!DGF.labels[difficulty]) throw new Error(`unknown difficulty: ${difficulty}`);
+  const size = Math.max(0, Math.trunc(Number(partySize)) || 0);
   return {
     v: RAID_VERSION,
     raidId: id,
     difficulty,
-    limit: DGF.labels[difficulty].limit,
+    partySize: size,
+    limit: suspicionLimit(difficulty, size),
     turn: 1,
     turns: DGF.turns,
     dawn: false,
@@ -77,6 +85,7 @@ export function normalizeRaid(stored) {
   const num = (v, d) => (Number.isFinite(v) ? v : d);
   return {
     ...base,
+    partySize: Math.max(0, Math.trunc(num(s.partySize, 0))),
     limit: num(s.limit, base.limit),
     turn: Math.max(1, num(s.turn, base.turn)),
     turns: num(s.turns, base.turns),
@@ -132,6 +141,8 @@ export function raidView(state) {
     difficulty: state.difficulty,
     value: s.value,
     limit: state.limit,
+    partySize: state.partySize ?? 0,
+    labelLimit: DGF.labels[state.difficulty]?.limit ?? state.limit, // the label's own Limit (the difference: five Entities, 2026-10-21)
     atLimit: s.atLimit,
     turn: state.turn,
     turns: state.turns,
@@ -208,6 +219,18 @@ export function advanceTurn(state, delta = 1) {
     return { ...state, turn: Math.max(1, state.turn + delta) };
   }
   return state;
+}
+
+/**
+ * 2026-10-21 (Chapters 5 and 8): the Entities in the raid changed (the Storyteller ticked one in or out): the Limit follows
+ * the party's size (five: 1 lower on Easy and Standard) while the raid is still in town and the hunt isn't on; once it is
+ * (or the raid is over) only the count changes. `size` 0 leaves the label's Limit.
+ */
+export function setPartySize(state, size) {
+  const n = Math.max(0, Math.trunc(Number(size)) || 0);
+  if (state.hunt || state.over || state.partyOut) return state.partySize === n ? state : { ...state, partySize: n };
+  const limit = suspicionLimit(state.difficulty, n);
+  return state.partySize === n && state.limit === limit ? state : { ...state, partySize: n, limit };
 }
 
 /** Start or stop the hunt by hand ("manual"), or as the rules say ("limit" / "dawn"). */

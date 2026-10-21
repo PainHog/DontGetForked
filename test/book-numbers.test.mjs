@@ -149,19 +149,23 @@ test("3 charges, 12 Turns, the castle upgrades (Chapters 2, 4, 7, 8, Entity Shee
 
 /* --------------------------------------------- the difficulty labels -- */
 
+/** 2026-10-21: a label's Limit, and in brackets the five-player one where it differs (DGF.fivePlayers): "9 (8)", "13". */
+const limitCell = (k) => { const l = L[k], five = l.limit + DGF.fivePlayers.limit[k]; return `${l.limit}${five !== l.limit ? ` (${five})` : ""}`; };
+
 test("Chapter 8's Easy, Standard or Hard table is DGF.labels, row by row", () => {
   const rows = tableAfter(CH.ch8, "Easy, Standard or Hard");
   const want = [
     ["Shopping list (essentials)", (l) => `${l.items} (${essentials(l.essentials)})`],
     ["Obstacle Difficulties the d20 gives (6 · 8 · 10 · 12)", (l) => mixRow(l.mix)],
-    ["Suspicion Limit", (l) => `${l.limit}`],
+    ["Suspicion Limit (with five players)", (l, k) => limitCell(k)],
     ["The final flight: escape at Lead", (l) => `${l.finalEscape}`],
     ["The way out: Difficulty", (l) => `${l.exit}`],
     ["The final flight: mob Difficulty", (l) => `${l.finalMob}`],
     ["The lock-up: Difficulty", (l) => `${l.lockup}`],
   ];
   assert.deepEqual(rows.map((r) => r[0]), want.map((w) => w[0]), "the table's rows");
-  for (const [i, [label, f]] of want.entries()) assert.deepEqual(rows[i].slice(1), LABELS.map((k) => f(L[k])), label);
+  for (const [i, [label, f]] of want.entries()) assert.deepEqual(rows[i].slice(1), LABELS.map((k) => f(L[k], k)), label);
+  assert.equal(DGF.fivePlayers.size, 5, "the row is for five players");
   says(TXT.ch8, "On Standard, roll any die: odd, one essential; even, two.", "Chapter 8, The Shopping List");
   assert.deepEqual(L.standard.essentials, [1, 2]);
 });
@@ -171,12 +175,12 @@ test("At the Table's numbers table is DGF.labels", () => {
   const rows = rowsOf(html.match(/<table class="tbl ref-numbers">[\s\S]*?<\/table>/)[0]);
   const want = {
     "Shopping list (essentials)": (l) => `${l.items} (${essentials(l.essentials)})`,
-    "Suspicion Limit": (l) => `${l.limit}`,
+    "Suspicion Limit (with five players)": (l, k) => limitCell(k),
     "The way out: Difficulty": (l) => `${l.exit}`,
     "The final flight: mob · escape at": (l) => `${l.finalMob} · ${l.finalEscape}`,
   };
   assert.deepEqual(rows.map((r) => r[0]), Object.keys(want));
-  for (const r of rows) assert.deepEqual(r.slice(1), LABELS.map((k) => want[r[0]](L[k])), r[0]);
+  for (const r of rows) assert.deepEqual(r.slice(1), LABELS.map((k) => want[r[0]](L[k], k)), r[0]);
   // the lock-up is the same on every label, so At the Table says it once, in the local chase
   assert.ok(LABELS.every((k) => L[k].lockup === L.easy.lockup));
   says(TXT.ref, `At the lock-up (Difficulty ${L.easy.lockup}, watched)`, "At the Table, Chases");
@@ -187,6 +191,10 @@ test("the labels' numbers in the chapters' prose (Chapters 4, 5, 6) are DGF.labe
   assert.deepEqual([L.easy.items, L.standard.items, L.hard.items], [eItems, shItems, shItems]);
   const [eLimit, sLimit, hLimit] = match(TXT.ch5, /Limit: (\d+) on Easy, (\d+) on Standard and (\d+) on Hard/, "Chapter 5's opener");
   assert.deepEqual([L.easy.limit, L.standard.limit, L.hard.limit], [eLimit, sLimit, hLimit]);
+  // 2026-10-21: five players (module/logic/rules.mjs suspicionLimit, the simulator's NUMBERS.fivePlayers)
+  const F = DGF.fivePlayers.limit;
+  assert.deepEqual([F.easy, F.standard, F.hard], [-1, -1, 0]);
+  says(TXT.ch5, `With five players, it’s 1 lower on Easy and Standard: ${L.easy.limit + F.easy} and ${L.standard.limit + F.standard}.`, "Chapter 5's opener");
   const lockRow = tableAfter(CH.ch6, "Captured").find((r) => r[0] === "Difficulty");
   assert.ok(lockRow, "Chapter 6's lock-up table has a Difficulty row");
   const [lock] = match(lockRow[1], /^The lock-up’s: (\d+)$/, "Chapter 6, Captured (rescue)"); // B7: one lock-up Difficulty for every label
@@ -213,7 +221,9 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion when the chase starts (after the rise from the roll that got you caught), rounded down, at most ${M.max}. It stays the same for the whole chase.`, "Chapter 6, The Local Chase");
   says(TXT.ch6, `(Suspicion 5: ${M.base} + 2 = ${localMobDifficulty(5)}.)`, "Chapter 6, The Local Chase (the example)");
   says(TXT.ch8, `${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw Suspicion +${DGF.suspicion.overdraw} (on top).`, "Chapter 8, The Same on Easy, Standard and Hard");
-  says(TXT.ch8, `Local chase: Lead starts at ${localStart}, escape at ${localEscape}; the mob is ${M.base} plus half the Suspicion when it starts, rounded down, at most ${M.max}.`, "Chapter 8, The Same on Easy, Standard and Hard");
+  says(TXT.ch8, `Local chase: Lead starts at ${localStart}, escape at ${localEscape}, ${DGF.localRoundCap.rounds} rounds at most; the mob is ${M.base} plus half the Suspicion when it starts, rounded down, at most ${M.max}.`, "Chapter 8, The Same on Easy, Standard and Hard");
+  // 2026-10-21: a local chase lasts at most 6 rounds (module/logic/chase.mjs resolveRound)
+  says(TXT.ch6, `A chase lasts ${DGF.localRoundCap.rounds} rounds at most: if it’s still running after round ${DGF.localRoundCap.rounds}, a Lead of ${DGF.localRoundCap.escapeAt} or more escapes, and less is cornered.`, "Chapter 6, The Local Chase");
   says(TXT.ch8, `Final flight: Lead starts at ${DGF.lead.finalStart}.`, "Chapter 8, The Same on Easy, Standard and Hard");
   says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion as it starts (at most ${M.max})`, "At the Table, Chases");
   assert.equal(localMobDifficulty(3), 9, "8 + half of 3, rounded down");
@@ -222,7 +232,7 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
 
 test("the outside review's rules (Chapters 4–6) are what the Foundry logic does: one chase one rise, giving up, any ability as a raise, everyone held, the way out once a Turn", () => {
   // D1: one chase, one rise
-  says(TXT.ch6, "One chase, one rise. A local chase raises Suspicion once, when it ends, by the biggest trigger among all its rolls, however many rounds it took and whoever rolled them: Trouble +1, the Monster showing +2. An overdraw in the chase adds its +2 on top. Until the chase ends, Suspicion stays where it was.", "Chapter 6, One chase, one rise");
+  says(TXT.ch6, "One chase, one rise. A local chase raises Suspicion once, when it ends, by the biggest trigger among all its rolls, however many rounds it took and whoever rolled them: Trouble +1, the Monster showing +2. Each overdraw in the chase adds its +2 on top. Until the chase ends, Suspicion stays where it was.", "Chapter 6, One chase, one rise");
   says(TXT.ch5, "If a local chase’s rise reaches it, an escaped runner joins the flight; anyone cornered was captured first.", "Chapter 5, At the Limit");
   // R1: the result first
   says(TXT.ch5, "A roll’s result comes first, so if the roll that reaches the Limit gets the party out, it’s out, and captives it frees join the flight.", "Chapter 5, At the Limit");
@@ -235,7 +245,10 @@ test("the outside review's rules (Chapters 4–6) are what the Foundry logic doe
   assert.equal(canGiveUp(c, "a").reason, "roundStarted", "at the start of a round only");
   const lone = newChase({ id: "y", members: [memberOf({ id: "a", name: "A", system: { entityKey: "witch" } })] });
   assert.equal(chaseRise(giveUp(startRound(lone, { face: 1 }), "a").chase).total, 0, "given up once the ground is read, before any roll: it raises nothing");
-  assert.deepEqual(giveUp(resolveRound(c).chase, "a").chase.members.map((m) => m.actorId), ["b"], "the other carries on");
+  assert.equal(canGiveUp(resolveRound(c).chase, "a").reason, "noGround", "the next round: not before its ground is read");
+  assert.deepEqual(giveUp(startRound(resolveRound(c).chase, { face: 2 }), "a").chase.members.map((m) => m.actorId), ["b"], "the other carries on");
+  // 2026-10-21: in any chase, a local one too, any ability may be spent as a raise (module/logic/roll-plan.mjs)
+  says(TXT.ch6, "Any ability, approaches and the Draught included, may instead be spent as a raise.", "Chapter 6, Each round");
   // D6b: any ability as a raise in the final flight
   says(TXT.ch6, "Any ability, approaches and the Draught included, may also be spent as a raise (the trait die one size bigger) on any runner’s roll, whatever its usual conditions, instead of doing what it usually does. Still one raise per roll.", "Chapter 6, The Final Flight");
   // D7b: everyone held
@@ -268,8 +281,10 @@ test("Weakness timings (Chapters 2 and 6, At the Table, Entity Sheet) are the En
 test("the chase table (Chapter 6, At the Table) is DGF.chaseTable", () => {
   const want = DGF.chaseTable.map((r, i) => [`${i + 1}`, `${r.name}. ${r.text}`, r.traits.map((t) => TRAIT[t]).join(", ")]);
   assert.deepEqual(tableAfter(CH.ch6, "The Chase Table"), want);
-  const ref = chapter(CH.ref).match(/<table class="tbl ref-numbers">[\s\S]*?<\/table>/g)[1];
-  assert.deepEqual(rowsOf(ref), want.map(([n, , traits], i) => [n, DGF.chaseTable[i].name, traits]), "At the Table's chase table (names only)");
+  // At the Table's chase table (names only), in two halves side by side: rows 1–3 on the left, 4–6 on the right
+  const ref = chapter(CH.ref).match(/<table class="tbl ref-numbers ref-ground">[\s\S]*?<\/table>/)[0];
+  const short = want.map(([n, , traits], i) => [n, DGF.chaseTable[i].name, traits]);
+  assert.deepEqual(rowsOf(ref), [0, 1, 2].map((i) => [...short[i], ...short[i + 3]]), "At the Table's chase table (names only)");
   assert.ok(DGF.chaseTable.every((r) => r.traits.some((t) => t !== "nimble")), "every ground offers a trait that isn't Nimble (Chapter 6)");
 });
 
@@ -490,7 +505,7 @@ test("rolling a town (Chapter 8's d20/d10 table and the ceiling) is DGF.townDice
 
 test("the obstacle table (Chapter 8) is DGF.obstacleTable", () => {
   assert.deepEqual(tableAfter(CH.ch8, "The Obstacle Table"), DGF.obstacleTable.map((o, i) => [
-    `${i + 1}`, `${o.name}${o.group ? " (group)" : ""}`, way(o.quiet, o.quietText), o.loud ? way(o.loud, o.loudText) : "—",
+    `${i + 1}`, `${o.name}${o.group ? " (group)" : ""}${o.inside ? " (inside)" : ""}`, way(o.quiet, o.quietText), o.loud ? way(o.loud, o.loudText) : "—",
   ]));
 });
 
@@ -540,7 +555,8 @@ test("Chapter 9's towns are book/src/towns.json, built from the tables, with the
     const piece = DGF.furniture.find((f) => f.key === t.locations[at].furniture.piece);
     says(text, `The furniture: ${low(piece.name)} (${cap(piece.size)}: ${piece.size === "huge" ? "two carriers" : "one carrier"}), at ${t.locations[at].place} (${at + 1}).`, t.key);
     says(text, `Villagers: ${t.villagers.map((v) => `${low(DGF.villagers.who[v.who - 1])} (${low(DGF.villagers.doing[v.doing - 1])})`).join("; ")}.`, t.key);
-    says(text, `${label}: Suspicion Limit ${Lb.limit} · Difficulty: the way out ${Lb.exit}, the lock-up ${Lb.lockup} · the final flight: mob ${Lb.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${Lb.finalEscape}.`, t.key);
+    const five = Lb.limit + DGF.fivePlayers.limit[t.label];
+    says(text, `${label}: Suspicion Limit ${Lb.limit}${five !== Lb.limit ? ` (${five} with five players)` : ""} · Difficulty: the way out ${Lb.exit}, the lock-up ${Lb.lockup} · the final flight: mob ${Lb.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${Lb.finalEscape}.`, t.key);
     const row = (step, o, harder = 0, tag = "") => {
       const e = obstacleOf(o);
       return [`${step} ${e.name}${e.group ? " (group)" : ""}${o.watched ? " watched" : ""}${tag ? ` ${tag}` : ""}`, way(e.quiet, e.quietText), e.loud ? way(e.loud, e.loudText) : "—", `${Math.min(DGF.furnitureObstacle.max, o.difficulty + harder)}`];

@@ -114,7 +114,7 @@ test("Through the Wall can't take loot or furniture through", () => {
 
 test("helping: another Entity's ability on my roll costs its charge; never in a local chase; no opening for others", () => {
   const me = roller("dracula");
-  const helper = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch1", payerName: "Witch", payer: { charges: 0, weaknessInPlay: false } };
+  const helper = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch1", payerName: "Witch", payer: { charges: 0 } };
   let p = plan(me, { abilities: [helper] });
   assert.equal(p.traitDie, 8);
   assert.deepEqual(p.payments.map((x) => [x.payerId, x.spend, x.overdraw]), [["witch1", 0, 1]]);
@@ -126,17 +126,59 @@ test("helping: another Entity's ability on my roll costs its charge; never in a 
   assert.ok(plan(me, { abilities: [opener] }).errors.some((e) => e.code === "openByHelper"));
 });
 
-test("overdraw: Suspicion +2, or once the hunt is on the Weakness (and never while it is in play)", () => {
+test("overdraw: Suspicion +2, or once the hunt is on a step down of its own from the next roll (2026-10-21), on top of any Weakness", () => {
   const broke = roller("witch", { charges: { value: 0, start: 3 } });
   let p = plan(broke, { abilities: [ownAbility(broke, "signature")] });
   assert.equal(p.overdraw, true);
   assert.equal(resolvePlannedRoll(p, 10, 6).suspicion, 2);
   p = plan(broke, { abilities: [ownAbility(broke, "signature")], hunt: true, second: "monster" });
   assert.equal(p.overdraw, false);
-  assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
+  assert.deepEqual(p.stepFromOverdraw, ["me"]);
+  assert.equal(p.downs, 0, "not on this roll: from its next roll");
   assert.equal(resolvePlannedRoll(p, 1, 1).suspicion, 0); // Suspicion stops once the hunt is on
+  // allowed while the Weakness is in play (no Dracula or Ghost exception any more)
   const weak = roller("witch", { charges: { value: 0, start: 3 }, weaknessInPlay: true });
-  assert.ok(plan(weak, { abilities: [ownAbility(weak, "signature")], hunt: true }).errors.some((e) => e.code === "overdrawWeakness"));
+  assert.equal(plan(weak, { abilities: [ownAbility(weak, "signature")], hunt: true, second: "monster" }).ok, true);
+  // its next roll to the end of the flight: one size smaller, on top of the Weakness (Wits d12 → d10 → d8)
+  const after = roller("witch", { charges: { value: 0, start: 3 }, overdrewInFlight: true });
+  p = plan(after, { trait: "wits", hunt: true, chase: true, second: "monster", difficulty: 11 });
+  assert.deepEqual([p.downParts.map((d) => d.key), p.traitDie], [["overdraw"], 10]);
+  p = plan(after, { trait: "wits", hunt: true, chase: true, second: "monster", difficulty: 11, weakness: true });
+  assert.deepEqual([p.downParts.map((d) => d.key), p.traitDie], [["weakness", "overdraw"], 8], "they stack");
+  assert.equal(plan(after, { trait: "wits" }).traitDie, 12, "only in the flight");
+  assert.ok(plan(after, { abilities: [{ ...ownAbility(after, "signature"), payer: { charges: 0, overdrewInFlight: true } }], hunt: true, second: "monster" }).errors.some((e) => e.code === "overdrawOnce"), "once per flight");
+});
+
+test("2026-10-21: one overdraw per runner per local chase (the switch localOverdrawOnce), on a roll or from the sheet", () => {
+  const sig = (r, payer = {}) => ({ ...ownAbility(r, "signature"), payer: { charges: 0, ...payer } });
+  const broke = roller("witch", { charges: { value: 0, start: 3 } });
+  const local = (r, opts) => plan(r, { chase: true, chaseTraits: ["wits", "sly"], trait: "wits", difficulty: 9, localOverdrawOnce: true, ...opts });
+  assert.equal(local(broke, { abilities: [sig(broke)] }).ok, true, "the first");
+  assert.ok(local(broke, { abilities: [sig(broke, { overdrewInChase: true })] }).errors.some((e) => e.code === "overdrawOnceLocal"), "a second is refused");
+  const gift = { ...sig(broke), slot: "gift", name: "Black Cat", effect: "hidden" };
+  assert.ok(local(broke, { abilities: [sig(broke), gift], second: "monster" }).errors.some((e) => e.code === "overdrawOnceLocal"), "two on one roll");
+  assert.equal(local(broke, { abilities: [sig(broke, { overdrewInChase: true })], localOverdrawOnce: false }).ok, true, "the switch off");
+  assert.equal(plan(broke, { abilities: [sig(broke, { overdrewInChase: true })], localOverdrawOnce: true }).ok, true, "outside a chase: no limit");
+});
+
+test("2026-10-21 (W4): a Huge piece one of whose carriers is in a local chase can't move: the way out is refused", () => {
+  const me = roller("werewolf");
+  const out = (opts) => plan(me, { trait: "sly", wayOut: true, ...opts });
+  assert.ok(out({ pieceHeld: true }).errors.some((e) => e.code === "pieceHeld"));
+  assert.equal(out({}).ok, true);
+  assert.equal(plan(me, { trait: "sly", pieceHeld: true }).ok, true, "only the way out");
+});
+
+test("Jekyll (2026-10-21): Hyde takes over whenever the Monster shows on Jekyll's roll, even when an ability (his or a friend's) kept its Suspicion off", () => {
+  const jh = roller("jekyll-hyde"); // as Jekyll: Sly d8
+  const pillar = { slot: "gift", name: "Pillar of Society", effect: "hidden", trait: null, payerId: "me", payerName: "Jekyll", payer: { charges: 3 } };
+  const unseen = { slot: "signature", name: "Unseen", effect: "hidden", trait: null, payerId: "inv", payerName: "The Invisible Man", payer: { charges: 3 } };
+  for (const ab of [pillar, unseen]) {
+    const p = plan(jh, { trait: "sly", second: "monster", abilities: [ab] });
+    assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+    const r = resolvePlannedRoll(p, 3, 7); // the Monster beats the trait die
+    assert.deepEqual([r.showed, r.show, r.suspicion, r.formShift], [true, false, 0, true], ab.name);
+  }
 });
 
 test("once the hunt is on the Mask is off; carriers can't use the Mask and roll Nimble smaller", () => {
@@ -292,7 +334,7 @@ test("bad input is refused with codes, not exceptions", () => {
 
 /* ------------------------------------------- the outside review's rules (DESIGN 2026-10-19, 2026-10-20) -- */
 
-test("D3: an overdraw always adds +2 on top of the roll's other rise (two overdraws +4); in the final flight it costs the Weakness instead", () => {
+test("D3: an overdraw always adds +2 on top of the roll's other rise (two overdraws +4); in the final flight it costs a step down instead", () => {
   const broke = roller("witch", { charges: { value: 0, start: 3 } });
   const hedge = ownAbility(broke, "signature");
   let p = plan(broke, { abilities: [hedge], second: "monster" });
@@ -310,13 +352,13 @@ test("D3: an overdraw always adds +2 on top of the roll's other rise (two overdr
   assert.equal(resolvePlannedRoll(p, 10, 6).suspicion, 4);
   // a helper's overdraw is one of the roll's too
   const me = roller("dracula");
-  const helper = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch1", payerName: "Witch", payer: { charges: 0, weaknessInPlay: false } };
+  const helper = { slot: "signature", name: "Hedge Spell", effect: "raise", trait: null, payerId: "witch1", payerName: "Witch", payer: { charges: 0 } };
   assert.equal(resolvePlannedRoll(plan(me, { abilities: [helper], loud: true }), 6, 6).suspicion, 3, "the loud way (+1) and the helper's overdraw");
-  // the final flight: no Suspicion, the Weakness
+  // the final flight: no Suspicion, a step down of its own (2026-10-21)
   p = plan(broke, { abilities: [hedge], hunt: true, second: "monster" });
   assert.equal(p.overdraws, 0);
   assert.equal(resolvePlannedRoll(p, 1, 9).suspicion, 0);
-  assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
+  assert.deepEqual(p.stepFromOverdraw, ["me"]);
   // a Cost's Suspicion +1 still adds to a roll whose only rise is its overdraw (the overdraw is on top of the rest)
   const cost = resolvePlannedRoll(plan(broke, { abilities: [hedge] }), 3, 4); // 7 against 8
   assert.equal(cost.band, "cost");
@@ -377,13 +419,21 @@ test("D6b: in the final flight any Signature or Gift (own, or a friend's in the 
   assert.deepEqual([p.raises, p.downs, p.traitDie], [1, 1, 12], "Garlic's step down and the raise cancel out");
   // one ability once: its own effect or a raise, not both
   assert.ok(flight({ trait: "sly", abilities: [ownAbility(drac, "gift"), bat] }).errors.some((e) => e.code === "sameAbilityTwice"));
-  // not before the hunt (nor in a local chase)
-  assert.ok(plan(drac, { trait: "sly", abilities: [bat] }).errors.some((e) => e.code === "raiseOnlyInFlight"));
-  assert.ok(plan(drac, { chase: true, chaseTraits: ["sly", "charm"], trait: "sly", abilities: [bat] }).errors.some((e) => e.code === "raiseOnlyInFlight"));
-  // at no charges, as a raise it is still an overdraw: the Weakness, once per flight
+  // only in a chase (2026-10-21: a local chase too, on your own roll; a friend's helps nobody there)
+  assert.ok(plan(drac, { trait: "sly", abilities: [bat] }).errors.some((e) => e.code === "raiseOnlyInChase"));
+  const local = (opts) => plan(drac, { chase: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 9, ...opts });
+  p = local({ trait: "sly", abilities: [bat] });
+  assert.equal(p.ok, true, p.errors.map((e) => e.code).join());
+  assert.deepEqual([p.trait, p.traitDie], ["sly", 8], "Bat as a raise in a local chase: Sly d6 → d8");
+  p = local({ trait: "sly", abilities: [mes] });
+  assert.equal(p.ok, true, "an approach of his own, which never works in a chase, as a raise");
+  assert.ok(local({ trait: "sly", abilities: [wall] }).errors.some((e) => e.code === "helpInLocalChase"), "a friend's ability helps nobody in a local chase");
+  assert.equal(local({ trait: "sly", abilities: [{ ...draught, payerId: "me", asRaise: true }] }).traitDie, 8, "the Draught as a raise");
+  assert.ok(local({ trait: "sly", abilities: [bat, mes] }).errors.some((e) => e.code === "tooManyRaises"), "still one raise per roll");
+  // at no charges, as a raise it is still an overdraw: in the flight a step down of its own, once per flight
   const broke = roller("dracula", { charges: { value: 0, start: 3 } });
   p = plan(broke, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 11, trait: "sly", abilities: [{ ...ownAbility(broke, "gift"), asRaise: true }] });
-  assert.deepEqual(p.weaknessFromOverdraw, ["me"]);
+  assert.deepEqual(p.stepFromOverdraw, ["me"]);
 });
 
 test("Wall-Crawler (2026-10-20): in a chase Dracula's Nimble die is one size bigger, the roll's one raise; a smaller die cancels it", () => {

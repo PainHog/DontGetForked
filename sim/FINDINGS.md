@@ -706,3 +706,45 @@ Measured in `sim/REVIEW2-2026-10-21.md` (`sim/review2-check.mjs`; three seeds, 2
 - **Party size (1.5):** five Entities sit outside on every level. A Limit 1 lower for five on Easy and Standard fixes those cells with every level inside. On Hard it needs a step both ways (five 12, three 14) to keep the pooled Hard inside. Ten Turns for five goes the wrong way. Easy Limit 10 takes Easy (94.0%) and Puddlecombe (93.1%) over. About a third of Hard raids end in the final flight (35.9% rolled, 36.3% Gallowsmere), not "most".
 - **Any ability as a raise in a local chase (1.6):** balance-neutral (within 0.3 everywhere).
 - **The recommended set together** ((a), one overdraw per chase, the stacking flight step, mob at most 11, the round-6 cap, any ability as a raise): 92.3 / 76.0 / 56.3% won, 1.0 / 3.3 / 9.8% forked, and every town inside. With every trick played: 92.3 / 76.1 / 56.6%.
+
+## The v0.2 review's decisions, in the game (2026-10-21)
+
+Decided the same day under Richard's delegation (DESIGN 2026-10-21) from `sim/REVIEW2-2026-10-21.md`, and now the simulator's defaults (`sim/params.mjs`): **Spectral only at a way in** (`spectralFix: "firstOnly"`, option (c): at a way in that is the location's only obstacle she still takes the item, and past a group way in she stays past whichever way in the others pick), **one overdraw per runner per local chase** (`localOverdraw: "once"`), **the flight overdraw's own step down** (`flightOverdraw: "stackAny"`: the overdrawer's trait die one size smaller from its next roll to the end of the flight, on top of any Weakness, once per flight, allowed while the Weakness is in play), **the local mob at most 11** (NUMBERS.localMob.max), **six rounds at most** (`localRoundCap: 6`; still running after round 6, Lead 2+ escapes, less is cornered), **five Entities: the Limit 1 lower on Easy and Standard** (NUMBERS.fivePlayers, read from `module/config.mjs` DGF.fivePlayers, the same data the Foundry system and the book's town pages use), **any ability as a raise in a local chase** (`localRaise: "any"`), and **the rolled towns' ways in** (NUMBERS.wayInRules: an `inside` row of the obstacle table, the strongbox and the back room, is rolled again at either way in, and a second way in that is also a group obstacle is rolled again). The five rule readings moved from REVIEW2 into PARAMS (so `run.mjs` sweeps them); the switch back is `BEFORE_REVIEW2` with `OLD_REVIEW2` (package V1), which reproduces the game before exactly (the same raids, seed for seed; V1 on seed 1 is 92.3 / 74.7 / 55.2%, the last recorded check). `sim/review2-check.mjs` plays every option on top of V1, so it still measures what its report measured.
+
+```
+node sim/run.mjs                                                   # sim/REPORT.md: seed 1, 2,000 raids per label and party size
+node sim/run.mjs --seed 7 --no-sweeps --no-packages --out …       # and seed 11
+node sim/premade-check.mjs 3000 [--seed 7 | --seed 11]             # the three printed towns
+node sim/demo-check.mjs 6000                                       # Hallowby (sim/DEMO.md); three seeds at 3,000 per party size below
+```
+
+Three seeds; rolled towns 2,000 raids per label and party size per seed (6,000 per label), towns 3,000 per party size per seed. Before = the same raids on V1 (the three-seed baseline of `sim/REVIEW2-2026-10-21.md`).
+
+| Measure | Target | Before (V1) | Now: seed 1 · 7 · 11 | Now, three seeds |
+|---|---|---|---|---|
+| Win, Easy | 87–93% | 92.5% | 91.4 · 91.6 · 91.8% | **91.6%** |
+| Win, Standard | 72–78% | 76.0% | 73.4 · 74.1 · 74.8% | **74.1%** |
+| Win, Hard | 55–60% | 55.6% | 55.9 · 56.6 · 56.7% | **56.4%** |
+| Forked, Easy | ≤2% | 0.9% | 0.8 · 1.1 · 0.8% | **0.9%** |
+| Forked, Standard | 3–7% | 3.3% | 4.0 · 3.2 · 3.3% | **3.5%** |
+| Forked, Hard | 8–12% | 9.2% | 9.6 · 10.1 · 9.3% | **9.7%** |
+| Captures per Hard raid | 0.2–0.3 (accepted ~0.34) | 0.48 | 0.42 · 0.43 · 0.43 | 0.43 ✗ (the known miss, down from 0.48) |
+| Puddlecombe (Easy) | 87–93% · ≤2% | 91.3% · 0.6% | 90.3 · 90.7 · 90.2% · 0.5 · 0.6 · 0.7% | **90.4% · 0.6%** |
+| Thistlewick (Standard) | 72–78% · 3–7% | 76.4% · 4.8% | 74.3 · 75.3 · 74.8% · 4.6 · 4.7 · 5.0% | **74.8% · 4.8%** |
+| Gallowsmere (Hard) | 55–60% · 8–12% | 57.8% · 9.7% | 59.2 · 58.0 · 57.8% · 10.0 · 10.3 · 10.8% | **58.3% · 10.4%** |
+| Hallowby (the one-shot, Easy) | 87–93% · ≤2% | 90.9% · 1.6% | 90.4 · 90.5 · 90.5% · 1.4 · 1.7 · 1.5% | **90.4% · 1.6%** (6,000 per party size on seed 1: 90% · 1%, `sim/DEMO.md`) |
+| Each Entity with vs without | within ±2.5 | +2.5 (A Ghost) to −1.9 | seed 1: A Ghost +2.9, Jekyll & Hyde −2.3; seed 7: Dracula +2.2, the Creature −2.0; seed 11: Dracula +2.0, Jekyll & Hyde −1.8 | averages: A Ghost +2.2, Dracula +2.0, the Invisible Man +1.3, the Werewolf +0.5, the Mummy −1.2, the Witch −1.4, the Creature −1.6, Jekyll & Hyde −1.8 (inside) |
+| Trouble · Criticals · half the charges spent · Mask where chosen | 10–22% · 3–7% · ≥50% · ≥25% | 17.9% · 5.3% · 76.8% · 37.3% | 17.8 · 17.6 · 17.6% · 5.2 · 5.3 · 5.4% · 78.0 · 77.8 · 77.9% · 38.2 · 38.2 · 38.4% | inside |
+| Grand Year when a party always goes for furniture · a Win lost | ~50% · ~20% | 48.0% · 19.6% (seed 1) | 47.1 · 47.7 · 47.5% · 20.1 · 19.6 · 20.5% | inside |
+
+**By party size** (win / forked, seeds 1 · 7 · 11):
+
+| Label | 3 Entities | 4 Entities | 5 Entities |
+|---|---|---|---|
+| Easy | 91.0 / 1.1 · 89.5 / 1.8 · 92.2 / 0.9 | 92.8 / 0.9 · 92.5 / 0.9 · 91.7 / 0.8 | 90.3 / 0.5 · 93.0 / 0.5 · 91.6 / 0.8 (before: 93.8 / 0.6, over) |
+| Standard | 72.8 / 4.8 · 72.1 / 3.4 · 72.5 / 4.0 | 75.4 / 3.5 · 76.3 / 3.5 · 77.3 / 3.3 | 72.0 / 3.8 · 74.0 / 2.8 · 74.6 / 2.5 (before: 77.1 / 2.7, forked under) |
+| Hard | 51.4 / 12.1 · 52.9 / 12.4 · 51.4 / 12.3 | 55.8 / 10.2 · 55.3 / 11.7 · 58.8 / 8.4 | 60.5 / 6.6 · 61.7 / 6.3 · 60.0 / 7.3 |
+
+Printed towns by party size (seed 1): Puddlecombe 87.7 · 91.3 · 91.8%, Thistlewick 70.6 · 77.7 · 74.6%, Gallowsmere 53.1 · 62.1 · 62.4%; Hallowby 88.2 · 92.0 · 91.0%.
+
+**Every level, the three printed towns and Hallowby are inside their targets on every seed.** The five-player cells the Limit change was for came in: Easy with five 91.6% (was 93.8%), Standard with five 73.5% won and 3.0% forked (was 77.1% / 2.7%; 2.8 and 2.5% on seeds 7 and 11, at the floor). **Still outside, as before and as decided:** Hard captures 0.43 a raid (the known miss, 0.48 before); Hard by party size (three Entities about 52%, five about 61%: Hard's Limit by party size was kept as it is); on single seeds the largest option outlier (seed 1: Through the Hedge +4.8, an edge case of one seed's small cells, like Book-Learned before; seeds 7 and 11: Pillar of Society +4.0, Fear the Curse +2.8).

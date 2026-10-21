@@ -234,7 +234,7 @@ export function registerRaidOps() {
       // D1 + D3: an overdraw from the sheet in a local chase adds +2 to the chase's one rise, when it ends
       if (card.kind === CARD.ability && card.chaseOverdraws > 0) {
         const { result } = await mutateRaid((s) => {
-          if (isRunning(s.chase) && s.chase.id === card.chaseId) return { state: R.setChase(s, addOverdraw(s.chase, { messageId, n: card.chaseOverdraws })), result: "chase" };
+          if (isRunning(s.chase) && s.chase.id === card.chaseId) return { state: R.setChase(s, addOverdraw(s.chase, { messageId, n: card.chaseOverdraws, actorId: card.actorId ?? "" })), result: "chase" };
           // the chase is over already (its rise is on the track): the overdraw raises Suspicion now, on its own
           return { state: R.recordEvent(s, { eventId: card.eventId, amount: 0, extra: card.chaseOverdraws * DGF.suspicion.overdraw, source: card.kind, label: "overdraw", actorName: card.actorName ?? "", messageId }), result: "now" };
         });
@@ -397,7 +397,9 @@ export function registerRaidOps() {
       const upgrades = setting(SETTINGS.campaign) ? castleUpgrades().length : 0;
       const given = assignExtraCharges({ wanted: extra, upgrades, members: members.map((a) => a.id) });
       if (!given.ok) return { ok: false, reason: given.reason };
-      const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty, readied: reset ? members.map((a) => a.id) : [] }));
+      // 2026-10-21: the Limit by the party's size (five Entities: 1 lower on Easy and Standard; the switch limitByPartySize)
+      const partySize = setting(SETTINGS.limitByPartySize) ? members.length : 0;
+      const { state } = await mutateRaid(() => R.newRaid({ id: foundry.utils.randomID(), difficulty, readied: reset ? members.map((a) => a.id) : [], partySize }));
       for (const actor of allEntities()) {
         const inRaid = members.includes(actor);
         const plus = given.extra[actor.id] ?? 0;
@@ -418,8 +420,15 @@ export function registerRaidOps() {
       const actor = game.actors.get(actorId);
       if (!isEntity(actor)) return { ok: false, reason: "notAnEntity" };
       await actor.update({ "system.inRaid": !!inRaid });
+      await followPartySize();
       return { ok: true, inRaid: !!inRaid };
     },
+  });
+
+  // 2026-10-21: the sheet's tick changes who is in the raid too; the Limit follows the party's size (followPartySize)
+  Hooks.on("updateActor", (actor, diff) => {
+    if (!isActiveGM() || !isEntity(actor) || diff?.system?.inRaid === undefined) return;
+    followPartySize().catch((err) => console.error("Don't Get Forked | the party's size", err));
   });
 
   // F26: an Entity ticked into the raid after it began is made ready for it once, as a new raid would have (resetOnNewRaid).
@@ -452,14 +461,30 @@ export function registerRaidOps() {
         const spent = card.autoCharges && setting(SETTINGS.autoCharges) ? Math.min(value, most, Math.max(0, Math.trunc(Number(p.spend)) || 0)) : 0;
         const update = {};
         if (spent) update["system.charges.value"] = value - spent;
-        if (p.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; } // B3: once per flight
+        // 2026-10-21: a flight overdraw costs its own step down from the payer's next roll (a card from before: the Weakness)
+        if (p.step) update["system.overdrewInFlight"] = true; // once per flight (B3)
+        else if (p.weakness) { update["system.weaknessInPlay"] = true; update["system.overdrewInFlight"] = true; }
         if (Object.keys(update).length) await actor.update(update);
-        paid.push({ actorId: actor.id, spent, weakness: !!p.weakness });
+        paid.push({ actorId: actor.id, spent, step: !!p.step });
       }
       await updateCard(message, { helpersPaid: true });
       return { ok: true, paid };
     },
   });
+}
+
+/**
+ * 2026-10-21 (Chapters 5 and 8): the Limit follows the party's size (five Entities in the raid: 1 lower on Easy and
+ * Standard) while the raid is in town and the hunt isn't on (module/logic/raid.mjs setPartySize). With the switch
+ * limitByPartySize off the size isn't counted and the Limit is the label's. Active GM only.
+ */
+export async function followPartySize() {
+  if (!isActiveGM()) return null;
+  const raid = getRaid();
+  if (!raid.raidId) return null;
+  const n = setting(SETTINGS.limitByPartySize) ? allEntities().filter((a) => isInRaid(a.system)).length : 0;
+  if (raid.partySize === n && raid.limit === R.setPartySize(raid, n).limit) return null;
+  return mutateRaid((s) => R.setPartySize(s, n));
 }
 
 /* ------------------------------------------------- GM on ready -- */

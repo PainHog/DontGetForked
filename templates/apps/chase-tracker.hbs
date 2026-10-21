@@ -2,7 +2,7 @@
   {{#if hasChase}}
   <header class="dgf-chase-head">
     <h3>{{kindLabel}}</h3>
-    <p class="dgf-hint">{{causeLabel}}{{#if running}} · {{roundLine}}{{/if}}</p>
+    <p class="dgf-hint"{{#if capHint}} data-tooltip="{{capHint}}"{{/if}}>{{causeLabel}}{{#if running}} · {{roundLine}}{{/if}}</p>
   </header>
   <div class="dgf-lead" data-lead="{{lead}}" data-escape="{{escape}}">
     {{#each pips}}<span class="dgf-lead-pip{{#if here}} dgf-here{{/if}}{{#if end}} dgf-end{{/if}}">{{n}}</span>{{/each}}

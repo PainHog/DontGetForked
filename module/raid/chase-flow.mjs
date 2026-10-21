@@ -25,9 +25,13 @@
  *    captured, no roll; the others carry on;
  *  - D7b: everyone in the raid held at the lock-up at once ends the night: Forked
  *    (checked at each capture, and when the hunt or dawn would start);
+ *  - 2026-10-21: a local chase lasts at most 6 rounds, then the Lead decides it (localRoundCap: the chase is made with
+ *    its cap, module/logic/chase.mjs resolveRound ends it); a Huge piece with a carrier in a local chase can't move
+ *    until the chase is over (hugePieceHeld: pieceHeldNow, read by the way out); either carrier captured, the town
+ *    takes it (capture, F15);
  *  - the Storyteller's hand on the tracker: start, roll the ground, resolve the
  *    round, Lead ±1, end, add or take out a member, capture or free.
- * Every automation is switchable (autoChase, autoLockup, autoGroupChecks, autoYear, autoAllHeld).
+ * Every automation is switchable (autoChase, autoLockup, autoGroupChecks, autoYear, autoAllHeld, localRoundCap, hugePieceHeld).
  */
 import { SETTINGS, OPS, CARD, ACTOR_TYPES } from "../contracts.mjs";
 import { DGF } from "../config.mjs";
@@ -75,6 +79,16 @@ function pieceCarried() {
   return entities().some((a) => a.system.carryingFurniture && !isCaptive(a.system));
 }
 
+/**
+ * 2026-10-21 (W4): is the Huge piece held by a local chase now: one of its carriers in the chase, the other outside it?
+ * It stays with the other carrier and can't move (no way out) until the chase is over. Either carrier captured, the town
+ * takes it (capture() below, F15).
+ */
+export function pieceHeldNow(raid = getRaid()) {
+  const carriers = entities().filter((a) => a.system.carryingFurniture && !isCaptive(a.system)).map((a) => a.id);
+  return C.holdsPiece(raid.chase, carriers);
+}
+
 /* ------------------------------------------------------------ starting -- */
 
 /**
@@ -88,7 +102,9 @@ export function startLocal(state, actorIds, { groupId = "", where = "" } = {}) {
   if (C.isRunning(state.chase)) return { state, started: false, reason: "chaseRunning" };
   const members = [...new Set(actorIds)].map((id) => game.actors.get(id)).filter((a) => isEntity(a) && inRaid(a)).map(memberFor);
   if (!members.length) return { state, started: false, reason: "nobody" };
-  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty, suspicion: R.suspicionOf(state).value });
+  // 2026-10-21: at most 6 rounds (the switch localRoundCap; off, the chase runs until the Lead ends it)
+  const roundCap = setting(SETTINGS.localRoundCap) ? DGF.localRoundCap.rounds : 0;
+  const chase = C.newChase({ id: randomID(), kind: "local", cause: "caught", members, turn: state.turn, groupId, where, label: state.difficulty, suspicion: R.suspicionOf(state).value, roundCap });
   return { state: R.setChase(state, chase), started: true, chase };
 }
 
@@ -167,7 +183,7 @@ function chaseFacts(chase, state, extra = {}) {
     v: 1, kind: CARD.chase, raidId: state.raidId, chaseId: chase.id, chaseKind: chase.kind, cause: chase.cause,
     round: chase.round, lead: chase.lead, start: chase.start, escape: chase.escape, mob: chase.mob,
     ground: chase.ground ? { ...chase.ground } : null, members: chase.members.map((m) => m.name), outcome: chase.outcome,
-    gaveUp: (chase.gaveUp ?? []).map((g) => g.name), ...extra,
+    gaveUp: (chase.gaveUp ?? []).map((g) => g.name), roundCap: chase.roundCap ?? 0, capped: !!chase.capped, ...extra,
   };
 }
 
@@ -250,7 +266,7 @@ export async function rollGround({ id, round, force = false } = {}) {
     });
     if (!result.ok) return result;
     const c = state.chase;
-    const weak = c.members.filter((m) => C.weaknessFor(c, m.actorId, { overdrawn: !!game.actors.get(m.actorId)?.system?.weaknessInPlay })).map((m) => m.name);
+    const weak = c.members.filter((m) => C.weaknessFor(c, m.actorId, { marked: !!game.actors.get(m.actorId)?.system?.weaknessInPlay })).map((m) => m.name);
     await postCard(chaseFacts(c, state, { event: "ground", weak, extras: c.members.filter((m) => C.traitsFor(c, m.actorId).length > c.ground.traits.length).map((m) => ({ name: m.name, traits: C.traitsFor(c, m.actorId) })) }), { rolls: [roll] });
     return { ok: true, face: roll.total };
   } finally {
@@ -635,14 +651,7 @@ export function registerChaseOps() {
 export function chaseRollContext(actor, raid = getRaid()) {
   const c = raid.chase;
   if (!C.isRunning(c) || !C.memberIn(c, actor.id)) return null;
-  return C.rollContext(c, actor.id, { overdrawn: !!actor.system.weaknessInPlay });
-}
-
-/** The Weakness in play for this Entity in the running chase (blocks overdraw in the flight). */
-export function chaseWeakness(actorId, raid = getRaid()) {
-  const c = raid.chase;
-  if (!C.isRunning(c) || !C.memberIn(c, actorId)) return false;
-  return C.weaknessFor(c, actorId, { overdrawn: !!game.actors.get(actorId)?.system?.weaknessInPlay });
+  return C.rollContext(c, actor.id, { marked: !!actor.system.weaknessInPlay });
 }
 
 /** The lock-up's Difficulty for this raid (the label's). */

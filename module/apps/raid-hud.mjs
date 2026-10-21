@@ -16,7 +16,8 @@ import { runOp } from "../net/gm-ops.mjs";
 import { getRaid, castleUpgrades } from "../raid/store.mjs";
 import { setting } from "../settings.mjs";
 import { t } from "../helpers/i18n.mjs";
-import { entities, allEntities, inRaid } from "../raid/chase-flow.mjs";
+import { entities, allEntities, inRaid, pieceHeldNow } from "../raid/chase-flow.mjs";
+import { suspicionLimit } from "../logic/rules.mjs";
 import { isCaptive } from "../logic/lockup.mjs";
 import { groupWaiting } from "../logic/checks.mjs";
 import { chaseRise } from "../logic/chase.mjs";
@@ -82,6 +83,12 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       limit: v.limit,
       pips: Array.from({ length: v.limit }, (_, i) => ({ filled: i < v.value })),
       label: t(`DGF.Label.${v.difficulty}`),
+      // 2026-10-21: the Limit by the party's size (five Entities: 1 lower on Easy and Standard)
+      limitNote: v.partySize >= DGF.fivePlayers.size
+        ? t(v.limit !== v.labelLimit ? "DGF.Raid.limitFive" : "DGF.Raid.limitFiveSame", { n: v.partySize, limit: v.limit, base: v.labelLimit, label: t(`DGF.Label.${v.difficulty}`) })
+        : "",
+      // 2026-10-21 (W4): a Huge piece with a carrier in a local chase can't move until the chase is over
+      pieceHeld: setting(SETTINGS.hugePieceHeld) && pieceHeldNow(state),
       turnLine: v.dawn ? t("DGF.Raid.dawn") : t("DGF.Raid.turn", { turn: v.turn, turns: v.turns }),
       atLimit: v.atLimit,
       hunt: v.hunt,
@@ -178,7 +185,9 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #onNewRaid() {
-    const options = R.LABELS.map((k) => `<option value="${k}" ${k === getRaid().difficulty ? "selected" : ""}>${t(`DGF.Label.${k}`)} — ${t("DGF.Raid.limitOf", { limit: DGF.labels[k].limit })}</option>`).join("");
+    // 2026-10-21: the Limit by the party's size (the Entities a new raid takes: those with a player owner)
+    const size = setting(SETTINGS.limitByPartySize) ? allEntities().filter((a) => a.hasPlayerOwner).length : 0;
+    const options = R.LABELS.map((k) => `<option value="${k}" ${k === getRaid().difficulty ? "selected" : ""}>${t(`DGF.Label.${k}`)} — ${t("DGF.Raid.limitOf", { limit: suspicionLimit(k, size) })}</option>`).join("");
     const difficulty = await foundry.applications.api.DialogV2.wait({
       window: { title: t("DGF.Raid.newRaid") },
       classes: ["dont-get-forked"],

@@ -129,7 +129,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "spectral", name: "Spectral", text: "Group obstacles (the ones each Entity must get past for itself) don’t stop you: no roll and no action, so you can still move or roll that Turn. Not while you carry loot or furniture.", default: true },
+      { key: "spectral", name: "Spectral", text: "Group ways in don’t stop you: no roll and no action. If one is the location’s only obstacle, you take the item, and if the party picks the other way in, you’re still past. Not while you carry loot or furniture.", default: true },
       { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously.", flavour: "nobody takes rattling chains seriously" },
       { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you aren’t captured: you’re back where you were caught, still carrying what you had, and you lose your next Turn. If the chase’s rise brings the Limit, you simply join the final flight." },
     ],
@@ -155,12 +155,12 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, that roll stands and Hyde takes over straight after it, free, until a draught changes him back." },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free, even if an ability meant it raised no Suspicion.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, that roll stands and Hyde takes over straight after it, free, until a draught changes him back. He does even when an ability, his own or a friend’s, meant the Monster raised no Suspicion." },
     gift: {
       name: "The Other Self",
       versions: [
         { key: "doctorsBag", name: "Doctor’s Bag", effect: "raise", text: "The right instrument for the job.", default: true },
-        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "On Jekyll’s rolls, Hyde still takes over if the Monster shows.", text: "A respectable doctor having a funny turn." },
+        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "Hyde still takes over if it shows.", text: "A respectable doctor having a funny turn." },
         { key: "trample", name: "Trample", effect: "open", trait: "brawn", note: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", text: "Hyde doesn’t wait to be let in." },
       ],
     },
@@ -236,7 +236,9 @@ DGF.townDice = Object.freeze({
 /**
  * C18: the d20 obstacle table. `quiet` is the trait that gets past it without a fuss; `loud`, if any, is the loud
  * way (Suspicion +1 whatever the result); `group`: everyone there rolls for themselves. Every trait is the quiet
- * way four times. A location's second way in is rolled again until its quiet trait differs.
+ * way four times. A location's second way in is rolled again until its quiet trait differs. `inside`: it only makes
+ * sense inside, so it is never a way in: rolled at a way in, roll again; and at most one of a location's two ways in
+ * is a group obstacle (rolled towns, W14, 2026-10-21; book/tools/towns.mjs checks the premade towns).
  */
 DGF.obstacleTable = Object.freeze([
   { key: "trapdoor", name: "A heavy cellar trapdoor", quiet: "brawn" },
@@ -255,8 +257,8 @@ DGF.obstacleTable = Object.freeze([
   { key: "dog", name: "A guard dog", quiet: "charm", quietText: "a biscuit and a pat", loud: "nimble", loudText: "outrun it, barking" },
   { key: "doorman", name: "A doorman checking invitations", quiet: "charm", loud: "wits", loudText: "a forged invitation that fools nobody for long" },
   { key: "children", name: "Children in costumes who want a closer look", quiet: "charm", group: true },
-  { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "work out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it" },
-  { key: "backRoom", name: "A dark, cluttered back room", quiet: "wits", loud: "sly", loudText: "rummage through everything" },
+  { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "work out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it", inside: true },
+  { key: "backRoom", name: "A dark, cluttered back room", quiet: "wits", loud: "sly", loudText: "rummage through everything", inside: true },
   { key: "watchman", name: "The night watchman on his round", quiet: "wits", quietText: "time his round" },
   { key: "stalls", name: "A maze of festival stalls", quiet: "wits", group: true },
 ].map((o) => Object.freeze(o)));
@@ -322,7 +324,7 @@ DGF.perkRules = Object.freeze({
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
   nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: if you're fleeing alone when your local chase starts, it starts at Lead 2.
   fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: if you're fleeing alone when your local chase starts, its mob's Difficulty is 1 lower.
-  spectral: Object.freeze({ groupPass: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture.
+  spectral: Object.freeze({ groupPass: true, wayInOnly: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture; 2026-10-21: only at a way in (a location's first obstacle).
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: if the chase's rise brings the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
   hiddenPockets: Object.freeze({ keepLoot: true }), // Captured, you keep the loot you carry (not furniture: V16).
@@ -398,7 +400,13 @@ DGF.epilogue = Object.freeze({
 DGF.charges = 3;
 DGF.turns = 12;
 DGF.lead = Object.freeze({ localStart: 1, localEscape: 4, finalStart: 2, finalEscape: 6 });
-DGF.localMob = Object.freeze({ base: 8, perSuspicion: 0.5, max: 12 }); // B3: base 8 (was 10)
+DGF.localMob = Object.freeze({ base: 8, perSuspicion: 0.5, max: 11 }); // B3: base 8 (was 10); 2026-10-21: at most 11 (was 12)
+/** 2026-10-21: a local chase lasts at most 6 rounds; still running after round 6, a Lead of 2 or more escapes, anything less is cornered. */
+DGF.localRoundCap = Object.freeze({ rounds: 6, escapeAt: 2 });
+/** 2026-10-21: overdraws a runner may make in one chase: one in a local chase (a second is refused), one in the final flight (B3). */
+DGF.overdrawsPerChase = Object.freeze({ local: 1, final: 1 });
+/** 2026-10-21: with five Entities in the raid (or more), the Suspicion Limit is this much different (1 lower on Easy and Standard). */
+DGF.fivePlayers = Object.freeze({ size: 5, limit: Object.freeze({ easy: -1, standard: -1, hard: 0 }) });
 DGF.labels = Object.freeze({
   easy: Object.freeze({ items: 4, essentials: [1], limit: 9, finalEscape: 5, exit: 6, finalMob: 10, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),
   standard: Object.freeze({ items: 5, essentials: [1, 2], limit: 10, finalEscape: 5, exit: 8, finalMob: 11, lockup: 10, mix: { 6: 0.15, 8: 0.5, 10: 0.3, 12: 0.05 } }),

@@ -3,5 +3,6 @@
   {{#each entities}}<label class="dgf-check"><input type="checkbox" name="entity.{{id}}"{{#if checked}} checked{{/if}}> {{name}}</label>{{/each}}
   {{#unless entities.length}}<p class="dgf-hint">{{localize "DGF.Raid.noEntities"}}</p>{{/unless}}
   <label>{{placeLabel}} <input type="text" name="place" placeholder="{{placeHint}}"></label>
+  {{#if wayInLabel}}<label class="dgf-check" data-tooltip="{{wayInHint}}"><input type="checkbox" name="wayIn"> {{wayInLabel}}</label>{{/if}}
   {{#if already}}<p class="dgf-hint">{{already}}</p>{{/if}}
 </div>

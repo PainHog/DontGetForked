@@ -352,7 +352,7 @@ test("furniture (B2, V4): its extra obstacle is 2 harder; once taken it is noisy
   await settle();
 });
 
-test("the final flight at the Limit: everyone free flees together; the majority rule; overdraw brings the Weakness; escape; then the year", async () => {
+test("the final flight at the Limit: everyone free flees together; the majority rule; overdraw costs a step down of its own; escape; then the year", async () => {
   await asUser(ANN, () => witch.update({ "system.carried": [{ name: "A wheel of strong cheese" }, { name: "a coil of rope" }], "system.charges.value": 0 }));
   diceQueue.push(2); // the first round's ground: back alleys (Nimble, Sly)
   for (let v = view().value; v < view().limit; v++) await op(GM, OPS.raidAdjust, { delta: 1 });
@@ -370,13 +370,15 @@ test("the final flight at the Limit: everyone free flees together; the majority 
   assert.ok(cards(CARD.chase).some((m) => cardOf(m).event === "start" && cardOf(m).chaseKind === "final"));
 
   const hedge = `ability:${witch.id}:signature`;
-  // round 1: the Witch overdraws Hedge Spell (no charges: once the hunt is on, it costs her Weakness); Sly d10 → d12; a Critical
+  // round 1: the Witch overdraws Hedge Spell (no charges: once the hunt is on, it costs a step down of its own, 2026-10-21); Sly d10 → d12; a Critical
   await rollAs(ANN, witch, { trait: "sly", second: "monster", chase: true, [hedge]: true }, [6, 6]);
   let card = cardOf(lastMessage());
   assert.equal(card.traitDie, 12);
   assert.equal(card.critical, true);
   assert.equal(card.suspicion, 0, "Suspicion has stopped");
-  assert.equal(witch.system.weaknessInPlay, true, "from her next roll to the end of the flight");
+  assert.equal(witch.system.overdrewInFlight, true, "her trait die one size smaller from her next roll to the end of the flight");
+  assert.equal(witch.system.weaknessInPlay, false, "it no longer brings the Weakness");
+  assert.match(lastMessage().content, /A Witch overdraws: its trait die is one size smaller from its next roll to the end of the flight/);
   assert.equal(chase().round, 1, "waiting for Dracula");
   // Dracula: Nimble d10 → d8 (Garlic), Monster d10: 11, a Success. Majority (B6): 3 Successes, no Trouble → +2
   await rollAs(BEN, dracula, { trait: "nimble", second: "monster", chase: true }, [5, 6, 2]);
@@ -387,10 +389,11 @@ test("the final flight at the Limit: everyone free flees together; the majority 
   const again = await refusedRoll(ANN, witch, { trait: "sly", second: "monster", chase: true, [hedge]: true });
   assert.ok(again.warnings.some((w) => w.includes("already overdrawn in this flight")));
   assert.equal(witch.system.overdrewInFlight, true);
-  // the overdraw's Weakness: Sly d10 → d8
+  // the overdraw's own step down: Sly d10 → d8 (her Weakness, Soon, isn't in play before round 3)
   await rollAs(ANN, witch, { trait: "sly", second: "monster", chase: true }, [6, 5]);
   card = cardOf(lastMessage());
   assert.equal(card.traitDie, 8);
+  assert.deepEqual(card.downParts.map((d) => d.key), ["overdraw"]);
   // both Succeed: +2, the Lead reaches 5 (and beyond): home with the goods
   await rollAs(BEN, dracula, { trait: "nimble", second: "monster", chase: true }, [5, 6]);
   c = chase();
@@ -480,7 +483,7 @@ test("two caught in one group check flee on a shared Lead; D1: their chase rises
   assert.deepEqual(c.members.map((m) => m.name), ["A Witch", "Dracula"], "caught together, they flee together");
   assert.equal(c.groupId, raid().group.id);
   assert.equal(c.lead, 1, "a shared Lead starts at 1");
-  assert.equal(c.mob, 12, "8 + half of 8, set as the chase starts");
+  assert.equal(c.mob, 11, "8 + half of 8 is 12, at most 11 (2026-10-21), set as the chase starts");
   const caughtCards = game.messages.filter((m) => cardOf(m)?.groupId === c.groupId);
   assert.ok(caughtCards.every((m) => cardOf(m).chaseStarted === c.id));
   // round 1: the Witch's Trouble (1) and Dracula's Monster (2): Suspicion doesn't move; 1 Success, 1 Trouble: Lead 0 move
@@ -490,7 +493,7 @@ test("two caught in one group check flee on a shared Lead; D1: their chase rises
   await rollAs(BEN, dracula, { trait: "charm", second: "monster", chase: true }, [8, 10, 5]); // Charm d12 → d10 (Garlic); then round 2's ground
   assert.equal(cardOf(game.messages.filter((m) => cardOf(m)?.kind === CARD.roll).at(-1)).chaseRise, 2);
   assert.equal(view().value, 8, "nothing on the track until the chase ends");
-  assert.deepEqual([chase().lead, chase().round, chase().mob], [1, 2, 12]);
+  assert.deepEqual([chase().lead, chase().round, chase().mob], [1, 2, 11]);
   // rounds 2 and 3: both Succeed (+2 each): clear at 4
   await rollAs(ANN, witch, { trait: "charm", second: "monster", chase: true }, [8, 5]);
   await rollAs(BEN, dracula, { trait: "charm", second: "mask", chase: true }, [10, 6, 5]);
@@ -528,7 +531,7 @@ test("D1: cornered, and the chase's one rise brings the Limit: captured first, a
   const local = chase();
   assert.equal(local.kind, "local");
   assert.equal(local.lead, 1);
-  assert.equal(local.mob, 12, "8 + half of 9");
+  assert.equal(local.mob, 11, "8 + half of 9 is 12, at most 11 (2026-10-21)");
   assert.equal(view().value, 9);
   // Trouble at Lead 1: cornered; the chase rises once (+1 → 10, the Limit) after she is captured
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true }, [1, 1, 2]); // then the flight's ground

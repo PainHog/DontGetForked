@@ -75,13 +75,16 @@ test("Chapter 2 (F19): no Castle Duty raise in a chase, whether or not the track
   assert.equal(plan(witch, { duty: true }).traitDie, 12);
 });
 
-test("V19 Spectral: a Ghost gets past a group obstacle without rolling, unless it carries loot or furniture", async () => {
+test("V19 Spectral: a Ghost gets past a group obstacle at a way in without rolling, unless it carries loot or furniture", async () => {
   const { spectralPasses, newGroup, awaitsRoll, groupWaiting, groupRecord, groupDone, groupCaught } = await import("../module/logic/checks.mjs");
-  assert.equal(spectralPasses(entitySystem("ghost")), true, "Spectral is the Ghost's default Perk");
-  assert.equal(spectralPasses({ ...entitySystem("ghost"), carried: [{ name: "a top hat" }] }), false);
-  assert.equal(spectralPasses({ ...entitySystem("ghost"), carryingFurniture: true }), false);
-  assert.equal(spectralPasses({ ...entitySystem("ghost"), perk: "rattle" }), false);
-  assert.equal(spectralPasses(entitySystem("witch")), false);
+  const wayIn = { wayIn: true };
+  assert.equal(spectralPasses(entitySystem("ghost"), wayIn), true, "Spectral is the Ghost's default Perk");
+  assert.equal(spectralPasses(entitySystem("ghost")), false, "2026-10-21: only at a way in (a location's first obstacle)");
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), carried: [{ name: "a top hat" }] }, wayIn), false);
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), carryingFurniture: true }, wayIn), false);
+  assert.equal(spectralPasses({ ...entitySystem("ghost"), perk: "rattle" }, wayIn), false);
+  assert.equal(spectralPasses(entitySystem("witch"), wayIn), false);
+  assert.equal(newGroup({ id: "w", wayIn: true, members: [{ actorId: "a" }, { actorId: "b" }] }).wayIn, true, "the group check keeps whether it's a way in");
   // in a group check it doesn't roll and isn't waited for, and it can't be caught
   let g = newGroup({ id: "g", members: [{ actorId: "ghost", name: "A Ghost", passes: true }, { actorId: "w", name: "A Witch" }, { actorId: "d", name: "Dracula" }] });
   assert.equal(awaitsRoll(g, "ghost"), false);
@@ -409,17 +412,25 @@ test("B7 at the table: the roll dialog offers Mesmerise only at a watched obstac
   assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only at a watched obstacle/.test(w)));
 });
 
-test("V19 at the table: a group check lets an empty-handed Spectral Ghost past; one that carries rolls like anyone else", async () => {
+test("V19 at the table: a group check at a way in lets an empty-handed Spectral Ghost past; one that carries, or anywhere else, rolls like anyone else", async () => {
   const ghost = await asUser(GM, () => api.createEntity("ghost", { ownerId: BEN.id })); // Spectral is its default Perk
   await settle();
-  const open = async () => {
-    await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id, ghost.id], label: "the crowded shop floor" });
+  const open = async (wayIn = true) => {
+    await op(GM, OPS.raidGroup, { action: "open", members: [witch.id, dracula.id, ghost.id], label: "the crowded shop floor", wayIn });
     await settle();
   };
+  // 2026-10-21: past a way in (a location's first obstacle) she rolls like anyone else
+  await open(false);
+  assert.equal(raid().group.rolls[ghost.id], undefined, "not at a way in: she rolls");
+  assert.match(lastMessage().content, /A Ghost: Spectral works only at a way in/);
+  await op(GM, OPS.raidGroup, { action: "close" });
+  await settle();
   await open();
   assert.deepEqual(raid().group.members.map((m) => m.actorId), [witch.id, dracula.id, ghost.id]);
+  assert.equal(raid().group.wayIn, true);
   assert.equal(raid().group.rolls[ghost.id]?.passed, true, "past without rolling");
-  assert.match(lastMessage().content, /A Ghost: past without rolling \(Spectral\)/);
+  assert.match(lastMessage().content, /A Ghost: past without rolling \(Spectral, at a way in\)/);
+  assert.match(lastMessage().content, /A way in: Spectral works here/);
   let content = "";
   dialogResponders.push((options) => { content = options.content; return null; });
   await asUser(BEN, () => api.roll(ghost, { trait: "sly" }));

@@ -13,6 +13,12 @@
  *  - documents: Actors (with the system's data models and derived data), Items,
  *    ChatMessages — players may write only what they own (actors) or authored
  *    (messages); creating or deleting actors and writing world settings are GM-only;
+ *    JournalEntries, Scenes, Macros, RollTables and Folders as plain world documents
+ *    (GM-only to create or delete; a create keeping an id already used throws);
+ *  - the system's compendium packs (installFoundry({ packs: true })), read from
+ *    packs/_source the way the build compiles them (tools/pack-config.mjs, the same
+ *    ids): getIndex, getDocuments, importAll (folder, keepId) and fromCompendium;
+ *  - settings menus (game.settings.registerMenu);
  *  - users connecting and dropping (setConnected fires userConnected on every client);
  *  - data models: foundry.data.fields (String/Number/Boolean/Schema/Array/Object…)
  *    fill each field's `initial` value and VALIDATE every create and update
@@ -320,8 +326,21 @@ export class User {
 class Collection extends Array {
   static get [Symbol.species]() { return Array; }
   get(id) { return this.find(d => d.id === id) ?? undefined; }
+  has(id) { return !!this.get(id); }
   get contents() { return [...this]; }
   getName(n) { return this.find(d => d.name === n); }
+  /** WorldCollection#fromCompendium: a compendium document's data for this world (its id kept only with keepId). */
+  fromCompendium(doc, { keepId = false, keepEmbeddedIds = true, clearFolder = false, clearSort = true, clearOwnership = true } = {}) {
+    const data = typeof doc?.toObject === "function" ? doc.toObject() : clone(doc);
+    setProperty(data, "_stats.compendiumSource", doc?.uuid ?? null);
+    delete data._key;
+    if (!keepId) delete data._id;
+    if (!keepEmbeddedIds) for (const k of ["pages", "notes", "results", "items"]) for (const e of data[k] ?? []) delete e._id;
+    if (clearFolder) delete data.folder;
+    if (clearSort) delete data.sort;
+    if (clearOwnership && "ownership" in data) data.ownership = { default: 0 };
+    return data;
+  }
 }
 
 /** Run `fn` as `user` (async continuations included). */
@@ -341,7 +360,13 @@ function broadcast(name, ...args) {
 /* ----------------------------------------------------------- Settings -- */
 
 class ClientSettings {
-  constructor() { this.settings = new Map(); this.values = new Map(); this.clientValues = new Map(); }
+  constructor() { this.settings = new Map(); this.values = new Map(); this.clientValues = new Map(); this.menus = new Map(); }
+  registerMenu(ns, key, data) {
+    touch();
+    const id = `${ns}.${key}`;
+    if (this.menus.has(id)) log.errors.push(`settings menu ${id} registered twice`);
+    this.menus.set(id, { ...data, namespace: ns, key });
+  }
   register(ns, key, data) {
     touch();
     const id = `${ns}.${key}`;
@@ -561,6 +586,8 @@ export class Actor extends BaseDocument {
     this.img = data.img ?? "icons/svg/mystery-man.svg";
     this.flags = clone(data.flags ?? {});
     this.ownership = clone(data.ownership ?? { default: 0 });
+    this.folder = data.folder ?? null;
+    this.pack = data.pack ?? null; // a compendium's copy (not in the world)
     this.prototypeToken = { actorLink: false, ...clone(data.prototypeToken ?? {}) }; // Foundry's default: unlinked
     this.system = fillSystem("Actor", data.type, clone(data.system ?? {}));
     this.items = new Collection();
@@ -569,7 +596,7 @@ export class Actor extends BaseDocument {
     this.prepareData();
   }
   get documentName() { return "Actor"; }
-  get uuid() { return `Actor.${this.id}`; }
+  get uuid() { return this.pack ? `Compendium.${this.pack}.Actor.${this.id}` : `Actor.${this.id}`; }
   get _source() { return this.toObject(); }
   get hasPlayerOwner() { return game.users.some(u => !u.isGM && this.testUserPermission(u, "OWNER")); }
   get sheet() { return { render: () => {}, rendered: false }; }
@@ -583,7 +610,7 @@ export class Actor extends BaseDocument {
   }
   reset() { this.prepareData(); }
   toObject() {
-    return clone({ _id: this.id, name: this.name, type: this.type, img: this.img, flags: this.flags, ownership: this.ownership, system: { ...this.system }, items: this.items.map(i => i.toObject()) });
+    return clone({ _id: this.id, name: this.name, type: this.type, img: this.img, flags: this.flags, ownership: this.ownership, folder: this.folder, prototypeToken: this.prototypeToken, system: { ...this.system }, items: this.items.map(i => i.toObject()) });
   }
   async update(changes, options = {}) {
     touch();
@@ -619,11 +646,22 @@ export class Actor extends BaseDocument {
   async updateEmbeddedDocuments(type, updates) {
     for (const u of updates) { const { _id, ...rest } = u; await this.items.get(_id)?.update(rest); }
   }
+  /** Several at once; an id is kept only with keepId (and one already in the world throws, as Foundry does). */
+  static async createDocuments(list = [], { keepId = false } = {}) {
+    const made = [];
+    for (const d of list) {
+      const data = clone(d);
+      if (!keepId) delete data._id;
+      if (data._id && game.actors.get(data._id)) throw new Error(`Actor ${data._id} already exists in the world`);
+      made.push(await Actor.create(data));
+    }
+    return made;
+  }
   static async create(data) {
     touch();
     if (!game.user?.isGM) throw new Error(`${game.user?.name} lacks permission to create an Actor`);
     const AC = CONFIG.Actor.documentClass ?? Actor;
-    const actor = new AC(clone(data));
+    const actor = new AC({ ...clone(data), pack: null });
     validateSystem("Actor", actor.type, actor.toObject().system, actor.name);
     game.actors.push(actor);
     broadcast("createActor", actor, {}, game.user.id);
@@ -661,6 +699,111 @@ export class ChatMessage extends BaseDocument {
   }
   static getSpeaker({ actor = null, alias = null } = {}) { return actor ? { actor: actor.id, alias: actor.name } : { alias: alias ?? game.user?.name }; }
   static applyRollMode(data) { return data; }
+}
+
+/* ------------------------------------------- World documents (plain) -- */
+
+/** JournalEntry, Scene, Macro, RollTable, Folder: their data as given, GM-only to create or delete. */
+class WorldDocument extends BaseDocument {
+  static documentName = "Document";
+  constructor(data = {}) {
+    super();
+    Object.assign(this, clone(data));
+    this.id = data._id ?? randomID();
+    delete this._id;
+    delete this._key;
+    this.flags ??= {};
+    this.ownership ??= { default: 0 };
+    this.folder ??= null;
+  }
+  get documentName() { return this.constructor.documentName; }
+  get uuid() { return this.pack ? `Compendium.${this.pack}.${this.documentName}.${this.id}` : `${this.documentName}.${this.id}`; }
+  static get collection() { return game.collections.get(this.documentName); }
+  toObject() { const o = clone({ ...this }); o._id = this.id; delete o.id; delete o.pack; return o; }
+  static async create(data, options = {}) { return (await this.createDocuments([data], options))[0]; }
+  static async createDocuments(list = [], { keepId = false } = {}) {
+    touch();
+    if (!game.user?.isGM) throw new Error(`${game.user?.name} lacks permission to create a ${this.documentName}`);
+    const made = [];
+    for (const d of list) {
+      const data = clone(d);
+      if (!keepId) delete data._id;
+      if (data._id && this.collection.get(data._id)) throw new Error(`${this.documentName} ${data._id} already exists in the world`);
+      const doc = new this({ ...data, pack: null });
+      delete doc.pack;
+      this.collection.push(doc);
+      made.push(doc);
+      broadcast(`create${this.documentName}`, doc, {}, game.user.id);
+    }
+    return made;
+  }
+  async update(changes) {
+    touch();
+    if (!game.user?.isGM && !this.isOwner) throw new Error(`${game.user?.name} lacks permission to update ${this.documentName} ${this.name}`);
+    const diff = applyUpdate(this, changes);
+    broadcast(`update${this.documentName}`, this, diff, {}, game.user.id);
+    return this;
+  }
+  async delete() {
+    touch();
+    if (!game.user?.isGM) throw new Error(`${game.user?.name} lacks permission to delete ${this.documentName} ${this.name}`);
+    const coll = this.constructor.collection;
+    const i = coll.indexOf(this);
+    if (i >= 0) coll.splice(i, 1);
+    broadcast(`delete${this.documentName}`, this, {}, game.user.id);
+    return this;
+  }
+}
+export class JournalEntry extends WorldDocument { static documentName = "JournalEntry"; }
+export class Scene extends WorldDocument { static documentName = "Scene"; }
+export class Macro extends WorldDocument { static documentName = "Macro"; }
+export class RollTable extends WorldDocument { static documentName = "RollTable"; }
+export class Folder extends WorldDocument { static documentName = "Folder"; }
+const DOCUMENT_CLASSES = () => ({ Actor: CONFIG.Actor.documentClass ?? Actor, JournalEntry, Scene, Macro, RollTable, Folder });
+
+/** A system compendium pack, read from its source the way tools/build-packs.mjs compiles it (the same ids). */
+class CompendiumCollection {
+  constructor(meta, docs) {
+    this.metadata = { ...meta, id: `${SYSTEM_ID}.${meta.name}`, packageName: SYSTEM_ID, packageType: "system" };
+    this.collection = this.metadata.id;
+    this.documentName = meta.type;
+    this._docs = docs;
+    this.index = new Map(docs.map(d => [d._id, { _id: d._id, name: d.name, uuid: `Compendium.${this.collection}.${meta.type}.${d._id}` }]));
+  }
+  get title() { return this.metadata.label; }
+  get documentClass() { return DOCUMENT_CLASSES()[this.documentName]; }
+  async getIndex() { touch(); return this.index; }
+  async getDocuments(query = {}) {
+    touch();
+    const ids = query._id__in;
+    const Cls = this.documentClass;
+    return this._docs.filter(d => !ids || ids.includes(d._id)).map(d => new Cls({ ...clone(d), pack: this.collection }));
+  }
+  /** v13 CompendiumCollection#importAll: into a folder (the one given, or a new one named after the pack). */
+  async importAll({ folderId = null, folderName = "", ...options } = {}) {
+    touch();
+    let folder = folderId ? game.folders.get(folderId) : null;
+    if (folderId && !folder) throw new Error(`no folder ${folderId}`);
+    folder ??= await Folder.create({ name: folderName || this.title, type: this.documentName, folder: null });
+    const coll = game.collections.get(this.documentName);
+    const data = (await this.getDocuments()).map(d => ({ ...coll.fromCompendium(d, options), folder: folder.id }));
+    return this.documentClass.createDocuments(data, options);
+  }
+}
+
+/** The system's packs (system.json), each from packs/_source through tools/pack-config.mjs. */
+async function loadPacks() {
+  const { PACKS, readSource, toCliDoc } = await import("./pack-config.mjs");
+  const manifest = JSON.parse(readFileSync(join(ROOT, "system.json"), "utf8"));
+  const out = new Map();
+  for (const meta of manifest.packs ?? []) {
+    const def = PACKS.find(p => p.out === meta.name);
+    if (!def) continue;
+    const docs = readSource(def.file).map((raw, i) => toCliDoc(def, raw, i));
+    const pack = new CompendiumCollection(meta, docs);
+    out.set(pack.collection, pack);
+  }
+  return out;
 }
 
 /* -------------------------------------------------------------- Dice -- */
@@ -816,7 +959,7 @@ export let CONFIG;
  * Install the globals. Returns the handles a test needs.
  * @param {{users: {id,name,isGM?,active?}[]}} opts
  */
-export function installFoundry({ users = [] } = {}) {
+export function installFoundry({ users = [], packs = false } = {}) {
   const userDocs = new Collection(...users.map(u => new User(u)));
   Object.defineProperty(userDocs, "activeGM", { get: () => userDocs.find(u => u.isGM && u.active) ?? null });
   defaultUser = userDocs.find(u => u.isGM) ?? userDocs[0];
@@ -839,7 +982,10 @@ export function installFoundry({ users = [] } = {}) {
     items: new Collection(),
     messages: new Collection(),
     journal: new Collection(),
-    scenes: { viewed: null },
+    scenes: Object.assign(new Collection(), { viewed: null }),
+    macros: new Collection(),
+    tables: new Collection(),
+    folders: new Collection(),
     packs: new Map(),
     combat: null,
     i18n,
@@ -865,8 +1011,12 @@ export function installFoundry({ users = [] } = {}) {
       }
     }
   };
+  game.collections = new Map([["Actor", game.actors], ["Item", game.items], ["JournalEntry", game.journal], ["Scene", game.scenes], ["Macro", game.macros], ["RollTable", game.tables], ["Folder", game.folders], ["ChatMessage", game.messages]]);
+  // the system's compendium packs (asked for: a test that imports them); loaded before the system's ready hook runs
+  if (packs) game._packsLoading = loadPacks().then(m => { for (const [k, v] of m) game.packs.set(k, v); });
   globalThis.Hooks = Hooks;
   globalThis.Handlebars = Handlebars;
+  Object.assign(globalThis, { JournalEntry, Scene, Macro, RollTable, Folder });
   globalThis.Actor = Actor;
   globalThis.Item = Item;
   globalThis.User = User;

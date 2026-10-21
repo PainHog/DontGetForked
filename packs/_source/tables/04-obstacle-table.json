@@ -134,7 +134,7 @@
     },
     {
       "key": "strongbox",
-      "description": "<p><strong>A locked strongbox</strong></p><p>Quiet way: Wits (work out the catch)<br>Loud way: Charm (sweet-talk the clerk into opening it)</p>",
+      "description": "<p><strong>A locked strongbox</strong> <em>(inside)</em></p><p>Quiet way: Wits (work out the catch)<br>Loud way: Charm (sweet-talk the clerk into opening it)</p>",
       "range": [
         17,
         17
@@ -142,7 +142,7 @@
     },
     {
       "key": "backRoom",
-      "description": "<p><strong>A dark, cluttered back room</strong></p><p>Quiet way: Wits<br>Loud way: Sly (rummage through everything)</p>",
+      "description": "<p><strong>A dark, cluttered back room</strong> <em>(inside)</em></p><p>Quiet way: Wits<br>Loud way: Sly (rummage through everything)</p>",
       "range": [
         18,
         18

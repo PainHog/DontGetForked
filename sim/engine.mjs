@@ -61,13 +61,23 @@ export function playRaid({ party, town, params, numbers, rng, rec }) {
   return summarise(S);
 }
 
+/**
+ * The raid's Suspicion Limit: the label's, and (2026-10-21) with five Entities or more 1 lower on Easy and Standard
+ * (NUMBERS.fivePlayers; Hard as it is). A town without a label (a test's) takes the label's number as it is.
+ */
+export function limitFor(town, size, N) {
+  const F = N.fivePlayers;
+  const step = F && size >= F.size ? (F.limit?.[town.label] ?? 0) : 0;
+  return town.L.limit + step;
+}
+
 /** The state of one raid at its start (the furniture placed, the party reset). */
 function makeState({ party, town, params: P, numbers: N, rng, rec }) {
   const S = {
     party, town, P, N, rng, rec,
     L: town.L,
     susp: 0,
-    limit: town.L.limit,
+    limit: limitFor(town, party.length, N),
     turn: 0,
     turns: town.L.turns,
     phase: "raid", // raid | done
@@ -228,7 +238,7 @@ function steerBonus(S, g, loc) {
   const last = left[left.length - 1];
   const versions = last.alt && S.P.waysIn === "two" ? [last, last.alt] : [last];
   if (!versions.some((o) => o.group)) return 0;
-  const fix = S.P.spectralFix ?? "none";
+  const fix = S.P.spectralFix ?? "firstOnly";
   if (fix === "notLast" || fix === "noItem") return 0;
   if (fix === "firstOnly" && loc.obstacles[0] !== last) return 0;
   return 1;
@@ -620,8 +630,8 @@ function workLocation(S, loc) {
       const need = Math.min(cap, past().length);
       const passedNow = () => past().filter((m) => ob.passed.has(m.id)).length;
       ghostHandOff(S, hereOf(S)); // REVIEW2 ghostHandOff (off by default)
-      const specOK = spectralHere(S, loc, ob, past()); // REVIEW2 spectralFix (off by default: always true)
-      const noItemLast = (S.P.spectralFix ?? "none") === "noItem" && loc.obstacles.filter((o) => !o.cleared).length === 1;
+      const specOK = spectralHere(S, loc, ob, past()); // spectralFix (2026-10-21 "firstOnly": only at a way in)
+      const noItemLast = (S.P.spectralFix ?? "firstOnly") === "noItem" && loc.obstacles.filter((o) => !o.cleared).length === 1;
       for (const m of avail) if (specOK && hasPerk(m, "spectral") && !(S.P.spectralRule === "noLoot" && (m.items.length || m.furniture))) { ob.passed.add(m.id); if (noItemLast) (ob.spectralPassed ??= new Set()).add(m.id); if (S.P.review2Stats) S.st.spectralGroup = (S.st.spectralGroup ?? 0) + 1; } // drifts past without rolling (candidate: not while carrying)
       if (passedNow() >= need) { ob.cleared = true; continue; }
       let rollers = avail.filter((m) => !ob.passed.has(m.id));
@@ -635,7 +645,7 @@ function workLocation(S, loc) {
         loc.behindWaits = true;
       }
       if (rollers.length === 0) {
-        if (noItemWaits(S, loc, ob, past())) break; // REVIEW2 spectralFix "noItem": only a Spectral pass so far; someone must roll it
+        if (noItemWaits(S, loc, ob, past())) break; // spectralFix "noItem": only a Spectral pass so far; someone must roll it
         // Everyone free to act is past it, and someone here isn't (it got Trouble). Those past go on; the others stay
         // behind it and try again for themselves (above). Before the audit the obstacle was cleared for everyone here,
         // so one who never got past went on with the rest.
@@ -744,13 +754,14 @@ function ghostHandOff(S, members) {
 }
 
 /**
- * REVIEW2 spectralFix (candidate texts, off by default; review 1.1): may a Ghost use Spectral on `ob`, the location's next
- * obstacle? "notLast" (a): not on the location's last obstacle; "firstOnly" (c): only on its first (either way in);
+ * spectralFix (2026-10-21: "firstOnly"; the other readings were the v0.2 review's 1.1 candidates): may a Ghost use Spectral
+ * on `ob`, the location's next obstacle? "firstOnly" (c, the rule): only at a way in, its first obstacle (either version;
+ * a Ghost past it stays past whichever way in the others pick, pickWayIn); "notLast" (a): not on the location's last obstacle;
  * "noItem" (b): anywhere, but at the last obstacle only while someone else here can roll it, since her pass doesn't take
  * the item (alone there, she rolls it herself).
  */
 function spectralHere(S, loc, ob, here) {
-  const fix = S.P.spectralFix ?? "none";
+  const fix = S.P.spectralFix ?? "firstOnly";
   if (fix === "none") return true;
   const left = loc.obstacles.filter((o) => !o.cleared);
   const last = left.length === 1 && left[0] === ob;
@@ -759,9 +770,9 @@ function spectralHere(S, loc, ob, here) {
   if (fix === "noItem") return !last || here.some((m) => m.status === "active" && !hasPerk(m, "spectral"));
   return true;
 }
-/** REVIEW2 spectralFix "noItem": at the location's last obstacle, has anyone here got past it by a roll (not a Spectral pass)? */
+/** spectralFix "noItem": at the location's last obstacle, has anyone here got past it by a roll (not a Spectral pass)? */
 function noItemWaits(S, loc, ob, past) {
-  if ((S.P.spectralFix ?? "none") !== "noItem") return false;
+  if ((S.P.spectralFix ?? "firstOnly") !== "noItem") return false;
   const left = loc.obstacles.filter((o) => !o.cleared);
   if (!(left.length === 1 && left[0] === ob)) return false;
   return !past.some((m) => ob.passed.has(m.id) && !(ob.spectralPassed && ob.spectralPassed.has(m.id)));
@@ -784,7 +795,7 @@ function spectralPass(S, loc, members) {
   if (!ob.group && !(alt && alt.group)) return false;
   const here = members.filter((m) => m.status === "active" && arrived(S, m));
   ghostHandOff(S, here); // REVIEW2 ghostHandOff (off by default): she hands her loot on first, so Spectral is on
-  if (!spectralHere(S, loc, ob, here)) return false; // REVIEW2 spectralFix (off by default)
+  if (!spectralHere(S, loc, ob, here)) return false; // spectralFix (2026-10-21: only at a way in)
   const can = (m) => hasPerk(m, "spectral") && !(S.P.spectralRule === "noLoot" && carrying(m));
   const ghosts = here.filter((m) => can(m) && !ob.passed.has(m.id));
   if (!ghosts.length) return false;
@@ -793,9 +804,9 @@ function spectralPass(S, loc, members) {
   S.rec.count("spectral: passed with no action (D4)");
   const outside = here.filter((m) => !can(m) && !(ob.group && !alt && ob.passed.has(m.id)));
   const last = loc.obstacles.filter((o) => !o.cleared).length === 1;
-  // REVIEW2 spectralFix "noItem" (b): at the last obstacle her pass doesn't take the item; the others roll it at their next
+  // spectralFix "noItem" (b): at the last obstacle her pass doesn't take the item; the others roll it at their next
   // action (spectralHere made sure someone else is here), and it's beaten only once one of them gets past by a roll.
-  if (last && (S.P.spectralFix ?? "none") === "noItem") { for (const g of ghosts) (ob.spectralPassed ??= new Set()).add(g.id); return true; }
+  if (last && (S.P.spectralFix ?? "firstOnly") === "noItem") { for (const g of ghosts) (ob.spectralPassed ??= new Set()).add(g.id); return true; }
   if (outside.length && !alt && !last) return true; // the others roll it at their next Turn here, as before
   ob.cleared = true;
   if (outside.length) { loc.behind = new Set(outside); loc.behindOb = ob; loc.behindWaits = false; loc.behindSpectral = true; }
@@ -903,8 +914,8 @@ function completeLocation(S, loc) {
     loc.itemsTaken = true;
     // outOfSightRule "handedSmart": the party keeps the loot out of the Invisible Man's hands when someone else is there.
     let takers = S.P.outOfSightRule === "handedSmart" && act.some((m) => !hasPerk(m, "outOfSight")) ? act.filter((m) => !hasPerk(m, "outOfSight")) : act;
-    // REVIEW2 spectralFix "noItem": a Spectral pass doesn't take the item, so whoever rolled past the last obstacle holds it.
-    const sp = (S.P.spectralFix ?? "none") === "noItem" ? loc.obstacles[loc.obstacles.length - 1]?.spectralPassed : null;
+    // spectralFix "noItem": a Spectral pass doesn't take the item, so whoever rolled past the last obstacle holds it.
+    const sp = (S.P.spectralFix ?? "firstOnly") === "noItem" ? loc.obstacles[loc.obstacles.length - 1]?.spectralPassed : null;
     if (sp && takers.some((m) => !sp.has(m.id))) takers = takers.filter((m) => !sp.has(m.id));
     for (const it of loc.items) {
       const holder = takers.reduce((a, b) => (b.items.length < a.items.length ? b : a), takers[0]);
@@ -996,14 +1007,15 @@ function chargeCost(S, phase) {
  * its +2 feeds the mob's fury instead of Suspicion.
  */
 function overdrawAllowed(S, phase, owner, ctx) {
-  // REVIEW2 localOverdraw "once" (off by default): at most one overdraw per runner per local chase.
-  if (phase === "local" && S.P.localOverdraw === "once" && ctx && ctx.chase && ctx.chase.odBy && ctx.chase.odBy.has(owner)) return false;
+  // localOverdraw "once" (2026-10-21): at most one overdraw per runner per local chase.
+  if (phase === "local" && (S.P.localOverdraw ?? "once") === "once" && ctx && ctx.chase && ctx.chase.odBy && ctx.chase.odBy.has(owner)) return false;
   if (phase !== "final") return true;
   const r = S.P.overdrawAtLimit;
   if (r === "forbidden") return false;
-  // REVIEW2 flightOverdraw (off by default = "weakness", the book): once per flight in every candidate; "round1" only in
-  // the flight's first round; "stack" a step down of its own, still never while the Weakness is in play; "stackAny" even then.
-  const fo = S.P.flightOverdraw ?? "weakness";
+  // flightOverdraw (2026-10-21: "stackAny", a step down of its own, allowed while the Weakness is in play): once per flight
+  // in every reading; "weakness" the book before (never while the Weakness is in play); "round1" only in the flight's first
+  // round; "stack" the step of its own, still never while the Weakness is in play.
+  const fo = S.P.flightOverdraw ?? "stackAny";
   if (fo !== "weakness" && r === "once") {
     if (owner.overdrewInFlight) return false;
     if (fo === "stackAny") return true;
@@ -1092,7 +1104,7 @@ function rollCandidates(S, m, ctx) {
  * Weakness that won't come in this flight (sunlight, not at dawn) counts 3. A step of its own ("stack") counts 3.
  */
 function smartODCost(S, m, ctx, need) {
-  const fo = S.P.flightOverdraw ?? "weakness";
+  const fo = S.P.flightOverdraw ?? "stackAny";
   let cost = 0;
   for (const [o, n] of need) {
     if (n <= o.charges) continue;
@@ -1117,8 +1129,8 @@ function planRoll(S, m, ctx) {
   const phase = ctx.phase;
   const cands = rollCandidates(S, m, ctx);
   // D6b (flightRaise "any"): in the final flight any Signature or Gift may be spent as a raise instead of its usual effect.
-  // REVIEW2 localRaise "any" (off by default): in a local chase too, any ability may be spent as a raise on your own roll.
-  const raiseAll = (phase === "final" && (P.flightRaise ?? "any") === "any") || (phase === "local" && P.localRaise === "any") ? sources(S, m, ctx, null) : sources(S, m, ctx, "raise");
+  // localRaise "any" (2026-10-21): in a local chase too, any ability may be spent as a raise on your own roll.
+  const raiseAll = (phase === "final" && (P.flightRaise ?? "any") === "any") || (phase === "local" && (P.localRaise ?? "any") === "any") ? sources(S, m, ctx, null) : sources(S, m, ctx, "raise");
   const hiddenSrc = sources(S, m, ctx, "hidden");
   const carrying = !!m.furniture;
   let seconds;
@@ -1164,7 +1176,7 @@ function planRoll(S, m, ctx) {
     if (duty) up += 1;
     if (c.trait === "nimble" && carrying && !hasPerk(m, "tireless") && !(hasPerk(m, "bruteStrength") && m.form === "hyde") && wc !== "carry") down += 1; // carriers roll Nimble one size smaller (tuning W-b: not with Wall-Crawler "carry")
     if (ctx.weakness) down += 1; // the mob brought your Weakness: one size smaller in the chase
-    if (ctx.odStep) down += 1; // REVIEW2 flightOverdraw "stack"/"stackAny": a flight overdraw's own step down (off by default)
+    if (ctx.odStep) down += 1; // flightOverdraw "stackAny" (2026-10-21) / "stack": a flight overdraw's own step down
     // wallCrawler "bigger" (the book since 2026-10-20, tuning W-e): in a chase (local or final) "your Nimble die is one size
     // bigger", the roll's one raise: no ability raise on top, and a step down (Garlic) cancels it one for one.
     const wcBig = wc === "bigger" && (phase === "local" || phase === "final") && c.trait === "nimble" && !duty;
@@ -1409,6 +1421,8 @@ function logChase(S, log, t, s0) {
 const oneRise = (S) => (S.P.chaseRule ?? "oneRise") === "oneRise";
 /** The local mob's rise with Suspicion: half of it, rounded down (the book); REVIEW2 NUMBERS.localMob.div: a third, etc. */
 const mobRise = (S) => (S.N.localMob.div ? Math.floor(S.susp / S.N.localMob.div) : Math.floor(S.susp * S.N.localMob.perSuspicion));
+/** localRoundCap (2026-10-21: 6): the most rounds a local chase runs before the Lead decides it (0: no cap). */
+const capRounds = (S) => Number(S.P.localRoundCap ?? 6) || 0;
 const corner = (S, m) => {
   if (hasPerk(m, "alreadyDead")) { m.loseTurn = S.P.alreadyDeadTurns > 1 ? S.P.alreadyDeadTurns : true; S.rec.count("already dead: drifted off"); return false; }
   capture(S, m);
@@ -1469,13 +1483,13 @@ function localChaseBody(S, m, t) {
     if (one) {
       ch.maxTrig = Math.max(ch.maxTrig, r.trigger);
       ch.odRise += r.odRise;
-      if (r.overdrawn.length) (ch.odBy ??= new Set()).add(m); // REVIEW2 localOverdraw "once" reads it
+      if (r.overdrawn.length) (ch.odBy ??= new Set()).add(m); // localOverdraw "once" reads it
       if (lead >= N.lead.localEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; tuneChase(S, m, "esc"); return chaseRise(S, ch); }
       if (lead <= 0) { if (corner(S, m)) { S.st.soloCaptured++; tuneChase(S, m, "cap"); } return chaseRise(S, ch); }
-      // REVIEW2 localRoundCap (off by default): after round N, a Lead of 2 or more escapes; anything less is cornered.
-      if (S.P.localRoundCap && round + 1 >= S.P.localRoundCap) {
+      // localRoundCap (2026-10-21: 6): still running after round 6, a Lead of 2 or more escapes; anything less is cornered.
+      if (capRounds(S) && round + 1 >= capRounds(S)) {
         t.capped = true;
-        if (lead >= 2) { S.rec.count("local chase escaped"); S.st.soloEscaped++; tuneChase(S, m, "esc"); return chaseRise(S, ch); }
+        if (lead >= N.lead.localCapEscape) { S.rec.count("local chase escaped"); S.st.soloEscaped++; tuneChase(S, m, "esc"); return chaseRise(S, ch); }
         if (corner(S, m)) { S.st.soloCaptured++; tuneChase(S, m, "cap"); }
         return chaseRise(S, ch);
       }
@@ -1529,7 +1543,7 @@ function groupChaseBody(S, group, t = {}) {
     const ground = chaseGround(S);
     for (const m of group) weak.set(m, weakNow(S, m, weak.get(m), round));
     const results = group.map((m) => executeRoll(S, m, planRoll(S, m, { phase: "local", options: groundFor(m, ground), difficulty: mobD, witnessed: false, helpers: [], locKind: null, weakness: weak.get(m), chase: ch }), "local"));
-    if (ch) results.forEach((r, i) => { if (r.overdrawn.length) (ch.odBy ??= new Set()).add(group[i]); }); // REVIEW2 localOverdraw "once" reads it
+    if (ch) results.forEach((r, i) => { if (r.overdrawn.length) (ch.odBy ??= new Set()).add(group[i]); }); // localOverdraw "once" reads it
     lead += majorityMove(results, critW, S.P.finalMove ?? "majority");
     // The round's rise: its biggest trigger, plus every overdraw on top (D3; under "merge" an overdraw is one of the triggers).
     const roundRise = Math.max(0, ...results.map((r) => r.trigger)) + results.reduce((a, r) => a + r.odRise, 0);
@@ -1538,10 +1552,10 @@ function groupChaseBody(S, group, t = {}) {
       ch.odRise += results.reduce((a, r) => a + r.odRise, 0);
       if (lead >= N.lead.localEscape) { S.st.sharedEscaped++; S.rec.count("shared chase escaped"); if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
       if (lead <= 0) { t.cornered = true; for (const m of group) if (corner(S, m)) captured = true; if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
-      // REVIEW2 localRoundCap (off by default): after round N, a Lead of 2 or more escapes; anything less is cornered.
-      if (S.P.localRoundCap && round + 1 >= S.P.localRoundCap) {
+      // localRoundCap (2026-10-21: 6): still running after round 6, a Lead of 2 or more escapes; anything less is cornered.
+      if (capRounds(S) && round + 1 >= capRounds(S)) {
         t.capped = true;
-        if (lead >= 2) { S.st.sharedEscaped++; S.rec.count("shared chase escaped"); if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
+        if (lead >= N.lead.localCapEscape) { S.st.sharedEscaped++; S.rec.count("shared chase escaped"); if (captured) S.st.sharedCaptured++; return chaseRise(S, ch); }
         t.cornered = true; for (const m of group) if (corner(S, m)) captured = true; if (captured) S.st.sharedCaptured++; return chaseRise(S, ch);
       }
       continue;
@@ -1754,17 +1768,17 @@ function finalFlight(S, trigger) {
     const ground = chaseGround(S);
     for (const m of fleeing) weak.set(m, weakNow(S, m, weak.get(m), round));
     const results = [];
-    const stackOD = ["stack", "stackAny"].includes(S.P.flightOverdraw ?? "weakness"); // REVIEW2 (off by default)
+    const stackOD = ["stack", "stackAny"].includes(S.P.flightOverdraw ?? "stackAny"); // 2026-10-21: the overdraw's own step
     for (const [i, m] of fleeing.entries()) {
       const ctx = {
         phase: "final", options: groundFor(m, ground), difficulty: mobD - fetchEase, witnessed: false, helpers: fleeing.filter((h) => h !== m),
         locKind: null, weakness: weak.get(m), weakOf: (o) => weak.get(o),
         furyLambda: furyRule && fury < N.furyCap ? N.furyLambda : 0,
-        round, rolled: new Set(fleeing.slice(0, i)), odStep: !!m.odStep, // REVIEW2 flightOverdraw / flightODPrice read these
+        round, rolled: new Set(fleeing.slice(0, i)), odStep: !!m.odStep, // flightOverdraw / flightODPrice read these
       };
       const plan = planRoll(S, m, ctx);
       const r = executeRoll(S, m, plan, "final");
-      if (stackOD && S.P.overdrawAtLimit === "once") for (const o of r.overdrawn) { o.odStep = true; o.overdrewInFlight = true; S.rec.count("flight overdraw: own step down (REVIEW2)"); }
+      if (stackOD && S.P.overdrawAtLimit === "once") for (const o of r.overdrawn) { o.odStep = true; o.overdrewInFlight = true; S.rec.count("flight overdraw: own step down"); }
       else if (S.P.overdrawAtLimit === "weakness" || S.P.overdrawAtLimit === "once") for (const o of r.overdrawn) { if (!weak.get(o)) S.rec.count("weakness taken by overdraw"); weak.set(o, true); o.overdrewInFlight = true; }
       results.push(r);
     }
@@ -1840,4 +1854,4 @@ function summarise(S) {
 }
 
 /** Internals for test/sim.test.mjs (not part of the simulator's interface). */
-export const internals = { makeState, rollCandidates, planRoll, executeRoll, pickCost, workLocation, groupCheck, exitLocation, lockupLocation, captivesAct, ctxFor, followsBehind, hereOf, localChase, groupChase, spectralPass, giveUps, chaseOdds };
+export const internals = { makeState, rollCandidates, planRoll, executeRoll, pickCost, workLocation, groupCheck, exitLocation, lockupLocation, captivesAct, ctxFor, followsBehind, hereOf, localChase, groupChase, spectralPass, giveUps, chaseOdds, overdrawAllowed, pickWayIn };

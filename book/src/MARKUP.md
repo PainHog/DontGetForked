@@ -119,3 +119,11 @@ Generic layouts; what goes in them is for the author to decide.
 and `figure.diagram` style it). Available names are listed in `book/art/README.md`.
 Spot illustrations at chapter ends are placed by the build (`SPOTS` in `build.mjs`),
 never written into the chapters.
+
+## Empty bands and "Waiting for Artwork"
+
+Where a page ends with an empty band and no stand-in picture is left, the build (`book/build.mjs`, planSpots) prints a
+framed "Waiting for Artwork" box sized to the gap: at a chapter's end, between two town pages, and (one-column pages
+only) before a block marked `<div class="keep gap-before">` when that block moves on to the next page. Use
+`gap-before` only on a hand-written block kept whole in the one-shot's single column; the rulebook's two columns
+don't take it.

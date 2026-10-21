@@ -5,8 +5,10 @@
  * escape number = clear), the mob's Difficulty, this round's ground and the
  * traits that work, whose Weakness is in play, who has rolled, and (D1) the
  * local chase's rise so far, which comes when it ends. Each player gets a Roll
- * button for their own Entity and, at the start of a round in a local chase, a
- * Give up button (D2: captured, no roll); the Storyteller gets those for everyone
+ * button for their own Entity and, at the start of a round in a local chase (once its
+ * ground is read), a Give up button (D2: captured, no roll); a local chase shows how
+ * many rounds it has left (2026-10-21: at most 6, then the Lead decides it); the
+ * Storyteller gets those for everyone
  * and the controls (roll the ground, move the Lead by the rolls, Lead ±1, escaped /
  * cornered / call it off, add or take out an Entity, start the final flight by
  * hand). Every control is a GM operation (module/raid/chase-flow.mjs); the rules
@@ -67,7 +69,7 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
         actorId: m.actorId,
         name: m.name,
         traits: c.ground ? traitList(C.traitsFor(c, m.actorId)) : "",
-        weakness: running && C.weaknessFor(c, m.actorId, { overdrawn: !!actor?.system?.weaknessInPlay }),
+        weakness: running && C.weaknessFor(c, m.actorId, { marked: !!actor?.system?.weaknessInPlay }),
         weaknessName: DGF.entities.find((e) => e.key === m.entityKey)?.weakness?.name ?? "",
         rolled: roll ? `${t(`DGF.Band.${roll.band}`)}${roll.critical ? ` (${t("DGF.Critical")})` : ""}` : "",
         canRoll: running && !!c.ground && !roll && !!actor?.isOwner,
@@ -82,7 +84,9 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
       running,
       kindLabel: t(`DGF.Chase.kind.${c.kind}`),
       causeLabel: t(`DGF.Chase.cause.${c.cause}`),
-      roundLine: t("DGF.Chase.roundLine", { round: c.round }),
+      // 2026-10-21: a local chase lasts at most 6 rounds (the chase keeps its cap: 0 with the switch off)
+      roundLine: c.kind === "local" && c.roundCap > 0 ? t("DGF.Chase.roundLineCap", { round: c.round, rounds: c.roundCap }) : t("DGF.Chase.roundLine", { round: c.round }),
+      capHint: c.kind === "local" && c.roundCap > 0 && running ? t("DGF.Chase.capHint", { rounds: c.roundCap, lead: DGF.localRoundCap.escapeAt }) : "",
       lead: c.lead,
       escape: c.escape,
       pips: Array.from({ length: c.escape + 1 }, (_, n) => ({ n, here: n === c.lead, end: n === 0 || n === c.escape })),
@@ -98,7 +102,7 @@ export class ChaseTracker extends HandlebarsApplicationMixin(ApplicationV2) {
       shared: c.kind === "final" || c.members.length > 1,
       waiting: running && c.ground ? C.waitingFor(c).map((m) => m.name).join(", ") : "",
       roundDone: C.roundDone(c),
-      outcome: c.outcome ? t(`DGF.Chase.outcome.${c.kind}.${c.outcome}`) : "",
+      outcome: c.outcome ? [t(`DGF.Chase.outcome.${c.kind}.${c.outcome}`), c.capped ? t("DGF.Chase.cappedText", { rounds: c.roundCap, lead: c.lead, need: DGF.localRoundCap.escapeAt }) : ""].filter(Boolean).join(" ") : "",
       history: c.history.slice(-4).reverse().map((h) => ({ text: t("DGF.Chase.historyLine", { round: h.round, ground: DGF.chaseTable[h.face - 1]?.name ?? "", move: h.move > 0 ? `+${h.move}` : `${h.move}`, lead: h.lead }) })),
       addable: isGM && running ? entities().filter((a) => !inChase.has(a.id)).map((a) => ({ actorId: a.id, name: a.name })) : [],
       auto: setting(SETTINGS.autoChase),

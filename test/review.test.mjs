@@ -162,12 +162,24 @@ test("D3: an overdraw adds +2 on top of the roll's other rise: alone, in a group
   await rollAs(ANN, witch, { trait: "sly", second: "mask", chase: true, [hedge()]: true }, [10, 5, 1]); // Sly d12: 15, a Success
   assert.match(cards(CARD.roll).at(-1).content, new RegExp(`A Witch overdraws \\(\\+2 on top of the chase${apos}s one rise, when it ends\\)`));
   assert.deepEqual([lastRoll().suspicion, lastRoll().chaseOverdraws, view().value], [0, 1, 1]);
-  // the sheet's Spend a charge in the chase, at no charges: another overdraw, +2 to the chase's rise
+  // 2026-10-21: one overdraw per runner per local chase: the sheet's Spend a charge at no charges is refused now
+  const before = log.warnings.length;
+  const msgs = game.messages.size;
   await asUser(ANN, () => api.spendCharge(witch));
   await settle();
+  assert.ok(log.warnings.slice(before).some((w) => w.includes("already overdrawn in this chase")));
+  assert.equal(game.messages.size, msgs, "no card: nothing spent");
+  // with that switch off, the sheet's overdraw adds its +2 to the chase's rise as before
+  await setSetting(SETTINGS.localOverdrawOnce, false);
+  await asUser(ANN, () => api.spendCharge(witch));
+  await settle();
+  await setSetting(SETTINGS.localOverdrawOnce, true);
   assert.deepEqual([cardOf(lastMessage()).kind, cardOf(lastMessage()).chaseId, cardOf(lastMessage()).suspicion], [CARD.ability, chase().id, 0]);
   assert.equal(view().value, 1, "nothing on the track yet");
   assert.match((await asUser(ANN, () => openChaseTracker())).renderedParts.body, new RegExp(`The chase${apos}s rise so far: \\+4`));
+  // and a roll that would overdraw again is refused (the switch back on)
+  const again = await refusedRoll(ANN, witch, { trait: "sly", second: "mask", chase: true, [hedge()]: true });
+  assert.ok(again.some((w) => w.includes("already overdrawn in this chase")));
   // the Storyteller: Escaped. The chase's one rise: no trigger, two overdraws on top: +4
   await op(GM, OPS.chaseEnd, { outcome: "escaped" });
   await settle();

@@ -52,11 +52,18 @@ export const OBSTACLE_TABLES = {
   ],
 };
 
-function makeObstacle(rng, L, numbers = null, avoidTrait = null) {
+/**
+ * One obstacle. `avoidTrait`: the second way in's quiet trait must differ from the first's (rolled again until it does).
+ * `wayIn` (2026-10-21, W14; numbers.wayInRules): at a way in, an obstacle that only makes sense inside (the table's
+ * `inside` rows) is rolled again; `noGroup`: the second way in when the first is a group obstacle (at most one of them is).
+ */
+function makeObstacle(rng, L, numbers = null, avoidTrait = null, { wayIn = false, noGroup = false } = {}) {
   const table = numbers && OBSTACLE_TABLES[numbers.obstacleTable];
   if (table) {
+    const rules = numbers.wayInRules !== false;
+    const reroll = (e) => (avoidTrait && e.quiet === avoidTrait) || (rules && wayIn && e.inside) || (rules && noGroup && e.group);
     let e;
-    do e = rng.pick(table); while (avoidTrait && e.quiet === avoidTrait);
+    do e = rng.pick(table); while (reroll(e));
     return {
       name: e.name,
       options: e.loud ? [{ trait: e.quiet, loud: false }, { trait: e.loud, loud: true }] : [{ trait: e.quiet, loud: false }],
@@ -84,9 +91,10 @@ function makeObstacle(rng, L, numbers = null, avoidTrait = null) {
 
 function makeLocation(rng, L, id, kind, numbers = null) {
   const n = weightedNum(rng, L.obstacles);
-  const obstacles = Array.from({ length: n }, () => makeObstacle(rng, L, numbers));
+  const obstacles = Array.from({ length: n }, (_, i) => makeObstacle(rng, L, numbers, null, { wayIn: i === 0 }));
   // T2: two ways in = the first obstacle comes in two versions (with a different quiet trait); the party picks one.
-  obstacles[0].alt = makeObstacle(rng.fork("way2", id), L, numbers, obstacles[0].options[0].trait);
+  // W14 (2026-10-21): neither way in is an inside obstacle, and at most one of them is a group obstacle.
+  obstacles[0].alt = makeObstacle(rng.fork("way2", id), L, numbers, obstacles[0].options[0].trait, { wayIn: true, noGroup: obstacles[0].group });
   return { id, kind, obstacles, items: [], furniture: null, done: false };
 }
 

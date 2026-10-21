@@ -60,10 +60,11 @@ const freeEntities = () => entities().filter((a) => !isCaptive(a.system)).map((a
 export async function groupCheckDialog() {
   if (!game.user?.isGM) return null;
   const list = freeEntities();
-  const content = await render(PICK_TEMPLATE, { intro: t("DGF.Group.intro"), entities: list, placeLabel: t("DGF.Group.what"), placeHint: t("DGF.Group.whatHint") });
+  // 2026-10-21: whether it is a way in (a location's first obstacle): Spectral works only there
+  const content = await render(PICK_TEMPLATE, { intro: t("DGF.Group.intro"), entities: list, placeLabel: t("DGF.Group.what"), placeHint: t("DGF.Group.whatHint"), wayInLabel: t("DGF.Group.wayIn"), wayInHint: t("DGF.Group.wayInHint") });
   const answer = await ask({
     title: t("DGF.Group.title"), content, okLabel: t("DGF.Group.open"),
-    read: (form) => ({ members: list.filter((e) => ticked(form, `entity.${e.id}`)).map((e) => e.id), label: String(field(form, "place")?.value ?? "").trim() }),
+    read: (form) => ({ members: list.filter((e) => ticked(form, `entity.${e.id}`)).map((e) => e.id), label: String(field(form, "place")?.value ?? "").trim(), wayIn: ticked(form, "wayIn") }),
   });
   if (!answer) return null;
   return sayRefused("DGF.Group.refused", await runOp(OPS.raidGroup, { action: "open", ...answer }));

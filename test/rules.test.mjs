@@ -6,7 +6,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   band, isCritical, monsterShows, suspicionForRoll, resolveRoll, rollOdds, stepUp, stepDown,
-  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves, obstacleOn, secondWayIn, villagerOn,
+  leadMove, majorityMove, localMobDifficulty, openApproachDifficulty, yearResult, tellGoesOff, weaknessInPlay, rollShoppingList, epilogueLines, addUpgrade, startingCharges, obstacleCount, obstacleDifficulty, obstacleWatched, capTwelves, obstacleOn, secondWayIn, villagerOn, firstWayIn, suspicionLimit,
 } from "../module/logic/rules.mjs";
 import { foldSuspicion, addEntry, cancelEvent } from "../module/logic/suspicion.mjs";
 import * as simRules from "../sim/rules.mjs";
@@ -68,11 +68,12 @@ test("R6 and die steps", () => {
 
 test("S10, S9 and the chase rules", () => {
   assert.equal(openApproachDifficulty(10), 8);
-  assert.equal(localMobDifficulty(0), 8); // B3: 8 + half the Suspicion, at most 12
+  assert.equal(localMobDifficulty(0), 8); // B3: 8 + half the Suspicion; 2026-10-21: at most 11 (was 12)
   assert.equal(localMobDifficulty(3), 9);
   assert.equal(localMobDifficulty(5), 10);
-  assert.equal(localMobDifficulty(8), 12);
-  assert.equal(localMobDifficulty(11), 12);
+  assert.equal(localMobDifficulty(6), 11);
+  assert.equal(localMobDifficulty(8), 11);
+  assert.equal(localMobDifficulty(12), 11);
   assert.equal(leadMove({ band: "success", critical: true }), 2);
   assert.equal(leadMove({ band: "cost" }), 0);
   assert.equal(majorityMove([{ band: "success" }, { band: "trouble" }, { band: "trouble" }]), -1);
@@ -152,7 +153,7 @@ test("C4 Tells go off on 4-6; C3 Weakness timings", () => {
   assert.equal(weaknessInPlay({ timing: "soon", round: 3 }), true);
   assert.throws(() => weaknessInPlay({ timing: "dawn", round: 1 }), /unknown Weakness timing/, "B3: the Dawn timing was dropped");
   assert.deepEqual([...DGF.weaknessTimings], ["always", "soon"]);
-  assert.equal(weaknessInPlay({ timing: "soon", round: 1, overdrawn: true }), true);
+  assert.equal(weaknessInPlay({ timing: "soon", round: 1, marked: true }), true, "an older world's Weakness mark");
 });
 
 test("C13: Lantern Night has six local customs, one per face of a d6", () => {
@@ -241,6 +242,16 @@ test("C18: the obstacle table: each trait the quiet way four times, 12 loud ways
   assert.equal(obstacleOn(9).key, "frontDoor");
   const faces = [10, 12, 13];
   assert.equal(secondWayIn(obstacleOn(9), () => faces.shift()).key, "shopkeeper"); // 10 and 12 are Sly too
+  // W14 (2026-10-21): no inside obstacle at a way in, and at most one of the two ways in a group obstacle
+  const inside = DGF.obstacleTable.filter((o) => o.inside).map((o) => o.key);
+  assert.ok(inside.includes("strongbox") && inside.includes("backRoom"), "the table marks its inside rows");
+  const f1 = [17, 18, 9]; // a strongbox, a back room, then a front door
+  assert.equal(firstWayIn(() => f1.shift()).key, "frontDoor");
+  const f2 = [18, 2, 1]; // after a front door (Sly): a back room (inside), a tug-of-war, fine
+  assert.equal(secondWayIn(obstacleOn(9), () => f2.shift()).key, "tugOfWar");
+  const f3 = [2, 16, 14]; // after the rooftops (group): a tug-of-war and the children are group too; the guard dog
+  assert.equal(secondWayIn(obstacleOn(7), () => f3.shift()).key, "dog");
+  assert.equal(secondWayIn(obstacleOn(13), () => [11][0]).key, "shopFloor", "a shop floor may follow the shopkeeper (one group)");
   const { OBSTACLE_TABLES } = await import("../sim/town.mjs");
   const { NUMBERS } = await import("../sim/params.mjs");
   assert.equal(NUMBERS.obstacleTable, "approved");
@@ -252,4 +263,13 @@ test("C19: the villagers: two d6 tables, flavour only", () => {
   assert.equal(DGF.villagers.doing.length, 6);
   assert.deepEqual(villagerOn(4, 2), { who: DGF.villagers.who[3], doing: DGF.villagers.doing[1] });
   assert.throws(() => villagerOn(7, 1));
+});
+
+test("2026-10-21: five Entities in the raid: the Limit is 1 lower on Easy and Standard, Hard's stays", () => {
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => suspicionLimit(l, 5)), [8, 9, 13]);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => suspicionLimit(l, 4)), [9, 10, 13]);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => suspicionLimit(l, 3)), [9, 10, 13]);
+  assert.deepEqual(["easy", "standard", "hard"].map((l) => suspicionLimit(l)), [9, 10, 13], "not counted: the label's");
+  assert.equal(suspicionLimit("standard", 6), 9, "more than five counts as five");
+  assert.throws(() => suspicionLimit("nightmare", 4), /unknown difficulty/);
 });
