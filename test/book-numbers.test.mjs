@@ -209,7 +209,8 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   assert.equal(M.perSuspicion, 0.5, "the book says “half the Suspicion”");
   says(TXT.ch6, `Lead: starts at ${localStart}. You escape at ${localEscape}.`, "Chapter 6, The Local Chase");
   // D1: set when the chase starts, for the whole chase (module/logic/chase.mjs newChase)
-  says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion when the chase starts, rounded down, at most ${M.max}. It stays the same for the whole chase.`, "Chapter 6, The Local Chase");
+  // the Suspicion after the catching roll's rise: module/raid/chase-flow.mjs records the roll's Suspicion, then startLocal
+  says(TXT.ch6, `The mob’s Difficulty: ${M.base} plus half the Suspicion when the chase starts (after the rise from the roll that got you caught), rounded down, at most ${M.max}. It stays the same for the whole chase.`, "Chapter 6, The Local Chase");
   says(TXT.ch6, `(Suspicion 5: ${M.base} + 2 = ${localMobDifficulty(5)}.)`, "Chapter 6, The Local Chase (the example)");
   says(TXT.ch8, `${DGF.charges} charges per Entity, ${DGF.turns} Turns, overdraw Suspicion +${DGF.suspicion.overdraw} (on top).`, "Chapter 8, The Same on Easy, Standard and Hard");
   says(TXT.ch8, `Local chase: Lead starts at ${localStart}, escape at ${localEscape}; the mob is ${M.base} plus half the Suspicion when it starts, rounded down, at most ${M.max}.`, "Chapter 8, The Same on Easy, Standard and Hard");
@@ -230,11 +231,13 @@ test("the outside review's rules (Chapters 4–6) are what the Foundry logic doe
   c = recordRoll(c, "b", { messageId: "2", band: "success", rise: DGF.suspicion.monsterShows, riseKeys: ["monster"] }).chase;
   assert.equal(chaseRise(c).total, DGF.suspicion.monsterShows + DGF.suspicion.overdraw, "the biggest trigger, and the overdraw on top");
   // D2: giving up
-  says(TXT.ch6, "Giving up. At the start of any round, a runner may give up and be captured, with no roll. Anyone caught with it carries on without it.", "Chapter 6, The Local Chase");
+  says(TXT.ch6, "Giving up. At the start of any round, once the ground is read and before anyone rolls, a runner may give up and be captured, with no roll. Anyone caught with it carries on without it. A chase given up before anyone has rolled raises nothing.", "Chapter 6, The Local Chase");
   assert.equal(canGiveUp(c, "a").reason, "roundStarted", "at the start of a round only");
+  const lone = newChase({ id: "y", members: [memberOf({ id: "a", name: "A", system: { entityKey: "witch" } })] });
+  assert.equal(chaseRise(giveUp(startRound(lone, { face: 1 }), "a").chase).total, 0, "given up once the ground is read, before any roll: it raises nothing");
   assert.deepEqual(giveUp(resolveRound(c).chase, "a").chase.members.map((m) => m.actorId), ["b"], "the other carries on");
   // D6b: any ability as a raise in the final flight
-  says(TXT.ch6, "Any ability may also be spent as a raise (the trait die one size bigger) instead of doing what it usually does. Still one raise per roll.", "Chapter 6, The Final Flight");
+  says(TXT.ch6, "Any ability, approaches and the Draught included, may also be spent as a raise (the trait die one size bigger) on any runner’s roll, whatever its usual conditions, instead of doing what it usually does. Still one raise per roll.", "Chapter 6, The Final Flight");
   // D7b: everyone held
   says(TXT.ch6, "Everyone held. If every Entity in the party is held at once, the night ends there and then. The town has the lot of you, and the year is Forked.", "Chapter 6, Captured");
   // R4: the way out once a Turn
@@ -426,8 +429,8 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   assert.equal(R.lightStep.loud, 0);
   says(perk("shortcut"), `the way out’s Difficulty is ${R.shortcut.exitEase} lower when you roll it`, "Shortcut");
   says(perk("fetch"), `While you’re at the way out, its Difficulty is ${R.fetch.partyExitEase} lower for whoever rolls it. A final flight you’re in starts at Lead ${R.fetch.finalLead}, not ${DGF.lead.finalStart}`, "Fetch");
-  says(perk("nightRunner"), `when you flee alone, your local chase starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
-  says(perk("fearTheCurse"), `when you flee alone, the mob’s Difficulty in your local chase is ${R.fearTheCurse.localMobEase} lower`, "Fear the Curse");
+  says(perk("nightRunner"), `if you’re fleeing alone when your local chase starts, it starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
+  says(perk("fearTheCurse"), `if you’re fleeing alone when your local chase starts, its mob’s Difficulty is ${R.fearTheCurse.localMobEase} lower`, "Fear the Curse");
   says(perk("wallCrawler"), `in a chase you can always roll ${TRAIT[R.wallCrawler.chaseTrait]}`, "Wall-Crawler");
   says(perk("wallCrawler"), `and your ${TRAIT[R.wallCrawler.chaseRaise]} die is one size bigger (the roll’s one raise)`, "Wall-Crawler's second edge (2026-10-20)");
   says(perk("flyByNight"), `in a chase you can always roll ${TRAIT[R.flyByNight.chaseTrait]}`, "Fly by Night");

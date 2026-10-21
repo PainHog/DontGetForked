@@ -312,7 +312,7 @@ p.opener::first-line { font-variant: small-caps; letter-spacing: .03em; font-wei
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .tbl td.num, .tbl th.num { text-align: center; white-space: nowrap; }
 /* a chapter whose tables must share one page: a hair less row padding */
-.tight-tables .tbl td { padding-top: 0.028in; padding-bottom: 0.028in; }
+.tight-tables .tbl td, .tight-tables .tbl tbody th { padding-top: 0.028in; padding-bottom: 0.028in; }
 
 /* ------------------------------------------------------------ entries --- */
 /* A catalogue entry (a character option, an item, …) with an optional portrait or badge. */
@@ -422,6 +422,9 @@ figure.map figcaption, figure.diagram figcaption { font: italic 8.6pt/1.3 var(--
 figure.diagram { break-inside: avoid; margin: 0.04in 0 0.12in; }
 
 .chapter p.span-all, .chapter aside.span-all, .chapter div.span-all { column-span: all; }
+/* Chapter 8: the numbers that don't change with the level, a full-width strip with its list in two columns */
+.box.same-all ul { columns: 2; column-gap: 0.3in; margin-top: 0; }
+.box.same-all li { break-inside: avoid; }
 
 .signoff {
   column-span: all;
@@ -541,6 +544,7 @@ figure.tailpiece.fill svg { width: 100%; }
 .chapter.designer p.signoff { max-width: none; margin-top: 0.35in; text-align: right; }
 .credits-legal { width: 5.4in; font: 8.6pt/1.45 var(--sans); color: var(--ink-soft); }
 .credits-legal p { margin: 0 0 0.08in; }
+.credits-legal p:last-child { margin-bottom: 0; }   /* nothing follows it, so its gap can't push a full page over */
 
 /* --------------------------------------------------------- back cover --- */
 @page back { margin: 0; background: var(--dark-deep); @bottom-center { content: none; } }
@@ -580,7 +584,7 @@ figure.tailpiece.fill svg { width: 100%; }
 .town-list li { margin: 0 0 0.01in; }
 .town-top figure.map { margin: 0.02in 0 0; }
 .town-key { font-size: 8.2pt; line-height: 1.16; margin: 0.04in 0 0.04in; table-layout: fixed; }
-.town-key col.c-ob { width: 2.66in; } .town-key col.c-quiet { width: 1.42in; } .town-key col.c-loud { width: 2.4in; } .town-key col.c-d { width: 0.66in; }
+.town-key col.c-ob { width: 2.96in; } .town-key col.c-quiet { width: 1.27in; } .town-key col.c-loud { width: 2.25in; } .town-key col.c-d { width: 0.66in; }
 .town-key th { font-size: 7.2pt; letter-spacing: .04em; padding-top: 0.035in; padding-bottom: 0.035in; }
 .town-key td { padding-top: 0.017in; padding-bottom: 0.017in; }
 .town-key td:first-child { font-weight: 600; }
@@ -595,10 +599,18 @@ figure.tailpiece.fill svg { width: 100%; }
 }
 .town-key .step { display: inline-block; width: 0.6in; text-indent: 0; font: 700 7.5pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); }
 .town-key .watched { font: italic 600 7.6pt var(--sans); color: var(--alarm); white-space: nowrap; }
+/* not by colour alone: the maps' eye (book/tools/town-maps.mjs, in the same ink) before the word */
+.town-key .watched::before {
+  content: ""; display: inline-block; width: 1.45em; height: 0.86em; margin: 0 0.2em 0 0.15em; vertical-align: -0.1em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-11 -6.5 22 13'%3E%3Cpath d='M-10 0 Q0 -8 10 0 Q0 8 -10 0 Z' fill='%23faf9f6' stroke='%23161618' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle r='3.3' fill='%23161618'/%3E%3Ccircle cx='1.1' cy='-1.1' r='0.9' fill='%23faf9f6'/%3E%3C/svg%3E") no-repeat center / contain;
+}
 .town-key .for-piece { font: italic 600 7.6pt var(--sans); color: var(--accent-deep); white-space: nowrap; }
 
 /* Chapter 8's shopping table: where each kind is found, under the kind */
 .tbl .where { font-size: 0.86em; color: var(--ink-soft); font-style: italic; }
+/* each of its items stays on one line: the row breaks only between items, after a "·" */
+.tbl .item { white-space: nowrap; }
+.tbl.shop thead th:nth-child(2) { width: 1.28in; }   /* the kind and its places keep the width they had before the items stayed whole */
 
 /* Entity sheet and the one-page reference (back of the book) */
 .sheet-line { margin: -0.1in 0 0.18in; font-size: 9pt; color: var(--ink-soft); text-align: center; }

@@ -394,6 +394,26 @@ export const TUNING = {
   tuneStats: { default: false, values: [false, true], doc: "true = count raises, rolls on a d12, carriers' Mask rolls and each Entity's lone chases for the tuning report (no effect on play)." },
 };
 
+/**
+ * Measuring switches for the second outside review's open decisions (docs/reviews/2026-10-20-outside-v0.2/REVIEW.md
+ * Section 1; sim/review2-check.mjs, report sim/REVIEW2-2026-10-21.md). Like TUNING: kept out of PARAMS (not swept, not
+ * in defaults()), and the engine reads each with its default when it is absent, so leaving them out plays the book.
+ * The "policy" ones play a trick as generously as the rules allow (an upper bound); the "rule" ones are candidate texts.
+ * Numbers options (the local mob, the lock-up, Limits, Turns) go through NUMBERS overrides instead; the one engine
+ * addition there is NUMBERS.localMob.div (absent = the book's "half the Suspicion").
+ */
+export const REVIEW2 = {
+  ghostHandOff: { kind: "policy", default: "none", values: ["none", "hand", "handSteer"], doc: "none = the simulated players only hand loot over before a watched roll (U2); hand = a Ghost with Spectral who holds loot hands all of it to a friend at the same place at once (handing over is free, any time: Chapter 4), so Spectral stays on for her next group obstacle (review 1.1's trick); handSteer = hand, and her group prefers locations whose last obstacle is a group obstacle her Spectral pass takes the item past." },
+  spectralFix: { kind: "rule", default: "none", values: ["none", "notLast", "noItem", "firstOnly"], doc: "none = Spectral on any group obstacle (the book); notLast = (a) not on a location's last obstacle; noItem = (b) a Spectral pass never takes the item: at a location's last obstacle she is past, but someone must get past it by a roll before it is beaten (alone there, she rolls it herself); firstOnly = (c) only on a location's first obstacle (either way in)." },
+  doomedOverdraw: { kind: "policy", default: false, values: [false, true], doc: "false = in a local chase the players price Suspicion as usual even once the chase's rise already reaches the Limit; true = once it does, Suspicion past the Limit is lost (Chapter 5), so further Suspicion costs a runner nothing and it overdraws whenever a raise helps (review 1.2's trick)." },
+  localOverdraw: { kind: "rule", default: "any", values: ["any", "once"], doc: "any = as many overdraws in a local chase as a runner likes, +2 each on top of the one rise (the book); once = at most one overdraw per runner per local chase (the Table Rulings sheet)." },
+  flightOverdraw: { kind: "rule", default: "weakness", values: ["weakness", "stack", "stackAny", "round1"], doc: "weakness = an overdraw in the final flight brings your Weakness in from your next roll, once per flight, never while the Weakness is in play (the book, overdrawAtLimit \"once\"); stack = it costs a step down of its own (trait die one size smaller from your next roll to the end of the flight) that stacks with the Weakness, once per flight, still never while the Weakness is in play; stackAny = stack, and allowed while the Weakness is in play (Dracula and a Ghost can then overdraw once); round1 = the book's cost, but only in round 1 of the flight." },
+  flightODPrice: { kind: "policy", default: "flat", values: ["flat", "smart"], doc: "flat = the players price a flight overdraw at a flat 0.3 (the simulator so far); smart = at 0.25 for each of the overdrawer's own later rolls it actually makes worse: none when its Soon Weakness arrives by then anyway (an overdraw in round 2, or after it has rolled this round), up to 3 for a step that lasts (review 1.2's \"free in round 2\")." },
+  localRoundCap: { kind: "rule", default: 0, values: [0, 6], doc: "0 = a local chase runs until the Lead reaches the escape number or 0 (the book); 6 = after round 6, a Lead of 2 or more escapes and anything less is captured (cornered), solo and shared chases alike (review 1.3)." },
+  localRaise: { kind: "rule", default: "raiseOnly", values: ["raiseOnly", "any"], doc: "raiseOnly = in a local chase only raise abilities raise (the book); any = in a local chase too, any Signature or Gift may be spent as a raise on your own roll (review 1.6), still one raise per roll." },
+  review2Stats: { kind: "measure", default: false, values: [false, true], doc: "true = log every local chase (start Suspicion, rounds, how it ended, overdraws, overdraws made with the hunt already certain, the dice chosen) and the Ghost's hand-offs in the raid summary's st (no effect on play)." },
+};
+
 /** Defaults for every parameter. */
 export function defaults() {
   return Object.fromEntries(Object.entries(PARAMS).map(([k, p]) => [k, p.default]));

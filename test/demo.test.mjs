@@ -63,7 +63,7 @@ test("the script's numbers are Easy's: the list, the Limit, the way out, the loc
   const mob = (s) => Math.min(DGF.localMob.max, DGF.localMob.base + Math.floor(s * DGF.localMob.perSuspicion));
   // the table stops one short of the Limit (Easy's 9), where the hunt starts instead
   assert.ok(happens.includes(`Suspicion 0–1: ${mob(0)} · 2–3: ${mob(2)} · 4–5: ${mob(4)} · 6–7: ${mob(6)} · 8: ${mob(8)}`));
-  assert.ok(happens.includes("worked out when the chase starts. It stays the same for the whole chase."), "D1: the mob is set when the chase starts");
+  assert.ok(happens.includes("worked out when the chase starts (after the rise from the roll that got them caught). It stays the same for the whole chase."), "D1: the mob is set when the chase starts, after the catching roll's rise");
 });
 
 /** Each place's obstacle boxes in order: quiet trait, loud trait, Difficulty, watched. */

@@ -164,7 +164,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Johannes van Cuylenburgh (Dutch, c.1772-1841); 1803-1841
 - **Source:** https://commons.wikimedia.org/wiki/File:Landschap_met_molen_bij_maanlicht,_RP-P-BI-6653.jpg
 - **Licence:** CC0 (CC-zero). Rijksmuseum Amsterdam scan released CC0; artist died 1841.
-- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects. Plate margin at the top and right cropped off (2026-10-06, book audit BA-39). Re-prepared on 2026-10-20 (outside review of v0.1): 2000 px wide from the 3840 px scan (was 900 px, about 126 ppi at full text width); same crop.
+- **Audit:** Windmill on its post, cottages on the bank, a boat on the water with a figure in it. No floating objects. Plate margin at the top and right cropped off (2026-10-06, book audit BA-39). Re-prepared on 2026-10-20 (outside review of v0.1): 2000 px wide from the 3840 px scan (was 900 px, about 126 ppi at full text width); same crop. Re-cropped on 2026-10-21 (outside review of v0.2, N6): the right edge moves from 0.935 to 0.941 of the scan, so the engraver's signature ("J. van Cuylenburgh", in the grass at the lower right) is whole instead of cut through its last letters; the plate's etched edge is at about 0.942, so no paper or plate line shows. 2000 × 1177 px (was 1185 px tall).
 
 ## spot-bonfire: Spot (Chapter 8 end)
 
@@ -172,7 +172,7 @@ Public-domain prints standing in until the illustrator's work arrives (decided b
 - **Artist:** Christiaan Andriessen (Dutch, 1775-1846); 1805-1808, pen and watercolour
 - **Source:** https://commons.wikimedia.org/wiki/File:Kinderen_bij_een_vreugdevuur_op_St._Maarten,_RP-T-2016-35.jpg (prepared from Commons' 3840 px rendition since 2026-10-20; it was the 1920 px one, about 126 ppi at full text width)
 - **Licence:** CC0 (CC-zero), checked 2026-10-05. Rijksmuseum Amsterdam scan released CC0; artist died 1846.
-- **Audit:** Seven figures standing or kneeling on the ground round a bonfire, their shadows running out from the fire across the ground; the fire on the ground among their feet; a tree rooted at the left, its branches overhead; fence posts set in the ground at the right. Faces that turn to us show two eyes. The artist's handwritten date and title are cropped off.
+- **Audit:** Seven figures standing or kneeling on the ground round a bonfire, their shadows running out from the fire across the ground; the fire on the ground among their feet; a tree rooted at the left, its branches overhead; fence posts set in the ground at the right. Faces that turn to us show two eyes. The artist's handwritten date and title are cropped off. **Printed again** from 2026-10-21 (outside review of v0.2, N1 and N3): Chapter 8 now ends with room for it, so it is the chapter's end spot again (7.14 × 6.36 in, the sides trimmed about 8% each by the build's fill, which keeps the tree's trunk and roots at the left and a fence post at the right), and Christiaan Andriessen is back on the rulebook's credits page.
 
 ## The Entities' portraits (Chapter 2)
 
@@ -369,3 +369,14 @@ A3, A4, A5, L12 and the two Palmer re-sources changed five printed pictures and 
 | Institutions | the Internet Archive is new (dracula-revealed); the Rijksmuseum also for invisible-revealed; the National Gallery of Art also for part1-tower, ch05-bellman, ch01-castle and back-festival | the same, less back-festival | **add** the Internet Archive to both |
 
 Every other row of the table above is unchanged. Ch07-dawn stays the Google Art Project scan on Commons: the National Gallery of Art has no copy of *Opening the Fold*.
+
+## Credits check after the outside review of v0.2 (2026-10-21)
+
+The review said Paul Gavarni's print was still Dracula's "In costume" picture and that his name had been dropped. That isn't so: `dracula-costume` is Charles Rochussen's 1868 playbill scene (above), and Rochussen is credited; nothing by Gavarni is printed. Every picture each book prints (the `data-art` names in `book/dist/dont-get-forked.html` and `book/dist/lantern-night-in-hallowby.html`) was matched to its artist above, and both credits lines checked in both directions:
+
+| Book | Change | Result |
+|---|---|---|
+| Rulebook | `spot-bonfire` printed again (Chapter 8's end) | **Christiaan Andriessen added back** to the credits, after Cuylenburgh, where he was before |
+| Rulebook | — | Every other credited name has a printed picture: Koster, Palmer, Bloch, Sandby, Doré, Vallotton, Folkema, Wolgemut, Pleydenwurff, de Visscher after van Ostade, Chodowiecki, Bleker, Cornet (`spot-lantern`, Chapter 1's end), Bewick, Cuylenburgh, Lepère after Scott, Rochussen (`dracula-costume`), Morel, David, Wageman and Whittock (`creature-revealed`), van Maële, Sand, Daumier, Leech, Woodward, Batten, Macauley, W. Duke, Sons & Co., and the unknown engravers (`ch02-curiosities`, `ch03-dice`, `ghost-costume`, `creature-costume`'s engraver); every printed picture's artist is credited |
+| One-shot | — | Unchanged and still exact: its five spots (lantern, owl, windmill, watchman, cart) are all printed, and every credited name has a printed picture |
+

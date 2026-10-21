@@ -183,6 +183,7 @@ body = body.replace(/<table class="tbl([^"]*)">([\s\S]*?)<\/table>/g, (m, cls, i
 // Markup can override per table: class "flow" lets a short table split across the
 // columns (so it doesn't leave a column-high hole beside it), class "nosplit" keeps a
 // longer table whole with its heading (so it never strands a row or two on its own).
+// A list marked "flow" may split the same way (its heading is then not bound to it).
 // (The heading's text may not run past its own closing tag, so a heading followed by
 // anything else — an article, a div — is left alone rather than swallowing what comes next.)
 body = body.replace(
@@ -190,7 +191,7 @@ body = body.replace(
   (m, head, _level, ws, block, tag, attrs) => {
     if (tag === "table" && /\bnosplit\b/.test(attrs)) return `<div class="keep">${head}${ws}${block}</div>`;
     if (tag === "table" && (/\b(wide|flow)\b/.test(attrs) || (block.match(/<tr\b/g) ?? []).length > 9)) return m;
-    if ((tag === "ul" || tag === "ol") && (block.match(/<li\b/g) ?? []).length > 6) return m;
+    if ((tag === "ul" || tag === "ol") && ((block.match(/<li\b/g) ?? []).length > 6 || /\bflow\b/.test(attrs))) return m;
     // a list with a list inside: the match ends at the inner list's close, so wrapping it would split the outer list
     if ((tag === "ul" || tag === "ol") && /<(?:ul|ol)\b/.test(block.slice(3))) return m;
     if (tag === "p" && block.length > 900) return m;
@@ -280,7 +281,7 @@ const SPOTS = DEMO ? {
   "ch-05": ["spot-watchman"],
   "ch-06": ["spot-windmill"],
   "ch-07": ["spot-cart"],
-  // ch-08: no gap since v0.2, so the bonfire spot (and Andriessen in the credits) is out
+  "ch-08": ["spot-bonfire"],
   "ch-09": ["spot-owl"],
 };
 const PT_PER_IN = 72;

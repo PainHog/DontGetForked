@@ -71,7 +71,10 @@ Record every ruling or text change in `book/REVIEW.md`.
 Tables with 4+ columns automatically span both text columns (`wide`).
 Add `flow` to let a short table split across the two columns, or `nosplit` to keep a table whole
 with its heading (use sparingly — a large unsplittable table can leave a gap).
-Wrap a chapter in `<div class="tight-tables">` when its tables must squeeze onto one page.
+A list marked `flow` (`<ul class="flow">`) may split across the columns too, so it isn't bound to
+its heading as a short list otherwise is.
+Wrap a chapter in `<div class="tight-tables">`, or add `tight-tables` to its section's classes, when
+its tables must squeeze onto fewer pages (a hair less row padding).
 
 ## Catalogue entries and stat blocks
 

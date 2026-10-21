@@ -80,7 +80,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost." },
       { key: "keeperOfTreasures", name: "Keeper of Treasures", text: "“Drop an item” is never your Cost." },
-      { key: "fearTheCurse", name: "Fear the Curse", text: "When you flee alone, the mob’s Difficulty in your local chase is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close", default: true },
+      { key: "fearTheCurse", name: "Fear the Curse", text: "If you’re fleeing alone when your local chase starts, its mob’s Difficulty is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close", default: true },
     ],
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
@@ -95,7 +95,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "nightRunner", name: "Night Runner", text: "When you flee alone, your local chase starts at Lead 2.", default: true },
+      { key: "nightRunner", name: "Night Runner", text: "If you’re fleeing alone when your local chase starts, it starts at Lead 2.", default: true },
       { key: "shortcut", name: "Shortcut", text: "The way out’s Difficulty is 2 lower when you roll it." },
       { key: "fetch", name: "Fetch", text: "You know the way home. Two edges. While you’re at the way out, its Difficulty is 1 lower for whoever rolls it. A final flight you’re in starts at Lead 3, not 2.", flavour: "You know the way home." },
     ],
@@ -320,8 +320,8 @@ DGF.perkRules = Object.freeze({
   // Perks that bend a chase, the lock-up or a Tell check (module/logic/chase.mjs, lockup.mjs, checks.mjs; chaseRaise: roll-plan.mjs):
   wallCrawler: Object.freeze({ chaseTrait: "nimble", chaseRaise: "nimble" }), // In a chase you can always roll Nimble, and your Nimble die is one size bigger there, the roll's one raise (2026-10-20).
   flyByNight: Object.freeze({ chaseTrait: "wits" }), // In a chase you can always roll Wits.
-  nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: when you flee alone, your local chase starts at Lead 2.
-  fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: when you flee alone, the mob's Difficulty in your local chase is 1 lower.
+  nightRunner: Object.freeze({ localLead: 2, aloneOnly: true }), // F14: if you're fleeing alone when your local chase starts, it starts at Lead 2.
+  fearTheCurse: Object.freeze({ localMobEase: 1, aloneOnly: true }), // F14: if you're fleeing alone when your local chase starts, its mob's Difficulty is 1 lower.
   spectral: Object.freeze({ groupPass: true }), // V19: past group obstacles without rolling, unless you carry loot or furniture.
   alreadyDead: Object.freeze({ corneredLosesTurn: true }), // Cornered in a local chase, you lose your next Turn instead of being captured (V5: if the chase's rise brings the Limit, you join the flight).
   builtToLast: Object.freeze({ slipOnCost: true }), // You slip free from the lock-up on a Success or a Cost.
