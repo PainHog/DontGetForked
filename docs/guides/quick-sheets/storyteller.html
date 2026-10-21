@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storyteller’s Guide</title>
+<style>
+/*FONTS*/
+@page { size: 8.5in 11in; margin: 0.34in 0.42in 0.46in 0.42in;
+  @bottom-center { content: "Don’t Get Forked  ·  Quick sheet  ·  Playtest copy: please don’t share"; font-family: "Alegreya Sans", sans-serif; font-size: 7.5pt; letter-spacing: 0.08em; color: #6b6a65; vertical-align: top; padding-top: 0.14in; } }
+/* colour tokens and type from book/src/book.css */
+:root {
+  --dark: #3a3a3c; --dark-deep: #222224; --paper: #f2f1ee; --paper-2: #e3e1dc; --paper-edge: #c9c6bf;
+  --ink: #161618; --ink-soft: #5a5a5e; --accent: #7a7f88; --accent-deep: #555a63; --alarm: #7c2a2a;
+  --display: "Fraunces", Georgia, serif; --text: "Alegreya", Georgia, serif; --sans: "Alegreya Sans", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--text); font-size: 8.5pt; line-height: 1.18; font-variant-numeric: lining-nums proportional-nums; hyphens: auto; -webkit-hyphens: auto; font-kerning: normal; }
+header { margin: 0 0 5pt; border-bottom: 2.5px solid var(--accent); padding-bottom: 3pt; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.2in; }
+.kicker { margin: 0; font: 800 7.5pt var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--accent-deep); }
+h1 { margin: 1pt 0 0; font: 900 21pt/1 var(--display); color: var(--dark-deep); }
+.sub { margin: 0 0 1pt; max-width: 4.4in; text-align: right; font: italic 9pt/1.25 var(--text); color: var(--ink-soft); }
+.cols { columns: 2; column-gap: 0.22in; column-fill: balance; }
+h2 { margin: 5pt 0 1.5pt; font: 800 11pt/1.1 var(--display); color: var(--dark); break-after: avoid; }
+h2:first-child { margin-top: 0; }
+h2 .ch { font: 700 7.4pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); margin-left: 3pt; }
+p { margin: 0 0 2.2pt; }
+ul { margin: 0 0 2.2pt; padding-left: 11pt; }
+ol { margin: 0 0 2.2pt; padding-left: 13pt; }
+li { margin: 0 0 1pt; break-inside: avoid; }
+ol li { padding-left: 2pt; }
+li::marker { color: var(--accent-deep); }
+ol li::marker { font: 800 8pt var(--sans); }
+strong { font-weight: 800; color: var(--dark-deep); }
+.line { font-family: var(--sans); font-size: 8.5pt; line-height: 1.22; }
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; margin: 2pt 0 4pt; font: 8.5pt/1.18 var(--sans); border: 1px solid var(--paper-edge); border-radius: 4px; overflow: hidden; break-inside: avoid; }
+.tbl th { background: var(--dark-deep); color: var(--paper); font: 800 7pt/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 2pt 4pt; }
+.tbl td { padding: 1.4pt 4pt; vertical-align: top; border-top: 1px solid color-mix(in srgb, var(--paper-edge) 70%, transparent); }
+.tbl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--paper-2) 55%, transparent); }
+.tbl td:first-child { font-weight: 700; color: var(--dark-deep); }
+.tbl td.num, .tbl th.num { text-align: center; white-space: nowrap; }
+.tbl.ground td, .tbl.ground th { padding-left: 3pt; padding-right: 3pt; white-space: nowrap; }
+.tbl td.d { font-weight: 700; color: var(--dark-deep); text-align: center; width: 1.2em; }
+.box { break-inside: avoid; margin: 4pt 0 2pt; padding: 4pt 6pt 2pt; border-radius: 4px; background: color-mix(in srgb, var(--paper-2) 60%, #fff); border: 1px solid var(--paper-edge); border-left: 4px solid var(--dark); }
+.box h2 { margin-top: 0; }
+.keep { break-inside: avoid; }
+.note { font-size: 8.5pt; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <p class="kicker">Don’t Get Forked · Quick sheet</p>
+    <h1>Storyteller’s Guide</h1>
+  </div>
+  <p class="sub">How to run a raid, on one page. The chapter beside each heading has the full rule.</p>
+</header>
+
+<div class="cols">
+
+<h2>Before the Game <span class="ch">Chapters 1, 8</span></h2>
+<ul>
+  <li><strong>Print</strong> an Entity Sheet and At the Table for each player, The Eight (Chapter 2) and the town’s page (Chapter 9), or roll a town (Chapter 8, about half an hour). Track Suspicion, the Turns and the Lead.</li>
+  <li><strong>Dice:</strong> each player a d4, d6, d8, d10 and d12, plus a Mask d6 and a Monster d10 in another colour. You: a d20, a d10 and two d6.</li>
+  <li><strong>3–5 players</strong>, 1–2 hours. <strong>Choose Easy, Standard or Hard:</strong></li>
+</ul>
+<table class="tbl">
+  <thead><tr><th>Number</th><th class="num">Easy</th><th class="num">Standard</th><th class="num">Hard</th></tr></thead>
+  <tbody>
+    <tr><td>Shopping list (essentials)</td><td class="num">4 (1)</td><td class="num">5 (1–2)</td><td class="num">5 (2)</td></tr>
+    <tr><td>Suspicion Limit</td><td class="num">9</td><td class="num">10</td><td class="num">13</td></tr>
+    <tr><td>… with five players</td><td class="num">8</td><td class="num">9</td><td class="num">13</td></tr>
+    <tr><td>The way out: Difficulty</td><td class="num">6</td><td class="num">8</td><td class="num">10</td></tr>
+    <tr><td>Final flight: mob · escape at</td><td class="num">10 · 5</td><td class="num">11 · 5</td><td class="num">11 · 6</td></tr>
+  </tbody>
+</table>
+<p class="note">On every level: the lock-up 10, 3 charges each, 12 Turns.</p>
+
+<h2>Setup <span class="ch">Chapters 2, 4</span></h2>
+<ol>
+  <li>Roll the <strong>shopping list</strong> and the <strong>furniture</strong> (or use the town’s) and read them out <strong>before anyone picks</strong>.</li>
+  <li>Each player picks an <strong>Entity</strong>, then a <strong>Gift, Perk and Castle Duty</strong> (defaults marked). Two who want the same Entity, or the same Duty, <strong>roll off</strong>: the high d6 keeps it. A random Duty that’s taken or not on the list is rolled again while a useful one remains.</li>
+  <li>3 charges each, Suspicion <strong>0</strong>, and everyone starts at <strong>the way out</strong>. Entering town needs no roll.</li>
+</ol>
+
+<h2>Running a Turn <span class="ch">Chapter 4</span></h2>
+<ol>
+  <li><strong>Say the Turn</strong> (“Turn 3”). Warn when three are left.</li>
+  <li><strong>Go round the table:</strong> each Entity takes one action (roll, move, pick up or wait), one at a time, in any order, each finished, chase and all, before the next. If the hunt starts mid-Turn, the rest don’t act.</li>
+  <li><strong>A move:</strong> they’re there. A watched place’s first arrival gets a <strong>Tell check</strong>.</li>
+  <li><strong>A roll:</strong> ask the trait, Mask or Monster, and who spends charges. Mark Suspicion <strong>once</strong>, by the biggest trigger (an overdraw adds +2 on top).</li>
+  <li><strong>End of the Turn:</strong> furniture taken and still in town, Suspicion +1. Move the Turn marker. When Turn 12 ends, <strong>dawn</strong>: anyone in town flees.</li>
+</ol>
+
+<h2>When to Roll What <span class="ch">Chapters 3–5</span></h2>
+<ul>
+  <li>Players roll only at <strong>obstacles</strong> (the way out and the lock-up too) and in <strong>chases</strong>.</li>
+  <li><strong>Tell check:</strong> the first time anyone reaches a watched location (the lock-up too, not a captive’s arrival; the way out once anyone comes back), when all moving there this Turn have arrived (ask first who else is coming). On a d6 of 4–6, pick an arrival with a d6 and describe its Tell: Suspicion +1.</li>
+  <li><strong>Group check:</strong> several at one group obstacle in a Turn declare dice and abilities, then roll at once; each passes on its own result. One rise for the check; all with Trouble are caught together.</li>
+  <li><strong>Costs:</strong> pick the one that hurts most now (a lost Turn near dawn, a smaller die before a big roll, a dropped item but never what this roll wins or furniture, Suspicion +1 near the Limit), but <strong>never a cost that costs nothing</strong>, like Suspicion +1 on a roll that already raised it. At the way out a Cost costs nothing. Say what happened.</li>
+  <li><strong>Trouble</strong> at an unwatched obstacle: Suspicion +1, no chase.</li>
+</ul>
+
+<h2>Running a Local Chase <span class="ch">Chapter 6</span></h2>
+<ol>
+  <li><strong>Set the mob</strong> when it starts: 8 + half the Suspicion (after the roll’s rise), rounded down, <strong>at most 11</strong>, for the whole chase. The Lead starts at <strong>1</strong>.</li>
+  <li>Each round, <strong>roll the ground</strong> (d6, below) and describe it. Once it’s read, before anyone rolls, a runner may <strong>give up</strong>: captured, no roll.</li>
+  <li><strong>Weakness:</strong> Always from round 1, Soon from round 3: the trait die one size smaller to the end. Make it a moment.</li>
+  <li>The runner picks a trait from the ground, and Mask or Monster (no Mask carrying furniture). Abilities on <strong>its own roll only</strong>, any as a raise; <strong>one overdraw</strong> a chase.</li>
+  <li><strong>The Lead:</strong> Success +1 (Critical +2), Cost 0, Trouble −1. Caught together: one Lead, by the majority rule. A Cost brings no Storyteller’s Cost.</li>
+  <li><strong>Lead 4:</strong> escaped, back where caught, Turn used. <strong>Lead 0:</strong> cornered, captured. <strong>After round 6:</strong> a Lead of 2+ escapes, less is cornered.</li>
+  <li><strong>One rise, when it ends:</strong> Trouble +1 or the Monster +2, the bigger, plus +2 per overdraw. Given up before anyone rolled: nothing.</li>
+</ol>
+<table class="tbl ground">
+  <thead><tr><th>d6</th><th>The ground</th><th>Traits</th><th>d6</th><th>The ground</th><th>Traits</th></tr></thead>
+  <tbody>
+    <tr><td class="d">1</td><td>Crowded square</td><td>Sly, Charm</td><td class="d">4</td><td>Over the rooftops</td><td>Nimble, Wits</td></tr>
+    <tr><td class="d">2</td><td>Back alleys</td><td>Nimble, Sly</td><td class="d">5</td><td>Festival parade</td><td>Charm, Sly</td></tr>
+    <tr><td class="d">3</td><td>Market stalls</td><td>Brawn, Nimble</td><td class="d">6</td><td>A dead end</td><td>Brawn, Wits</td></tr>
+  </tbody>
+</table>
+
+<h2>Captured and Rescued <span class="ch">Chapter 6</span></h2>
+<p>Captured, the town takes what the runner carried, furniture too, for the night. The lock-up is one move from anywhere, watched, Difficulty <strong>10</strong>.</p>
+<ul>
+  <li><strong>Rescue</strong> (by anyone not held, at the lock-up): Sly, or Brawn the loud way. A Success or a Cost frees every captive there; Trouble, Suspicion +1 and the rescuer is caught.</li>
+  <li><strong>Slip free</strong> (the captive’s action, once a Turn from the Turn after its capture): Sly or Nimble, or Brawn the loud way. A Success frees it; a Cost does nothing; Trouble, Suspicion +1, no chase.</li>
+  <li>The freed act next Turn, from the lock-up. Let a waiting player voice a jailer or a villager.</li>
+</ul>
+
+<h2>The Limit and the Hunt <span class="ch">Chapter 5</span></h2>
+<p><strong>A roll’s result comes first:</strong> if the roll that reaches the Limit gets the party out, they’re out, and captives it frees join the flight. <strong>Trouble that brings the Limit starts no local chase:</strong> the roller flees with everyone. If a chase’s rise brings it, an escaped runner joins the flight; anyone cornered was captured first. Then Suspicion stops; extra points are lost. <strong>Everyone held at once:</strong> the night ends, <strong>Forked</strong>.</p>
+
+<h2>Running the Final Flight <span class="ch">Chapter 6</span></h2>
+<p>Everyone not captured flees together, from wherever they are. <strong>Lead 2</strong>, escape at 5 (6 on Hard), mob 10 (Easy) or 11.</p>
+<ul>
+  <li>Each round, roll the ground; everyone rolls, <strong>Monster only</strong>, in any order. Abilities on anyone’s roll, any as a raise; still one raise a roll.</li>
+  <li><strong>Majority rule:</strong> Successes (a Critical is two) against Trouble. Ahead by 1, the Lead moves 1; by 2+, 2; level, it stays.</li>
+  <li>A new chase: count Weakness rounds from 1 again. <strong>Overdraw:</strong> no Suspicion, but a step down from the next roll to the end, on top of any Weakness; once a flight.</li>
+  <li>Escape: home with what they carry; captives left behind. Cornered: <strong>Forked</strong>.</li>
+</ul>
+<p>Play the mob like the weather: always there, always closer.</p>
+
+<h2>Ending <span class="ch">Chapter 7</span></h2>
+<p>An item is <strong>home</strong> if an Entity who got out carries it. <strong>Grand Year:</strong> a Win and the furniture. <strong>Win:</strong> every essential, at most one extra missing. <strong>Partial:</strong> at least half the list (a missing essential makes it Partial at best). <strong>Bust:</strong> less. <strong>Forked:</strong> cornered in the flight, or everyone held. Then one step down for each Entity left behind (never below Bust). Read the <strong>epilogue</strong>: the result’s line, then (unless Forked) one for each kind of item missing.</p>
+
+<div class="box">
+<h2>Quick Advice</h2>
+<ul>
+  <li><strong>You’re not out to beat them.</strong> Make room for chaos; a forking is the dice’s doing.</li>
+  <li><strong>Make a ruling and keep moving.</strong> Look it up after the game.</li>
+  <li><strong>Describe the town.</strong> Everyone’s in costume and sees what they expect. Give watched obstacles a face (Chapter 8’s villagers), and let the mood follow Suspicion: whispers, then pointing, then torches.</li>
+  <li><strong>Let them laugh at the Monster showing,</strong> then mark the +2.</li>
+  <li><strong>Pace it.</strong> Steer a new player to a Difficulty 8 first. Warn the party if carried furniture would reach the Limit. Near the Limit, remind a caught runner that giving up before anyone rolls raises nothing.</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>

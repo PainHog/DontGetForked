@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Player’s Rules</title>
+<style>
+/*FONTS*/
+@page { size: 8.5in 11in; margin: 0.34in 0.42in 0.46in 0.42in;
+  @bottom-center { content: "Don’t Get Forked  ·  Quick sheet  ·  Playtest copy: please don’t share"; font-family: "Alegreya Sans", sans-serif; font-size: 7.5pt; letter-spacing: 0.08em; color: #6b6a65; vertical-align: top; padding-top: 0.14in; } }
+/* colour tokens and type from book/src/book.css */
+:root {
+  --dark: #3a3a3c; --dark-deep: #222224; --paper: #f2f1ee; --paper-2: #e3e1dc; --paper-edge: #c9c6bf;
+  --ink: #161618; --ink-soft: #5a5a5e; --accent: #7a7f88; --accent-deep: #555a63; --alarm: #7c2a2a;
+  --display: "Fraunces", Georgia, serif; --text: "Alegreya", Georgia, serif; --sans: "Alegreya Sans", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { background: #fff; }
+body { margin: 0; color: var(--ink); font-family: var(--text); font-size: 8.5pt; line-height: 1.18; font-variant-numeric: lining-nums proportional-nums; hyphens: auto; -webkit-hyphens: auto; font-kerning: normal; }
+header { margin: 0 0 5pt; border-bottom: 2.5px solid var(--accent); padding-bottom: 3pt; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.2in; }
+.kicker { margin: 0; font: 800 7.5pt var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--accent-deep); }
+h1 { margin: 1pt 0 0; font: 900 21pt/1 var(--display); color: var(--dark-deep); }
+.sub { margin: 0 0 1pt; max-width: 3.6in; text-align: right; font: italic 9pt/1.25 var(--text); color: var(--ink-soft); }
+.cols { columns: 2; column-gap: 0.22in; column-fill: balance; }
+h2 { margin: 5pt 0 1.5pt; font: 800 11pt/1.1 var(--display); color: var(--dark); break-after: avoid; }
+h2:first-child { margin-top: 0; }
+h2 .ch { font: 700 7.4pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); margin-left: 3pt; }
+p { margin: 0 0 2.2pt; }
+ul { margin: 0 0 2.2pt; padding-left: 10pt; }
+li { margin: 0 0 1pt; break-inside: avoid; }
+li::marker { color: var(--accent-deep); }
+strong { font-weight: 800; color: var(--dark-deep); }
+.line { font-family: var(--sans); font-size: 8.5pt; line-height: 1.22; }
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; margin: 2pt 0 4pt; font: 8.5pt/1.18 var(--sans); border: 1px solid var(--paper-edge); border-radius: 4px; overflow: hidden; break-inside: avoid; }
+.tbl th { background: var(--dark-deep); color: var(--paper); font: 800 7pt/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 2pt 4pt; }
+.tbl td { padding: 1.4pt 4pt; vertical-align: top; border-top: 1px solid color-mix(in srgb, var(--paper-edge) 70%, transparent); }
+.tbl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--paper-2) 55%, transparent); }
+.tbl td:first-child { font-weight: 700; color: var(--dark-deep); white-space: nowrap; }
+.box { break-inside: avoid; margin: 4pt 0 2pt; padding: 4pt 6pt 2pt; border-radius: 4px; background: color-mix(in srgb, var(--paper-2) 60%, #fff); border: 1px solid var(--paper-edge); border-left: 4px solid var(--dark); }
+.box h2 { margin-top: 0; }
+.keep { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <p class="kicker">Don’t Get Forked · Quick sheet</p>
+    <h1>Player’s Rules</h1>
+  </div>
+  <p class="sub">How to play, on one page. The chapter beside each heading has the full rule.</p>
+</header>
+
+<div class="cols">
+
+<h2>Your Entity <span class="ch">Chapter 2</span></h2>
+<p>You play a classic monster with five <strong>traits</strong>: one each of <strong>d12, d10, d8, d6 and d4</strong>.</p>
+<p class="line"><strong>Brawn</strong> force, breaking · <strong>Nimble</strong> climbing, running · <strong>Sly</strong> sneaking, stealing · <strong>Charm</strong> talking, passing as human · <strong>Wits</strong> noticing, working things out</p>
+<p>Every roll adds a <strong>Mask d6</strong> or a <strong>Monster d10</strong>, in a different colour from the trait dice. A 0 on a d10 is 10. You also have <strong>3 charges</strong>, two abilities (a <strong>signature</strong> and a <strong>Gift</strong>), a <strong>Perk</strong> (always on), a <strong>Castle Duty</strong>, a <strong>Weakness</strong> and a <strong>Tell</strong> (when it goes off, Suspicion +1).</p>
+
+<h2>The Job <span class="ch">Chapter 4</span></h2>
+<p>Steal the <strong>shopping list</strong> (4 items on Easy, 5 on Standard and Hard; one or two are <strong>essentials</strong>) and get out before <strong>dawn</strong>, when the 12th Turn ends. A location’s <strong>obstacles</strong> are passed in order, and whoever gets past the last has the item. Its first obstacle has <strong>two ways in</strong>: the first roll at either picks it for the raid.</p>
+
+<h2>Your Turn <span class="ch">Chapter 4</span></h2>
+<p>You start at <strong>the way out</strong>. Each Turn, each Entity takes <strong>one action</strong>: <strong>roll</strong> at the next obstacle where it is, <strong>move</strong> to another place (one Turn; one more carrying furniture), <strong>pick up</strong> dropped items, or <strong>wait</strong>. Entities act <strong>one at a time</strong>, in any order, and <strong>everything happens straight away</strong>: finish one action, chase and all, before the next. A Success or a Cost beats an obstacle for everyone, except a <strong>group</strong> obstacle, where each who wants past rolls for itself.</p>
+
+<h2>The Roll <span class="ch">Chapter 3</span></h2>
+<p>Your <strong>trait die</strong> (one the obstacle lists) <strong>+ the Mask d6 or the Monster d10</strong> against the <strong>Difficulty</strong>: 6, 8, 10 or 12. Rolling an obstacle’s <strong>loud way</strong> is Suspicion +1, whatever the result.</p>
+<table class="tbl">
+  <tbody>
+    <tr><td>Success</td><td>Equal or more: you do it.</td></tr>
+    <tr><td>Cost</td><td>1–2 short: you do it, but the Storyteller picks Suspicion +1, drop an item, lose a Turn, or next trait die one size smaller.</td></tr>
+    <tr><td>Trouble</td><td>3+ short: you don’t; Suspicion +1. At a <strong>watched</strong> obstacle you’re caught.</td></tr>
+    <tr><td>Critical</td><td>A Success on doubles: one spent charge back, or in a chase, two Successes.</td></tr>
+  </tbody>
+</table>
+<p><strong>The Monster shows</strong> when the d10 <strong>beats your trait die</strong>: <strong>Suspicion +2</strong>, whatever the result. A tie, or the Mask, shows nothing. Carrying furniture, or in the final flight, you must roll the Monster.</p>
+
+<h2>Charges and Abilities <span class="ch">Chapters 2–3</span></h2>
+<p><strong>One charge</strong> a use, and you still roll. An ability makes your trait die <strong>one size bigger</strong> (a <strong>raise</strong>), lets you <strong>roll its trait</strong> instead, rolls <strong>the Monster without risking Suspicion</strong>, or opens <strong>an approach of your own</strong> (an unlisted trait, Difficulty 2 lower; only you get past, except at the way out and the lock-up; never in a chase).</p>
+<ul>
+  <li><strong>Spend before you roll,</strong> on yours or a friend’s roll in the same place. Helping costs a charge, not your action. An approach, or the Draught, only on your own roll.</li>
+  <li><strong>One raise per roll,</strong> from any source; d12 at most, d4 at least.</li>
+  <li><strong>Castle Duty:</strong> where the list item is your Duty’s kind, your trait die is one size bigger on your own rolls (not in a chase): the roll’s one raise.</li>
+  <li><strong>Overdraw:</strong> at 0 charges, use one anyway: <strong>Suspicion +2</strong> on top (only once in a local chase).</li>
+</ul>
+
+<h2>Suspicion <span class="ch">Chapter 5</span></h2>
+<p>One shared track, from 0 to the <strong>Limit</strong>: <strong>9</strong> on Easy, <strong>10</strong> on Standard, <strong>13</strong> on Hard (five players: 8 on Easy, 9 on Standard).</p>
+<p class="line">Trouble +1 · the Monster shows +2 · the loud way +1 · a Cost as Suspicion +1 · overdraw +2 on top · a Tell +1 · furniture, each Turn once taken +1</p>
+<p><strong>One roll, one rise:</strong> by its biggest trigger (an overdraw on top). <strong>At the Limit, the hunt is on:</strong> the final flight.</p>
+
+<h2>Caught: the Local Chase <span class="ch">Chapter 6</span></h2>
+<p>Trouble at a watched obstacle, and you run (unless it brings the Limit: then it’s the final flight).</p>
+<ul>
+  <li>The <strong>Lead</strong> starts at <strong>1</strong>. At <strong>4</strong> you escape, back where you were caught, Turn used. At <strong>0</strong> you’re cornered: captured.</li>
+  <li>Each round, the Storyteller rolls <strong>the ground</strong>: two traits. Pick one, Mask or Monster, and roll against <strong>the mob</strong>: 8 + half the Suspicion when the chase starts, rounded down, <strong>at most 11</strong>.</li>
+  <li><strong>Success</strong> Lead +1 (Critical +2) · <strong>Cost</strong> no change · <strong>Trouble</strong> −1.</li>
+  <li>Abilities on <strong>your own roll only</strong>, any as a raise; <strong>one overdraw</strong> a chase.</li>
+  <li><strong>Weakness:</strong> your trait die one size smaller from round 1 (Always) or round 3 (Soon) to the end of the chase.</li>
+  <li><strong>6 rounds at most:</strong> then a Lead of 2+ escapes; less is cornered.</li>
+  <li><strong>Give up</strong> at the start of a round, once the ground is read: captured, no roll.</li>
+  <li>It raises Suspicion <strong>once, when it ends</strong>: its biggest trigger (Trouble +1, the Monster +2), plus +2 an overdraw. Given up before anyone rolled, nothing.</li>
+  <li>Nothing can be dropped or handed over until it ends.</li>
+</ul>
+
+<h2>Captured: the Lock-up <span class="ch">Chapter 6</span></h2>
+<p>The town takes what you carried, for the night. The lock-up is watched, Difficulty 10. <strong>Slip free</strong> as your action, once a Turn from the Turn after your capture: Sly or Nimble, or Brawn the loud way; only a Success frees you (Trouble: Suspicion +1, no chase). Or a friend there <strong>rescues</strong> you: Sly, or Brawn the loud way; a Success or a Cost frees every captive, and Trouble gets the rescuer caught. Freed, you act next Turn. Everyone held at once: <strong>Forked</strong>.</p>
+
+<h2>Carrying <span class="ch">Chapter 4</span></h2>
+<p><strong>Loot:</strong> any amount. Hand it over in the same place, or drop it, any time, <strong>free</strong> (not while caught, never to a captive). <strong>Furniture</strong> (Bulky: one carrier; Huge: two): <strong>no Mask</strong>, Nimble one size smaller, moves one Turn longer, and Suspicion +1 at the end of every Turn once it’s taken, until it leaves town. Abandon it any time. Home with a Win, it makes a <strong>Grand Year</strong>.</p>
+
+<h2>Leaving Town <span class="ch">Chapter 4</span></h2>
+<p><strong>The way out:</strong> <strong>Sly or Nimble, or Brawn the loud way</strong>, Difficulty <strong>6</strong> on Easy, <strong>8</strong> on Standard, <strong>10</strong> on Hard. With everyone not captured there, one rolls for all, once a Turn. A Success or a Cost gets everyone out (the Cost costs nothing); Trouble raises Suspicion and catches the roller. Captives stay behind.</p>
+
+<h2>The Final Flight <span class="ch">Chapter 6</span></h2>
+<p>At the Limit, or at dawn with anyone in town, all not captured flee together.</p>
+<ul>
+  <li><strong>Lead 2</strong>, escape at <strong>5</strong> (6 on Hard); mob 10 on Easy, 11 on Standard and Hard.</li>
+  <li><strong>The Monster only</strong>: the Mask is off. Suspicion has stopped.</li>
+  <li><strong>Majority rule:</strong> everyone rolls; count Successes (a Critical is two) against Trouble. Ahead by 1, the Lead moves 1; by 2+, it moves 2; level, it stays.</li>
+  <li>Abilities on <strong>anyone’s</strong> roll, and <strong>any ability can be a raise</strong> on any runner’s.</li>
+  <li><strong>Overdraw</strong> is a <strong>step down</strong>: your trait die one size smaller from your next roll to the end, <strong>on top of any Weakness</strong>. Once a flight.</li>
+  <li><strong>Weakness:</strong> a new chase, so count its rounds from 1 again.</li>
+  <li>Escape: home with what you carry. Cornered: <strong>Forked</strong>.</li>
+</ul>
+
+<div class="keep">
+<h2>How the Year Went <span class="ch">Chapter 7</span></h2>
+<table class="tbl">
+  <tbody>
+    <tr><td>Grand Year</td><td>A Win, and the furniture came home too</td></tr>
+    <tr><td>Win</td><td>Every essential home, at most one extra missing</td></tr>
+    <tr><td>Partial</td><td>At least half the list home (2 of 4, 3 of 5)</td></tr>
+    <tr><td>Bust</td><td>Less than half the list home</td></tr>
+    <tr><td>Forked</td><td>Cornered in the final flight, or everyone held</td></tr>
+  </tbody>
+</table>
+<p>Each Entity left in the lock-up drops it one step (never below Bust).</p>
+</div>
+
+<div class="box">
+<h2>Tips from the Playtests</h2>
+<ul>
+  <li><strong>Pass the essentials around</strong> before a risky roll at a watched obstacle: handing over is free, and the town takes a captured Entity’s loot.</li>
+  <li><strong>The Mask never shows.</strong> Near the Limit, it’s the safe die.</li>
+  <li><strong>Giving up</strong> stops Suspicion snowballing, but costs what you carry.</li>
+  <li><strong>Spend your charges,</strong> on friends too. Unspent ones don’t carry over.</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
