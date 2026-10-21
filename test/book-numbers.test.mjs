@@ -225,7 +225,7 @@ test("the local chase (Chapters 6 and 8, At the Table) is DGF.lead and DGF.local
   // 2026-10-21: a local chase lasts at most 6 rounds (module/logic/chase.mjs resolveRound)
   says(TXT.ch6, `A chase lasts ${DGF.localRoundCap.rounds} rounds at most: if it’s still running after round ${DGF.localRoundCap.rounds}, a Lead of ${DGF.localRoundCap.escapeAt} or more escapes, and less is cornered.`, "Chapter 6, The Local Chase");
   says(TXT.ch8, `Final flight: Lead starts at ${DGF.lead.finalStart}.`, "Chapter 8, The Same on Easy, Standard and Hard");
-  says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion as it starts (at most ${M.max})`, "At the Table, Chases");
+  says(TXT.ref, `Local chase: Lead ${localStart}, escape at ${localEscape}, against ${M.base} + half the Suspicion as it starts (rounded down, at most ${M.max})`, "At the Table, Chases");
   assert.equal(localMobDifficulty(3), 9, "8 + half of 3, rounded down");
   assert.equal(localMobDifficulty(100), M.max);
 });
@@ -445,7 +445,7 @@ test("the Perks' numbers (Chapter 2) are DGF.perkRules", () => {
   says(perk("shortcut"), `the way out’s Difficulty is ${R.shortcut.exitEase} lower when you roll it`, "Shortcut");
   says(perk("fetch"), `While you’re at the way out, its Difficulty is ${R.fetch.partyExitEase} lower for whoever rolls it. A final flight you’re in starts at Lead ${R.fetch.finalLead}, not ${DGF.lead.finalStart}`, "Fetch");
   says(perk("nightRunner"), `if you’re fleeing alone when your local chase starts, it starts at Lead ${R.nightRunner.localLead}`, "Night Runner");
-  says(perk("fearTheCurse"), `if you’re fleeing alone when your local chase starts, its mob’s Difficulty is ${R.fearTheCurse.localMobEase} lower`, "Fear the Curse");
+  says(perk("fearTheCurse"), `if you’re fleeing alone when your local chase starts, its mob’s Difficulty is ${R.fearTheCurse.localMobEase} lower (after the cap of ${DGF.localMob.max})`, "Fear the Curse (PT10 R-L4: the cap first)");
   says(perk("wallCrawler"), `in a chase you can always roll ${TRAIT[R.wallCrawler.chaseTrait]}`, "Wall-Crawler");
   says(perk("wallCrawler"), `and your ${TRAIT[R.wallCrawler.chaseRaise]} die is one size bigger (the roll’s one raise)`, "Wall-Crawler's second edge (2026-10-20)");
   says(perk("flyByNight"), `in a chase you can always roll ${TRAIT[R.flyByNight.chaseTrait]}`, "Fly by Night");
@@ -520,7 +520,7 @@ test("the shopping table (Chapter 8) is DGF.shoppingTable, its kinds and places 
 test("every kind has three places, and Chapter 8 says how to place a list (V15)", () => {
   for (const d of DGF.duties) assert.equal(d.where.split(", ").length, 3, `${d.name}: three places, so a d3 always lands on one`);
   says(TXT.ch8, "Roll a d3, or pick: 1 is the first place listed, 2 the second, 3 the third. One item per place.", "Chapter 8, Rolling a Town");
-  says(TXT.ch8, "If a kind has more items than places, they share places, two to a place: one location, guarding both items.", "Chapter 8, Rolling a Town");
+  says(TXT.ch8, "If a kind has more items than places, each extra one shares a place already taken (roll or pick), two at most: one location, guarding both items.", "Chapter 8, Rolling a Town");
 });
 
 test("the villagers (Chapter 8) are DGF.villagers", () => {

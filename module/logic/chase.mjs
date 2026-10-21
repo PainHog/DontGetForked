@@ -124,7 +124,7 @@ export function groundOn(face) {
 }
 
 /**
- * The mob's Difficulty with this Suspicion. Local: 8 plus half the Suspicion (B3), at most 12 (Fear the Curse,
+ * The mob's Difficulty with this Suspicion. Local: 8 plus half the Suspicion (B3), at most 11 (DGF.localMob.max; Fear the Curse,
  * fleeing alone: 1 easier); D1: newChase works it out once, as the chase starts, and it stays put. Final flight:
  * the town's label, whatever the party's size.
  */

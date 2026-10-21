@@ -123,7 +123,7 @@ function glancePage(t) {
     `<ol>${L.map((l) => `<li>${l.essential ? `<strong>${esc(cap(l.item))}</strong> (essential)` : esc(cap(l.item))}</li>`).join("")}</ol>`,
     `<p><strong>The furniture:</strong> ${esc(low(host.furniture.name))} (Bulky: one carrier), at ${esc(host.place)} (${host.n}).</p>`,
     `<p><strong>Villagers:</strong> ${t.villagers.map((v) => `${esc(low(v.who))} (${esc(low(v.doing))})`).join("; ")}.</p>`,
-    `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>`,
+    `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit}${t.limitFive !== t.limit ? ` (${t.limitFive} with five players)` : ""} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>`,
     `<table><thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th>Difficulty</th></tr></thead><tbody>`,
     ...rows,
     `</tbody></table>`,

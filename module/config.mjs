@@ -80,7 +80,7 @@ DGF.entities = Object.freeze([
     perks: [
       { key: "patienceOfAges", name: "Patience of Ages", text: "“Lose a Turn” is never your Cost." },
       { key: "keeperOfTreasures", name: "Keeper of Treasures", text: "“Drop an item” is never your Cost." },
-      { key: "fearTheCurse", name: "Fear the Curse", text: "If you’re fleeing alone when your local chase starts, its mob’s Difficulty is 1 lower: nobody wants to get too close.", flavour: "nobody wants to get too close", default: true },
+      { key: "fearTheCurse", name: "Fear the Curse", text: "If you’re fleeing alone when your local chase starts, its mob’s Difficulty is 1 lower (after the cap of 11): nobody wants to get too close.", flavour: "nobody wants to get too close", default: true },
     ],
     weakness: { name: "A Loose Thread", timing: "soon", text: "Once someone grabs a loose end, it all starts to unravel." },
     tell: { name: "Dust and Spice", text: "A trail of dust and a smell of old spices wherever it walks." },
