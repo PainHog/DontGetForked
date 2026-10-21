@@ -36,7 +36,7 @@ import { internals as E } from "./engine.mjs";
 
 const TOWNS = [...PREMADE, HALLOWBY];
 const STEER = { ghostHandOff: "handSteer" };
-/** name → { item, title, p: REVIEW2/params over the defaults, n: NUMBERS over the defaults, n5: NUMBERS for 5-Entity raids only, ghost: run the Ghost tables } */
+/** name → { item, title, p: REVIEW2/params over the defaults, n: NUMBERS over the defaults, n5 / n3: NUMBERS for 5- / 3-Entity raids only, ghost: run the Ghost tables } */
 export const CONFIGS = {
   base: { item: "0", title: "Today's rules and players", p: {}, ghost: true },
   // 1.1 Spectral plus free hand-offs
@@ -68,6 +68,7 @@ export const CONFIGS = {
   // 1.5 Clocks and party size
   P5L: { item: "1.5", title: "With 5 Entities, the Limit is 1 lower (8 / 9 / 12)", p: {}, n5: { labels: { easy: { limit: 8 }, standard: { limit: 9 }, hard: { limit: 12 } } } },
   P5T: { item: "1.5", title: "With 5 Entities, the night lasts 10 Turns", p: {}, n5: { labels: { easy: { turns: 10 }, standard: { turns: 10 }, hard: { turns: 10 } } } },
+  P53: { item: "1.5", title: "Limit 1 lower with 5 Entities (8 / 9 / 12), and 1 higher with 3 on Hard (14)", p: {}, n5: { labels: { easy: { limit: 8 }, standard: { limit: 9 }, hard: { limit: 12 } } }, n3: { labels: { hard: { limit: 14 } } } },
   P5LES: { item: "1.5", title: "With 5 Entities, the Limit is 1 lower on Easy and Standard only (8 / 9 / 13)", p: {}, n5: { labels: { easy: { limit: 8 }, standard: { limit: 9 } } } },
   E10: { item: "1.5", title: "Easy Limit 10 (10 / 10 / 13)", p: {}, n: { labels: { easy: { limit: 10 } } } },
   // 1.6 Dead abilities in a local chase
@@ -130,7 +131,7 @@ function play(cfg, P, runs, seed, { labels = LABELS, sizes = SIZES, townFn = nul
   const raids = [];
   const rec = new Recorder();
   for (const s of sizes) {
-    const N = mergeNumbers(mergeNumbers(NUMBERS, cfg.n ?? {}), s === 5 && cfg.n5 ? cfg.n5 : {});
+    const N = mergeNumbers(mergeNumbers(NUMBERS, cfg.n ?? {}), s === 5 && cfg.n5 ? cfg.n5 : s === 3 && cfg.n3 ? cfg.n3 : {});
     const R = runConfig({ params: P, numbers: N, runs, seed, labels, sizes: [s], townFn: townFn ? () => townFn(N) : null });
     raids.push(...R.raids);
     rec.merge(R.rec);
@@ -412,10 +413,10 @@ export function report(res, { chases = null } = {}) {
     L.push(`**Raids that end in the final flight on Hard:** rolled Hard towns ${pct(S.base.labels.hard.flights / S.base.labels.hard.n)} (at the Limit ${pct(S.base.labels.hard.limit / S.base.labels.hard.n)}, at dawn ${pct(S.base.labels.hard.dawn / S.base.labels.hard.n)}); Gallowsmere ${pct(S.base.towns.gallowsmere.all.flights / S.base.towns.gallowsmere.all.n)} (at the Limit ${pct(S.base.towns.gallowsmere.all.limit / S.base.towns.gallowsmere.all.n)}, at dawn ${pct(S.base.towns.gallowsmere.all.dawn / S.base.towns.gallowsmere.all.n)}).`, "");
     L.push("### Options", "");
     const orow = [];
-    for (const nm of ["base", "P5L", "P5LES", "P5T", "E10"].filter((k) => S[k])) {
-      orow.push([nm, CONFIGS[nm].title, ...LABELS.map((l) => wf(S[nm].cells[`${l}|5`], l)), ...LABELS.map((l) => wf(S[nm].labels[l], l)), ...TOWNS.map((t) => wf(S[nm].towns[t.key].bySize[5], t.label))]);
+    for (const nm of ["base", "P5L", "P5LES", "P53", "P5T", "E10"].filter((k) => S[k])) {
+      orow.push([nm, CONFIGS[nm].title, ...LABELS.map((l) => wf(S[nm].cells[`${l}|5`], l)), wf(S[nm].cells["hard|3"], "hard"), ...LABELS.map((l) => wf(S[nm].labels[l], l)), ...TOWNS.map((t) => wf(S[nm].towns[t.key].bySize[5], t.label)), wf(S[nm].towns.gallowsmere.bySize[3], "hard")]);
     }
-    L.push(table(["", "Option", "5 Entities: Easy", "Standard", "Hard", "All sizes: Easy", "Standard", "Hard", ...TOWNS.map((t) => `${t.name}, 5`)], orow), "");
+    L.push(table(["", "Option", "5 Entities: Easy", "Standard", "Hard", "3 Entities: Hard", "All sizes: Easy", "Standard", "Hard", ...TOWNS.map((t) => `${t.name}, 5`), "Gallowsmere, 3"], orow), "");
     if (S.E10) L.push(`E10 on the Easy towns (all sizes): Puddlecombe ${wf(S.E10.towns.puddlecombe.all, "easy")} (today ${wf(S.base.towns.puddlecombe.all, "easy")}), Hallowby ${wf(S.E10.towns.hallowby.all, "easy")} (today ${wf(S.base.towns.hallowby.all, "easy")}).`, "");
   }
 
