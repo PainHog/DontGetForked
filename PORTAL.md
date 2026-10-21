@@ -1,13 +1,13 @@
-Now: The last fixes before the first game: better starting powers for three monsters, new stand-in pictures, and a final test game of the Halloween one-shot.
-Next: Richard runs the one-shot for his group on Wednesday, then settles two questions left open (a bigger roll on a twelve-sided die, and Jekyll & Hyde's starting choices) and writes his foreword when he has time.
-Number: Design decisions made = 133
+Now: Version 0.3 of the rulebook and the Halloween one-shot, after a second outside review: fairer chases late in the night, rules for bigger tables, two one-page quick sheets, and an online version that sets up the one-shot by itself.
+Next: Richard reads through the whole package and runs the one-shot for his group, then settles two questions left open (a bigger roll on a twelve-sided die, and Jekyll & Hyde's starting choices) and writes his foreword when he has time.
+Number: Design decisions made = 158
 Number: Open design questions = 2
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 333
+Number: Automated checks passing = 360
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
-Download: book/dist/Dont_Get_Forked_v0.2.pdf = The rulebook, version 0.2, a work in progress (PDF)
-Download: book/dist/Lantern_Night_in_Hallowby_v0.2.pdf = Lantern Night in Hallowby, the Halloween one-shot, version 0.2 (PDF)
+Download: book/dist/Dont_Get_Forked_v0.3.pdf = The rulebook, version 0.3, a work in progress (PDF)
+Download: book/dist/Lantern_Night_in_Hallowby_v0.3.pdf = Lantern Night in Hallowby, the Halloween one-shot, version 0.3 (PDF)
 Download: downloads/Dont_Get_Forked_Foundry_v0.1.5.zip = The online version for Foundry VTT, release 0.1.5 (unzip into Foundry's Data/systems folder)
 
 - [x] Decide the engine
@@ -66,6 +66,8 @@ Download: downloads/Dont_Get_Forked_Foundry_v0.1.5.zip = The online version for 
 - [x] A Halloween one-shot: a word-for-word script, a town map and monster tokens
 - [x] A final test game of the one-shot before the first real table
 - [x] An outside review of the rulebook, and version 0.2 with its fixes
+- [x] A second outside review, and version 0.3 with its fixes
+- [x] One-page quick sheets for players and the Storyteller
 - [x] The monsters fine-tuned after the outside review, and the middle town evened out
 - [ ] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice

@@ -42,8 +42,8 @@ const CHAPTERS = DEMO ? join(BOOK, "demo", "chapters") : join(SRC, "chapters");
 const BOOK_TITLE = DEMO ? "Lantern Night in Hallowby" : "Don’t Get Forked";             // curly apostrophe, as in the chapters
 const BOOK_DESCRIPTION = DEMO ? "A Halloween one-shot for Don’t Get Forked, by Richard Moore" : "A tabletop roleplaying game by Richard Moore";   // PLACEHOLDER — the real subtitle is not written yet
 const AUTHOR = "Richard Moore";
-const VERSION = "0.2";
-const FILE_STEM = DEMO ? "Lantern_Night_in_Hallowby" : "Dont_Get_Forked";        // → Dont_Get_Forked_v0.2.pdf
+const VERSION = "0.3";
+const FILE_STEM = DEMO ? "Lantern_Night_in_Hallowby" : "Dont_Get_Forked";        // → Dont_Get_Forked_v0.3.pdf
 const HTML_NAME = DEMO ? "lantern-night-in-hallowby.html" : "dont-get-forked.html";   // the self-contained print HTML (digital build only)
 // An ornament anchored in the top-left corner of the Table of Contents page
 // (an art name from book/art/, or null for none). Art direction is undecided.
