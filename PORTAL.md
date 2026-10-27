@@ -1,7 +1,7 @@
 Now: Version 0.3 of the rulebook and the Halloween one-shot, after a second outside review: fairer chases late in the night, rules for bigger tables, two one-page quick sheets, and an online version that sets up the one-shot by itself.
-Next: Richard reads through the whole package and runs the one-shot for his group, then settles two questions left open (a bigger roll on a twelve-sided die, and Jekyll & Hyde's starting choices) and writes his foreword when he has time.
-Number: Design decisions made = 158
-Number: Open design questions = 2
+Next: Richard reads through the whole package and runs the one-shot for his group, then writes his foreword when he has time.
+Number: Design decisions made = 161
+Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 360
 
