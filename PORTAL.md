@@ -1,9 +1,9 @@
-Now: Version 0.3 of the rulebook and the Halloween one-shot, after a second outside review: fairer chases late in the night, rules for bigger tables, two one-page quick sheets, and an online version that sets up the one-shot by itself.
-Next: Richard reads through the whole package and runs the one-shot for his group, then writes his foreword when he has time.
-Number: Design decisions made = 161
+Now: The book's three ready-made towns are now as ready to play online as the Halloween one-shot: a night map for each, with pins that open each place's page, and one click to start the raid.
+Next: Richard tries the three towns in Foundry, runs the one-shot for his group, then writes his foreword when he has time.
+Number: Design decisions made = 162
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 360
+Number: Automated checks passing = 373
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 Download: book/dist/Dont_Get_Forked_v0.3.pdf = The rulebook, version 0.3, a work in progress (PDF)
@@ -69,6 +69,7 @@ Download: downloads/Dont_Get_Forked_Foundry_v0.1.6.zip = The online version for 
 - [x] A second outside review, and version 0.3 with its fixes
 - [x] One-page quick sheets for players and the Storyteller
 - [x] The monsters fine-tuned after the outside review, and the middle town evened out
+- [x] The three ready-made towns ready to play online, like the one-shot: maps, place pages and a start button
 - [ ] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice
 - [ ] Richard's own foreword

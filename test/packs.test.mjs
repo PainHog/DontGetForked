@@ -55,12 +55,15 @@ test("the compendium source is exactly what the game data makes (run npm run bui
   assert.deepEqual([...stale, ...extra].map((p) => p.slice(ROOT.length + 1)), []);
 });
 
-test("system.json declares the packs the build makes: the game's in one folder, the one-shot's in the Demo folder", () => {
+test("system.json declares the packs the build makes: the game's in one folder, the one-shot's in the Demo folder, the towns' in Ready-made Towns", () => {
   const manifest = JSON.parse(readFileSync(join(ROOT, "system.json"), "utf8"));
   assert.deepEqual(manifest.packs.map((p) => [p.name, p.type, p.path]), PACKS.map((d) => [d.out, d.type, `packs/${d.out}`]));
-  assert.deepEqual(manifest.packFolders.map((f) => f.name), ["Don't Get Forked", "Demo"]);
+  assert.deepEqual(manifest.packFolders.map((f) => f.name), ["Don't Get Forked", "Demo", "Ready-made Towns"]);
   assert.deepEqual(manifest.packFolders[0].packs, ["entities", "tables", "journal"]);
   assert.deepEqual([...manifest.packFolders[1].packs].sort(), PACKS.map((d) => d.out).filter((n) => n.startsWith("demo-")).sort());
+  assert.deepEqual(manifest.packFolders[2].packs, ["town-scenes", "town-macros"]);
+  // the Storyteller's: players don't see the towns' scenes and macros in the compendium sidebar
+  for (const name of ["town-scenes", "town-macros"]) assert.equal(manifest.packs.find((p) => p.name === name).ownership.PLAYER, "NONE");
 });
 
 /* ------------------------------------------------------------ entities -- */
@@ -173,7 +176,7 @@ const codeOf = (html) => html.match(/<pre><code>([\s\S]*?)<\/code><\/pre>/)[1].r
 test("the journal holds the guide, then the three towns in Chapter 9's order", () => {
   const journal = readSource("journal");
   assert.deepEqual(journal.map((j) => j.key), ["how-to-run-a-raid", ...TOWNS.map((t) => t.key)]);
-  assert.deepEqual(journal[0].pages.map((p) => p.name), ["Before the raid", "During the raid", "After the raid"]);
+  assert.deepEqual(journal[0].pages.map((p) => p.name), ["Ready to play", "Before the raid", "During the raid", "After the raid"]);
 });
 
 test("each town's journal is book/src/towns.json: its list, furniture, custom, villagers and numbers", () => {
@@ -183,7 +186,12 @@ test("each town's journal is book/src/towns.json: its list, furniture, custom, v
     const label = cap(t.label);
     const L = DGF.labels[t.label];
     assert.equal(doc.name, `${t.name} (${label})`);
-    assert.deepEqual(doc.pages.map((p) => [p.name, p.type]), [[t.name, "text"], ["Locations", "text"], ["Map", "image"]]);
+    const pretty = (s) => s.replace(/^the /, "The ").replace(/(^|\s)(\w)/g, (m, a, b) => a + b.toUpperCase());
+    assert.deepEqual(doc.pages.map((p) => [p.name, p.type]), [
+      [t.name, "text"], ["Locations", "text"], ["Map", "image"],
+      ...t.locations.map((l, n) => [`${n + 1} · ${pretty(l.place)}`, "text"]), ["The Lock-up", "text"], ["The Way Out", "text"],
+    ], "the book's three pages, then one for each place the map's pins open");
+    assert.deepEqual(doc.flags, { [DGF.id]: { setup: t.key } }, "flagged for the setup");
     const html = doc.pages[0].text.content;
     const ov = plain(html);
     assert.ok(ov.includes(t.description));
@@ -235,14 +243,21 @@ test("each town's map page shows its map, which ships with the system", () => {
   }
 });
 
-test("each town's macro puts its shopping list on the Raid HUD", async () => {
+test("each town's page shows its Start the Raid macro, which starts a raid at its level with its shopping list on the Raid HUD", async () => {
   const journal = readSource("journal");
+  const macros = readSource("town-macros");
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
   for (const t of TOWNS) {
     const code = codeOf(journal.find((j) => j.key === t.key).pages[0].text.content);
-    await asUser(gm, () => new AsyncFunction("game", code)(game));
+    assert.equal(code, macros.find((m) => m.key === t.key).command, `${t.key}: the page shows what the macro runs`);
+    const result = await asUser(gm, () => new AsyncFunction("game", code)(game));
     await settle();
-    assert.deepEqual(game.dontGetForked.raid.get().list, t.locations.map((l) => ({ name: itemOf(l), duty: dutyOf(l).key, essential: !!l.essential })), t.key);
+    assert.equal(result.ok, true, t.key);
+    const raid = game.dontGetForked.raid.get();
+    assert.equal(raid.difficulty, t.label, t.key);
+    assert.equal(raid.limit, DGF.labels[t.label].limit, t.key);
+    assert.equal(raid.turn, 1);
+    assert.deepEqual(raid.list, t.locations.map((l) => ({ name: itemOf(l), duty: dutyOf(l).key, essential: !!l.essential })), t.key);
   }
   assert.deepEqual(log.errors, []);
 });

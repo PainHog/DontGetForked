@@ -49,8 +49,8 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.localRoundCap, true);
   toggle(SETTINGS.limitByPartySize, true, { onChange: () => onLimitRule() });
   toggle(SETTINGS.hugePieceHeld, true);
-  // The one-shot, Lantern Night in Hallowby (module/apps/demo-import.mjs): offered once to a GM opening a world without it,
-  // and set up again from a menu (GM only).
+  // The ready-made games, the one-shot Lantern Night in Hallowby and the three towns of Chapter 9
+  // (module/apps/demo-import.mjs): offered once to a GM opening a world without any, and set up from a menu (GM only).
   toggle(SETTINGS.demoPrompt, true);
   reg(SETTINGS.demoImported, { scope: "world", config: false, type: String, default: "" });
   if (demoMenu) {

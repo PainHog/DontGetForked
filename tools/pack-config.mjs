@@ -24,6 +24,7 @@ export const OUT = join(ROOT, "packs");
  *  - entities: the eight Entities, as New Entity makes them (Chapter 2);
  *  - tables:   the book's random tables (Chapters 2, 6 and 8);
  *  - journal:  the three premade towns (Chapter 9) and a guide to the system's tools.
+ * A source doc's `flags` are kept (a ready-made game's documents carry flags["dont-get-forked"].setup).
  */
 export const PACKS = [
   { file: "entities", out: "entities", collection: "actors", type: "Actor", subtype: "entity" },
@@ -34,6 +35,10 @@ export const PACKS = [
   { file: "demo-scenes", out: "demo-scenes", collection: "scenes", type: "Scene", subtype: null },
   { file: "demo-journal", out: "demo-journal", collection: "journal", type: "JournalEntry", subtype: null },
   { file: "demo-macros", out: "demo-macros", collection: "macros", type: "Macro", subtype: null },
+  // the three towns of Chapter 9, ready to play (tools/gen-town-source.mjs): the Ready-made Towns folder. Their journal
+  // entries are the towns' in "journal"; their Entities are the Demo's.
+  { file: "town-scenes", out: "town-scenes", collection: "scenes", type: "Scene", subtype: null },
+  { file: "town-macros", out: "town-macros", collection: "macros", type: "Macro", subtype: null },
 ];
 
 /** Icons from Foundry core for documents that don't name their own. */
@@ -118,7 +123,7 @@ export function toCliDoc(def, raw, index) {
       folder: null,
       sort,
       ownership: { default: 0 },
-      flags: {},
+      flags: raw.flags ?? {},
       _stats: STATS
     };
   }
@@ -141,7 +146,7 @@ export function toCliDoc(def, raw, index) {
       folder: null,
       sort,
       ownership: { default: 0 },
-      flags: {},
+      flags: raw.flags ?? {},
       _stats: STATS
     };
   }
@@ -159,7 +164,7 @@ export function toCliDoc(def, raw, index) {
       folder: null,
       sort,
       ownership: { default: 0 },
-      flags: {},
+      flags: raw.flags ?? {},
       _stats: STATS
     };
   }

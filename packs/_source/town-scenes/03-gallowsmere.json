@@ -1,0 +1,171 @@
+{
+  "key": "gallowsmere",
+  "name": "Gallowsmere",
+  "flags": {
+    "dont-get-forked": {
+      "setup": "gallowsmere"
+    }
+  },
+  "background": {
+    "src": "systems/dont-get-forked/assets/towns/gallowsmere-map.jpg"
+  },
+  "width": 4200,
+  "height": 3010,
+  "thumb": "systems/dont-get-forked/assets/towns/gallowsmere-thumb.jpg",
+  "grid": {
+    "type": 0,
+    "size": 140
+  },
+  "initial": {
+    "x": 2100,
+    "y": 1505,
+    "scale": 0.35
+  },
+  "padding": 0,
+  "backgroundColor": "#141a1d",
+  "tokenVision": false,
+  "fog": {
+    "exploration": false
+  },
+  "environment": {
+    "globalLight": {
+      "enabled": true
+    }
+  },
+  "navigation": true,
+  "notes": [
+    {
+      "key": "gallowsmere-smithy",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "fbcc802aae172a65",
+      "x": 980,
+      "y": 770,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-silversmith",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "e8b536deb9d63b0c",
+      "x": 2100,
+      "y": 490,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-printer",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "0f93432d0063cca1",
+      "x": 3220,
+      "y": 770,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-tailor",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "f9586e7a8ffdd40a",
+      "x": 3255,
+      "y": 2030,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-butcher",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "098b943a488b26ec",
+      "x": 945,
+      "y": 2030,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-lockup",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "338ee9d5b2792f57",
+      "x": 1505,
+      "y": 2527,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "gallowsmere-wayout",
+      "entryId": "e088cff3f61f3a84",
+      "pageId": "340cf225e181f76a",
+      "x": 2100,
+      "y": 2624,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    }
+  ]
+}

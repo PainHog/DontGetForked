@@ -41,8 +41,8 @@ export const SETTINGS = Object.freeze({
   localRoundCap: "localRoundCap",             // world: a local chase lasts at most 6 rounds, then the Lead decides it (2026-10-21)
   limitByPartySize: "limitByPartySize",       // world: with five Entities in the raid the Limit is 1 lower on Easy and Standard (2026-10-21)
   hugePieceHeld: "hugePieceHeld",             // world: a Huge piece with a carrier in a local chase can't move (no way out) until it ends (2026-10-21)
-  demoPrompt: "demoPrompt",                   // world: offer to set up the one-shot when a GM opens a world without it
-  demoImported: "demoImported",               // world, hidden: the one-shot (the Demo compendiums) is in this world: the system version that set it up
+  demoPrompt: "demoPrompt",                   // world: offer to set up a ready-made game (the one-shot, the three towns) when a GM opens a world without one
+  demoImported: "demoImported",               // world, hidden: a ready-made game has been set up in this world: the system version that did it
   campaign: "campaign",                       // world: the optional campaign rules: castle upgrades (default off)
   castleUpgrades: "castleUpgrades",           // world, hidden: the castle's upgrades (the pieces brought home, three at most)
   showOdds: "showOdds"                        // client: show the odds in the roll dialog
@@ -50,7 +50,7 @@ export const SETTINGS = Object.freeze({
 
 /** Settings menus (game.settings.registerMenu; a button in Configure Settings). */
 export const MENUS = Object.freeze({
-  demoImport: "demoImport"                    // GM: set up the one-shot (the Demo compendiums) in this world again
+  demoImport: "demoImport"                    // GM: set up a ready-made game (the one-shot, the three towns) in this world
 });
 
 /** Chat-card kinds (flags["dont-get-forked"].card.kind). */

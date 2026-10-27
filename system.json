@@ -2,7 +2,7 @@
   "id": "dont-get-forked",
   "type": "system",
   "title": "Don't Get Forked",
-  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls, with chases and the lock-up run for you. Compendiums hold the eight Entities, the book's random tables and its three premade towns, and a Demo folder with a Halloween one-shot, Lantern Night in Hallowby: its script, a map scene, the Entities with tokens and a macro that starts the raid.",
+  "description": "The companion Foundry VTT game system for Don't Get Forked, a tabletop roleplaying game by Richard Moore: classic monsters raid a town on festival night for the castle's shopping list. Play the eight Entities on their sheets, roll a trait with the Mask or the Monster while the system applies abilities, Costs and Perks as the book says, and keep Suspicion, the Limit, the Turns and dawn on a shared Raid HUD the Storyteller controls, with chases and the lock-up run for you. Compendiums hold the eight Entities, the book's random tables and its three premade towns, a Demo folder with a Halloween one-shot, Lantern Night in Hallowby (its script, a map scene, the Entities with tokens and a macro that starts the raid), and a Ready-made Towns folder that makes the three towns ready to play the same way: a night map for each, with pins that open each place's page, and a macro that starts its raid. The system offers to set any of them up in a new world.",
   "version": "0.1.0",
   "compatibility": {
     "minimum": "13",
@@ -83,6 +83,20 @@
       "path": "packs/demo-macros",
       "type": "Macro",
       "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "town-scenes",
+      "label": "Ready-made Towns: Scenes",
+      "path": "packs/town-scenes",
+      "type": "Scene",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "town-macros",
+      "label": "Ready-made Towns: Macros",
+      "path": "packs/town-macros",
+      "type": "Macro",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
     }
   ],
   "packFolders": [
@@ -95,6 +109,11 @@
       "name": "Demo",
       "sorting": "m",
       "packs": ["demo-journal", "demo-scenes", "demo-entities", "demo-macros"]
+    },
+    {
+      "name": "Ready-made Towns",
+      "sorting": "m",
+      "packs": ["town-scenes", "town-macros"]
     }
   ],
   "socket": true,

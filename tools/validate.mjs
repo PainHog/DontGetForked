@@ -4,9 +4,10 @@
  * Run before every commit and in CI:  node tools/validate.mjs   (npm run validate)
  *
  * Checks:
- *  0. Generated source — packs/_source/{entities,tables,journal} and assets/maps
- *     are exactly what tools/gen-pack-source.mjs makes from the game data
- *     (module/config.mjs, book/src/towns.json, lang/en.json).
+ *  0. Generated source — packs/_source/{entities,tables,journal,demo-*,town-*} and
+ *     assets/maps are exactly what tools/gen-pack-source.mjs makes from the game data
+ *     (module/config.mjs, book/src/towns.json, lang/en.json); the towns' scene
+ *     pictures (assets/towns) were rendered from their current maps (tools/town-art.mjs).
  *  1. Manifest sanity — semver version; the id matches module/contracts.mjs and
  *     module/config.mjs; every referenced esmodule/style/lang/pack path exists;
  *     language files are valid JSON; declared packs match the build config both
@@ -50,6 +51,16 @@ try {
   else pass("compendium source matches module/config.mjs, book/src/towns.json and lang/en.json");
 } catch (e) {
   err(`compendium source can't be generated: ${e.message}`); // e.g. a premade town that breaks Chapter 8's rules
+}
+
+console.log("The towns' pictures…");
+try {
+  const { artProblems } = await import("./town-art.mjs");
+  const problems = artProblems();
+  if (problems.length) err(`the towns' scene pictures are out of date (${problems.join("; ")}) — run: node tools/town-art.mjs`);
+  else pass("assets/towns: each town's map and thumbnail match its layout and its scene's size");
+} catch (e) {
+  err(`the towns' pictures can't be checked: ${e.message}`);
 }
 
 /* -------------------------------------------- 1. Manifest -- */

@@ -87,6 +87,9 @@
 .dont-get-forked.dgf-roll-dialog .window-content, .dont-get-forked.dgf-choose-entity .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); }
 .dont-get-forked .dgf-dialog fieldset { border: 1px solid var(--dgf-paper-edge); margin: 0.5em 0; padding: 0.3em 0.6em; }
 .dont-get-forked .dgf-dialog legend { font-variant: small-caps; padding: 0 0.3em; }
+/* setting up a ready-made game: one tick per game, each on its own line */
+.dont-get-forked .dgf-setup-choices { margin: 0.5em 0; }
+.dont-get-forked .dgf-setup-choices .dgf-check { margin: 0.45em 0; }
 .dont-get-forked .dgf-dialog .dgf-row label { display: flex; flex-direction: column; flex: 1 1 8em; font-variant: small-caps; }
 .dont-get-forked .dgf-odds { font-size: 0.95em; text-align: center; border-top: 1px dotted var(--dgf-paper-edge); padding-top: 0.4em; margin-top: 0.5em; }
 

@@ -19,7 +19,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DGF } from "../module/config.mjs";
-import { SYSTEM_ID, OPS } from "../module/contracts.mjs";
+import { SYSTEM_ID } from "../module/contracts.mjs";
+import { townRaid } from "../module/logic/start-raid.mjs";
 import { entitySystem } from "../module/logic/entity.mjs";
 import { wayText } from "../book/tools/towns.mjs";
 import { townMap } from "../book/tools/town-maps.mjs";
@@ -152,19 +153,22 @@ function scriptDoc(t) {
   };
 }
 
-/** The macro that starts the raid: a new Easy raid, then Hallowby's list on the Raid HUD. */
-export function startMacroCommand(t) {
-  const items = t.locations.map((l) => `  { name: ${JSON.stringify(l.item)}, duty: ${JSON.stringify(l.kind)}, essential: ${l.essential} }`);
+/**
+ * A ready-made game's macro: game.dontGetForked.raid.start (module/raid/start-raid.mjs) with the town's level and its
+ * shopping list (module/logic/start-raid.mjs townRaid), the same for the one-shot and the three towns of Chapter 9.
+ */
+export function startMacroCommand(t, title = t.name) {
+  const spec = townRaid(t);
+  const items = spec.list.map((it) => `    { name: ${JSON.stringify(it.name)}, duty: ${JSON.stringify(it.duty)}, essential: ${it.essential} }`);
   return [
-    `// Lantern Night in Hallowby: a new raid on ${t.labelName}, with Hallowby's shopping list on the Raid HUD.`,
+    `// ${title}: a new ${t.labelName} raid, with ${t.name}'s shopping list on the Raid HUD.`,
     `// Run it as the Storyteller once each player owns their Entity: the raid takes every Entity with a player owner.`,
-    `const run = game.dontGetForked.runOp;`,
-    `const raid = await run(${JSON.stringify(OPS.raidReset)}, { difficulty: ${JSON.stringify(t.label)} });`,
-    `if (!raid?.ok) return ui.notifications.warn(\`New raid refused: \${raid?.reason ?? "no reply"}\`);`,
-    `await run(${JSON.stringify(OPS.raidList)}, { action: "set", list: [`,
+    `return game.dontGetForked.raid.start({`,
+    `  town: ${JSON.stringify(spec.town)}, difficulty: ${JSON.stringify(spec.difficulty)},`,
+    `  list: [`,
     items.join(",\n"),
-    `] });`,
-    `ui.notifications.info("${t.name}: a new ${t.labelName} raid, with its shopping list.");`,
+    `  ],`,
+    `});`,
   ].join("\n");
 }
 
@@ -173,7 +177,7 @@ function guideDoc(t, L, B) {
   const setup = [
     `<p>Everything for the one-shot is in the <strong>Demo</strong> folder of the Compendium Packs tab. The script is the same as the PDF’s; at the table the PDF’s Entity cards and tracker are for players without Foundry, and here the sheets and the Raid HUD do their jobs.</p>`,
     `<ol>`,
-    `<li><strong>Bring it in.</strong> Right-click each Demo compendium and choose Import All Content, the script and guide first, then the scenes, the Entities and the macro. Keep the documents’ IDs if Foundry asks: the map’s pins open the script’s pages by them. (Or drag only what you need out of each compendium.)</li>`,
+    `<li><strong>Bring it in.</strong> The first time the Storyteller opens a world, the system offers to set it up (or Configure Settings → ${B("DGF.Settings.demoImport.Label")}, tick <em>${L("DGF.Demo.name.hallowby")}</em>): the four Demo compendiums come into the world in folders named after them, keeping their IDs (the map’s pins open the script’s pages by them). By hand: right-click each Demo compendium and choose Import All Content, the script and guide first, then the scenes, the Entities and the macro, keeping the documents’ IDs if Foundry asks.</li>`,
     `<li><strong>The scenes.</strong> Activate <em>The Castle</em> for Part One, then <em>Hallowby</em> for Part Two. Hallowby has no grid: tokens stand anywhere, and every move takes one Turn, so where a token stands only says which place it’s at.</li>`,
     `<li><strong>The Entities.</strong> When the players have chosen (Part One), give each player Owner of their Entity (right-click the actor, Configure Ownership). Change Castle Duties on the sheets.</li>`,
     `<li><strong>Start the raid.</strong> Drag the macro <em>Hallowby: Start the Raid</em> to the hotbar and run it: a new ${t.labelName} raid on ${B("DGF.Raid.title")} window (the Raid HUD), Suspicion 0, Turn 1, with Hallowby’s list. Run it after the players own their Entities: the raid takes every Entity with a player owner (or tick ${B("DGF.Sheet.inRaid")} on a sheet).</li>`,
@@ -196,7 +200,7 @@ function guideDoc(t, L, B) {
 
 /* ------------------------------------------------------------- scenes -- */
 
-const sceneBase = { padding: 0, backgroundColor: "#141a1d", tokenVision: false, fog: { exploration: false }, environment: { globalLight: { enabled: true } }, navigation: true };
+export const sceneBase = { padding: 0, backgroundColor: "#141a1d", tokenVision: false, fog: { exploration: false }, environment: { globalLight: { enabled: true } }, navigation: true };
 
 /** A pin opening one page of the script. */
 const pin = (sceneKey, key, x, y, text = "") => ({
@@ -238,7 +242,7 @@ export function demoDocs({ L, B }) {
     entities: demoEntityDocs(),
     scenes: demoSceneDocs(t),
     journal: [scriptDoc(t), guideDoc(t, L, B)],
-    macros: [{ key: "start-the-raid", name: "Hallowby: Start the Raid", type: "script", img: "icons/svg/fire.svg", command: startMacroCommand(t) }],
+    macros: [{ key: "start-the-raid", name: "Hallowby: Start the Raid", type: "script", img: "icons/svg/fire.svg", command: startMacroCommand(t, "Lantern Night in Hallowby") }],
     map: townMap(t),
   };
 }

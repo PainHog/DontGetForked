@@ -1,0 +1,152 @@
+{
+  "key": "puddlecombe",
+  "name": "Puddlecombe",
+  "flags": {
+    "dont-get-forked": {
+      "setup": "puddlecombe"
+    }
+  },
+  "background": {
+    "src": "systems/dont-get-forked/assets/towns/puddlecombe-map.jpg"
+  },
+  "width": 4200,
+  "height": 3010,
+  "thumb": "systems/dont-get-forked/assets/towns/puddlecombe-thumb.jpg",
+  "grid": {
+    "type": 0,
+    "size": 140
+  },
+  "initial": {
+    "x": 2100,
+    "y": 1505,
+    "scale": 0.35
+  },
+  "padding": 0,
+  "backgroundColor": "#141a1d",
+  "tokenVision": false,
+  "fog": {
+    "exploration": false
+  },
+  "environment": {
+    "globalLight": {
+      "enabled": true
+    }
+  },
+  "navigation": true,
+  "notes": [
+    {
+      "key": "puddlecombe-tavern",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "d2308e6d27acbc17",
+      "x": 1155,
+      "y": 805,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "puddlecombe-garden",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "4cd604ad3d5e138e",
+      "x": 3080,
+      "y": 770,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "puddlecombe-draper",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "c13ea2ec28ef0b83",
+      "x": 3115,
+      "y": 2240,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "puddlecombe-school",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "20eb029025732a73",
+      "x": 1120,
+      "y": 2205,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "puddlecombe-lockup",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "49e84abf02e577b2",
+      "x": 2100,
+      "y": 2562,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "puddlecombe-wayout",
+      "entryId": "6c8a87e803021b46",
+      "pageId": "d005d18474f6db52",
+      "x": 3701,
+      "y": 1505,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    }
+  ]
+}

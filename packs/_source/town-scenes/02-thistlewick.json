@@ -1,0 +1,171 @@
+{
+  "key": "thistlewick",
+  "name": "Thistlewick",
+  "flags": {
+    "dont-get-forked": {
+      "setup": "thistlewick"
+    }
+  },
+  "background": {
+    "src": "systems/dont-get-forked/assets/towns/thistlewick-map.jpg"
+  },
+  "width": 4200,
+  "height": 3010,
+  "thumb": "systems/dont-get-forked/assets/towns/thistlewick-thumb.jpg",
+  "grid": {
+    "type": 0,
+    "size": 140
+  },
+  "initial": {
+    "x": 2100,
+    "y": 1505,
+    "scale": 0.35
+  },
+  "padding": 0,
+  "backgroundColor": "#141a1d",
+  "tokenVision": false,
+  "fog": {
+    "exploration": false
+  },
+  "environment": {
+    "globalLight": {
+      "enabled": true
+    }
+  },
+  "navigation": true,
+  "notes": [
+    {
+      "key": "thistlewick-baker",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "e1cc48720e08dea8",
+      "x": 1050,
+      "y": 770,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-china",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "4b6faf3b0c94e264",
+      "x": 2100,
+      "y": 595,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-hatter",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "22c44e81bee80251",
+      "x": 3150,
+      "y": 910,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-ironmonger",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "28b4577a6936f79b",
+      "x": 3185,
+      "y": 2135,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-seeds",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "7e791fdb3c233691",
+      "x": 2135,
+      "y": 2450,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-lockup",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "d0cf35fc93c1115a",
+      "x": 1120,
+      "y": 2422,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    },
+    {
+      "key": "thistlewick-wayout",
+      "entryId": "aaae01e5f28e18a9",
+      "pageId": "6ef2dc8eae8461ec",
+      "x": 500,
+      "y": 1505,
+      "elevation": 0,
+      "sort": 0,
+      "texture": {
+        "src": "icons/svg/book.svg"
+      },
+      "iconSize": 72,
+      "text": "",
+      "fontSize": 32,
+      "textAnchor": 1,
+      "textColor": "#efe6d2",
+      "global": false,
+      "flags": {}
+    }
+  ]
+}

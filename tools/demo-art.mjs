@@ -44,10 +44,10 @@ export const TOKENS = {
 
 const FONT_DIR = join(ROOT, "node_modules", "@fontsource");
 const fontFace = (family, pkg, weight) => `@font-face{font-family:"${family}";src:url("${pathToFileURL(join(FONT_DIR, pkg, "files", `${pkg}-latin-${weight}-normal.woff2`)).href}") format("woff2");font-weight:${weight};}`;
-const FONTS = [fontFace("Fraunces", "fraunces", 800), fontFace("Fraunces", "fraunces", 900), fontFace("Alegreya Sans", "alegreya-sans", 700)].join("");
+export const FONTS = [fontFace("Fraunces", "fraunces", 800), fontFace("Fraunces", "fraunces", 900), fontFace("Alegreya Sans", "alegreya-sans", 700)].join("");
 
 /** Pixel size of a JPEG, read from its header. */
-function jpegSize(buf) {
+export function jpegSize(buf) {
   for (let i = 2; i < buf.length - 9;) {
     if (buf[i] !== 0xff) { i++; continue; }
     const m = buf[i + 1];
@@ -80,7 +80,8 @@ export function tokenSvg(key) {
 </svg>`;
 }
 
-async function render(browser, svg, { width, height, type, out, quality }) {
+/** Render an SVG to a picture file with the book's typefaces (a browser from launchChromium). */
+export async function render(browser, svg, { width, height, type, out, quality }) {
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 });
   await page.setContent(`<!doctype html><html><head><style>${FONTS} html,body{margin:0;background:transparent} svg{display:block;width:${width}px;height:${height}px}</style></head><body>${svg}</body></html>`);
   await page.evaluate(() => document.fonts.ready);
@@ -88,10 +89,15 @@ async function render(browser, svg, { width, height, type, out, quality }) {
   await page.close();
 }
 
+/** The local Chromium: $CHROME_PATH, else /opt/pw-browsers/chromium when present, else Playwright's own. */
+export function launchChromium() {
+  const CHROME = process.env.CHROME_PATH ?? (existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined);
+  return chromium.launch(CHROME ? { executablePath: CHROME } : {});
+}
+
 export async function renderDemoArt() {
   mkdirSync(join(DEMO_ASSETS, "tokens"), { recursive: true });
-  const CHROME = process.env.CHROME_PATH ?? (existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined);
-  const browser = await chromium.launch(CHROME ? { executablePath: CHROME } : {});
+  const browser = await launchChromium();
   const written = [];
   try {
     const m = sceneMap(demoTown());

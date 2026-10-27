@@ -32,6 +32,7 @@ import { registerChaseOps, driveChase } from "./raid/chase-flow.mjs";
 import { registerCheckOps } from "./raid/raid-checks.mjs";
 import { ChaseTracker, openChaseTracker, refreshChaseTracker, currentChaseTracker } from "./apps/chase-tracker.mjs";
 import { groupCheckDialog, tellCheckDialog, shoppingListDialog, yearDialog, castleUpgradeDialog } from "./apps/raid-dialogs.mjs";
+import { startRaid } from "./raid/start-raid.mjs";
 
 /* -------------------------------------------- */
 /*  Init                                        */
@@ -90,6 +91,7 @@ Hooks.once("init", function () {
     raid: {
       get: getRaid, view: raidView, mutate: mutateRaid, reconcile, openHud, refreshHud, currentHud, RaidHud,
       groupCheck: groupCheckDialog, tellCheck: tellCheckDialog, shoppingList: shoppingListDialog, endRaid: yearDialog,
+      start: startRaid, // a ready-made game's macro: a new raid at its level with its shopping list (module/raid/start-raid.mjs)
     },
     chase: { open: openChaseTracker, current: currentChaseTracker, drive: driveChase, ChaseTracker },
     demo: { offer: offerDemo, import: importDemo, dialog: demoImportDialog },
@@ -116,8 +118,8 @@ Hooks.once("ready", async function () {
   wasActiveGM.set(game.user?.id ?? "", isActiveGM());
   if (isActiveGM()) await catchUp();
   await openHud();
-  // the one-shot ships in compendiums: offer the Storyteller to set it up in this world (once; GM only)
-  if (isActiveGM()) offerDemo().catch((err) => console.error("Don't Get Forked | setting up the one-shot failed", err));
+  // the ready-made games (the one-shot, the three towns) ship in compendiums: offer to set one up in this world (once; GM only)
+  if (isActiveGM()) offerDemo().catch((err) => console.error("Don't Get Forked | setting up a ready-made game failed", err));
   console.log("Don't Get Forked | Ready.");
 });
 

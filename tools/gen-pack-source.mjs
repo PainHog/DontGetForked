@@ -19,6 +19,8 @@
  *   assets/maps/             each town's map, drawn by the book's map code
  *                            (book/tools/town-maps.mjs), for the towns' map pages
  *   packs/_source/demo-…    the Halloween one-shot's Demo compendiums (tools/gen-demo-source.mjs)
+ *   packs/_source/town-…    the three towns ready to play: their scenes and Start the Raid macros, and the
+ *                            towns' journal pages for each place (tools/gen-town-source.mjs)
  *
  * Everything here restates the book or the system; nothing is new game content.
  * The few sentences quoted from the book (BOOK_QUOTES) are checked against the
@@ -37,7 +39,9 @@ import { entitySystem } from "../module/logic/entity.mjs";
 import { loadTowns, wayText, TRAIT_NAME } from "../book/tools/towns.mjs";
 import { townMap } from "../book/tools/town-maps.mjs";
 import { ROOT, SRC } from "./pack-config.mjs";
-import { demoDocs } from "./gen-demo-source.mjs";
+import { demoDocs, startMacroCommand } from "./gen-demo-source.mjs";
+import { demoTown } from "../book/tools/demo-pages.mjs";
+import { townDocs, townPlacePages, locationRows, furnitureLine, setupFlag } from "./gen-town-source.mjs";
 
 /** The folders this script owns: every file in them is generated (anything else there is removed). */
 export const OWNED = Object.freeze({
@@ -49,6 +53,8 @@ export const OWNED = Object.freeze({
   demoScenes: join(SRC, "demo-scenes"),
   demoJournal: join(SRC, "demo-journal"),
   demoMacros: join(SRC, "demo-macros"),
+  townScenes: join(SRC, "town-scenes"),
+  townMacros: join(SRC, "town-macros"),
 });
 
 const LANG = JSON.parse(readFileSync(join(ROOT, "lang", "en.json"), "utf8"));
@@ -88,6 +94,15 @@ export const BOOK_QUOTES = Object.freeze({
   townTraits: { chapter: "32-ch09.html", html: "<em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for." },
   townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn (one more carrying furniture)." },
   townMap: { chapter: "32-ch09.html", html: "On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture." },
+  // the towns' place pages (tools/gen-town-source.mjs): the lock-up, the way out, Tell checks
+  townAlways: { chapter: "32-ch09.html", html: "The way out (Sly or Nimble, or Brawn the loud way) and the lock-up (Sly, or Brawn the loud way; Nimble too to slip free) are always watched." },
+  gettingOut: { chapter: "14-ch04.html", html: "The way out is one watched obstacle: <strong>Sly or Nimble, or Brawn the loud way</strong>, at Difficulty 6 on Easy, 8 on Standard and 10 on Hard. The party leaves together. One Entity rolls for everyone, but only when every Entity who isn’t captured is at the way out. A Success or a Cost gets everyone out, and a Cost here costs nothing. On Trouble, Suspicion rises and the roller is caught. The way out can be rolled once a Turn, so try again next Turn. Anyone still captured is left behind." },
+  partyStarts: { chapter: "14-ch04.html", html: "The party starts at the edge of town, at the way out, and entering the town needs no roll." },
+  tells: { chapter: "15-ch05.html", html: "The first time anyone reaches a watched location, the Storyteller makes a <strong>Tell check</strong>: roll a d6, and on <strong>4–6</strong> a Tell goes off. Each place is checked once a raid, for everyone." },
+  wayOutTell: { chapter: "15-ch05.html", html: "The way out counts once anyone comes back to it." },
+  lockupTell: { chapter: "15-ch05.html", html: "The lock-up counts, but not a captive’s arrival." },
+  lockupHeld: { chapter: "16-ch06.html", html: "While held, you can’t pick up or be handed anything. You can still spend charges on any roll at the lock-up (your own, a rescuer’s or another captive’s)." },
+  lockupWatched: { chapter: "16-ch06.html", html: "The lock-up is always watched, so abilities that need a watched obstacle (Dracula’s Mesmerise) work on both. A rescue frees only the captives held at that moment, so anyone captured later needs a new rescue." },
 });
 const Q = (k) => BOOK_QUOTES[k].html;
 const source = (chapter, section) => `<p><em>Rulebook, Chapter ${chapter}: ${section}.</em></p>`;
@@ -182,69 +197,77 @@ export function tableDocs() {
 
 /* ------------------------------------------------------------- journal -- */
 
-const SIZE = { bulky: "Bulky", huge: "Huge" };
 const textPage = (key, name, content) => ({ key, name, type: "text", text: { format: 1, content } });
 
-/** The script macro that puts a town's list on the Raid HUD (the raid.list operation's "set"). */
-export function listMacro(t) {
-  const items = t.locations.map((l) => `  { name: ${JSON.stringify(l.item)}, duty: ${JSON.stringify(l.kind)}, essential: ${l.essential} }`);
-  return `// ${t.name}: put this shopping list on the Raid HUD (run as the Storyteller, after New raid → ${t.labelName}).\n`
-    + `game.dontGetForked.runOp(${JSON.stringify(OPS.raidList)}, { action: "set", list: [\n${items.join(",\n")}\n] });`;
-}
-
-function obstacleRow(step, o, tag = "") {
-  const name = `${esc(o.name)}${o.group ? " <em>(group)</em>" : ""}${o.watched ? " <strong>watched</strong>" : ""}${tag ? ` <em>${tag}</em>` : ""}`;
-  return `<tr><td><strong>${step}</strong> ${name}</td><td>${esc(wayText(o.quiet, o.quietText))}</td><td>${o.loud ? esc(wayText(o.loud, o.loudText)) : "—"}</td><td>${o.difficulty}</td></tr>`;
-}
-
-/** One premade town as a journal entry: the town, its location key, its map. */
+/**
+ * One premade town as a journal entry: the town, its location key and its map (Chapter 9), then a page for each place
+ * that the town's map scene pins open (tools/gen-town-source.mjs townPlacePages).
+ */
 function townDoc(t) {
-  const L = t.locations;
-  const host = L.find((l) => l.furniture);
-  const list = L.map((l) => `<li>${l.essential ? `<strong>${esc(cap(l.item))}</strong> (essential)` : esc(cap(l.item))}</li>`).join("");
+  const L_ = t.locations;
+  const host = L_.find((l) => l.furniture);
+  const list = L_.map((l) => `<li>${l.essential ? `<strong>${esc(cap(l.item))}</strong> (essential)` : esc(cap(l.item))}</li>`).join("");
   const villagers = t.villagers.map((v) => `${esc(low(v.who))} (${esc(low(v.doing))})`).join("; ");
   const overview = [
     `<p><strong>${t.labelName}.</strong> ${esc(t.description)}</p>`,
     `<p><strong>Lantern Night:</strong> ${esc(t.custom)}</p>`,
-    `<p><strong>The shopping list</strong> (${L.length} items):</p>`,
+    `<p><strong>The shopping list</strong> (${L_.length} items):</p>`,
     `<ol>${list}</ol>`,
-    `<p><strong>The furniture:</strong> ${esc(low(host.furniture.name))} (${SIZE[host.furniture.size]}: ${host.furniture.size === "huge" ? "two carriers" : "one carrier"}), at ${esc(host.place)} (${host.n}).</p>`,
+    furnitureLine(host),
     `<p><strong>Villagers:</strong> ${villagers}.</p>`,
     `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>`,
     `<h2>In Foundry</h2>`,
-    `<p>On the Raid HUD, ${B("DGF.Raid.newRaid")} → <strong>${t.labelName}</strong> sets these numbers. To put this town’s list on the HUD (so its items show there and the end of the raid starts from them), run this as a script macro:</p>`,
-    `<pre><code>${esc(listMacro(t))}</code></pre>`,
+    `<p>${esc(t.name)} is ready to play. ${B("DGF.Settings.demoImport.Label")} (Configure Settings, or the question when a world first opens) brings it in, each part in a folder named ${esc(t.name)}: this entry, the scene <em>${esc(t.name)}</em> (its night map, with a pin on each place that opens its page here), the macro <em>${esc(t.name)}: Start the Raid</em>, and the eight Entities with tokens if the world hasn’t got them.</p>`,
+    `<p>Run the macro as the Storyteller once each player owns their Entity: a new ${t.labelName} raid, with this list on the Raid HUD. The party’s tokens start on the map’s yard at <em>The Way Out</em>. The macro runs this:</p>`,
+    `<pre><code>${esc(startMacroCommand(t))}</code></pre>`,
   ].join("\n");
-  const rows = [];
-  for (const l of L) {
-    rows.push(`<tr><th colspan="4">${l.n}. ${esc(cap(l.place))}: ${esc(l.item)} (${esc(l.kindName)})${l.essential ? " · <strong>essential</strong>" : ""}</th></tr>`);
-    rows.push(obstacleRow("Way in", l.waysIn[0]));
-    rows.push(obstacleRow("or", l.waysIn[1]));
-    for (const o of l.then) rows.push(obstacleRow("Then", o));
-    if (l.furniture) rows.push(obstacleRow("Then", l.furniture.obstacle, "for the piece"));
-  }
   const locations = [
     `<p>${Q("townRows")} ${Q("townTraits")} ${Q("townMove")}</p>`,
     `<table>`,
     `<thead><tr><th>Location · obstacle</th><th>Quiet way</th><th>Loud way</th><th>Difficulty</th></tr></thead>`,
     `<tbody>`,
-    ...rows,
+    ...L_.flatMap(locationRows),
     `</tbody>`,
     `</table>`,
   ].join("\n");
   return {
     key: t.key,
     name: `${t.name} (${t.labelName})`,
+    flags: setupFlag(t.key),
     pages: [
       textPage("town", t.name, overview),
       textPage("locations", "Locations", locations),
       { key: "map", name: "Map", type: "image", src: `systems/${SYSTEM_ID}/assets/maps/${t.key}.svg`, image: { caption: Q("townMap") } },
+      ...townPlacePages(t, { Q, B, L }),
     ],
   };
 }
 
-/** The guide: where the system's tools are, in the order a raid uses them. Facts about the system only. */
-function guideDoc() {
+/**
+ * The guide: the ready-made games and how to start each, then where the system's tools are, in the order a raid uses
+ * them. Facts about the system only.
+ */
+function guideDoc(towns) {
+  const hallowby = demoTown();
+  const games = [
+    { name: "Lantern Night in Hallowby", what: "the Halloween one-shot", t: hallowby, macro: "Hallowby: Start the Raid", folders: "the four Demo folders" },
+    ...towns.map((t) => ({ name: t.name, what: "Chapter 9", t, macro: `${t.name}: Start the Raid`, folders: `folders named ${t.name}` })),
+  ];
+  const ready = [
+    `<p>Four games are ready to play straight away: the Halloween one-shot <em>Lantern Night in Hallowby</em> and the three towns of Chapter 9.</p>`,
+    `<table>`,
+    `<thead><tr><th>Game</th><th>Level</th><th>Scene</th><th>Macro</th></tr></thead>`,
+    `<tbody>`,
+    ...games.map((g) => `<tr><td>${esc(g.name)} (${esc(g.what)})</td><td>${g.t.labelName}</td><td>${esc(g.t.name)}</td><td>${esc(g.macro)}</td></tr>`),
+    `</tbody>`,
+    `</table>`,
+    `<ol>`,
+    `<li><strong>Set it up.</strong> The first time the Storyteller opens a world, the system asks which to set up; any time after, Configure Settings → ${B("DGF.Settings.demoImport.Label")}. Tick the games you want. Each brings its journal, its map scene and its macro into the world in its own folders (the one-shot in the four Demo folders; a town in folders named after it), keeping their IDs so the map’s pins open the journal’s pages, and the eight Entities with tokens come in too if the world hasn’t got them. Setting one up again keeps or replaces what is there, never a second copy.</li>`,
+    `<li><strong>The Entities.</strong> Give each player Owner of their Entity (right-click the actor, Configure Ownership), and change its Castle Duty on the sheet.</li>`,
+    `<li><strong>Start the raid.</strong> Activate the game’s scene and run its macro as the Storyteller (drag it to the hotbar): a new raid at the town’s level, with the town’s shopping list and its essentials on the Raid HUD. Run it after the players own their Entities: the raid takes every Entity with a player owner.</li>`,
+    `<li><strong>The tokens.</strong> Drag each Entity onto the map, onto the yard at <em>The Way Out</em>: the party starts at the edge of town. Each pin on the map is the Storyteller’s: it opens that place’s page, with its obstacles in order, their ways and Difficulty.</li>`,
+    `</ol>`,
+  ].join("\n");
   // Every world switch in Configure Settings (the client's odds line isn't an automation).
   const settings = Object.values(SETTINGS).filter((k) => `DGF.Settings.${k}.Name` in LANG && k !== SETTINGS.showOdds)
     .map((k) => `<em>${esc(L(`DGF.Settings.${k}.Name`))}</em>`).join(", ");
@@ -252,9 +275,9 @@ function guideDoc() {
     `<p>The Storyteller runs the raid from ${B("DGF.Raid.title")} window (the Raid HUD): everyone sees Suspicion, the Limit and the Turn; the Storyteller’s copy has the buttons.</p>`,
     `<ol>`,
     `<li><strong>The Entities.</strong> In the Actors sidebar, ${B("DGF.Create.button")} makes one of the eight with the book’s dice and marked defaults, for the player you pick, and lets the party see each other’s sheets. The same eight are in the compendium <strong>${esc(packLabel("entities"))}</strong>, to drag into the world; then give the player ownership (Configure Ownership). Change the Gift, Perk and Castle Duty on the sheet.</li>`,
-    `<li><strong>The town.</strong> Run one of the three premade towns in this compendium (Chapter 9), or build one with the book’s tables in the <strong>${esc(packLabel("tables"))}</strong> compendium (Chapter 8).</li>`,
+    `<li><strong>The town.</strong> Run one of the three premade towns in this compendium (Chapter 9: each is ready to play, as <em>Ready to play</em> says), or build one with the book’s tables in the <strong>${esc(packLabel("tables"))}</strong> compendium (Chapter 8).</li>`,
     `<li><strong>A new raid.</strong> Press ${B("DGF.Raid.newRaid")} and pick the town’s difficulty: Suspicion goes back to 0, the Turn to 1, and the Limit is the difficulty’s. The raid holds every Entity with a player owner (change who on the Raid window’s ${B("DGF.Raid.party")} list, or with the sheet’s ${B("DGF.Sheet.inRaid")} tick). With <em>${esc(L("DGF.Settings.resetOnNewRaid.Name"))}</em> on, every Entity in the raid is free again and its charges refill.</li>`,
-    `<li><strong>The shopping list.</strong> For a rolled town, ${B("DGF.Raid.list")} → ${B("DGF.List.roll")} rolls it; a premade town’s page has a macro that puts its list on the HUD.</li>`,
+    `<li><strong>The shopping list.</strong> For a rolled town, ${B("DGF.Raid.list")} → ${B("DGF.List.roll")} rolls it; a ready-made game’s Start the Raid macro starts the raid with its list on the HUD.</li>`,
     `</ol>`,
   ].join("\n");
   const during = [
@@ -273,18 +296,18 @@ function guideDoc() {
   const after = [
     `<p>When the party gets out, the ${B("DGF.RaidCard.home.title")} card gives the Storyteller ${B("DGF.Card.yearButton")} (or use ${B("DGF.Raid.endRaid")} on the HUD). Tick what came home, then ${B("DGF.Year.decide")}: the card gives the result and the epilogue. A forked party’s year card posts itself.</p>`,
     `<p><strong>Running it by hand.</strong> Every automation has a switch in Configure Settings → ${esc(MANIFEST.title)}: ${settings}.</p>`,
-    `<p><strong>The compendiums.</strong> ${esc(packLabel("entities"))}: the eight Entities. ${esc(packLabel("tables"))}: the book’s random tables. ${esc(packLabel("journal"))}: this guide and the three towns of Chapter 9, each with its list, location key and map.</p>`,
+    `<p><strong>The compendiums.</strong> ${esc(packLabel("entities"))}: the eight Entities. ${esc(packLabel("tables"))}: the book’s random tables. ${esc(packLabel("journal"))}: this guide and the three towns of Chapter 9, each with its list, location key and map, and a page for each place. ${esc(packLabel("town-scenes"))} and ${esc(packLabel("town-macros"))}: each town’s night map and its Start the Raid macro. The Demo folder: the Halloween one-shot, and the eight Entities with tokens that every ready-made game uses.</p>`,
   ].join("\n");
   return {
     key: "how-to-run-a-raid",
     name: "How to Run a Raid in Foundry",
-    pages: [textPage("before", "Before the raid", before), textPage("during", "During the raid", during), textPage("after", "After the raid", after)],
+    pages: [textPage("ready", "Ready to play", ready), textPage("before", "Before the raid", before), textPage("during", "During the raid", during), textPage("after", "After the raid", after)],
   };
 }
 
 /** The guide first, then the towns in the book's order (Easy, Standard, Hard). */
 export function journalDocs(towns = loadTowns()) {
-  return [guideDoc(), ...towns.map(townDoc)];
+  return [guideDoc(towns), ...towns.map(townDoc)];
 }
 
 /* ------------------------------------------------------------ generate -- */
@@ -304,6 +327,10 @@ export function generate() {
   demo.journal.forEach((d, i) => files.set(join(OWNED.demoJournal, num(i, d.key)), json(d)));
   demo.macros.forEach((d, i) => files.set(join(OWNED.demoMacros, num(i, d.key)), json(d)));
   files.set(join(OWNED.maps, "hallowby.svg"), demo.map);
+  // the three towns ready to play (the Ready-made Towns folder)
+  const ready = townDocs(towns);
+  ready.scenes.forEach((d, i) => files.set(join(OWNED.townScenes, num(i, d.key)), json(d)));
+  ready.macros.forEach((d, i) => files.set(join(OWNED.townMacros, num(i, d.key)), json(d)));
   return files;
 }
 

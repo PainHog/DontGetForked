@@ -772,7 +772,15 @@ class CompendiumCollection {
   }
   get title() { return this.metadata.label; }
   get documentClass() { return DOCUMENT_CLASSES()[this.documentName]; }
-  async getIndex() { touch(); return this.index; }
+  /** v13 CompendiumCollection#getIndex: the index, with any extra `fields` (dotted paths) read from the documents. */
+  async getIndex({ fields = [] } = {}) {
+    touch();
+    for (const d of this._docs) {
+      const entry = this.index.get(d._id);
+      for (const f of fields) setProperty(entry, f, clone(getProperty(d, f)));
+    }
+    return this.index;
+  }
   async getDocuments(query = {}) {
     touch();
     const ids = query._id__in;
