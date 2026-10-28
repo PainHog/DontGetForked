@@ -71,7 +71,8 @@ test("the script's numbers are Easy's: the list, the Limit, the way out, the loc
 function boxes(placeHtml) {
   return [...placeHtml.matchAll(/<p class="roll">([\s\S]*?)<\/p>/g)].map((m) => {
     const s = plain(m[1]);
-    return { quiet: s.match(/^(\w+)/)[1].toLowerCase(), loud: (s.match(/Or (\w+), the loud way/) ?? [])[1]?.toLowerCase() ?? null, d: +s.match(/Difficulty (\d+)/)[1], watched: /\bWatched\b/.test(s) };
+    const T = "Brawn|Nimble|Sly|Charm|Wits";
+    return { quiet: s.match(new RegExp(`\\b(${T})\\b`))[1].toLowerCase(), loud: (s.match(new RegExp(`\\b(${T}) to [^(,]*\\(the loud way\\)`)) ?? [])[1]?.toLowerCase() ?? null, d: +s.match(/Difficulty (\d+)/)[1], watched: /Difficulty \d+(?: \([^)]*\))?, watched\./.test(s) };
   });
 }
 
@@ -85,8 +86,8 @@ test("every obstacle the script reads out is the town's: its traits, loud way, D
     const obs = [...l.waysIn, ...l.then, ...(l.furniture ? [l.furniture.obstacle] : [])];
     assert.deepEqual(boxes(sec), obs.map(want), l.key);
   }
-  assert.deepEqual(boxes(part(/^<h3>The Way Out/)), [{ quiet: "one", loud: "brawn", d: L.exit, watched: true }]);
-  assert.ok(plain(part(/^<h3>The Way Out/)).includes("Sly to slip across with the crowd, or Nimble"));
+  assert.deepEqual(boxes(part(/^<h3>The Way Out/)), [{ quiet: "sly", loud: "brawn", d: L.exit, watched: true }]);
+  assert.ok(plain(part(/^<h3>The Way Out/)).includes("Sly to slip across with the crowd, Nimble to go along under the bridge"));
   const h = chapter("40-happens.html");
   const rescue = plain(h.slice(h.indexOf('id="if-rescue"'), h.indexOf('id="if-drop"')));
   assert.equal([...rescue.matchAll(/Difficulty (\d+)(?! lower)/g)].map((m) => +m[1]).join(), `${L.lockup},${L.lockup}`);
