@@ -178,7 +178,7 @@ test("the settings menu sets it up again: keep what's there (only the missing co
   const warned = log.warnings.length;
   dialogResponders.push(press("skip", {}));
   assert.deepEqual(await asUser(GM, () => api().demo.dialog()), { ok: false, reason: "noneChosen" });
-  assert.ok(log.warnings.slice(warned).some((w) => /Nothing was ticked/.test(w)));
+  assert.ok(log.warnings.slice(warned).some((w) => /Nothing was checked/.test(w)));
   assert.deepEqual(log.errors, []);
 });
 
