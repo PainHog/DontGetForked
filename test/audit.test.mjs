@@ -384,7 +384,7 @@ test("V17 Out of Sight at the table: the roll dialog's tick for someone with him
   await settle();
 });
 
-test("B7 at the table: the roll dialog offers Mesmerise only at a watched obstacle; refused otherwise", async () => {
+test("B7 at the table: the roll dialog offers Mesmerize only at a watched obstacle; refused otherwise", async () => {
   const { promptRoll } = await import("../module/dice/rolling.mjs");
   const mes = `ability:${dracula.id}:signature`;
   const box = (html) => html.match(new RegExp(`<input type="checkbox" name="${mes}"[^>]*>`))?.[0] ?? "";
@@ -409,7 +409,7 @@ test("B7 at the table: the roll dialog offers Mesmerise only at a watched obstac
   const before = log.warnings.length;
   await asUser(BEN, () => api.roll(dracula, { trait: "sly" }));
   await settle();
-  assert.ok(log.warnings.slice(before).some((w) => /Mesmerise opens an approach only at a watched obstacle/.test(w)));
+  assert.ok(log.warnings.slice(before).some((w) => /Mesmerize opens an approach only at a watched obstacle/.test(w)));
 });
 
 test("V19 at the table: a group check at a way in lets an empty-handed Spectral Ghost past; one that carries, or anywhere else, rolls like anyone else", async () => {

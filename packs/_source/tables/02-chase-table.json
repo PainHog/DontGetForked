@@ -14,7 +14,7 @@
     },
     {
       "key": "backAlleys",
-      "description": "<p><strong>Back alleys.</strong> Duck, dodge, double back.</p><p>Traits that work: Nimble, Sly</p>",
+      "description": "<p><strong>Back alleys.</strong> Dodge around corners and double back.</p><p>Traits that work: Nimble, Sly</p>",
       "range": [
         2,
         2
@@ -22,7 +22,7 @@
     },
     {
       "key": "marketStalls",
-      "description": "<p><strong>The market stalls.</strong> Overturn a cart, vault a stall.</p><p>Traits that work: Brawn, Nimble</p>",
+      "description": "<p><strong>The market stalls.</strong> Tip over a cart or jump over a stall.</p><p>Traits that work: Brawn, Nimble</p>",
       "range": [
         3,
         3
@@ -30,7 +30,7 @@
     },
     {
       "key": "rooftops",
-      "description": "<p><strong>Over the rooftops.</strong> Climb, jump, find a way down.</p><p>Traits that work: Nimble, Wits</p>",
+      "description": "<p><strong>Over the rooftops.</strong> Climb up, jump across and find a way down.</p><p>Traits that work: Nimble, Wits</p>",
       "range": [
         4,
         4
@@ -38,7 +38,7 @@
     },
     {
       "key": "parade",
-      "description": "<p><strong>The festival parade.</strong> Join in: you’re in costume, after all.</p><p>Traits that work: Charm, Sly</p>",
+      "description": "<p><strong>The festival parade.</strong> Join the parade and blend in with the costumes.</p><p>Traits that work: Charm, Sly</p>",
       "range": [
         5,
         5
@@ -46,7 +46,7 @@
     },
     {
       "key": "deadEnd",
-      "description": "<p><strong>A dead end.</strong> Break through, or think fast.</p><p>Traits that work: Brawn, Wits</p>",
+      "description": "<p><strong>A dead end.</strong> Break through, or think of another way out.</p><p>Traits that work: Brawn, Wits</p>",
       "range": [
         6,
         6

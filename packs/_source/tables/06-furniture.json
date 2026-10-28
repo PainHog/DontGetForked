@@ -14,7 +14,7 @@
     },
     {
       "key": "mirror",
-      "description": "<p><strong>A gilt mirror</strong></p><p>Size: Bulky</p>",
+      "description": "<p><strong>A gold-framed mirror</strong></p><p>Size: Bulky</p>",
       "range": [
         2,
         2
@@ -22,7 +22,7 @@
     },
     {
       "key": "armour",
-      "description": "<p><strong>A suit of armour</strong></p><p>Size: Bulky</p>",
+      "description": "<p><strong>A suit of armor</strong></p><p>Size: Bulky</p>",
       "range": [
         3,
         3

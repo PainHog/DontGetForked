@@ -1,7 +1,7 @@
 {
   "key": "shopping-list",
   "name": "The Shopping List (d66)",
-  "description": "<p>For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again. Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location.</p><p><em>Rulebook, Chapter 8: The Shopping List.</em></p><p>Read the total as the two dice, tens then units: 34 is a 3 for the kind and a 4 for the item. On the Raid HUD, <strong>Shopping list</strong> → <strong>Roll the list</strong> rolls a whole list on this table (a repeat is rolled again) and keeps it on the HUD.</p>",
+  "description": "<p>For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again. Only the kind matters to the rules, since it decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location.</p><p><em>Rulebook, Chapter 8: The Shopping List.</em></p><p>Read the total as the two dice, tens then units: 34 is a 3 for the kind and a 4 for the item. On the Raid HUD, <strong>Shopping list</strong> → <strong>Roll the list</strong> rolls a whole list on this table (a repeat is rolled again) and keeps it on the HUD.</p>",
   "formula": "1d6 * 10 + 1d6",
   "results": [
     {
@@ -26,7 +26,7 @@
         13,
         13
       ],
-      "description": "<p><strong>Food and drink:</strong> a cask of red wine (“for the guests”)</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
+      "description": "<p><strong>Food and drink:</strong> a cask of red wine</p><p>Where in town: the baker, the butcher, the tavern cellar</p>"
     },
     {
       "key": "cook-4",
@@ -66,7 +66,7 @@
         22,
         22
       ],
-      "description": "<p><strong>Plants and seeds:</strong> a pot of nightshade (purely ornamental)</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+      "description": "<p><strong>Plants and seeds:</strong> a pot of nightshade</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
     },
     {
       "key": "gardener-3",
@@ -98,7 +98,7 @@
         26,
         26
       ],
-      "description": "<p><strong>Plants and seeds:</strong> mushroom spawn for the cellar</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
+      "description": "<p><strong>Plants and seeds:</strong> mushroom spores for the cellar</p><p>Where in town: the market garden, the florist, the seed merchant</p>"
     },
     {
       "key": "librarian-1",
@@ -122,7 +122,7 @@
         33,
         33
       ],
-      "description": "<p><strong>Books and paper:</strong> a cookbook “for the guests”</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
+      "description": "<p><strong>Books and paper:</strong> a cookbook</p><p>Where in town: the bookseller, the printer, the schoolhouse</p>"
     },
     {
       "key": "librarian-4",
@@ -162,7 +162,7 @@
         42,
         42
       ],
-      "description": "<p><strong>Silver, china and linen:</strong> a tea service</p><p>Where in town: the silversmith, the china shop, the laundry</p>"
+      "description": "<p><strong>Silver, china and linen:</strong> a tea set</p><p>Where in town: the silversmith, the china shop, the laundry</p>"
     },
     {
       "key": "butler-3",
@@ -218,7 +218,7 @@
         53,
         53
       ],
-      "description": "<p><strong>Tools and hardware:</strong> hinges that creak properly</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
+      "description": "<p><strong>Tools and hardware:</strong> a set of new hinges</p><p>Where in town: the smithy, the ironmonger, the carpenter</p>"
     },
     {
       "key": "handyman-4",
@@ -258,7 +258,7 @@
         62,
         62
       ],
-      "description": "<p><strong>Cloth and costumes:</strong> bandages, lots</p><p>Where in town: the draper, the tailor, the hatter</p>"
+      "description": "<p><strong>Cloth and costumes:</strong> a box of bandages</p><p>Where in town: the draper, the tailor, the hatter</p>"
     },
     {
       "key": "tailor-3",
@@ -282,7 +282,7 @@
         65,
         65
       ],
-      "description": "<p><strong>Cloth and costumes:</strong> knitting wool</p><p>Where in town: the draper, the tailor, the hatter</p>"
+      "description": "<p><strong>Cloth and costumes:</strong> knitting yarn</p><p>Where in town: the draper, the tailor, the hatter</p>"
     },
     {
       "key": "tailor-6",
@@ -290,7 +290,7 @@
         66,
         66
       ],
-      "description": "<p><strong>Cloth and costumes:</strong> boots in a very large size</p><p>Where in town: the draper, the tailor, the hatter</p>"
+      "description": "<p><strong>Cloth and costumes:</strong> a pair of very large boots</p><p>Where in town: the draper, the tailor, the hatter</p>"
     }
   ]
 }

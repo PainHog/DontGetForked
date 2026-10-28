@@ -5,7 +5,7 @@
       "key": "puddlecombe",
       "name": "Puddlecombe",
       "label": "easy",
-      "description": "A sleepy village that has never had a real monster.",
+      "description": "A quiet village that has never seen a real monster.",
       "custom": "pies",
       "villagers": [
         { "who": 1, "doing": 1 },
@@ -188,7 +188,7 @@
       "key": "gallowsmere",
       "name": "Gallowsmere",
       "label": "hard",
-      "description": "A walled town that remembers last year.",
+      "description": "A walled town that still remembers last year’s trouble.",
       "custom": "bells",
       "villagers": [
         { "who": 6, "doing": 6 },

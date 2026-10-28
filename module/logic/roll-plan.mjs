@@ -100,7 +100,7 @@ export function buildRollPlan(input) {
   // Where the roll is: the way out (Chapter 4) or the lock-up (Chapter 6) list their own traits.
   const mode = input.wayOut ? "wayOut" : input.lockup === "slip" ? "slip" : input.lockup === "rescue" ? "rescue" : "";
   const listed = mode === "wayOut" ? DGF.wayOut : mode ? DGF.lockup[mode] : null;
-  // B7: Mesmerise opens an approach only at a watched obstacle (the way out and the lock-up always are)
+  // B7: Mesmerize opens an approach only at a watched obstacle (the way out and the lock-up always are)
   if (opener?.watchedOnly && !input.watched && !mode) errors.push({ code: "openNotWatched", name: opener.name });
   const captive = sys.status === "captured";
   if (captive && mode !== "slip") errors.push({ code: "captiveOnlySlips" }); // held at the lock-up: its one roll is slipping free

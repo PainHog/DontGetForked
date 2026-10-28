@@ -1,7 +1,7 @@
 {
   "key": "villagers-doing",
   "name": "The Villagers: What They’re Doing (d6)",
-  "description": "<p>Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are flavour. They don’t change an obstacle’s traits or Difficulty.</p><p><em>Rulebook, Chapter 8: The Villagers.</em></p>",
+  "description": "<p>Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are only flavor and don’t change an obstacle’s traits or Difficulty.</p><p><em>Rulebook, Chapter 8: The Villagers.</em></p>",
   "formula": "1d6",
   "results": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "key": "doing-2",
-      "description": "<p>Tipsy from the cider</p>",
+      "description": "<p>A little drunk on cider</p>",
       "range": [
         2,
         2
@@ -30,7 +30,7 @@
     },
     {
       "key": "doing-4",
-      "description": "<p>Carrying a lantern and a pitchfork “for the parade”</p>",
+      "description": "<p>Carrying a lantern and a pitchfork for the parade</p>",
       "range": [
         4,
         4
@@ -38,7 +38,7 @@
     },
     {
       "key": "doing-5",
-      "description": "<p>Gossiping, loudly</p>",
+      "description": "<p>Gossiping loudly</p>",
       "range": [
         5,
         5
@@ -46,7 +46,7 @@
     },
     {
       "key": "doing-6",
-      "description": "<p>Practising the bells</p>",
+      "description": "<p>Ringing the church bells</p>",
       "range": [
         6,
         6

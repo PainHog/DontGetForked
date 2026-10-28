@@ -48,7 +48,7 @@ test("the sheet's signature, Gift versions, Perks, Weakness and Tell read exactl
   // spot checks, word for word
   const drac = game.actors.find((a) => a.system.entityKey === "dracula");
   const shown = await sheetText(drac);
-  assert.ok(shown.includes("Signature: Mesmerise 1 charge"));
+  assert.ok(shown.includes("Signature: Mesmerize 1 charge"));
   assert.ok(shown.includes("At a watched obstacle that doesn’t list Charm, roll Charm at a Difficulty 2 lower; Trouble still gets you caught."));
   assert.ok(shown.includes("Gift: Shape of the Night pick one · 1 charge a use"));
   assert.ok(shown.includes("Perk pick one · always on"));

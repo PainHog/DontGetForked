@@ -30,7 +30,7 @@
     },
     {
       "key": "backGate",
-      "description": "<p><strong>A bolted back gate</strong></p><p>Quiet way: Brawn (lift it off its hinges)<br>Loud way: Charm (shout “Delivery!” until someone opens it)</p>",
+      "description": "<p><strong>A bolted back gate</strong></p><p>Quiet way: Brawn (lift it off its hinges)<br>Loud way: Charm (call out until someone opens it)</p>",
       "range": [
         4,
         4
@@ -38,7 +38,7 @@
     },
     {
       "key": "gardenWall",
-      "description": "<p><strong>A high garden wall</strong></p><p>Quiet way: Nimble<br>Loud way: Brawn (through the gate, lock and all)</p>",
+      "description": "<p><strong>A high garden wall</strong></p><p>Quiet way: Nimble<br>Loud way: Brawn (break through the gate)</p>",
       "range": [
         5,
         5
@@ -78,7 +78,7 @@
     },
     {
       "key": "neighbour",
-      "description": "<p><strong>A nosy neighbour at her window</strong></p><p>Quiet way: Sly<br>Loud way: Wits (a false alarm: “Your cat’s on the roof!”)</p>",
+      "description": "<p><strong>A nosy neighbor at her window</strong></p><p>Quiet way: Sly<br>Loud way: Wits (raise a false alarm to draw her away)</p>",
       "range": [
         10,
         10
@@ -86,7 +86,7 @@
     },
     {
       "key": "shopFloor",
-      "description": "<p><strong>A crowded shop floor</strong> <em>(group)</em></p><p>Quiet way: Sly<br>Loud way: —</p>",
+      "description": "<p><strong>A crowded shop</strong> <em>(group)</em></p><p>Quiet way: Sly<br>Loud way: —</p>",
       "range": [
         11,
         11
@@ -94,7 +94,7 @@
     },
     {
       "key": "geese",
-      "description": "<p><strong>A muddy yard full of geese</strong></p><p>Quiet way: Sly<br>Loud way: Nimble (run for it, honking)</p>",
+      "description": "<p><strong>A muddy yard full of geese</strong></p><p>Quiet way: Sly<br>Loud way: Nimble (run straight through the flock)</p>",
       "range": [
         12,
         12
@@ -110,7 +110,7 @@
     },
     {
       "key": "dog",
-      "description": "<p><strong>A guard dog</strong></p><p>Quiet way: Charm (a biscuit and a pat)<br>Loud way: Nimble (outrun it, barking)</p>",
+      "description": "<p><strong>A guard dog</strong></p><p>Quiet way: Charm (a treat and a pat)<br>Loud way: Nimble (outrun it while it barks)</p>",
       "range": [
         14,
         14
@@ -118,7 +118,7 @@
     },
     {
       "key": "doorman",
-      "description": "<p><strong>A doorman checking invitations</strong></p><p>Quiet way: Charm<br>Loud way: Wits (a forged invitation that fools nobody for long)</p>",
+      "description": "<p><strong>A doorman checking invitations</strong></p><p>Quiet way: Charm<br>Loud way: Wits (show a forged invitation)</p>",
       "range": [
         15,
         15
@@ -134,7 +134,7 @@
     },
     {
       "key": "strongbox",
-      "description": "<p><strong>A locked strongbox</strong> <em>(inside)</em></p><p>Quiet way: Wits (work out the catch)<br>Loud way: Charm (sweet-talk the clerk into opening it)</p>",
+      "description": "<p><strong>A locked strongbox</strong> <em>(inside)</em></p><p>Quiet way: Wits (figure out the catch)<br>Loud way: Charm (sweet-talk the clerk into opening it)</p>",
       "range": [
         17,
         17
@@ -150,7 +150,7 @@
     },
     {
       "key": "watchman",
-      "description": "<p><strong>The night watchman on his round</strong></p><p>Quiet way: Wits (time his round)<br>Loud way: —</p>",
+      "description": "<p><strong>The night watchman on his rounds</strong></p><p>Quiet way: Wits (time his rounds)<br>Loud way: —</p>",
       "range": [
         19,
         19

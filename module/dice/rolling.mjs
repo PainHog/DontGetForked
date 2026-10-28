@@ -204,7 +204,7 @@ function dialogContext(actor, values, raid) {
     if (c.weakness) notices.push(t("DGF.Roll.notice.chaseWeakness"));
     if (c.local) notices.push(t("DGF.Roll.notice.chaseRise", { n: chaseRise(raid.chase).total })); // D1
   } else if (c) notices.push(t(`DGF.Plan.${c.reason}`));
-  // B7: an approach only at a watched obstacle (Mesmerise) isn't offered until Watched, the way out or the lock-up is ticked
+  // B7: an approach only at a watched obstacle (Mesmerize) isn't offered until Watched, the way out or the lock-up is ticked
   const watchedHere = !!(values.watched || values.wayOut || values.lockup);
   const describe = (a) => ({
     id: a.id, name: a.name, helper: a.payerName, charges: a.payer.charges,
@@ -252,7 +252,7 @@ function liveOdds(actor, raid, choices) {
       const out = root?.querySelector?.(".dgf-odds");
       if (!form || !out) return;
       const update = () => {
-        // B7: Mesmerise is on offer only while Watched, the way out or the lock-up is ticked
+        // B7: Mesmerize is on offer only while Watched, the way out or the lock-up is ticked
         const named = (n) => form.elements?.namedItem?.(n);
         const watchedHere = ["watched", "wayOut", "lockup"].some((n) => named(n)?.checked);
         for (const box of root.querySelectorAll?.("input[data-watched-only]") ?? []) {
@@ -449,7 +449,7 @@ export async function spendCharge(actor) {
   return postAbilityCard(actor, { action: "spend", spend: pay.spend, overdraw: pay.overdraw, suspicion: pay.suspicion, step: pay.step, autoCharges, chargesBefore: before, chargesAfter: actor.system.charges.value }, raid);
 }
 
-/** The Draught (Jekyll & Hyde): change form; one charge, free back to Jekyll with Practised Hand. */
+/** The Draught (Jekyll & Hyde): change form; one charge, free back to Jekyll with Practiced Hand. */
 export async function drinkDraught(actor) {
   if (!isEntity(actor) || !actor.isOwner) return null;
   const raid = getRaid();

@@ -109,7 +109,7 @@ export function townPlacePages(t, { Q, B, L }) {
     lockupTable(),
     `<p>${Q("lockupWatched")}</p>`,
     `<p>${Q("tells")} ${Q("lockupTell")}</p>`,
-    `<p><strong>In Foundry:</strong> a capture shows on the Raid HUD at the lock-up. From the next Turn a captive’s roll is slipping free (tick <em>${esc(L("DGF.Roll.lockupSlip").replace(/\s*\(.*$/, ""))}</em>); a rescue that beats the lock-up frees every captive there.</p>`,
+    `<p><strong>In Foundry:</strong> a capture shows on the Raid HUD at the lock-up. From the next Turn a captive’s roll is slipping free (check <em>${esc(L("DGF.Roll.lockupSlip").replace(/\s*\(.*$/, ""))}</em>); a rescue that beats the lock-up frees every captive there.</p>`,
   ].join("\n")));
   pages.push(textPage("wayout", "The Way Out", [
     `<p>${Q("townAlways")}</p>`,
@@ -117,7 +117,7 @@ export function townPlacePages(t, { Q, B, L }) {
     `<p>${Q("gettingOut")}</p>`,
     `<p>${Q("partyStarts")}</p>`,
     `<p>${Q("tells")} ${Q("wayOutTell")}</p>`,
-    `<p><strong>In Foundry:</strong> the party’s tokens start on this yard. The roll dialog has a tick for the way out.</p>`,
+    `<p><strong>In Foundry:</strong> the party’s tokens start on this yard. The roll dialog has a checkbox for the way out.</p>`,
   ].join("\n")));
   return pages;
 }

@@ -52,7 +52,7 @@ test("Jekyll & Hyde starts as Jekyll; the Draught swaps the arrangement", () => 
   assert.equal(toHyde.to, "hyde");
   assert.equal(toHyde.cost, 1);
   assert.equal(toHyde.spend, 1);
-  // Practised Hand (the default Perk): changing back to Jekyll costs no charge
+  // Practiced Hand (the default Perk): changing back to Jekyll costs no charge
   const back = draughtPlan({ ...s, form: "hyde", traits: diceFor("jekyll-hyde", "hyde") });
   assert.equal(back.to, "jekyll");
   assert.equal(back.cost, 0);

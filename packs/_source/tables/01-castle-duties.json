@@ -1,7 +1,7 @@
 {
   "key": "castle-duties",
   "name": "Castle Duties (d6)",
-  "description": "<p>Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), the high d6 keeps it, and the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is where you can. Rolling a Duty at random, roll again on one that’s taken or not on the list, while a Duty that’s both free and on the list remains.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
+  "description": "<p>Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. If you roll a Duty at random, roll again on one that’s taken or not on the list, as long as a Duty that’s both free and on the list remains.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
   "formula": "1d6",
   "results": [
     {
@@ -30,7 +30,7 @@
     },
     {
       "key": "butler",
-      "description": "<p><strong>Butler</strong></p><p>Shops for: silver, china and linen<br>Where in town: the silversmith, the china shop, the laundry<br>At the castle: knows how fine houses run, and where they keep the good spoons</p>",
+      "description": "<p><strong>Butler</strong></p><p>Shops for: silver, china and linen<br>Where in town: the silversmith, the china shop, the laundry<br>At the castle: knows how fine houses are run and where they keep the silver</p>",
       "range": [
         4,
         4

@@ -96,7 +96,7 @@ test("the shopping list: rolled on the d66 table (a d6 for the kind, a d6 for th
   await asUser(GM, () => currentHud().runAction("shoppingList"));
   await settle();
   const list = raid().list;
-  assert.deepEqual(list.map((i) => i.name), ["a wheel of strong cheese", "a pot of nightshade (purely ornamental)", "a cookbook “for the guests”", "a lace tablecloth", "a coil of rope"]);
+  assert.deepEqual(list.map((i) => i.name), ["a wheel of strong cheese", "a pot of nightshade", "a cookbook", "a lace tablecloth", "a coil of rope"]);
   assert.deepEqual(list.map((i) => i.essential), [true, false, false, false, false]);
   assert.deepEqual(list.map((i) => i.duty), ["cook", "gardener", "librarian", "butler", "handyman"]);
   assert.match(lastMessage().content, /The shopping list/);
@@ -422,8 +422,8 @@ test("the final flight at the Limit: everyone free flees together; the majority 
   assert.equal(year.result, "win");
   assert.deepEqual(year.lines, [DGF.epilogue.year.win, DGF.epilogue.missing.librarian]);
   assert.match(lastMessage().content, /How the year went: Win/);
-  assert.match(lastMessage().content, /Full larders/);
-  assert.match(lastMessage().content, /Nobody knows what the town is saying/);
+  assert.match(lastMessage().content, /The pantry is full/);
+  assert.match(lastMessage().content, /The castle hears no news from town/);
   assert.equal(view().over.result, "win");
   assert.equal(fired.yearDecided, 1);
   assert.match((await asUser(ANN, () => openHud())).renderedParts.body, /The raid is over: Win/);

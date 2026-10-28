@@ -34,7 +34,7 @@ DGF.dieSteps = Object.freeze([4, 6, 8, 10, 12]);
  * Gifts, Perks, Weaknesses and Tells: C3–C9 (rulebook Chapter 2).
  */
 DGF.entities = Object.freeze([
-  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerise", effect: "open", trait: "charm", watchedOnly: true, text: "open an approach with Charm at a watched obstacle. He bends a mind with a look.", flavour: "He bends a mind with a look." },
+  { key: "dracula", name: "Dracula", duty: "butler", dice: { brawn: 8, nimble: 10, sly: 6, charm: 12, wits: 4 }, signature: { name: "Mesmerize", effect: "open", trait: "charm", watchedOnly: true, text: "open an approach with Charm at a watched obstacle. He bends a mind with a look.", flavour: "He bends a mind with a look." },
     gift: {
       name: "Shape of the Night",
       versions: [
@@ -49,7 +49,7 @@ DGF.entities = Object.freeze([
       { key: "wallCrawler", name: "Wall-Crawler", text: "In a chase you can always roll Nimble, whatever the ground, and your Nimble die is one size bigger (the roll’s one raise)." },
     ],
     weakness: { name: "Garlic", timing: "always", text: "Every kitchen in town has some, and the mob knows it." },
-    tell: { name: "No Reflection", text: "A shop window shows everyone but him." },
+    tell: { name: "No Reflection", text: "A store window shows everyone but him." },
   },
   { key: "creature", name: "Frankenstein’s Creature", duty: "handyman", dice: { brawn: 12, nimble: 8, sly: 6, charm: 4, wits: 10 }, signature: { name: "Brute Force", effect: "switch", trait: "brawn", text: "use Brawn instead of the trait called. Stronger than any man, it breaks what others pick.", flavour: "Stronger than any man, it breaks what others pick." },
     gift: {
@@ -100,7 +100,7 @@ DGF.entities = Object.freeze([
       { key: "fetch", name: "Fetch", text: "You know the way home. Two edges. While you’re at the way out, its Difficulty is 1 lower for whoever rolls it. A final flight you’re in starts at Lead 3, not 2.", flavour: "You know the way home." },
     ],
     weakness: { name: "Hounds", timing: "soon", text: "Someone lets the hunting dogs out." },
-    tell: { name: "Eyebrows That Meet", text: "Brows that meet in the middle, and a little too much hair everywhere." },
+    tell: { name: "Eyebrows That Meet", text: "Eyebrows that meet in the middle, and too much hair everywhere else." },
   },
   { key: "invisible", name: "The Invisible Man", duty: "tailor", dice: { brawn: 4, nimble: 8, sly: 12, charm: 6, wits: 10 }, signature: { name: "Unseen", effect: "hidden", text: "roll the Monster die without risking Suspicion. When the Monster shows, there’s nothing to see.", flavour: "When the Monster shows, there’s nothing to see." },
     gift: {
@@ -112,7 +112,7 @@ DGF.entities = Object.freeze([
       ],
     },
     perks: [
-      { key: "outOfSight", name: "Out of Sight", text: "Trouble at a watched obstacle doesn’t get you caught unless you, or anyone in the same place, carries loot or furniture. It still raises Suspicion: they can’t see you, but they can see a floating candlestick.", flavour: "they can’t see you, but they can see a floating candlestick", default: true },
+      { key: "outOfSight", name: "Out of Sight", text: "Trouble at a watched obstacle doesn’t get you caught unless you, or anyone in the same place, carries loot or furniture. It still raises Suspicion: they can’t see you, but they can tell something is there.", flavour: "they can’t see you, but they can tell something is there", default: true },
       { key: "hiddenPockets", name: "Hidden Pockets", text: "Captured, you keep the loot you carry (not furniture)." },
       { key: "lightStep", name: "Light Step", text: "The loud way costs you no Suspicion." },
     ],
@@ -130,18 +130,18 @@ DGF.entities = Object.freeze([
     },
     perks: [
       { key: "spectral", name: "Spectral", text: "Group ways in don’t stop you: no roll and no action. If one is the location’s only obstacle, you take the item, and if the party picks the other way in, you’re still past. Not while you carry loot or furniture.", default: true },
-      { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: nobody takes rattling chains seriously.", flavour: "nobody takes rattling chains seriously" },
+      { key: "rattle", name: "Rattle", text: "The Monster showing on your roll is Suspicion +1, not +2: on Lantern Night, rattling chains sound like part of the festival.", flavour: "on Lantern Night, rattling chains sound like part of the festival" },
       { key: "alreadyDead", name: "Already Dead", text: "Cornered in a local chase, you aren’t captured: you’re back where you were caught, still carrying what you had, and you lose your next Turn. If the chase’s rise brings the Limit, you simply join the final flight." },
     ],
     weakness: { name: "Cold Iron", timing: "always", text: "Horseshoes, railings, a poker from the fire: every street has some." },
-    tell: { name: "Cold Spot", text: "Candles gutter and breath fogs wherever it drifts." },
+    tell: { name: "Cold Spot", text: "Candles flicker and breath fogs wherever it drifts." },
   },
   { key: "witch", name: "A Witch", duty: "cook", dice: { brawn: 6, nimble: 4, sly: 10, charm: 8, wits: 12 }, signature: { name: "Hedge Spell", effect: "raise", text: "raise a trait die one size, on any roll in the same place, hers or a friend’s (in a local chase, only hers). Old village magic: a muttered word, a pinch of salt, and luck leans her way.", flavour: "Old village magic: a muttered word, a pinch of salt, and luck leans her way." },
     gift: {
       name: "Witchcraft",
       versions: [
         { key: "broomstick", name: "Broomstick", effect: "open", trait: "nimble", text: "In over the rooftops, quiet as an owl." },
-        { key: "blackCat", name: "Black Cat", effect: "hidden", text: "Everyone blames the cat." },
+        { key: "blackCat", name: "Black Cat", effect: "hidden", text: "If anyone sees something strange, they blame the cat." },
         { key: "potionForThat", name: "A Potion for That", effect: "switch", trait: "wits", text: "There’s a potion for everything.", default: true },
       ],
     },
@@ -150,7 +150,7 @@ DGF.entities = Object.freeze([
       { key: "flyByNight", name: "Fly by Night", text: "In a chase you can always roll Wits, whatever the ground." },
       { key: "wiseWoman", name: "Wise Woman", text: "A Cost on your Wits roll is never “lose a Turn”." },
     ],
-    weakness: { name: "Rowan", timing: "soon", text: "A sprig of rowan, the old charm against witches: somebody’s grandmother always has one." },
+    weakness: { name: "Rowan", timing: "soon", text: "A sprig of rowan, an old charm against witches. Someone in every crowd has one." },
     tell: { name: "A Black Cat", text: "A black cat follows her everywhere and stares at people." },
   },
   {
@@ -160,16 +160,16 @@ DGF.entities = Object.freeze([
       name: "The Other Self",
       versions: [
         { key: "doctorsBag", name: "Doctor’s Bag", effect: "raise", text: "The right instrument for the job.", default: true },
-        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "Hyde still takes over if it shows.", text: "A respectable doctor having a funny turn." },
+        { key: "pillarOfSociety", name: "Pillar of Society", effect: "hidden", note: "Hyde still takes over if it shows.", text: "A respectable doctor who just seems a little unwell." },
         { key: "trample", name: "Trample", effect: "open", trait: "brawn", note: "Your Brawn is a d4 as Jekyll, a d12 as Hyde.", text: "Hyde doesn’t wait to be let in." },
       ],
     },
     perks: [
-      { key: "practisedHand", name: "Practised Hand", text: "Changing back to Jekyll costs no charge.", default: true },
+      { key: "practisedHand", name: "Practiced Hand", text: "Changing back to Jekyll costs no charge.", default: true },
       { key: "steadyNerves", name: "Steady Nerves", text: "On Jekyll’s rolls, Hyde takes over only if the Monster beats your trait die by 2 or more. Beating it by 1 still shows: Suspicion +2." },
       { key: "bruteStrength", name: "Brute Strength", text: "As Hyde, carrying doesn’t make your Nimble smaller." },
     ],
-    weakness: { name: "A Familiar Face", timing: "soon", text: "Someone in the mob recognises the good doctor." },
+    weakness: { name: "A Familiar Face", timing: "soon", text: "Someone in the mob recognizes the good doctor." },
     tell: { name: "The Wrong Hand", text: "One hand a gentleman’s, the other hairy and knotted." },
     forms: { jekyll: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 }, hyde: { brawn: 12, nimble: 10, sly: 8, charm: 4, wits: 6 } },
   },
@@ -185,26 +185,26 @@ DGF.duties = Object.freeze([
   { key: "cook", name: "Cook", kind: "food and drink", where: "the baker, the butcher, the tavern cellar", role: "keeps the castle fed and knows every kitchen door" },
   { key: "gardener", name: "Gardener", kind: "plants and seeds", where: "the market garden, the florist, the seed merchant", role: "knows what grows where, and what’s poisonous" },
   { key: "librarian", name: "Librarian", kind: "books and paper", where: "the bookseller, the printer, the schoolhouse", role: "reads the town’s notices and signs" },
-  { key: "butler", name: "Butler", kind: "silver, china and linen", where: "the silversmith, the china shop, the laundry", role: "knows how fine houses run, and where they keep the good spoons" },
+  { key: "butler", name: "Butler", kind: "silver, china and linen", where: "the silversmith, the china shop, the laundry", role: "knows how fine houses are run and where they keep the silver" },
   { key: "handyman", name: "Handyman", kind: "tools and hardware", where: "the smithy, the ironmonger, the carpenter", role: "knows how locks and hinges work" },
   { key: "tailor", name: "Tailor", kind: "cloth and costumes", where: "the draper, the tailor, the hatter", role: "keeps everyone’s disguises in one piece" },
 ].map((d) => Object.freeze(d)));
 
 /** C14: the d66 shopping table: a d6 for the kind (in Castle Duty order), a d6 for the item. Only the kind matters to the rules. */
 DGF.shoppingTable = Object.freeze([
-  { duty: "cook", items: ["a wheel of strong cheese", "a side of bacon", "a cask of red wine (“for the guests”)", "a sack of flour", "a jar of honey", "the wedding cake in the shop window"] },
-  { duty: "gardener", items: ["seed potatoes", "a pot of nightshade (purely ornamental)", "rose bushes for the graveyard", "turnip seed for next year’s lanterns", "a crate of lilies", "mushroom spawn for the cellar"] },
-  { duty: "librarian", items: ["this week’s newspapers", "black-edged writing paper", "a cookbook “for the guests”", "ink and sealing wax", "an almanac with next year’s moons", "a book of etiquette"] },
-  { duty: "butler", items: ["the silver spoons", "a tea service", "bed linen", "a lace tablecloth", "a pair of candlesticks", "a gravy boat"] },
-  { duty: "handyman", items: ["a box of nails", "a new lock for the dungeon", "hinges that creak properly", "a lamp and a can of oil", "a coil of rope", "a length of good chain"] },
-  { duty: "tailor", items: ["a bolt of black velvet", "bandages, lots", "a top hat", "a new cape", "knitting wool", "boots in a very large size"] },
+  { duty: "cook", items: ["a wheel of strong cheese", "a side of bacon", "a cask of red wine", "a sack of flour", "a jar of honey", "the wedding cake in the shop window"] },
+  { duty: "gardener", items: ["seed potatoes", "a pot of nightshade", "rose bushes for the graveyard", "turnip seed for next year’s lanterns", "a crate of lilies", "mushroom spores for the cellar"] },
+  { duty: "librarian", items: ["this week’s newspapers", "black-edged writing paper", "a cookbook", "ink and sealing wax", "an almanac with next year’s moons", "a book of etiquette"] },
+  { duty: "butler", items: ["the silver spoons", "a tea set", "bed linen", "a lace tablecloth", "a pair of candlesticks", "a gravy boat"] },
+  { duty: "handyman", items: ["a box of nails", "a new lock for the dungeon", "a set of new hinges", "a lamp and a can of oil", "a coil of rope", "a length of good chain"] },
+  { duty: "tailor", items: ["a bolt of black velvet", "a box of bandages", "a top hat", "a new cape", "knitting yarn", "a pair of very large boots"] },
 ].map((r) => Object.freeze({ duty: r.duty, items: Object.freeze(r.items) })));
 
 /** C16: the d6 furniture table (the piece standing at one of the list's locations, and its size). */
 DGF.furniture = Object.freeze([
   { key: "armchair", name: "A wingback armchair", size: "bulky" },
-  { key: "mirror", name: "A gilt mirror", size: "bulky" },
-  { key: "armour", name: "A suit of armour", size: "bulky" },
+  { key: "mirror", name: "A gold-framed mirror", size: "bulky" },
+  { key: "armour", name: "A suit of armor", size: "bulky" },
   { key: "bear", name: "A stuffed bear", size: "bulky" },
   { key: "clock", name: "A grandfather clock", size: "huge" },
   { key: "bed", name: "A four-poster bed", size: "huge" },
@@ -244,39 +244,39 @@ DGF.obstacleTable = Object.freeze([
   { key: "trapdoor", name: "A heavy cellar trapdoor", quiet: "brawn" },
   { key: "tugOfWar", name: "A tug-of-war across the lane", quiet: "brawn", group: true },
   { key: "cart", name: "A cart blocking the alley", quiet: "brawn", loud: "nimble", loudText: "scramble over the load" },
-  { key: "backGate", name: "A bolted back gate", quiet: "brawn", quietText: "lift it off its hinges", loud: "charm", loudText: "shout “Delivery!” until someone opens it" },
-  { key: "gardenWall", name: "A high garden wall", quiet: "nimble", loud: "brawn", loudText: "through the gate, lock and all" },
+  { key: "backGate", name: "A bolted back gate", quiet: "brawn", quietText: "lift it off its hinges", loud: "charm", loudText: "call out until someone opens it" },
+  { key: "gardenWall", name: "A high garden wall", quiet: "nimble", loud: "brawn", loudText: "break through the gate" },
   { key: "window", name: "A shuttered window", quiet: "nimble", loud: "brawn", loudText: "force the shutters" },
   { key: "rooftops", name: "The rooftops", quiet: "nimble", group: true },
   { key: "drainpipe", name: "A rickety drainpipe", quiet: "nimble" },
   { key: "frontDoor", name: "A locked front door", quiet: "sly", quietText: "pick the lock", loud: "brawn", loudText: "kick it in" },
-  { key: "neighbour", name: "A nosy neighbour at her window", quiet: "sly", loud: "wits", loudText: "a false alarm: “Your cat’s on the roof!”" },
-  { key: "shopFloor", name: "A crowded shop floor", quiet: "sly", group: true },
-  { key: "geese", name: "A muddy yard full of geese", quiet: "sly", loud: "nimble", loudText: "run for it, honking" },
+  { key: "neighbour", name: "A nosy neighbor at her window", quiet: "sly", loud: "wits", loudText: "raise a false alarm to draw her away" },
+  { key: "shopFloor", name: "A crowded shop", quiet: "sly", group: true },
+  { key: "geese", name: "A muddy yard full of geese", quiet: "sly", loud: "nimble", loudText: "run straight through the flock" },
   { key: "shopkeeper", name: "The shopkeeper behind the counter", quiet: "charm", loud: "sly", loudText: "snatch it from under her nose" },
-  { key: "dog", name: "A guard dog", quiet: "charm", quietText: "a biscuit and a pat", loud: "nimble", loudText: "outrun it, barking" },
-  { key: "doorman", name: "A doorman checking invitations", quiet: "charm", loud: "wits", loudText: "a forged invitation that fools nobody for long" },
+  { key: "dog", name: "A guard dog", quiet: "charm", quietText: "a treat and a pat", loud: "nimble", loudText: "outrun it while it barks" },
+  { key: "doorman", name: "A doorman checking invitations", quiet: "charm", loud: "wits", loudText: "show a forged invitation" },
   { key: "children", name: "Children in costumes who want a closer look", quiet: "charm", group: true },
-  { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "work out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it", inside: true },
+  { key: "strongbox", name: "A locked strongbox", quiet: "wits", quietText: "figure out the catch", loud: "charm", loudText: "sweet-talk the clerk into opening it", inside: true },
   { key: "backRoom", name: "A dark, cluttered back room", quiet: "wits", loud: "sly", loudText: "rummage through everything", inside: true },
-  { key: "watchman", name: "The night watchman on his round", quiet: "wits", quietText: "time his round" },
+  { key: "watchman", name: "The night watchman on his rounds", quiet: "wits", quietText: "time his rounds" },
   { key: "stalls", name: "A maze of festival stalls", quiet: "wits", group: true },
 ].map((o) => Object.freeze(o)));
 
 /** C19: the villagers (flavour only): a d6 for who it is, a d6 for what they're doing. */
 DGF.villagers = Object.freeze({
-  who: Object.freeze(["The baker’s wife", "The night watchman", "A gang of children", "The vicar", "The mayor, in his best costume", "Old Granny Mott, who has seen it all before"]),
-  doing: Object.freeze(["Looking for a lost cat", "Tipsy from the cider", "Judging the costume contest", "Carrying a lantern and a pitchfork “for the parade”", "Gossiping, loudly", "Practising the bells"]),
+  who: Object.freeze(["The baker’s wife", "The night watchman", "A gang of children", "The pastor", "The mayor, in his best costume", "Old Granny Mott, who has seen it all before"]),
+  doing: Object.freeze(["Looking for a lost cat", "A little drunk on cider", "Judging the costume contest", "Carrying a lantern and a pitchfork for the parade", "Gossiping loudly", "Ringing the church bells"]),
 });
 
 /** C12: the d6 chase table; one roll each round for everyone in the chase (the traits that work there). */
 DGF.chaseTable = Object.freeze([
   { key: "crowdedSquare", name: "The crowded square", text: "Lose yourself in the crowd, or bluff your way through.", traits: ["sly", "charm"] },
-  { key: "backAlleys", name: "Back alleys", text: "Duck, dodge, double back.", traits: ["nimble", "sly"] },
-  { key: "marketStalls", name: "The market stalls", text: "Overturn a cart, vault a stall.", traits: ["brawn", "nimble"] },
-  { key: "rooftops", name: "Over the rooftops", text: "Climb, jump, find a way down.", traits: ["nimble", "wits"] },
-  { key: "parade", name: "The festival parade", text: "Join in: you’re in costume, after all.", traits: ["charm", "sly"] },
-  { key: "deadEnd", name: "A dead end", text: "Break through, or think fast.", traits: ["brawn", "wits"] },
+  { key: "backAlleys", name: "Back alleys", text: "Dodge around corners and double back.", traits: ["nimble", "sly"] },
+  { key: "marketStalls", name: "The market stalls", text: "Tip over a cart or jump over a stall.", traits: ["brawn", "nimble"] },
+  { key: "rooftops", name: "Over the rooftops", text: "Climb up, jump across and find a way down.", traits: ["nimble", "wits"] },
+  { key: "parade", name: "The festival parade", text: "Join the parade and blend in with the costumes.", traits: ["charm", "sly"] },
+  { key: "deadEnd", name: "A dead end", text: "Break through, or think of another way out.", traits: ["brawn", "wits"] },
 ].map((r) => Object.freeze(r)));
 
 /** C13: the festival, and a d6 table of local customs (flavour only, no rules). */
@@ -285,10 +285,10 @@ DGF.festival = Object.freeze({
   customs: Object.freeze([
   { key: "lanterns", text: "Turnip lanterns in every window." },
   { key: "parade", text: "A costume parade through the square at midnight." },
-  { key: "maskedBall", text: "A masked ball at the mayor’s house." },
-  { key: "pies", text: "Pies left on doorsteps “for the wanderers”." },
+  { key: "maskedBall", text: "A costume party at the mayor’s house." },
+  { key: "pies", text: "Pies left on doorsteps for wandering spirits." },
   { key: "bonfire", text: "A bonfire in the square, and a straw monster burned at dawn." },
-  { key: "bells", text: "Bells rung every hour to keep the real monsters away. They never work." },
+  { key: "bells", text: "Bells ringing every hour to keep real monsters away." },
   ].map((c) => Object.freeze(c))),
 });
 
@@ -380,19 +380,19 @@ DGF.results = Object.freeze(["bust", "partial", "win", "grand"]);
 /** C15: the epilogue (story only): one line for the result, then one for each kind of item (by Castle Duty) that didn't come home. */
 DGF.epilogue = Object.freeze({
   year: Object.freeze({
-    grand: "A year of plenty. The new piece goes in the great hall, and everyone pretends it was always there.",
-    win: "Full larders, warm fires. The castle creaks happily through another year.",
-    partial: "The castle gets by, just. Someone has to sleep in the draughty tower.",
-    bust: "A long, thin year, and a lot of arguing about whose fault it was.",
-    forked: "The town tells the story for years. Next Lantern Night, the bells ring a little louder.",
+    grand: "A year of plenty, and the new piece takes pride of place in the great hall.",
+    win: "The pantry is full and the fires stay lit all year.",
+    partial: "The castle gets by, but barely, and the tower stays cold all winter.",
+    bust: "A long, hard year, with too little to go around.",
+    forked: "The town tells the story for years, and next Lantern Night it keeps a closer watch.",
   }),
   missing: Object.freeze({
     cook: "Turnip soup every night until spring.",
-    gardener: "Nothing grows but nettles, and the nettles win.",
-    librarian: "Nobody knows what the town is saying, or what day it is.",
-    butler: "Dinner is served on old coffin lids.",
-    handyman: "Every door in the castle creaks, sticks or falls off.",
-    tailor: "Next year’s disguises are held together with string and hope.",
+    gardener: "Nothing grows in the garden but nettles.",
+    librarian: "The castle hears no news from town and loses track of the days.",
+    butler: "Meals are served on cracked plates, with no clean linen.",
+    handyman: "Doors stick, hinges break and nothing gets fixed.",
+    tailor: "Next year’s disguises are old and patched together with string.",
   }),
 });
 

@@ -1,5 +1,5 @@
-Now: The book's three ready-made towns are now as ready to play online as the Halloween one-shot: a night map for each, with pins that open each place's page, and one click to start the raid.
-Next: Richard tries the three towns in Foundry, runs the one-shot for his group, then writes his foreword when he has time.
+Now: Rewriting the whole game in plain, everyday American English: the one-shot, the online version's text, the run guide and the quick sheets are done; the rulebook is next.
+Next: Richard runs the one-shot for his group, then the rest of the rulebook gets the same plain-English rewrite.
 Number: Design decisions made = 162
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000

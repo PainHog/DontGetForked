@@ -3,7 +3,7 @@
   "name": "Thistlewick: Start the Raid",
   "type": "script",
   "img": "icons/svg/fire.svg",
-  "command": "// Thistlewick: a new Standard raid, with Thistlewick's shopping list on the Raid HUD.\n// Run it as the Storyteller once each player owns their Entity: the raid takes every Entity with a player owner.\nreturn game.dontGetForked.raid.start({\n  town: \"Thistlewick\", difficulty: \"standard\",\n  list: [\n    { name: \"the wedding cake in the shop window\", duty: \"cook\", essential: true },\n    { name: \"a tea service\", duty: \"butler\", essential: true },\n    { name: \"a top hat\", duty: \"tailor\", essential: false },\n    { name: \"a coil of rope\", duty: \"handyman\", essential: false },\n    { name: \"turnip seed for next year’s lanterns\", duty: \"gardener\", essential: false }\n  ],\n});",
+  "command": "// Thistlewick: a new Standard raid, with Thistlewick's shopping list on the Raid HUD.\n// Run it as the Storyteller once each player owns their Entity: the raid takes every Entity with a player owner.\nreturn game.dontGetForked.raid.start({\n  town: \"Thistlewick\", difficulty: \"standard\",\n  list: [\n    { name: \"the wedding cake in the shop window\", duty: \"cook\", essential: true },\n    { name: \"a tea set\", duty: \"butler\", essential: true },\n    { name: \"a top hat\", duty: \"tailor\", essential: false },\n    { name: \"a coil of rope\", duty: \"handyman\", essential: false },\n    { name: \"turnip seed for next year’s lanterns\", duty: \"gardener\", essential: false }\n  ],\n});",
   "flags": {
     "dont-get-forked": {
       "setup": "thistlewick"

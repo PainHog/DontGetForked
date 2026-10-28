@@ -131,7 +131,7 @@ test("D1: a local chase's mob is set when it starts; its rolls raise nothing unt
   await settle();
   assert.equal(view().value, 6);
   const again = game.messages.get(end.id);
-  assert.match(again.content, /cancelled by the Storyteller/);
+  assert.match(again.content, /canceled by the Storyteller/);
   clickButton(renderMessage(again, GM), "Restore Suspicion", GM);
   await settle();
   assert.equal(view().value, 8);
@@ -242,7 +242,7 @@ test("D7b: everyone held at once ends the night, Forked: from a give-up, and at 
   assert.match(cards(CARD.chase).find((m) => cardOf(m).chaseId === chase().id && cardOf(m).outcome === "gaveUp").content, /Everyone gave up: captured/);
   const held = cards(CARD.raid).at(-1);
   assert.equal(cardOf(held).event, "allHeld");
-  assert.match(held.content, /the night ends there and then/);
+  assert.match(held.content, /the night ends right there/);
   const year = cardOf(lastMessage());
   assert.deepEqual([year.kind, year.result, year.how], [CARD.year, "forked", "allHeld"]);
   assert.equal(view().over.result, "forked");
@@ -297,11 +297,11 @@ test("D6b: in the final flight a Gift that usually switches the trait, and a fri
   assert.deepEqual([card.trait, card.traitDie, card.abilities.map((a) => [a.name, a.asRaise])], ["charm", 12, [["Bat", true]]]);
   assert.match(cards(CARD.roll).at(-1).content, /Bat \(as a raise\)/);
   assert.equal(dracula.system.charges.value, 2, "it still costs its charge");
-  // the Witch: Dracula's Mesmerise (an approach of his own, never in a chase) as a raise on her roll: Sly d10 → d12
+  // the Witch: Dracula's Mesmerize (an approach of his own, never in a chase) as a raise on her roll: Sly d10 → d12
   await rollAs(ANN, witch, { trait: "sly", second: "monster", chase: true, [`ability:${dracula.id}:signature:raise`]: true }, [7, 5, 1]);
   card = lastRoll();
   assert.deepEqual([card.traitDie, card.band], [12, "success"]);
-  assert.match(cards(CARD.roll).at(-1).content, /Mesmerise \(as a raise\) \(Dracula\)/);
+  assert.match(cards(CARD.roll).at(-1).content, /Mesmerize \(as a raise\) \(Dracula\)/);
   assert.equal(dracula.system.charges.value, 1, "the helper pays");
   assert.equal(chase().lead, 4, "two Successes: +2");
   await asUser(GM, () => currentHud().runAction("toggleHunt"));

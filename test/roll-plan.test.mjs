@@ -272,13 +272,13 @@ test("V17 Out of Sight: caught only while you or anyone with you carries loot or
   assert.equal(drac.carryingBy, "");
 });
 
-test("B7: Mesmerise opens an approach only at a watched obstacle (the way out and the lock-up always are)", () => {
+test("B7: Mesmerize opens an approach only at a watched obstacle (the way out and the lock-up always are)", () => {
   const drac = roller("dracula");
   const mes = ownAbility(drac, "signature");
-  assert.equal(mes.name, "Mesmerise");
+  assert.equal(mes.name, "Mesmerize");
   const unwatched = plan(drac, { trait: "sly", abilities: [mes] });
   assert.equal(unwatched.ok, false);
-  assert.ok(unwatched.errors.some((e) => e.code === "openNotWatched" && e.name === "Mesmerise"));
+  assert.ok(unwatched.errors.some((e) => e.code === "openNotWatched" && e.name === "Mesmerize"));
   const watched = plan(drac, { trait: "sly", watched: true, abilities: [mes] });
   assert.equal(watched.ok, true);
   assert.equal(watched.trait, "charm");
@@ -389,7 +389,7 @@ test("D1: a local chase roll raises nothing now; its Trouble or Monster (and ove
 });
 
 test("D6b: in the final flight any Signature or Gift (own, or a friend's in the flight) may be spent as a raise instead; still one raise per roll", () => {
-  const drac = roller("dracula", { charges: { value: 2, start: 3 } }); // Bat (switch Nimble), Mesmerise (open Charm)
+  const drac = roller("dracula", { charges: { value: 2, start: 3 } }); // Bat (switch Nimble), Mesmerize (open Charm)
   const bat = { ...ownAbility(drac, "gift"), asRaise: true };
   const flight = (opts) => plan(drac, { chase: true, hunt: true, chaseTraits: ["sly", "charm"], second: "monster", difficulty: 11, ...opts });
   let p = flight({ trait: "charm", abilities: [bat] });

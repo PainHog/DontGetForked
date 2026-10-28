@@ -152,7 +152,7 @@ export function payFor({ charges, uses = 1, cost = 1, hunt = false, overdrewInFl
 
 /**
  * The Draught (C2b): change form, Jekyll to Hyde or back; one charge, except
- * Practised Hand ("changing back to Jekyll costs no charge").
+ * Practiced Hand ("changing back to Jekyll costs no charge").
  * Returns { from, to, traits, cost, ...payFor } or null for an Entity without forms.
  */
 export function draughtPlan(system, { hunt = false, localChase = false, overdrewInChase = false } = {}) {

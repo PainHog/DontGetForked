@@ -254,7 +254,7 @@ test("spending a charge from the sheet, and Jekyll & Hyde's change of form", asy
   assert.equal(jekyll.system.traits.brawn, 12);
   assert.equal(jekyll.system.charges.value, 3);
   assert.match(lastMessage().content, /Hyde takes over/);
-  // the Draught back to Jekyll: Practised Hand makes it free
+  // the Draught back to Jekyll: Practiced Hand makes it free
   await asUser(ANN, () => api.drinkDraught(jekyll));
   await settle();
   assert.equal(jekyll.system.form, "jekyll");
@@ -293,7 +293,7 @@ test("the Storyteller's HUD: +1 / −1, undo, cancel and restore an event (the c
   assert.equal(raid().value, v0 - 2);
   assert.equal(cardOf(first).cancelled, true);
   assert.deepEqual(buttonLabels(first, GM), ["Restore Suspicion"]);
-  assert.match(first.content, /cancelled by the Storyteller/);
+  assert.match(first.content, /canceled by the Storyteller/);
   clickButton(renderMessage(first, GM), "Restore Suspicion", GM);
   await settle();
   assert.equal(raid().value, v0);

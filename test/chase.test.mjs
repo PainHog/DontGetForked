@@ -435,7 +435,7 @@ test("the way out lists Sly or Nimble, or Brawn the loud way: the loud way is au
   assert.equal(resolvePlannedRoll(plan(ww, { wayOut: true, trait: "nimble" }), 1, 1).caught, true);
   // an approach of its own at the way out: only with a trait it doesn't list (U1, T5)
   const drac = roller("dracula");
-  const mes = own(drac, "signature"); // Mesmerise: open with Charm
+  const mes = own(drac, "signature"); // Mesmerize: open with Charm
   assert.equal(plan(drac, { wayOut: true, trait: "sly", abilities: [mes] }).ok, true);
   const mummy = roller("invisible");
   const gap = own(mummy, "gift"); // Through the Gap: open with Nimble — the way out lists Nimble

@@ -5,7 +5,7 @@
       "key": "hallowby",
       "name": "Hallowby",
       "label": "easy",
-      "description": "A market town that takes Lantern Night very seriously, and real monsters not at all.",
+      "description": "A small market town where everyone turns out for Lantern Night.",
       "custom": "lanterns",
       "villagers": [
         { "who": 6, "doing": 4 },

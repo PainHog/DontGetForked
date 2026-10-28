@@ -82,27 +82,27 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
  * checks each still appears in its chapter.
  */
 export const BOOK_QUOTES = Object.freeze({
-  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), the high d6 keeps it, and the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is where you can. Rolling a Duty at random, roll again on one that’s taken or not on the list, while a Duty that’s both free and on the list remains." },
+  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. If you roll a Duty at random, roll again on one that’s taken or not on the list, as long as a Duty that’s both free and on the list remains." },
   chase: { chapter: "16-ch06.html", html: "The row names two traits that work this round, for everyone in the chase." },
-  customs: { chapter: "31-ch08.html", html: "Every town keeps it its own way, so roll a d6 or pick a custom for each town. Customs are flavour and change no rules." },
+  customs: { chapter: "31-ch08.html", html: "Every town celebrates it in its own way, so roll a d6 or pick a custom for each town. Customs are only flavor and change no rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself." },
   shopping: { chapter: "31-ch08.html", html: "For each item, roll two d6: the first for its kind, the second for the item. If you roll an item already on the list, roll both dice again." },
-  shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules. It decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location." },
+  shoppingKind: { chapter: "31-ch08.html", html: "Only the kind matters to the rules, since it decides where the item can be (Rolling a Town) and which Castle Duty gets its edge at its location." },
   furniture: { chapter: "31-ch08.html", html: "Roll a d6 on the table below for the piece. Decor counts as furniture for every rule." },
-  villagers: { chapter: "31-ch08.html", html: "Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are flavour. They don’t change an obstacle’s traits or Difficulty." },
-  townRows: { chapter: "32-ch09.html", html: "Each location’s rows run in order: its two ways in (picked by the first roll at one of them, then kept for the raid), then each “Then”. The furniture’s obstacle is already 2 harder. It comes last, marked “for the piece”." },
-  townTraits: { chapter: "32-ch09.html", html: "<em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in brackets is what one Castle Duty shops for." },
+  villagers: { chapter: "31-ch08.html", html: "Whenever a watched obstacle needs a face, or a Cost needs someone to cause it, roll a d6 for who it is and another d6 for what they’re doing. Villagers are only flavor and don’t change an obstacle’s traits or Difficulty." },
+  townRows: { chapter: "32-ch09.html", html: "Each location’s rows run in order: its two ways in (picked by the first roll at one of them, then kept for the raid), then each “Then”. The furniture’s obstacle comes last, marked “for the piece”, and is already 2 harder." },
+  townTraits: { chapter: "32-ch09.html", html: "<em>Watched:</em> Trouble there gets you caught. <em>(group):</em> each Entity rolls for itself. The loud way works too, at Suspicion +1 whatever the result. The kind in parentheses is what one Castle Duty shops for." },
   townMove: { chapter: "32-ch09.html", html: "Any move takes one Turn (one more carrying furniture)." },
   townMap: { chapter: "32-ch09.html", html: "On the map, an eye marks a watched location (one with a watched obstacle besides the furniture’s): the first time anyone arrives, make a Tell check (Chapter 5). A star marks the furniture." },
   // the towns' place pages (tools/gen-town-source.mjs): the lock-up, the way out, Tell checks
   townAlways: { chapter: "32-ch09.html", html: "The way out (Sly or Nimble, or Brawn the loud way) and the lock-up (Sly, or Brawn the loud way; Nimble too to slip free) are always watched." },
-  gettingOut: { chapter: "14-ch04.html", html: "The way out is one watched obstacle: <strong>Sly or Nimble, or Brawn the loud way</strong>, at Difficulty 6 on Easy, 8 on Standard and 10 on Hard. The party leaves together. One Entity rolls for everyone, but only when every Entity who isn’t captured is at the way out. A Success or a Cost gets everyone out, and a Cost here costs nothing. On Trouble, Suspicion rises and the roller is caught. The way out can be rolled once a Turn, so try again next Turn. Anyone still captured is left behind." },
+  gettingOut: { chapter: "14-ch04.html", html: "The way out is one watched obstacle: <strong>Sly or Nimble, or Brawn the loud way</strong>, at Difficulty 6 on Easy, 8 on Standard and 10 on Hard. The party leaves together, so one Entity rolls for everyone, but only once every Entity who isn’t captured is at the way out. A Success or a Cost gets everyone out, and a Cost here costs nothing. On Trouble, Suspicion rises and the roller is caught, and since the way out can be rolled only once a Turn, the party tries again next Turn. Anyone still captured is left behind." },
   partyStarts: { chapter: "14-ch04.html", html: "The party starts at the edge of town, at the way out, and entering the town needs no roll." },
   tells: { chapter: "15-ch05.html", html: "The first time anyone reaches a watched location, the Storyteller makes a <strong>Tell check</strong>: roll a d6, and on <strong>4–6</strong> a Tell goes off. Each place is checked once a raid, for everyone." },
   wayOutTell: { chapter: "15-ch05.html", html: "The way out counts once anyone comes back to it." },
   lockupTell: { chapter: "15-ch05.html", html: "The lock-up counts, but not a captive’s arrival." },
   lockupHeld: { chapter: "16-ch06.html", html: "While held, you can’t pick up or be handed anything. You can still spend charges on any roll at the lock-up (your own, a rescuer’s or another captive’s)." },
-  lockupWatched: { chapter: "16-ch06.html", html: "The lock-up is always watched, so abilities that need a watched obstacle (Dracula’s Mesmerise) work on both. A rescue frees only the captives held at that moment, so anyone captured later needs a new rescue." },
+  lockupWatched: { chapter: "16-ch06.html", html: "The lock-up is always watched, so abilities that need a watched obstacle (Dracula’s Mesmerize) work on both. A rescue frees only the captives held at that moment, so anyone captured later needs a new rescue." },
 });
 const Q = (k) => BOOK_QUOTES[k].html;
 const source = (chapter, section) => `<p><em>Rulebook, Chapter ${chapter}: ${section}.</em></p>`;
@@ -217,7 +217,7 @@ function townDoc(t) {
     `<p><strong>Villagers:</strong> ${villagers}.</p>`,
     `<p><strong>${t.labelName}:</strong> Suspicion Limit ${t.limit} · Difficulty: the way out ${t.wayOut.difficulty}, the lock-up ${t.lockup.difficulty} · the final flight: mob ${t.finalMob}, Lead ${DGF.lead.finalStart}, escape at ${t.finalEscape}.</p>`,
     `<h2>In Foundry</h2>`,
-    `<p>${esc(t.name)} is ready to play. ${B("DGF.Settings.demoImport.Label")} (Configure Settings, or the question when a world first opens) brings it in, each part in a folder named ${esc(t.name)}: this entry, the scene <em>${esc(t.name)}</em> (its night map, with a pin on each place that opens its page here), the macro <em>${esc(t.name)}: Start the Raid</em>, and the eight Entities with tokens if the world hasn’t got them.</p>`,
+    `<p>${esc(t.name)} is ready to play. ${B("DGF.Settings.demoImport.Label")} (Configure Settings, or the question when a world first opens) brings it in, each part in a folder named ${esc(t.name)}: this entry, the scene <em>${esc(t.name)}</em> (its night map, with a pin on each place that opens its page here), the macro <em>${esc(t.name)}: Start the Raid</em>, and the eight Entities with tokens if the world doesn’t have them yet.</p>`,
     `<p>Run the macro as the Storyteller once each player owns their Entity: a new ${t.labelName} raid, with this list on the Raid HUD. The party’s tokens start on the map’s yard at <em>The Way Out</em>. The macro runs this:</p>`,
     `<pre><code>${esc(startMacroCommand(t))}</code></pre>`,
   ].join("\n");
@@ -254,7 +254,7 @@ function guideDoc(towns) {
     ...towns.map((t) => ({ name: t.name, what: "Chapter 9", t, macro: `${t.name}: Start the Raid`, folders: `folders named ${t.name}` })),
   ];
   const ready = [
-    `<p>Four games are ready to play straight away: the Halloween one-shot <em>Lantern Night in Hallowby</em> and the three towns of Chapter 9.</p>`,
+    `<p>Four games are ready to play right away: the Halloween one-shot <em>Lantern Night in Hallowby</em> and the three towns of Chapter 9.</p>`,
     `<table>`,
     `<thead><tr><th>Game</th><th>Level</th><th>Scene</th><th>Macro</th></tr></thead>`,
     `<tbody>`,
@@ -262,7 +262,7 @@ function guideDoc(towns) {
     `</tbody>`,
     `</table>`,
     `<ol>`,
-    `<li><strong>Set it up.</strong> The first time the Storyteller opens a world, the system asks which to set up; any time after, Configure Settings → ${B("DGF.Settings.demoImport.Label")}. Tick the games you want. Each brings its journal, its map scene and its macro into the world in its own folders (the one-shot in the four Demo folders; a town in folders named after it), keeping their IDs so the map’s pins open the journal’s pages, and the eight Entities with tokens come in too if the world hasn’t got them. Setting one up again keeps or replaces what is there, never a second copy.</li>`,
+    `<li><strong>Set it up.</strong> The first time the Storyteller opens a world, the system asks which to set up; any time after, Configure Settings → ${B("DGF.Settings.demoImport.Label")}. Check the games you want. Each brings its journal, its map scene and its macro into the world in its own folders (the one-shot in the four Demo folders; a town in folders named after it), keeping their IDs so the map’s pins open the journal’s pages, and the eight Entities with tokens come in too if the world doesn’t have them yet. Setting one up again keeps or replaces what is there, never a second copy.</li>`,
     `<li><strong>The Entities.</strong> Give each player Owner of their Entity (right-click the actor, Configure Ownership), and change its Castle Duty on the sheet.</li>`,
     `<li><strong>Start the raid.</strong> Activate the game’s scene and run its macro as the Storyteller (drag it to the hotbar): a new raid at the town’s level, with the town’s shopping list and its essentials on the Raid HUD. Run it after the players own their Entities: the raid takes every Entity with a player owner.</li>`,
     `<li><strong>The tokens.</strong> Drag each Entity onto the map, onto the yard at <em>The Way Out</em>: the party starts at the edge of town. Each pin on the map is the Storyteller’s: it opens that place’s page, with its obstacles in order, their ways and Difficulty.</li>`,
@@ -276,25 +276,25 @@ function guideDoc(towns) {
     `<ol>`,
     `<li><strong>The Entities.</strong> In the Actors sidebar, ${B("DGF.Create.button")} makes one of the eight with the book’s dice and marked defaults, for the player you pick, and lets the party see each other’s sheets. The same eight are in the compendium <strong>${esc(packLabel("entities"))}</strong>, to drag into the world; then give the player ownership (Configure Ownership). Change the Gift, Perk and Castle Duty on the sheet.</li>`,
     `<li><strong>The town.</strong> Run one of the three premade towns in this compendium (Chapter 9: each is ready to play, as <em>Ready to play</em> says), or build one with the book’s tables in the <strong>${esc(packLabel("tables"))}</strong> compendium (Chapter 8).</li>`,
-    `<li><strong>A new raid.</strong> Press ${B("DGF.Raid.newRaid")} and pick the town’s difficulty: Suspicion goes back to 0, the Turn to 1, and the Limit is the difficulty’s. The raid holds every Entity with a player owner (change who on the Raid window’s ${B("DGF.Raid.party")} list, or with the sheet’s ${B("DGF.Sheet.inRaid")} tick). With <em>${esc(L("DGF.Settings.resetOnNewRaid.Name"))}</em> on, every Entity in the raid is free again and its charges refill.</li>`,
+    `<li><strong>A new raid.</strong> Press ${B("DGF.Raid.newRaid")} and pick the town’s difficulty: Suspicion goes back to 0, the Turn to 1, and the Limit is the difficulty’s. The raid holds every Entity with a player owner (change who on the Raid window’s ${B("DGF.Raid.party")} list, or with the sheet’s ${B("DGF.Sheet.inRaid")} checkbox). With <em>${esc(L("DGF.Settings.resetOnNewRaid.Name"))}</em> on, every Entity in the raid is free again and its charges refill.</li>`,
     `<li><strong>The shopping list.</strong> For a rolled town, ${B("DGF.Raid.list")} → ${B("DGF.List.roll")} rolls it; a ready-made game’s Start the Raid macro starts the raid with its list on the HUD.</li>`,
     `</ol>`,
   ].join("\n");
   const during = [
     `<ul>`,
-    `<li><strong>Rolling.</strong> Click a trait on the Entity’s sheet. The roll dialog asks for the second die (Mask or Monster) and the Difficulty, offers the Entity’s abilities and help from the others, and has ticks for the situation: Castle Duty, the loud way, watched, the way out of town, the furniture’s extra obstacle and the lock-up. The roll card shows the result, and Suspicion goes on the HUD by itself: one roll, one rise, with an overdraw’s +2 on top.</li>`,
+    `<li><strong>Rolling.</strong> Click a trait on the Entity’s sheet. The roll dialog asks for the second die (Mask or Monster) and the Difficulty, offers the Entity’s abilities and help from the others, and has checkboxes for the situation: Castle Duty, the loud way, watched, the way out of town, the furniture’s extra obstacle and the lock-up. The roll card shows the result, and Suspicion goes on the HUD by itself: one roll, one rise, with an overdraw’s +2 on top.</li>`,
     `<li><strong>Costs.</strong> On a Cost, the Storyteller picks one on the roll card, and it applies itself.</li>`,
     `<li><strong>Turns.</strong> Press ${B("DGF.Raid.nextTurn")} at the end of each Turn. After the last Turn comes dawn.</li>`,
     `<li><strong>Undo.</strong> ${B("DGF.Raid.undo")} on the Raid window (or ${B("DGF.Card.cancelButton")} on a card) cancels an event’s Suspicion only. A chase or a capture that event caused stays: undo those with the chase tracker’s own buttons (${B("DGF.Chase.leadUp")}, ${B("DGF.Chase.leadDown")}, ${B("DGF.Chase.drop")}) and the lock-up’s ${B("DGF.Raid.free")}.</li>`,
-    `<li><strong>Tell checks.</strong> When the book calls for a Tell check (Chapter 5), press ${B("DGF.Raid.tellCheck")}, tick who is arriving, name the place, then ${B("DGF.Tell.check")}. The system rolls the dice, says whose Tell goes off and raises Suspicion; each place is checked once.</li>`,
+    `<li><strong>Tell checks.</strong> When the book calls for a Tell check (Chapter 5), press ${B("DGF.Raid.tellCheck")}, check who is arriving, name the place, then ${B("DGF.Tell.check")}. The system rolls the dice, says whose Tell goes off and raises Suspicion; each place is checked once.</li>`,
     `<li><strong>Group obstacles.</strong> Press ${B("DGF.Raid.groupCheck")} before several Entities roll the same group obstacle: their rolls raise Suspicion once, by the biggest trigger among them, and everyone caught flees together.</li>`,
     `<li><strong>Chases.</strong> Trouble at a watched obstacle starts a local chase (by itself, or from the roll card when chases are run by hand), and ${B("DGF.Chase.title")} tracker opens for everyone: the Lead, the ground, the mob (fixed when the chase starts), the Suspicion the chase will add when it ends (one chase, one rise) and who still has to roll. Each fleeing Entity rolls from it, and a runner can give up at the start of a round. ${B("DGF.Raid.chase")} on the HUD opens it again.</li>`,
-    `<li><strong>The lock-up.</strong> Cornered in a local chase, an Entity is captured and the HUD shows it at the lock-up. From the next Turn its roll is slipping free (tick <em>${esc(L("DGF.Roll.lockupSlip").replace(/\s*\(.*$/, ""))}</em>); a rescue that beats the lock-up frees every captive there.</li>`,
+    `<li><strong>The lock-up.</strong> Cornered in a local chase, an Entity is captured and the HUD shows it at the lock-up. From the next Turn its roll is slipping free (check <em>${esc(L("DGF.Roll.lockupSlip").replace(/\s*\(.*$/, ""))}</em>); a rescue that beats the lock-up frees every captive there.</li>`,
     `<li><strong>The hunt.</strong> At the Limit, or at dawn, the whole town hunts, and the final flight runs on the chase tracker.</li>`,
     `</ul>`,
   ].join("\n");
   const after = [
-    `<p>When the party gets out, the ${B("DGF.RaidCard.home.title")} card gives the Storyteller ${B("DGF.Card.yearButton")} (or use ${B("DGF.Raid.endRaid")} on the HUD). Tick what came home, then ${B("DGF.Year.decide")}: the card gives the result and the epilogue. A forked party’s year card posts itself.</p>`,
+    `<p>When the party gets out, the ${B("DGF.RaidCard.home.title")} card gives the Storyteller ${B("DGF.Card.yearButton")} (or use ${B("DGF.Raid.endRaid")} on the HUD). Check what came home, then ${B("DGF.Year.decide")}: the card gives the result and the epilogue. A forked party’s year card posts itself.</p>`,
     `<p><strong>Running it by hand.</strong> Every automation has a switch in Configure Settings → ${esc(MANIFEST.title)}: ${settings}.</p>`,
     `<p><strong>The compendiums.</strong> ${esc(packLabel("entities"))}: the eight Entities. ${esc(packLabel("tables"))}: the book’s random tables. ${esc(packLabel("journal"))}: this guide and the three towns of Chapter 9, each with its list, location key and map, and a page for each place. ${esc(packLabel("town-scenes"))} and ${esc(packLabel("town-macros"))}: each town’s night map and its Start the Raid macro. The Demo folder: the Halloween one-shot, and the eight Entities with tokens that every ready-made game uses.</p>`,
   ].join("\n");
