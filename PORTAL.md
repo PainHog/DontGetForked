@@ -1,5 +1,5 @@
-Now: Rewriting the whole game in plain, everyday American English: the one-shot, the online version's text, the run guide and the quick sheets are done; the rulebook is next.
-Next: Richard runs the one-shot for his group, then the rest of the rulebook gets the same plain-English rewrite.
+Now: The whole game now reads in plain, everyday American English: the rulebook, the Halloween one-shot, the online version, the run guide and the quick sheets.
+Next: Richard runs the one-shot for his group and decides a few leftover names (the old-fashioned shop names in three towns).
 Number: Design decisions made = 162
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
