@@ -155,7 +155,7 @@ DGF.entities = Object.freeze([
   },
   {
     key: "jekyll-hyde", name: "Jekyll & Hyde", duty: "librarian", dice: { brawn: 4, nimble: 6, sly: 8, charm: 12, wits: 10 },
-    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free, even if an ability meant it raised no Suspicion.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, that roll stands and Hyde takes over straight after it, free, until a draught changes him back. He does even when an ability, his own or a friend’s, meant the Monster raised no Suspicion." },
+    signature: { name: "The Draught", effect: "form", text: "change form, Jekyll to Hyde or back, before one of your rolls; the new form lasts until the next draught. He starts each raid as Jekyll. When the Monster shows on one of Jekyll’s rolls, Hyde takes over, free, even if an ability meant it raised no Suspicion.", rule: "Before one of your rolls, change form: Jekyll to Hyde or back (each has its own dice). The new form lasts until the next draught. Each raid starts with Jekyll. When the Monster shows on one of Jekyll’s rolls, that roll stands and Hyde takes over right after it, free, until a draught changes him back. He does even when an ability, his own or a friend’s, meant the Monster raised no Suspicion." },
     gift: {
       name: "The Other Self",
       versions: [
