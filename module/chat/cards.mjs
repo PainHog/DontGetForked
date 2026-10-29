@@ -81,7 +81,7 @@ function rollWhy(card) {
 function rollContext(card) {
   const stepNotes = [
     ...(card.raises ? [card.perkRaise ? t("DGF.Card.raisedPerk", { perk: card.perkRaise }) // Wall-Crawler, in a chase
-      : t(card.duty && !card.abilities?.some((a) => a.effect === "raise") ? "DGF.Card.raisedDuty" : "DGF.Card.raised")] : []),
+      : t(card.abilities?.some((a) => a.effect === "raise") ? "DGF.Card.raised" : card.duty ? "DGF.Card.raisedDuty" : card.stRaise ? "DGF.Card.raisedCall" : "DGF.Card.raised")] : []),
     ...(card.downParts ?? []).map((p) => t(`DGF.Card.smaller.${p.key}`)),
   ];
   const diffNotes = (card.diffParts ?? []).map((p) => t(`DGF.Card.diff.${p.key}`, { n: Math.abs(p.n) }));

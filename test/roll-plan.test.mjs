@@ -480,3 +480,13 @@ test("R4: the way out is rolled once a Turn: a second roll that Turn is refused"
   assert.equal(plan(ww, { wayOut: true, trait: "nimble" }).ok, true);
   assert.equal(plan(ww, { trait: "nimble", wayOutRolled: true }).ok, true, "only the way out");
 });
+
+test("2026-10-29: the Storyteller's call makes the trait die one size bigger, as the roll's one raise", () => {
+  const witch = roller("witch");
+  const p = plan(witch, { stRaise: true, trait: "nimble" });
+  assert.equal(p.ok, true);
+  assert.equal(p.traitDie, 6); // Nimble d4 → d6
+  assert.equal(p.stRaise, true);
+  assert.equal(p.payments.length, 0); // no charge
+  assert.deepEqual(plan(witch, { stRaise: true, duty: true }).errors.map((e) => e.code), ["tooManyRaises"]);
+});

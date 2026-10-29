@@ -22,6 +22,7 @@
  *                 payer: { charges, overdrewInFlight, overdrewInChase } }],   // spent before the roll; asRaise: spent as a raise
  *                 // (D6b: any runner's roll in the final flight; 2026-10-21: your own roll in a local chase)
  *   duty,      // at a location whose list item is the roller's Castle Duty kind
+ *   stRaise,   // 2026-10-29: the Storyteller's call, trait die one size bigger (the roll's one raise)
  *   loud,      // taking the loud way
  *   watched,   // the obstacle is watched
  *   wayOut,    // this is the way out of town (always watched; Shortcut)
@@ -134,7 +135,8 @@ export function buildRollPlan(input) {
   // still cancels it one for one: Garlic leaves his Nimble a d10).
   const perkRaise = chase && !!P.chaseRaise && P.chaseRaise === trait;
   const abilityRaises = abilities.filter((a) => a.effect === "raise").length;
-  const raiseSources = abilityRaises + (duty ? 1 : 0) + (perkRaise ? 1 : 0);
+  const stRaise = !!input.stRaise;
+  const raiseSources = abilityRaises + (duty ? 1 : 0) + (perkRaise ? 1 : 0) + (stRaise ? 1 : 0);
   if (raiseSources > 1) errors.push(perkRaise ? { code: "perkRaiseTaken", perk: perkName(sys), trait } : { code: "tooManyRaises" });
   const raises = Math.min(1, raiseSources);
 
@@ -237,6 +239,7 @@ export function buildRollPlan(input) {
     furniture,
     weakness: weakness && chase,
     duty,
+    stRaise,
     chase,
     hunt,
     abilities,

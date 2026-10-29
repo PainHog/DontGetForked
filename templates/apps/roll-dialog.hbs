@@ -26,6 +26,7 @@
   <fieldset>
     <legend>{{localize "DGF.Roll.situation"}}</legend>
     {{#if duty}}<label class="dgf-check"><input type="checkbox" name="duty"{{#if duty.checked}} checked{{/if}}> {{duty.label}}</label>{{/if}}
+    <label class="dgf-check"><input type="checkbox" name="stRaise"{{#if stRaise}} checked{{/if}}> {{localize "DGF.Roll.stRaise"}}</label>
     <label class="dgf-check"><input type="checkbox" name="loud"{{#if loud}} checked{{/if}}> {{localize "DGF.Roll.loud"}}</label>
     <label class="dgf-check"><input type="checkbox" name="watched"{{#if watched}} checked{{/if}}> {{localize "DGF.Roll.watched"}}</label>
     {{#if companion}}<label class="dgf-check"><input type="checkbox" name="companionCarrying"{{#if companion.checked}} checked{{/if}}> {{localize "DGF.Roll.companionCarrying"}}</label>{{/if}}
