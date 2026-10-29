@@ -213,6 +213,12 @@ Proposals put to Richard; nothing here is decided until he answers.
 - ~~**Jekyll & Hyde's default kit,** and which kits the targets apply to.~~ Defaults kept; the targets apply to random kits.
 - ~~*The two flavour lines (Hedge Spell, Trample).*~~ Approved as written.
 
+### After the first real game (2026-10-29)
+Richard's group played Lantern Night in Hallowby on Foundry: "an absolute blast". Open:
+- **Difficulty.** The group asked for the difficulty to change some. Waiting on how the night went (the ending, Suspicion, chases, the Limit used) before simulating options and proposing two or three.
+- **Old-fashioned shop names** in the three book towns (the ironmonger, the draper, the smithy, the hatter, the market garden): keep, or rename (e.g. the hardware store, the fabric shop)? Renaming touches the maps and the Foundry scenes.
+- **The any-approach rule in the simulator.** The Storyteller's call (good fit, loud, or a stretch at +2) isn't modeled yet, so the balance numbers still assume listed traits only.
+
 
 ## Rights note: classic monsters (not legal advice)
 - **Public-domain sources:** these literary characters are in the public domain:

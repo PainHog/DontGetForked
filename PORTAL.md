@@ -1,7 +1,7 @@
 Now: Richard ran the Halloween one-shot for his group online, and they had a blast. Their one request: change the difficulty some.
 Next: Hear how the night went (how it ended, how close Suspicion got), test difficulty options in the simulator, and let Richard pick one.
 Number: Design decisions made = 164
-Number: Open design questions = 0
+Number: Open design questions = 3
 Number: Simulated raids per balance check = 18000
 Number: Automated checks passing = 376
 
