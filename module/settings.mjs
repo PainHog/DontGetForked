@@ -49,6 +49,7 @@ export function registerSettings({ onRaidChange = () => {}, onHudChange = () => 
   toggle(SETTINGS.localRoundCap, true);
   toggle(SETTINGS.limitByPartySize, true, { onChange: () => onLimitRule() });
   toggle(SETTINGS.hugePieceHeld, true);
+  toggle(SETTINGS.lockDuties, true); // 2026-10-29: Standard and Hard keep each monster's own Castle Duty
   // The ready-made games, the one-shot Lantern Night in Hallowby and the three towns of Chapter 9
   // (module/apps/demo-import.mjs): offered once to a GM opening a world without any, and set up from a menu (GM only).
   toggle(SETTINGS.demoPrompt, true);

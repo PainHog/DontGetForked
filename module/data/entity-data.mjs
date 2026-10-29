@@ -12,7 +12,7 @@
 import { DGF } from "../config.mjs";
 import { SYSTEM_ID, SETTINGS } from "../contracts.mjs";
 import { entityView, rollAbilities, isInRaid } from "../logic/entity.mjs";
-import { normalizeRaid, isFurnitureRetake } from "../logic/raid.mjs";
+import { normalizeRaid, isFurnitureRetake, dutiesLocked } from "../logic/raid.mjs";
 import { inLocalChase } from "../logic/chase.mjs";
 import { carriedChangeRefused } from "../logic/lockup.mjs";
 
@@ -22,6 +22,9 @@ const currentRaid = () => {
 };
 const currentChase = () => currentRaid()?.chase ?? null;
 /** The switch for the drop and pick-up rules (V21–V28: "Dropped loot waits where it fell"); off, they are by hand. */
+const dutiesLockedNow = () => {
+  try { return game.settings.get(SYSTEM_ID, SETTINGS.lockDuties) !== false && dutiesLocked(currentRaid()); } catch (err) { return false; }
+};
 const dropsAutomated = () => {
   try { return game.settings.get(SYSTEM_ID, SETTINGS.autoDrops) !== false; } catch (err) { return true; }
 };
@@ -102,6 +105,11 @@ export class EntityData extends foundry.abstract.TypeDataModel {
     if (user?.isGM) {
       if (dropsAutomated()) retake(this, sys, { refuse: false }); // V26: the Storyteller's tick takes it back up too
       return allowed;
+    }
+    // 2026-10-29 (Chapters 2 and 8): on a Standard or Hard raid each Entity keeps its default Castle Duty (the switch lockDuties)
+    if ("duty" in sys && sys.duty !== this.duty && dutiesLockedNow()) {
+      delete sys.duty;
+      globalThis.ui?.notifications?.warn(game.i18n.localize("DGF.Notify.dutyLocked"));
     }
     const dropped = STORYTELLER_ONLY.filter((k) => k in sys && sys[k] !== this[k]);
     if (dropped.length) {

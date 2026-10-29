@@ -82,7 +82,7 @@ const packLabel = (name) => MANIFEST.packs?.find((p) => p.name === name)?.label 
  * checks each still appears in its chapter.
  */
 export const BOOK_QUOTES = Object.freeze({
-  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. If you roll a Duty at random, roll again on one that’s taken or not on the list, as long as a Duty that’s both free and on the list remains." },
+  duties: { chapter: "12-ch02.html", html: "Each Entity’s entry gives its default Duty, which it keeps <strong>on Standard and Hard</strong>; on Easy you may switch. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. A random Duty that’s taken or not on the list is rolled again while a free one on the list remains." },
   chase: { chapter: "16-ch06.html", html: "The row names two traits that work this round, for everyone in the chase." },
   customs: { chapter: "31-ch08.html", html: "Every town celebrates it in its own way, so roll a d6 or pick a custom for each town. Customs are only flavor and change no rules." },
   obstacles: { chapter: "31-ch08.html", html: "The quiet way gets past without a fuss; the loud way works too, but Suspicion rises by 1 whatever the result. At a <em>group</em> obstacle, each Entity who wants past rolls for itself." },
@@ -263,7 +263,7 @@ function guideDoc(towns) {
     `</table>`,
     `<ol>`,
     `<li><strong>Set it up.</strong> The first time the Storyteller opens a world, the system asks which to set up; any time after, Configure Settings → ${B("DGF.Settings.demoImport.Label")}. Check the games you want. Each brings its journal, its map scene and its macro into the world in its own folders (the one-shot in the four Demo folders; a town in folders named after it), keeping their IDs so the map’s pins open the journal’s pages, and the eight Entities with tokens come in too if the world doesn’t have them yet. Setting one up again keeps or replaces what is there, never a second copy.</li>`,
-    `<li><strong>The Entities.</strong> Give each player Owner of their Entity (right-click the actor, Configure Ownership), and change its Castle Duty on the sheet.</li>`,
+    `<li><strong>The Entities.</strong> Give each player Owner of their Entity (right-click the actor, Configure Ownership). On Easy, change its Castle Duty on the sheet if the player switched; on Standard and Hard each keeps its own (the sheet locks it for players).</li>`,
     `<li><strong>Start the raid.</strong> Activate the game’s scene and run its macro as the Storyteller (drag it to the hotbar): a new raid at the town’s level, with the town’s shopping list and its essentials on the Raid HUD. Run it after the players own their Entities: the raid takes every Entity with a player owner.</li>`,
     `<li><strong>The tokens.</strong> Drag each Entity onto the map, onto the yard at <em>The Way Out</em>: the party starts at the edge of town. Each pin on the map is the Storyteller’s: it opens that place’s page, with its obstacles in order, their ways and Difficulty.</li>`,
     `</ol>`,

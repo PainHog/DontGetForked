@@ -46,9 +46,10 @@
     </div>
     <div class="dgf-pick">
       <label>{{localize "DGF.Sheet.duty"}}
-        <select name="system.duty">{{#each duties}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}</option>{{/each}}</select>
+        <select name="system.duty"{{#if dutyLocked}} disabled{{/if}}>{{#each duties}}<option value="{{key}}"{{#if selected}} selected{{/if}}>{{name}}{{#if isDefault}} ({{localize "DGF.Sheet.default"}}){{/if}}</option>{{/each}}</select>
       </label>
       <p>{{dutyText}}</p>
+      {{#if dutyLocked}}<p class="dgf-hint">{{localize "DGF.Sheet.dutyLocked"}}</p>{{/if}}
     </div>
   </section>
 

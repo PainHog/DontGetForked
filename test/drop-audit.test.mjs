@@ -21,6 +21,7 @@ const BEN = game.users.get("benUser000000000");
 
 await import("../module/dont-get-forked.mjs");
 const { SYSTEM_ID, SETTINGS, OPS } = await import("../module/contracts.mjs");
+const { DGF } = await import("../module/config.mjs");
 const { EntitySheet } = await import("../module/sheets/entity-sheet.mjs");
 const { openHud } = await import("../module/apps/raid-hud.mjs");
 Hooks.callAll("init");
@@ -256,4 +257,28 @@ test("2026-10-29: the Storyteller sets the Limit from the Raid window; a player 
   assert.equal(raid().limit, 7, "only the Storyteller sets the Limit");
   await op(GM, OPS.raidLimit, { limit: before });
   await settle();
+});
+
+test("2026-10-29: on Standard and Hard a player can't switch a Castle Duty (the sheet locks it); on Easy they can; the Storyteller always can", async () => {
+  await fresh("standard");
+  const own = witch.system.duty;
+  const other = DGF.duties.find((d) => d.key !== own).key;
+  await asUser(ANN, () => witch.update({ "system.duty": other }));
+  assert.equal(witch.system.duty, own, "locked on Standard");
+  const sheet = await sheetOf(ANN, witch);
+  assert.equal((await asUser(ANN, () => sheet._prepareContext({}))).dutyLocked, true);
+  await asUser(GM, () => witch.update({ "system.duty": other }));
+  assert.equal(witch.system.duty, other, "the Storyteller can");
+  await asUser(GM, () => witch.update({ "system.duty": own }));
+  await fresh("easy");
+  await asUser(ANN, () => witch.update({ "system.duty": other }));
+  assert.equal(witch.system.duty, other, "switched on Easy");
+  await asUser(GM, () => witch.update({ "system.duty": own }));
+  await setSetting(SETTINGS.lockDuties, false);
+  await fresh("hard");
+  await asUser(ANN, () => witch.update({ "system.duty": other }));
+  assert.equal(witch.system.duty, other, "the switch off: anyone who owns the sheet");
+  await asUser(GM, () => witch.update({ "system.duty": own }));
+  await setSetting(SETTINGS.lockDuties, true);
+  await fresh();
 });

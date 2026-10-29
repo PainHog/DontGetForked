@@ -1,7 +1,7 @@
 {
   "key": "castle-duties",
   "name": "Castle Duties (d6)",
-  "description": "<p>Each Entity’s entry gives its default Duty. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. If you roll a Duty at random, roll again on one that’s taken or not on the list, as long as a Duty that’s both free and on the list remains.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
+  "description": "<p>Each Entity’s entry gives its default Duty, which it keeps <strong>on Standard and Hard</strong>; on Easy you may switch. If two players want the same Duty, they roll off (again on a tie), and the higher d6 keeps it while the other picks again. A Duty whose kind isn’t on the list gives no edge that raid, so pick one that is on it if you can. A random Duty that’s taken or not on the list is rolled again while a free one on the list remains.</p><p><em>Rulebook, Chapter 2: Castle Duties.</em></p>",
   "formula": "1d6",
   "results": [
     {

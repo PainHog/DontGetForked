@@ -40,6 +40,7 @@ export const SETTINGS = Object.freeze({
   localOverdrawOnce: "localOverdrawOnce",     // world: one overdraw per runner per local chase; a second is refused (2026-10-21)
   localRoundCap: "localRoundCap",             // world: a local chase lasts at most 6 rounds, then the Lead decides it (2026-10-21)
   limitByPartySize: "limitByPartySize",       // world: with five Entities in the raid the Limit is 1 lower on Easy and Standard (2026-10-21)
+  lockDuties: "lockDuties",                   // world: on a Standard or Hard raid, players can't change Castle Duties (2026-10-29)
   hugePieceHeld: "hugePieceHeld",             // world: a Huge piece with a carrier in a local chase can't move (no way out) until it ends (2026-10-21)
   demoPrompt: "demoPrompt",                   // world: offer to set up a ready-made game (the one-shot, the three towns) when a GM opens a world without one
   demoImported: "demoImported",               // world, hidden: a ready-made game has been set up in this world: the system version that did it

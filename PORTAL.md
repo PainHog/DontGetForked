@@ -1,9 +1,9 @@
-Now: Richard ran the Halloween one-shot for his group online, and they had a blast. Their one request: change the difficulty some.
-Next: Hear how the night went (how it ended, how close Suspicion got), test difficulty options in the simulator, and let Richard pick one.
+Now: After the first group's game, the difficulty levels now differ in their rules too: on Standard each monster keeps its own Castle Duty, and on Hard the players pick monsters before hearing the shopping list.
+Next: Publish the online version with the locked Castle Duties, then the next playtest on Standard or Hard.
 Number: Design decisions made = 164
 Number: Open design questions = 2
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 376
+Number: Automated checks passing = 377
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 Download: book/dist/Dont_Get_Forked_v0.3.pdf = The rulebook, version 0.3, a work in progress (PDF)
@@ -75,7 +75,7 @@ Download: downloads/Dont_Get_Forked_Foundry_v0.1.13.zip = The online version for
 - [x] The whole game rewritten in plain, everyday American English
 - [x] Players can try any idea to get past an obstacle, and the Storyteller decides if it's loud or harder
 - [x] Online version: a scrolling roll window, a Storyteller's call for a bigger die, and a Suspicion Limit the Storyteller can set
-- [ ] Change the difficulty after the first group's feedback
+- [x] Change the difficulty after the first group's feedback (Standard keeps each monster's Castle Duty; Hard picks monsters before hearing the list)
 - [ ] Richard's own foreword
 - [x] Foundry system playable
 - [x] First playtest

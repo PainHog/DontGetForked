@@ -237,6 +237,11 @@ export function setPartySize(state, size) {
   return state.partySize === n && state.limit === limit ? state : { ...state, partySize: n, limit };
 }
 
+/** 2026-10-29 (Chapters 2 and 8): on Standard and Hard each Entity keeps its default Castle Duty; only Easy switches. */
+export function dutiesLocked(state) {
+  return state?.difficulty === "standard" || state?.difficulty === "hard";
+}
+
 /** 2026-10-29: the Storyteller sets the Limit by hand (1–30); the party's size no longer moves it this raid. */
 export function setLimit(state, limit) {
   const n = Math.trunc(Number(limit));

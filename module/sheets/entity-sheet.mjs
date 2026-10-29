@@ -16,6 +16,7 @@ import { powerShort, powerDetail, perkParts, weaknessTiming } from "../logic/pow
 import { rollEntity, spendCharge, drinkDraught } from "../dice/rolling.mjs";
 import { chooseEntity, becomeEntityUpdate } from "../entities/create.mjs";
 import { getRaid } from "../raid/store.mjs";
+import { dutiesLocked } from "../logic/raid.mjs";
 import { t, traitLabel, dieLabel } from "../helpers/i18n.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -76,6 +77,7 @@ export class EntitySheet extends HandlebarsApplicationMixin(foundry.applications
       perks: (view?.perks ?? []).map((p) => ({ key: p.key, name: p.name, selected: p.key === view.perk.key, isDefault: !!p.default, ...perkParts(p) })),
       duties: DGF.duties.map((d) => ({ key: d.key, name: d.name, selected: d.key === sys.duty, isDefault: d.key === view?.defaultDuty })),
       dutyText: view?.duty ? t("DGF.Sheet.dutyText", { kind: view.duty.kind, where: view.duty.where }) : "",
+      dutyLocked: !game.user.isGM && setting(SETTINGS.lockDuties) && dutiesLocked(getRaid()),
       weakness: view?.weakness ?? null,
       weaknessRule: view ? weaknessTiming[view.weakness.timing] ?? "" : "",
       tell: view?.tell ?? null,
