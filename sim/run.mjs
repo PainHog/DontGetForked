@@ -17,7 +17,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeRng } from "./rng.mjs";
 import { PARAMS, PRESETS, NUMBERS, TARGETS, PACKAGES, defaults } from "./params.mjs";
-import { makeParty, ROSTER, ROSTERS, DUTIES, rosterWithGiftTraits } from "./entities.mjs";
+import { makeParty, applyDutyPolicy, ROSTER, ROSTERS, DUTIES, rosterWithGiftTraits } from "./entities.mjs";
 import { makeTown } from "./town.mjs";
 import { playRaid } from "./engine.mjs";
 import { Recorder } from "./recorder.mjs";
@@ -56,11 +56,12 @@ export function runConfig({ params, numbers, runs, seed = 1, labels = LABELS, si
       for (let i = 0; i < runs; i++) {
         const rng = makeRng(seed, label, size, i);
         // Measuring aids (sim/tuning-check.mjs; off by default): kitPolicy "default", forceEntity, kitOverride, giftTraits.
-        const party = makeParty(rng.fork("party"), size, numbers.charges, roster, { kit: params.kitPolicy ?? "random", force: params.forceEntity ?? null, override: params.kitOverride ?? null });
+        const town = (townFn ?? makeTown)(rng.fork("town"), label, numbers);
+        const party = makeParty(rng.fork("party"), size, numbers.charges, roster, { kit: params.kitPolicy ?? "random", force: params.forceEntity ?? null, override: params.kitOverride ?? null, pick: params.partyPick ?? "random", town });
+        applyDutyPolicy(rng.fork("duty"), party, town, params.dutyPolicy ?? "random");
         // campaign upgrades (optional rules): each bonus charge goes to the next Entity in the party
         // (bonusStack: all of them on one Entity instead)
         for (let k = 0; k < (numbers.bonusCharges ?? 0); k++) { const m = party[numbers.bonusStack ? 0 : k % party.length]; m.charges += 1; m.chargesStart += 1; }
-        const town = (townFn ?? makeTown)(rng.fork("town"), label, numbers);
         const s = playRaid({ party, town, params, numbers, rng: rng.fork("dice"), rec });
         raids.push({ label, size, i, members: party.map((m) => ({ id: m.id, ent: m.ent, gift: m.gift, perk: m.perk, duty: m.duty })), ...s });
       }

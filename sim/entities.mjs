@@ -150,9 +150,10 @@ export function validateEntity(e) {
  *    is measured on every raid instead of half of them (the same parties as the raids that happen to include him).
  *  - override: { entityKey: { gift: name, perk: key } } replaces that Entity's Gift and/or Perk whenever it plays.
  */
-export function makeParty(rng, n, chargesEach, roster = ROSTER, { kit = "random", force = null, override = null } = {}) {
+export function makeParty(rng, n, chargesEach, roster = ROSTER, { kit = "random", force = null, override = null, pick = "random", town = null } = {}) {
   let picks;
-  if (force) {
+  if (pick === "list" && town && !force) picks = listAwarePicks(rng, roster, n, town);
+  else if (force) {
     const x = roster.find((e) => e.key === force || e.id === force);
     if (!x) throw new Error(`no Entity "${force}" to force into the party`);
     const rest = rng.shuffle(roster.filter((e) => e !== x)).slice(0, n - 1);
@@ -179,6 +180,51 @@ export function makeParty(rng, n, chargesEach, roster = ROSTER, { kit = "random"
       if (o.gift) m.gift = m.ent.giftOptions.find((g) => (g.name ?? g) === o.gift) ?? (() => { throw new Error(`${m.ent.key}: no Gift "${o.gift}"`); })();
       if (o.perk) { if (!m.ent.perkOptions?.includes(o.perk)) throw new Error(`${m.ent.key}: no Perk "${o.perk}"`); m.perk = o.perk; }
     }
+  }
+  return party;
+}
+
+/** The list's kinds, essentials first (each once). */
+function listKinds(town) {
+  const items = [...(town.items ?? [])].sort((a, b) => (b.essential ? 1 : 0) - (a.essential ? 1 : 0));
+  return [...new Set(items.map((i) => i.kind).filter(Boolean))];
+}
+
+/**
+ * 2026-10-29 (Richard): the players choose their monsters after hearing the list (Easy, Standard): each pick covers a
+ * list kind its default Castle Duty hasn't covered yet (essentials first), ties at random; the rest at random.
+ */
+export function listAwarePicks(rng, roster, n, town) {
+  const kinds = listKinds(town);
+  const pool = rng.shuffle(roster);
+  const picks = [];
+  const covered = new Set();
+  for (const k of kinds) {
+    if (picks.length >= n) break;
+    const e = pool.find((x) => !picks.includes(x) && DEFAULTS[x.key]?.duty === k);
+    if (e && !covered.has(k)) { picks.push(e); covered.add(k); }
+  }
+  for (const e of pool) if (picks.length < n && !picks.includes(e)) picks.push(e);
+  return rng.shuffle(picks);
+}
+
+/**
+ * 2026-10-29 (Richard): how the Castle Duties are set. random = the simulator's standard (a Duty at random, no two alike);
+ * default = each monster keeps its own Duty (Standard and Hard: no switching; a clash takes another at random);
+ * match = the players heard the list and switch Duties to cover its kinds, essentials first (Easy).
+ */
+export function applyDutyPolicy(rng, party, town, policy = "random") {
+  if (policy === "default") {
+    const taken = new Set();
+    for (const m of party) {
+      const d = DEFAULTS[m.ent.key]?.duty;
+      m.duty = d && !taken.has(d) ? d : rng.pick(DUTIES.filter((x) => !taken.has(x)));
+      taken.add(m.duty);
+    }
+  } else if (policy === "match") {
+    const chosen = listKinds(town).slice(0, party.length);
+    const all = [...chosen, ...rng.shuffle(DUTIES.filter((d) => !chosen.includes(d)))].slice(0, party.length);
+    rng.shuffle(party.map((_, i) => i)).forEach((pi, k) => { party[pi].duty = all[k]; });
   }
   return party;
 }

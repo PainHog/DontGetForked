@@ -415,6 +415,8 @@ export const PARAMS = {
  */
 export const TUNING = {
   kitPolicy: { default: "random", values: ["random", "default"], doc: "random = each Entity's Gift and Perk at random, a Castle Duty at random (the simulator's standard); default = every Entity on its marked default Gift, Perk and Castle Duty (a clash: the later one takes another at random), what a first-time table and the one-shot's Entity cards play." },
+  dutyPolicy: { default: "random", values: ["random", "default", "match"], doc: "2026-10-29 (Richard): random = a Castle Duty at random (the simulator's standard); default = each monster keeps its own Duty (Standard and Hard: no switching); match = the players heard the list and switch Duties to cover its kinds, essentials first (Easy)." },
+  partyPick: { default: "random", values: ["random", "list"], doc: "2026-10-29 (Richard): random = monsters picked at random (Hard picks them before the list); list = picked after hearing the list, each covering a list kind with its own Duty where one can." },
   forceEntity: { default: null, doc: "An Entity key always in the party (at a random place; the others random): the same parties as the raids that include it, all of them." },
   kitOverride: { default: null, doc: "{ entityKey: { gift: versionName, perk: perkKey } }: that Entity always plays this Gift and/or Perk (a default changed, or a pick measured)." },
   giftTraits: { default: null, doc: "{ versionName: trait }: a Gift version rolls another trait (Wi-b: { Broomstick: \"wits\" })." },
