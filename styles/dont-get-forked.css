@@ -85,6 +85,8 @@
 /* ------------------------------------------------------------ dialogs -- */
 
 .dont-get-forked.dgf-roll-dialog .window-content, .dont-get-forked.dgf-choose-entity .window-content { background: var(--dgf-paper); color: var(--dgf-ink); font-family: var(--dgf-serif); }
+/* A long dialog scrolls inside, so its buttons always stay on screen */
+.dont-get-forked.dgf-dialog { max-height: calc(100vh - 10rem); overflow-y: auto; padding-right: 0.3em; }
 .dont-get-forked .dgf-dialog fieldset { border: 1px solid var(--dgf-paper-edge); margin: 0.5em 0; padding: 0.3em 0.6em; }
 .dont-get-forked .dgf-dialog legend { font-variant: small-caps; padding: 0 0.3em; }
 /* setting up a ready-made game: one tick per game, each on its own line */
