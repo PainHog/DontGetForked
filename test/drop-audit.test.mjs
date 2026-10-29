@@ -242,3 +242,18 @@ test("the drop audit's session left no errors, no missing words and no unanswere
   assert.deepEqual(log.missingI18n, []);
   assert.equal(dialogResponders.length, 0);
 });
+
+test("2026-10-29: the Storyteller sets the Limit from the Raid window; a player can't", async () => {
+  const before = raid().limit;
+  assert.equal((await op(GM, OPS.raidLimit, { limit: 7 }))?.ok, true);
+  await settle();
+  assert.equal(raid().limit, 7);
+  assert.equal(raid().limitByHand, true);
+  assert.notEqual((await op(GM, OPS.raidLimit, { limit: 0 }))?.ok, true);
+  assert.equal(raid().limit, 7);
+  await op(ANN, OPS.raidLimit, { limit: 3 });
+  await settle();
+  assert.equal(raid().limit, 7, "only the Storyteller sets the Limit");
+  await op(GM, OPS.raidLimit, { limit: before });
+  await settle();
+});

@@ -54,6 +54,7 @@ export function newRaid({ id = "", difficulty = "standard", readied = [], partyS
     difficulty,
     partySize: size,
     limit: suspicionLimit(difficulty, size),
+    limitByHand: false, // 2026-10-29: the Storyteller set the Limit on the Raid window
     turn: 1,
     turns: DGF.turns,
     dawn: false,
@@ -87,6 +88,7 @@ export function normalizeRaid(stored) {
     ...base,
     partySize: Math.max(0, Math.trunc(num(s.partySize, 0))),
     limit: num(s.limit, base.limit),
+    limitByHand: !!s.limitByHand,
     turn: Math.max(1, num(s.turn, base.turn)),
     turns: num(s.turns, base.turns),
     dawn: !!s.dawn,
@@ -142,6 +144,8 @@ export function raidView(state) {
     value: s.value,
     limit: state.limit,
     partySize: state.partySize ?? 0,
+    limitByHand: !!state.limitByHand,
+    bookLimit: suspicionLimit(state.difficulty, state.partySize ?? 0),
     labelLimit: DGF.labels[state.difficulty]?.limit ?? state.limit, // the label's own Limit (the difference: five Entities, 2026-10-21)
     atLimit: s.atLimit,
     turn: state.turn,
@@ -228,9 +232,16 @@ export function advanceTurn(state, delta = 1) {
  */
 export function setPartySize(state, size) {
   const n = Math.max(0, Math.trunc(Number(size)) || 0);
-  if (state.hunt || state.over || state.partyOut) return state.partySize === n ? state : { ...state, partySize: n };
+  if (state.hunt || state.over || state.partyOut || state.limitByHand) return state.partySize === n ? state : { ...state, partySize: n };
   const limit = suspicionLimit(state.difficulty, n);
   return state.partySize === n && state.limit === limit ? state : { ...state, partySize: n, limit };
+}
+
+/** 2026-10-29: the Storyteller sets the Limit by hand (1–30); the party's size no longer moves it this raid. */
+export function setLimit(state, limit) {
+  const n = Math.trunc(Number(limit));
+  if (!(n >= 1 && n <= 30)) throw new Error(`bad Limit: ${limit}`);
+  return state.limit === n && state.limitByHand ? state : { ...state, limit: n, limitByHand: true };
 }
 
 /** Start or stop the hunt by hand ("manual"), or as the rules say ("limit" / "dawn"). */

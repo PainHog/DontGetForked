@@ -8,6 +8,7 @@ import { DGF } from "../module/config.mjs";
 import {
   newRaid, normalizeRaid, suspicionOf, raidView, recordEvent, cancel, restore, lastLiveEvent, adjust, advanceTurn, setHunt, huntDue, eventsOf, leaveTown, backInTown, takeFurniture, setFurniture,
 } from "../module/logic/raid.mjs";
+import * as R from "../module/logic/raid.mjs";
 import { foldSuspicion } from "../module/logic/suspicion.mjs";
 
 test("a new raid: the Limit by difficulty (9 / 10 / 13), 12 Turns, nothing raised", () => {
@@ -205,4 +206,18 @@ test("R4: the way out is rolled once a Turn: marked for the Turn, free again nex
   const out = leaveTown(markWayOut(s), "wayOut");
   assert.equal(wayOutRolled(backInTown(out)), false);
   assert.equal(wayOutRolled(backInTown(leaveTown(markWayOut(s), "flight"))), true, "the flight escaped: the way-out roll stands");
+});
+
+test("2026-10-29: the Storyteller sets the Limit by hand, and the party's size no longer moves it", () => {
+  let s = R.newRaid({ difficulty: "easy", partySize: 4 });
+  assert.equal(s.limit, 9);
+  s = R.setLimit(s, 7);
+  assert.equal(s.limit, 7);
+  assert.equal(s.limitByHand, true);
+  s = R.setPartySize(s, 5);
+  assert.equal(s.limit, 7, "five Entities don't change a Limit set by hand");
+  assert.equal(R.normalizeRaid(JSON.parse(JSON.stringify(s))).limitByHand, true);
+  assert.throws(() => R.setLimit(s, 0));
+  assert.equal(R.raidView(s).limitByHand, true);
+  assert.equal(R.raidView(s).bookLimit, 8);
 });

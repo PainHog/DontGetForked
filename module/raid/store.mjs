@@ -385,6 +385,16 @@ export function registerRaidOps() {
     },
   });
 
+  registerOp(OPS.raidLimit, {
+    gmOnly: true,
+    apply: async ({ limit }) => {
+      const n = Math.trunc(Number(limit));
+      if (!(n >= 1 && n <= 30)) return { ok: false, reason: "badLimit" };
+      const { state } = await mutateRaid((s) => R.setLimit(s, n));
+      return { ok: true, limit: state.limit };
+    },
+  });
+
   registerOp(OPS.raidReset, {
     gmOnly: true,
     apply: async ({ difficulty = "standard", extra = {} }) => {

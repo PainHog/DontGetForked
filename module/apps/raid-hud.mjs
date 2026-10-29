@@ -42,6 +42,7 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       nextTurn: RaidHud.#onTurn(1),
       prevTurn: RaidHud.#onTurn(-1),
       toggleHunt: RaidHud.#onToggleHunt,
+      setLimit: RaidHud.#onSetLimit,
       newRaid: RaidHud.#onNewRaid,
       groupCheck: () => groupCheckDialog(),
       closeGroup: () => runOp(OPS.raidGroup, { action: "close" }),
@@ -84,7 +85,8 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
       pips: Array.from({ length: v.limit }, (_, i) => ({ filled: i < v.value })),
       label: t(`DGF.Label.${v.difficulty}`),
       // 2026-10-21: the Limit by the party's size (five Entities: 1 lower on Easy and Standard)
-      limitNote: v.partySize >= DGF.fivePlayers.size
+      limitNote: v.limitByHand ? t("DGF.Raid.limitByHand", { limit: v.limit, base: v.bookLimit })
+        : v.partySize >= DGF.fivePlayers.size
         ? t(v.limit !== v.labelLimit ? "DGF.Raid.limitFive" : "DGF.Raid.limitFiveSame", { n: v.partySize, limit: v.limit, base: v.labelLimit, label: t(`DGF.Label.${v.difficulty}`) })
         : "",
       // 2026-10-21 (W4): a Huge piece with a carrier in a local chase can't move until the chase is over
@@ -178,6 +180,23 @@ export class RaidHud extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static #onTurn(delta) {
     return async function () { return runOp(OPS.raidTurn, { delta }); };
+  }
+
+  static async #onSetLimit() {
+    const raid = getRaid();
+    const limit = await foundry.applications.api.DialogV2.wait({
+      window: { title: t("DGF.Raid.setLimit") },
+      classes: ["dont-get-forked"],
+      content: `<div class="dont-get-forked dgf-dialog"><p>${t("DGF.Raid.setLimitText")}</p><input type="number" name="limit" min="1" max="30" step="1" value="${raid.limit}"></div>`,
+      buttons: [
+        { action: "ok", label: t("DGF.Raid.setLimit"), default: true, callback: (event, button) => button.form.elements.namedItem("limit")?.value },
+        { action: "cancel", label: t("DGF.Dialog.cancel") },
+      ],
+      rejectClose: false,
+    });
+    const n = Math.trunc(Number(limit));
+    if (!limit || !(n >= 1 && n <= 30)) return null;
+    return runOp(OPS.raidLimit, { limit: n });
   }
 
   static async #onToggleHunt() {

@@ -72,6 +72,7 @@ export const OPS = Object.freeze({
   raidUndo: "raid.undo",                 // GM: cancel the newest event that still counts
   raidTurn: "raid.turn",                 // GM: next / previous Turn (dawn after the last)
   raidHunt: "raid.hunt",                 // GM: start or stop the hunt by hand
+  raidLimit: "raid.limit",               // GM: set the Suspicion Limit by hand (2026-10-29)
   raidReset: "raid.reset",               // GM: a new raid at a difficulty
   actorSpendCharges: "actor.spendCharges", // anyone: a roll card's helpers pay for the abilities they lent (once, as the card says)
   raidRoll: "raid.roll",                 // anyone: a roll card's Suspicion, group check, chase, capture and lock-up effects
