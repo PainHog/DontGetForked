@@ -1,9 +1,9 @@
-Now: The whole game now reads in plain, everyday American English: the rulebook, the Halloween one-shot, the online version, the run guide and the quick sheets.
-Next: Richard runs the one-shot for his group and decides a few leftover names (the old-fashioned shop names in three towns).
-Number: Design decisions made = 162
+Now: Richard ran the Halloween one-shot for his group online, and they had a blast. Their one request: change the difficulty some.
+Next: Hear how the night went (how it ended, how close Suspicion got), test difficulty options in the simulator, and let Richard pick one.
+Number: Design decisions made = 164
 Number: Open design questions = 0
 Number: Simulated raids per balance check = 18000
-Number: Automated checks passing = 373
+Number: Automated checks passing = 376
 
 Screenshot: docs/portal/cover.jpg = The rulebook's cover, with a 19th-century etching standing in until the illustrator's art arrives
 Download: book/dist/Dont_Get_Forked_v0.3.pdf = The rulebook, version 0.3, a work in progress (PDF)
@@ -70,9 +70,13 @@ Download: downloads/Dont_Get_Forked_Foundry_v0.1.13.zip = The online version for
 - [x] One-page quick sheets for players and the Storyteller
 - [x] The monsters fine-tuned after the outside review, and the middle town evened out
 - [x] The three ready-made towns ready to play online, like the one-shot: maps, place pages and a start button
-- [ ] Richard runs the one-shot for his group
+- [x] Richard runs the one-shot for his group
 - [x] The rulebook in a more human voice, with Richard's dedication and advice
+- [x] The whole game rewritten in plain, everyday American English
+- [x] Players can try any idea to get past an obstacle, and the Storyteller decides if it's loud or harder
+- [x] Online version: a scrolling roll window, a Storyteller's call for a bigger die, and a Suspicion Limit the Storyteller can set
+- [ ] Change the difficulty after the first group's feedback
 - [ ] Richard's own foreword
-- [ ] Foundry system playable
-- [ ] First playtest
+- [x] Foundry system playable
+- [x] First playtest
 - [ ] Legal checks before launch (the name and the monster roster)
